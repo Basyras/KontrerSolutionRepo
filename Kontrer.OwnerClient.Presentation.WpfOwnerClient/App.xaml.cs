@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace WpfApp
+namespace Kontrer.OwnerClient.Presentation.WpfOwnerClient
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -1,7 +1,7 @@
-﻿<Application x:Class="Kontrer.OwnerClients.WpfClient.Presentation.Wpf.App"
+﻿<Application x:Class="Kontrer.OwnerClient.Presentation.WpfOwnerClient.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Kontrer.OwnerClients.WpfClient.Presentation.Wpf"
+             xmlns:local="clr-namespace:Kontrer.OwnerClient.Presentation.WpfOwnerClient"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
