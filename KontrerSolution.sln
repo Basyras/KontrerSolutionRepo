@@ -21,15 +21,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Bootstr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Presentation.WpfOwnerClient", "Kontrer.OwnerClient.Presentation.WpfOwnerClient\Kontrer.OwnerClient.Presentation.WpfOwnerClient.csproj", "{F623D898-2732-4F83-8372-EF15B1A96791}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Shared", "Kontrer.OwnerClient.Shared\Kontrer.OwnerClient.Shared.csproj", "{C0F24F9C-E415-4F2D-A5FE-AD2299DF9165}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Shared", "Kontrer.OwnerClient.Shared\Kontrer.OwnerClient.Shared.csproj", "{C0F24F9C-E415-4F2D-A5FE-AD2299DF9165}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Data.Abstraction", "Kontrer.OwnerClient.Data.Abstraction\Kontrer.OwnerClient.Data.Abstraction.csproj", "{E882E93D-54E2-4BD3-9DD3-BD88FD4C954E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Data.Abstraction", "Kontrer.OwnerClient.Data.Abstraction\Kontrer.OwnerClient.Data.Abstraction.csproj", "{E882E93D-54E2-4BD3-9DD3-BD88FD4C954E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Business.Abstraction", "Kontrer.OwnerClient.Business.Abstraction\Kontrer.OwnerClient.Business.Abstraction.csproj", "{4EC74E38-2093-4E46-A4A4-842A7C5A4E13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Business.Abstraction", "Kontrer.OwnerClient.Business.Abstraction\Kontrer.OwnerClient.Business.Abstraction.csproj", "{4EC74E38-2093-4E46-A4A4-842A7C5A4E13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Business", "Kontrer.OwnerClient.Business\Kontrer.OwnerClient.Business.csproj", "{BD74829E-003D-4FEF-A6C2-D20AD3EF867F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Business", "Kontrer.OwnerClient.Business\Kontrer.OwnerClient.Business.csproj", "{BD74829E-003D-4FEF-A6C2-D20AD3EF867F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Data", "Kontrer.OwnerClient.Data\Kontrer.OwnerClient.Data.csproj", "{73E920A4-E525-42A0-B2FB-20B55D6F8C17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Data", "Kontrer.OwnerClient.Data\Kontrer.OwnerClient.Data.csproj", "{73E920A4-E525-42A0-B2FB-20B55D6F8C17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Presentation.WpfOwnerClient.Tests", "Kontrer.OwnerClient.Presentation.WpfOwnerClient.Tests\Kontrer.OwnerClient.Presentation.WpfOwnerClient.Tests.csproj", "{D62A9259-86C3-44DB-8C37-0201D2306A1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Bootstrapper.Tests", "Kontrer.OwnerClient.Bootstrapper.Tests\Kontrer.OwnerClient.Bootstrapper.Tests.csproj", "{4B9D5F1F-17AD-433F-B510-E9C49E758960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +73,14 @@ Global
 		{73E920A4-E525-42A0-B2FB-20B55D6F8C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73E920A4-E525-42A0-B2FB-20B55D6F8C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73E920A4-E525-42A0-B2FB-20B55D6F8C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D62A9259-86C3-44DB-8C37-0201D2306A1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D62A9259-86C3-44DB-8C37-0201D2306A1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D62A9259-86C3-44DB-8C37-0201D2306A1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D62A9259-86C3-44DB-8C37-0201D2306A1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B9D5F1F-17AD-433F-B510-E9C49E758960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B9D5F1F-17AD-433F-B510-E9C49E758960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B9D5F1F-17AD-433F-B510-E9C49E758960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B9D5F1F-17AD-433F-B510-E9C49E758960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +97,8 @@ Global
 		{4EC74E38-2093-4E46-A4A4-842A7C5A4E13} = {5195E098-A486-4618-8B4E-D544CAC6EC5C}
 		{BD74829E-003D-4FEF-A6C2-D20AD3EF867F} = {5195E098-A486-4618-8B4E-D544CAC6EC5C}
 		{73E920A4-E525-42A0-B2FB-20B55D6F8C17} = {80BFEF7A-1E07-4503-8AFF-BDC5EF0064D6}
+		{D62A9259-86C3-44DB-8C37-0201D2306A1A} = {F5E78D67-7223-44BE-9B48-126DD36FFF84}
+		{4B9D5F1F-17AD-433F-B510-E9C49E758960} = {57BBB39E-7EE9-4C90-8CBB-3820E13E5E01}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

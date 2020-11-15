@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +15,33 @@ namespace Kontrer.OwnerClient.Presentation.WpfOwnerClient
     /// </summary>
     public partial class App : Application
     {
+        private readonly Action<IServiceCollection> serviceConfiguration;
+
+        public IHost AppHost { get; private set; }
+
+        public App()
+        {
+            ConfigureHost();
+        }
+
+        public App(Action<IServiceCollection> serviceConfiguration)
+        {
+            this.serviceConfiguration = serviceConfiguration;
+            ConfigureHost();
+        }
+
+     
+
+        protected virtual void ConfifureServices(IServiceCollection service)
+        {
+            serviceConfiguration?.Invoke(service);
+        }
+
+        private void ConfigureHost()
+        {
+            AppHost = Host.CreateDefaultBuilder().ConfigureServices(ConfifureServices).Build();
+        }
+
+
     }
 }
