@@ -13,9 +13,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerClient.Bootstrapper\Kontrer.OwnerClient.Bootstrapper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+    <Folder Include="Views\" />
   </ItemGroup>
 
 </Project>

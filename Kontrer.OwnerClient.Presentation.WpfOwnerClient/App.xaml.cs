@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Kontrer.OwnerClient.Bootstrapper;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -15,31 +16,41 @@ namespace Kontrer.OwnerClient.Presentation.WpfOwnerClient
     /// </summary>
     public partial class App : Application
     {
-        private readonly Action<IServiceCollection> serviceConfiguration;
+        protected readonly Action<IServiceCollection> serviceConfiguration;
 
         public IHost AppHost { get; private set; }
 
         public App() : this(null)
         {
-           
+
         }
 
         public App(Action<IServiceCollection> serviceConfiguration = null)
         {
             this.serviceConfiguration = serviceConfiguration;
-            ConfigureHost();
+            AppHost = CreateHost();
         }
 
-     
 
-        protected virtual void ConfifureServices(IServiceCollection service)
-        {            
+
+        protected virtual void ConfigureServices(IServiceCollection service)
+        {
             serviceConfiguration?.Invoke(service);
         }
 
-        private void ConfigureHost()
+        private IHost CreateHost()
         {
-            AppHost = Host.CreateDefaultBuilder().ConfigureServices(ConfifureServices).Build();
+
+            return Host.CreateDefaultBuilder().ConfigureServices(services =>
+            {
+                ConfigureServices(services);
+                var bootstrapper = new OwnerClientBootstrapper();
+                foreach(var service in bootstrapper.BuildApp(services))
+                {
+                    services.Add(service);
+                }
+
+            }).Build();
         }
 
 
