@@ -19,12 +19,12 @@ namespace Kontrer.OwnerClient.Presentation.WpfOwnerClient
 
         public IHost AppHost { get; private set; }
 
-        public App()
+        public App() : this(null)
         {
-            ConfigureHost();
+           
         }
 
-        public App(Action<IServiceCollection> serviceConfiguration)
+        public App(Action<IServiceCollection> serviceConfiguration = null)
         {
             this.serviceConfiguration = serviceConfiguration;
             ConfigureHost();
@@ -33,7 +33,7 @@ namespace Kontrer.OwnerClient.Presentation.WpfOwnerClient
      
 
         protected virtual void ConfifureServices(IServiceCollection service)
-        {
+        {            
             serviceConfiguration?.Invoke(service);
         }
 
