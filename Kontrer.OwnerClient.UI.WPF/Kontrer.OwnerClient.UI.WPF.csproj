@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerClient.Business.Abstraction\Kontrer.OwnerClient.Business.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerClient.UI.Abstraction\Kontrer.OwnerClient.UI.Abstraction.csproj" />
+  </ItemGroup>
+
+</Project>

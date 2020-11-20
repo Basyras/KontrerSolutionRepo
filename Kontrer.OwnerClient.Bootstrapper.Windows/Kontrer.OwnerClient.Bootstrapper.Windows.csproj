@@ -1,7 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,8 @@
     <ProjectReference Include="..\Kontrer.OwnerClient.Data.Abstraction\Kontrer.OwnerClient.Data.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerClient.Data\Kontrer.OwnerClient.Data.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerClient.Shared\Kontrer.OwnerClient.Shared.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerClient.UI.Abstraction\Kontrer.OwnerClient.UI.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerClient.UI.WPF\Kontrer.OwnerClient.UI.WPF.csproj" />
     <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
   </ItemGroup>
 

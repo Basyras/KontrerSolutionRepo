@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Kontrer.OwnerClient.Presentation.WpfOwnerClient
+namespace Kontrer.OwnerClient.UI.WPF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
