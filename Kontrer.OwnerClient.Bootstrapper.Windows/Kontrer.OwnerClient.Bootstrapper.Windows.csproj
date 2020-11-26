@@ -19,7 +19,6 @@
     <ProjectReference Include="..\Kontrer.OwnerClient.Shared\Kontrer.OwnerClient.Shared.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerClient.UI.Abstraction\Kontrer.OwnerClient.UI.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerClient.UI.WPF\Kontrer.OwnerClient.UI.WPF.csproj" />
-    <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
   </ItemGroup>
 
 </Project>

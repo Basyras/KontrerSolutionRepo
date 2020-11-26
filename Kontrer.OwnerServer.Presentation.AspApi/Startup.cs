@@ -1,3 +1,4 @@
+using Kontrer.OwnerServer.Presentation.AspApi.Bootstrapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,7 +32,11 @@ namespace Kontrer.OwnerServer.Presentation.AspApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kontrer.OwnerServer.Presentation.AspApi", Version = "v1" });
-            });
+            });            
+
+            ApiBootstrapper.ConfigureServices(services);
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

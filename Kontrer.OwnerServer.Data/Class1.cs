@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kontrer.Shared
+namespace Kontrer.OwnerServer.Data
 {
     public class Class1
     {

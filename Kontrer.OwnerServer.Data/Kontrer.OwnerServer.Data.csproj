@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Data.Abstraction\Kontrer.OwnerServer.Data.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

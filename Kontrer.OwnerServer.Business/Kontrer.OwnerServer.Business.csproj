@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerServer.Business.Abstraction\Kontrer.OwnerServer.Business.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Data.Abstraction\Kontrer.OwnerServer.Data.Abstraction.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Customers\EntityFramework\" />
+    <Folder Include="Customers\DepedencyInjection\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>
