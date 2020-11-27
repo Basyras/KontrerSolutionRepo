@@ -1,12 +1,13 @@
 ﻿using Bogus;
 using Kontrer.Shared.Models;
+using Kontrer.Shared.Models.Pricing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
+namespace Kontrer.Shared.Tests.FakeData
 {
     public static class AccommodationFakeData
     {
@@ -34,7 +35,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
                 .RuleFor(x => x.Blueprint, (Faker x) => BlueprintFakeData.GetAccommodationBlueprints(1, true, sharedCurrency)[0])
                 .RuleFor(x => x.AccomodationId, x => idCounter++)
                 .RuleFor(x => x.Customer, x => null)
-                .RuleFor(x => x.Cost, (Faker x, AccommodationModel a) => CostFakeData.GetAccommodationCosts(1, sharedCurrency)[0] with { DateFrom = a.Blueprint.Start, DateTo = a.Blueprint.End })
+                .RuleFor(x => x.Cost, (Faker x, AccommodationModel a) => CostFakeData.GetAccommodationCosts(1, sharedCurrency)[0])
                 .FinishWith((x, a) =>
                 {
                     sharedCurrency = hasSharedCurrencies ? sharedCurrency : x.Random.Enum<Currencies>();

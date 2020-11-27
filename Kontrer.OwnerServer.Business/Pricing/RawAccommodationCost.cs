@@ -4,13 +4,14 @@ using System.Collections.Generic;
 
 namespace Kontrer.OwnerServer.Business.Pricing
 {
-    public class RawAccommodationCostModel
+    public class RawAccommodationCost
     {
-        public RawAccommodationCostModel(Currencies currency,List<RawItemCost> rawAccommodationItems, List<RawRoomCost> rawRooms )
+        public RawAccommodationCost(Currencies currency, List<RawItemCost> rawAccommodationItems, List<RawRoomCost> rawRooms)
         {
             RawAccommodationItems = rawAccommodationItems;
             RawRooms = rawRooms;
             Currency = currency;
+            
         }
 
         public List<RawItemCost> RawAccommodationItems { get; }

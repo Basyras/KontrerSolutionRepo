@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
+namespace Kontrer.Shared.Tests.FakeData
 {
     public static class CustomerFakeData
     {
@@ -39,7 +39,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
                        foreach (var acco in accos)
                        {
                            acco.Customer = customer;
-                           acco.Cost = CostFakeData.GetAccommodationCosts(1)[0] with { Customer = customer };
+                           acco.Cost = CostFakeData.GetAccommodationCosts(1)[0];
                        }
 
                        return accos;

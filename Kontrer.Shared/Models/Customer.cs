@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.Models.Costs;
+﻿using Kontrer.Shared.Models.Pricing.Costs;
 using System;
 using System.Collections.Generic;
 using System.Text;

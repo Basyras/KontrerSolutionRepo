@@ -5,6 +5,6 @@ namespace Kontrer.OwnerServer.Business.Pricing
 {
     public interface IPricingSettingsResolver
     {
-        TimedPricingSetting ResolveSetting(DateTime? start, DateTime? end);
+        TSetting ResolveSettingValue<TSetting>(DateTime? start, DateTime? end);
     }
 }

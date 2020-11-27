@@ -1,13 +1,15 @@
 ﻿using Bogus;
 using Kontrer.Shared.Models;
-using Kontrer.Shared.Models.Blueprints;
+
+using Kontrer.Shared.Models.Pricing;
+using Kontrer.Shared.Models.Pricing.Blueprints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
+namespace Kontrer.Shared.Tests.FakeData
 {
     public static class BlueprintFakeData
     {
@@ -65,8 +67,8 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
 
             var items = new Faker<ItemBlueprint>()
                 .StrictMode(true)
-                .RuleFor(x => x.CanBeDiscounted, x => x.Random.Bool())
-                .RuleFor(x => x.CostPerOne, x => new Cash(sharedCurrency.Value, x.Random.Float(0, 500)))
+                .RuleFor(x => x.CanParentApplyDiscount, x => x.Random.Bool())
+                .RuleFor(x => x.CostPerOne, x => new Cash(sharedCurrency.Value, x.Random.Decimal(0, 500)))
                 .RuleFor(x => x.Count, x => x.Random.Int(0, 5))
                 .RuleFor(x => x.ExtraInfo, (Faker x) => new Dictionary<string, string>(new Faker<Tuple<string, string>>()
                        .CustomInstantiator(x => new Tuple<string, string>(x.IndexGlobal.ToString(), ""))
@@ -75,7 +77,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
                        .Generate(x.Random.Int(0, 10)).Select(x => new KeyValuePair<string, string>(x.Item1, x.Item2))))
                 .RuleFor(x => x.ItemId, (Faker x) => x.UniqueIndex)
                 .RuleFor(x => x.ItemName, x => x.Random.Word())
-                .RuleFor(x => x.TaxPercentageCut, x => x.Random.Int(0, 20))
+                .RuleFor(x => x.TaxPercentageToAdd, x => x.Random.Float(0, 1))
                 .FinishWith((x, a) =>
                 {
                     sharedCurrency = hasSharedCurrency ? sharedCurrency :x.Random.Enum<Currencies>();
@@ -96,7 +98,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
 
             var accos = new Faker<AccommodationBlueprint>()
                 .StrictMode(true)
-                .RuleFor(x => x.Deposit, x => x.Random.Bool() == true ? new Cash(sharedCurrency.Value, x.Random.Float(0, 500)) : null)
+                .RuleFor(x => x.Deposit, x => x.Random.Bool() == true ? new Cash(sharedCurrency.Value, x.Random.Decimal(0, 500)) : null)
                 .RuleFor(x => x.Start, (Faker x) => x.Date.Between(x.Date.Recent(3000), x.Date.Recent(3000)))
                 .RuleFor(x => x.End, (Faker x, AccommodationBlueprint a) => x.Date.Soon(x.Random.Int(0, 30), a.Start))
                 .RuleFor(x => x.Rooms, x => GetRoomBlueprints(x.Random.Int(0, 5),true,sharedCurrency))
@@ -105,7 +107,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData
                        DateTime? rss = (a.Deposit == null) ? null : x.Date.Soon(15, a.End);
                        return rss;
                    })
-                .RuleFor(x => x.ContractItems, (Faker x, AccommodationBlueprint a) => GetItemBlueprints(x.Random.Int(0, 5), true, sharedCurrency))
+                .RuleFor(x => x.AccommodationItems, (Faker x, AccommodationBlueprint a) => GetItemBlueprints(x.Random.Int(0, 5), true, sharedCurrency))
                 .FinishWith((x, a) =>
                 {
                     sharedCurrency = hasSharedCurrency ? sharedCurrency : x.Random.Enum<Currencies>();

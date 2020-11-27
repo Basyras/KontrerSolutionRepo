@@ -1,5 +1,6 @@
 ﻿using Kontrer.OwnerServer.Business.Abstraction.Pricing;
 using Kontrer.OwnerServer.Business.Abstraction.UnitOfWork;
+using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
 using Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares;
 using Kontrer.OwnerServer.Data.Abstraction.Pricing;
 using Kontrer.Shared.Models;
@@ -23,42 +24,48 @@ namespace Kontrer.OwnerServer.Business.Pricing
         private readonly IPricingSettingsResolver settingsResolver;
         private readonly IOptions<PriceManagerOptions> options;
 
-        public PricingManager(IPricingSettingsRepository settingsRepository, IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory,IPricingSettingsResolver settingsResolver, IOptions<PriceManagerOptions> options)
+        public PricingManager(IPricingSettingsRepository settingsRepository, IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IPricingSettingsResolver settingsResolver, IOptions<PriceManagerOptions> options)
         {
             this.settingsRepository = settingsRepository;
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.settingsResolver = settingsResolver;
             this.options = options;
         }
-       
+
 
 
         public Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint accommodationBlueprint)
         {
-            RawAccommodationCostModel rawAccoCost = PrepareRawCost(accommodationBlueprint);
 
-            foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers)
+            foreach (IAccommodationBlueprintEditor editor in options.Value.AccommodationEditors)
+            {
+                editor.EditBlueprint(ref accommodationBlueprint, settingsResolver);
+            }
+
+            RawAccommodationCost rawAccoCost = PrepareRawCost(accommodationBlueprint);
+
+            foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers.OrderBy(x=>x.QueuePosition))
             {
                 pricer.CalculateContractCost(accommodationBlueprint, ref rawAccoCost, settingsResolver);
             }
+            
+            AccommodationCost accommodationCost = FinishAccommodationCost(accommodationBlueprint.Currency, rawAccoCost);
 
-            AccommodationCost contractCostModel = FinishAccommodationCost(accommodationBlueprint.Currency, rawAccoCost);
-
-            return Task.FromResult(contractCostModel);
+            return Task.FromResult(accommodationCost);
         }
 
-        private RawAccommodationCostModel PrepareRawCost(AccommodationBlueprint blueprint)
+        private RawAccommodationCost PrepareRawCost(AccommodationBlueprint blueprint)
         {
             var rawItems = blueprint.AccommodationItems.Select(accoItemBp => new RawItemCost(accoItemBp)).ToList();
-            var rawRooms = blueprint.Rooms.Select(roomBp=> new RawRoomCost(roomBp.RoomItems.Select(roomItemBp=>new RawItemCost(roomItemBp)).ToList(),roomBp.People.Select(peopleBp => new RawPersonCost()).ToList())).ToList();
-            RawAccommodationCostModel rawAccoCost = new RawAccommodationCostModel(blueprint.Currency,rawItems, rawRooms);
+            var rawRooms = blueprint.Rooms.Select(roomBp => new RawRoomCost(roomBp.RoomItems.Select(roomItemBp => new RawItemCost(roomItemBp)).ToList(), roomBp.People.Select(peopleBp => new RawPersonCost()).ToList())).ToList();
+            RawAccommodationCost rawAccoCost = new RawAccommodationCost(blueprint.Currency, rawItems, rawRooms);
             return rawAccoCost;
         }
 
-        private AccommodationCost FinishAccommodationCost(Currencies currency, RawAccommodationCostModel rawAccommodationCost)
+        private AccommodationCost FinishAccommodationCost(Currencies currency, RawAccommodationCost rawAccommodationCost)
         {
-            List<ItemCost> accoItemCosts = rawAccommodationCost.RawAccommodationItems.Select(x=>FinishItemCost(currency,x)).ToList();
-            List<RoomCost> roomCosts = rawAccommodationCost.RawRooms.Select(x=>FinishRoomCost(currency,x)).ToList();
+            List<ItemCost> accoItemCosts = rawAccommodationCost.RawAccommodationItems.Select(x => FinishItemCost(currency, x)).ToList();
+            List<RoomCost> roomCosts = rawAccommodationCost.RawRooms.Select(x => FinishRoomCost(currency, x)).ToList();
             decimal totalAmount = accoItemCosts.Sum(x => x.TotalCost.Amout) + roomCosts.Sum(x => x.TotalCost.Amout);
             Cash totalCash = new Cash(currency, totalAmount);
             AccommodationCost accommodationCost = new AccommodationCost(roomCosts.AsReadOnly(), accoItemCosts.AsReadOnly(), totalCash);
@@ -74,7 +81,7 @@ namespace Kontrer.OwnerServer.Business.Pricing
         private PersonCost FinishPersonCost(Currencies currency, RawPersonCost rawPersonCost)
         {
             var totalCash = new Cash(currency, rawPersonCost.RawPersonItems.Sum(x => x.SubTotal));
-            var personCost = new PersonCost(rawPersonCost.RawPersonItems.Select(x=>FinishItemCost(currency,x)).ToList().AsReadOnly(), totalCash);
+            var personCost = new PersonCost(rawPersonCost.RawPersonItems.Select(x => FinishItemCost(currency, x)).ToList().AsReadOnly(), totalCash);
             return personCost;
         }
 

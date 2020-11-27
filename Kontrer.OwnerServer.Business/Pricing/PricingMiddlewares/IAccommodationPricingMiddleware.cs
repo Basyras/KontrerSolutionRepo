@@ -2,7 +2,7 @@
 
 namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
 {
-    public interface IAccommodationPricingMiddleware : IPricingMiddleware<AccommodationBlueprint,RawAccommodationCostModel>
+    public interface IAccommodationPricingMiddleware : IPricingMiddleware<AccommodationBlueprint,RawAccommodationCost>
     {
         
     }

@@ -1,9 +1,11 @@
 ﻿using Kontrer.OwnerServer.Business.Abstraction.Accommodations;
+using Kontrer.OwnerServer.Business.Abstraction.Pricing;
+using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
 using Kontrer.OwnerServer.Presentation.AspApi.Controllers;
-using Kontrer.OwnerServer.Presentation.AspApi.Tests.FakeData;
+
 using Kontrer.OwnerServer.Presentation.AspApi.Tests.Repositories.Accommodation;
 using Kontrer.Shared.Models;
-using Kontrer.Shared.Models.Costs;
+using Kontrer.Shared.Tests.FakeData;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
@@ -26,7 +28,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.Controllers
         public async Task TestGetOneNull()
         {
             var mockRepo = new Mock<IAccommodationRepository>();
-            mockRepo.Setup(x => x.TryGetAsync(It.IsAny<int>())).Returns(() => Task.FromResult<AccommodationModel>(null));
+            mockRepo.Setup(x => x.GetAsync(It.IsAny<int>())).Returns(() => Task.FromResult<AccommodationModel>(null));
 
             var uow = new Mock<IAccommodationUnitOfWork>();
             uow.Setup(x => x.Accommodations).Returns(mockRepo.Object);
@@ -34,9 +36,12 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.Controllers
             var mockManager = new Mock<IAccommodationManager>();
             mockManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
 
+            var mockPricingManager = new Mock<IPricingManager>();
+            
+
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
-            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
+            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockPricingManager.Object, mockLogger.Object);
             ActionResult<AccommodationModel> result = await controller.Get(int.MaxValue);            
             Assert.IsAssignableFrom<ObjectResult>(result.Result);            
             var objectResult =  (result.Result as ObjectResult);
@@ -57,17 +62,20 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.Controllers
             var mockRepo = new Mock<IAccommodationRepository>();
             var record = new AccommodationModel() { AccomodationId = 68 };
 
-            mockRepo.Setup(x => x.TryGetAsync(It.Is<int>(x=>x==record.AccomodationId))).Returns(Task.FromResult(record));
+            mockRepo.Setup(x => x.GetAsync(It.Is<int>(x=>x==record.AccomodationId))).Returns(Task.FromResult(record));
 
             var uow = new Mock<IAccommodationUnitOfWork>();
             uow.Setup(x => x.Accommodations).Returns(mockRepo.Object);
 
-            var mockManager = new Mock<IAccommodationManager>();
-            mockManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
+            var mockAccoManager = new Mock<IAccommodationManager>();
+            mockAccoManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
+
+            var mockPricingManager = new Mock<IPricingManager>();
+            
 
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
-            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
+            AccommodationsController controller = new AccommodationsController(mockAccoManager.Object, mockPricingManager.Object, mockLogger.Object);
             ActionResult<AccommodationModel> result = await controller.Get(record.AccomodationId);
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);
@@ -89,9 +97,11 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.Controllers
             var mockManager = new Mock<IAccommodationManager>();
             mockManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
 
+            var mockPricingManager = new Mock<IPricingManager>();
+            
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
-            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
+            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockPricingManager.Object, mockLogger.Object);
             ActionResult<Dictionary<int, AccommodationModel>> result = await controller.Get();
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             ObjectResult objectResult = (result.Result as ObjectResult);
@@ -112,10 +122,10 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.Controllers
 
             var mockManager = new Mock<IAccommodationManager>();
             mockManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
-
+            var mockPricingManager = new Mock<IPricingManager>();
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
-            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
+            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockPricingManager.Object, mockLogger.Object);
             ActionResult<Dictionary<int, AccommodationModel>> result = await controller.Get();
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);

@@ -7,12 +7,7 @@ using System.Text;
 namespace Kontrer.Shared.Models.Pricing.Blueprints
 {
     public class AccommodationBlueprint
-    {
-        public AccommodationBlueprint(Currencies currency)
-        {
-            Currency = currency;
-        }
-
+    {    
 
 
         public AccommodationBlueprint(Currencies currency,DateTime start, DateTime end, List<RoomBlueprint> rooms = null, List<ItemBlueprint> contractItems = null, string customersNotes = null) 
@@ -54,6 +49,7 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
         public List<ItemBlueprint> AccommodationItems { get; set; } = new List<ItemBlueprint>();
 
         public Currencies Currency { get; set; }
+        public List<DiscountBlueprint> Discounts { get; set; } = new List<DiscountBlueprint>();
 
 
     }

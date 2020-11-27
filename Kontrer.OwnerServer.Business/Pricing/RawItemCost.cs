@@ -1,6 +1,7 @@
 ﻿using Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Kontrer.OwnerServer.Business.Pricing
 {
@@ -16,7 +17,12 @@ namespace Kontrer.OwnerServer.Business.Pricing
         public string ItemName { get; }
         public ItemBlueprint Blueprint { get; }
 
-        public void Manipulate(string manipulator, string manipulationLog, decimal newSubTotal)
+        public void ManipulateCost(IPricingMiddleware pricingMiddleware, decimal newSubTotal)
+        {
+            ManipulateCost(pricingMiddleware.WorkDescription, newSubTotal, pricingMiddleware.GetType().Name);
+        }
+
+        public void ManipulateCost(string manipulationLog, decimal newSubTotal, [CallerFilePath] string manipulator = "")
         {
             manipulationLog = $"{manipulator}: {SubTotal} + {newSubTotal - SubTotal} = {newSubTotal} desc: {manipulationLog}";
             Manipulators.Add(manipulator, manipulationLog);
