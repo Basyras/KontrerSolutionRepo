@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Business.Pricing.BlueprintEditors
 {
-    public interface IAccommodationBlueprintEditor : IBlueprintEditor<AccommodationBlueprint>
+    public interface IAccommodationBlueprintEditor : IBlueprintEditor<AccommodationBlueprint> 
     {
       
     }

@@ -10,10 +10,10 @@ namespace Kontrer.OwnerServer.Business.Pricing.BlueprintEditors
 {
     public class AddCustomerDiscountEditor : IAccommodationBlueprintEditor
     {
-        public void EditBlueprint(ref AccommodationBlueprint blueprint, IPricingSettingsResolver resolver)
+        public void EditBlueprint(AccommodationBlueprint blueprint, IPricingSettingsResolver resolver)
         {
 
-            DiscountBlueprint discount = resolver.ResolveSettingValue<DiscountBlueprint>(blueprint.Start, blueprint.End);
+            DiscountBlueprint discount = resolver.ResolveSettingValue<DiscountBlueprint>(SettingNameConstants.CustomerLoayltyDiscount,blueprint.Start, blueprint.End);
             blueprint.Discounts.Add(discount);
 
         }

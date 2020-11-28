@@ -14,6 +14,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
         public abstract string WorkDescription { get; }
 
         //Dictionary<string, Action<ItemBlueprint, RawItemCost>> Calls = new Dictionary<string, Action<ItemBlueprint, RawItemCost>>();
+        //Action<ItemBlueprint, RawItemCost> EveryItemAction = null
 
         public void CalculateContractCost(AccommodationBlueprint blueprint, ref RawAccommodationCost rawAccommodation, IPricingSettingsResolver resolver)
         {
@@ -62,10 +63,17 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
             }
         }
 
+      
         protected virtual void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IPricingSettingsResolver resolver)
         {
-
+            
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blueprint"></param>
+        /// <param name="rawCost"></param>
+        /// <param name="resolver"></param>
         protected virtual void CallForEveryRoom(RoomBlueprint blueprint, RawRoomCost rawCost, IPricingSettingsResolver resolver)
         {
 

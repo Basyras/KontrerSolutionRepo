@@ -13,9 +13,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
     public class ItemTaxMiddleware : AccommodationPricingMiddlewareBase
     {
         public override string WorkDescription => "Adding taxes from ItemBlueprint";
-
         public override int QueuePosition => int.MaxValue;
-
      
         protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IPricingSettingsResolver resolver)
         {

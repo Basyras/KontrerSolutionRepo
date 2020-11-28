@@ -39,14 +39,14 @@ namespace Kontrer.OwnerServer.Business.Pricing
 
             foreach (IAccommodationBlueprintEditor editor in options.Value.AccommodationEditors)
             {
-                editor.EditBlueprint(ref accommodationBlueprint, settingsResolver);
+                editor.EditBlueprint(accommodationBlueprint, settingsResolver);
             }
 
             RawAccommodationCost rawAccoCost = PrepareRawCost(accommodationBlueprint);
 
             foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers.OrderBy(x=>x.QueuePosition))
             {
-                pricer.CalculateContractCost(accommodationBlueprint, ref rawAccoCost, settingsResolver);
+                pricer.CalculateContractCost(accommodationBlueprint, rawAccoCost, settingsResolver);
             }
             
             AccommodationCost accommodationCost = FinishAccommodationCost(accommodationBlueprint.Currency, rawAccoCost);

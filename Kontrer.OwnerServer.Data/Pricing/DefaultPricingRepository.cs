@@ -14,12 +14,15 @@ namespace Kontrer.OwnerServer.Data.Pricing
 
         public void Add(int id, PricingSettingsModel model)
         {
-            throw new NotImplementedException();
+           //throw new NotImplementedException();
+           //dbContext.Settings.Add();
+           
         }
 
         public Task<Dictionary<int, PricingSettingsModel>> GetAllAsync()
         {
             throw new NotImplementedException();
+            //dbContext.Settings.ToList();
         }
 
         public void Remove(int id)

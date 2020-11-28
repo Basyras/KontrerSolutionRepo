@@ -32,9 +32,11 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
 
         // GET api/<CustomersController>/5
         [HttpGet("{id}")]
-        public Customer Get(int id)
+        public async Task<Customer> Get(int id)
         {
-            return new Customer();
+            using var work = customerManager.CreateUnitOfWork();
+            var customer = await work.Customers.TryGetAsync(id);
+            return customer;
         }
 
         // POST api/<CustomersController>

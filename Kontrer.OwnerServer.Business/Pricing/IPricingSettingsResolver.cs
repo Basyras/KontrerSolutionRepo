@@ -5,6 +5,9 @@ namespace Kontrer.OwnerServer.Business.Pricing
 {
     public interface IPricingSettingsResolver
     {
-        TSetting ResolveSettingValue<TSetting>(DateTime? start, DateTime? end);
+        //TSetting ResolveSettingValue<TSetting>(string settingUniqueName);
+        TSetting ResolveSettingValue<TSetting>(string settingUniqueName, DateTime? start = null, DateTime? end = null);
+
+        bool TryResolveSettingValue<TSetting>(string settingUniqueName, out TSetting setting, DateTime? start = null, DateTime? end = null);
     }
 }

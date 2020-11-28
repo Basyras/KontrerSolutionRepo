@@ -60,9 +60,9 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.Controllers
         public async Task TestGetOneNotNull()
         {
             var mockRepo = new Mock<IAccommodationRepository>();
-            var record = new AccommodationModel() { AccomodationId = 68 };
+            var record = new AccommodationModel() { AccommodationId = 68 };
 
-            mockRepo.Setup(x => x.GetAsync(It.Is<int>(x=>x==record.AccomodationId))).Returns(Task.FromResult(record));
+            mockRepo.Setup(x => x.GetAsync(It.Is<int>(x=>x==record.AccommodationId))).Returns(Task.FromResult(record));
 
             var uow = new Mock<IAccommodationUnitOfWork>();
             uow.Setup(x => x.Accommodations).Returns(mockRepo.Object);
@@ -76,7 +76,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.Controllers
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
             AccommodationsController controller = new AccommodationsController(mockAccoManager.Object, mockPricingManager.Object, mockLogger.Object);
-            ActionResult<AccommodationModel> result = await controller.Get(record.AccomodationId);
+            ActionResult<AccommodationModel> result = await controller.Get(record.AccommodationId);
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.OK, objectResult.StatusCode);
@@ -87,7 +87,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Tests.Controllers
         public async Task TestGetAllNotNull()
         {
             var mockRepo = new Mock<IAccommodationRepository>();
-            Dictionary<int, AccommodationModel> records = AccommodationFakeData.GetAccommodationsWithoutCustomers(15).ToDictionary(x => x.AccomodationId);
+            Dictionary<int, AccommodationModel> records = AccommodationFakeData.GetAccommodationsWithoutCustomers(15).ToDictionary(x => x.AccommodationId);
 
             mockRepo.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(records));
 

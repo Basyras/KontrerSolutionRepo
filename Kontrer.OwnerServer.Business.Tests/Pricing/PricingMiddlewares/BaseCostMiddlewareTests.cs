@@ -34,5 +34,19 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing.PricingMiddlewares
 
 
         }
+
+        [Fact]
+        public void Test()
+        {
+            ItemBlueprint bp = new ItemBlueprint();
+            bp.CanParentApplyDiscount = true;
+            ChangeBp(bp);
+            Assert.False(bp.CanParentApplyDiscount);
+        }
+
+        private void ChangeBp (ItemBlueprint bp)
+        {
+            bp.CanParentApplyDiscount = false;
+        }
     }
 }

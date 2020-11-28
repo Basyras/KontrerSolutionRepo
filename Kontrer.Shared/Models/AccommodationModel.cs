@@ -10,7 +10,7 @@ namespace Kontrer.Shared.Models
 {
     public class AccommodationModel
     {
-        public int AccomodationId { get; set; }
+        public int AccommodationId { get; set; }
         public Customer Customer { get; set; }
         public AccommodationCost Cost { get; set; }
         public AccommodationBlueprint Blueprint { get; set; }

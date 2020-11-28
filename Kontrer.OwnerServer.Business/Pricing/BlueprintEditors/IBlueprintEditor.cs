@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Business.Pricing.BlueprintEditors
 {
-    public interface IBlueprintEditor<TBlueprint>
+    public interface IBlueprintEditor<TBlueprint> where TBlueprint : class
     {
-        void EditBlueprint(ref TBlueprint blueprint, IPricingSettingsResolver resolver);
+        void EditBlueprint(TBlueprint blueprint, IPricingSettingsResolver resolver);
     }
 }
