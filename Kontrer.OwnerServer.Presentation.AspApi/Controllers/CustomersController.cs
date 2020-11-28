@@ -23,16 +23,16 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
 
         // GET: api/<CustomersController>
         [HttpGet]
-        public async Task<Dictionary<int, Customer>> Get()
+        public async Task<Dictionary<int, CustomerModel>> Get()
         {
             using var work = customerManager.CreateUnitOfWork();
-            Dictionary<int, Customer> customers = await work.Customers.GetAllAsync();
+            Dictionary<int, CustomerModel> customers = await work.Customers.GetAllAsync();
             return customers;
         }
 
         // GET api/<CustomersController>/5
         [HttpGet("{id}")]
-        public async Task<Customer> Get(int id)
+        public async Task<CustomerModel> Get(int id)
         {
             using var work = customerManager.CreateUnitOfWork();
             var customer = await work.Customers.TryGetAsync(id);
@@ -41,14 +41,14 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
 
         // POST api/<CustomersController>
         [HttpPost]
-        public void Post([FromBody] Customer value)
+        public void Post([FromBody] CustomerModel value)
         {
 
         }
 
         // PUT api/<CustomersController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Customer value)
+        public void Put(int id, [FromBody] CustomerModel value)
         {
 
         }

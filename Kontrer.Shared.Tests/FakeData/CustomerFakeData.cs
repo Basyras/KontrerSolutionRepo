@@ -10,12 +10,12 @@ namespace Kontrer.Shared.Tests.FakeData
 {
     public static class CustomerFakeData
     {
-        public static List<Customer> GetCustomersWithAccommodation(int count)
+        public static List<CustomerModel> GetCustomersWithAccommodation(int count)
         {
 
             if (count == 0)
             {
-                return new List<Customer>();
+                return new List<CustomerModel>();
             }
 
             var f = new Faker();
@@ -26,14 +26,14 @@ namespace Kontrer.Shared.Tests.FakeData
             var enumerator = unique.GetEnumerator();
 
 
-            var customers = new Faker<Customer>()
+            var customers = new Faker<CustomerModel>()
                 //.RuleFor(x => x.CustomerId, x => idCounter++)
                 .RuleFor(x => x.CustomerId, x =>
                 {
                     enumerator.MoveNext();
                     return enumerator.Current;
                 })
-                .RuleFor(x => x.Accomodations, (Faker faker, Customer customer) =>
+                .RuleFor(x => x.Accomodations, (Faker faker, CustomerModel customer) =>
                    {
                        var accos = AccommodationFakeData.GetAccommodationsWithoutCustomer(faker.Random.Int(0,5));
                        foreach (var acco in accos)
@@ -54,11 +54,11 @@ namespace Kontrer.Shared.Tests.FakeData
             return customers;
         }
 
-        public static List<Customer> GetCustomersWithoutAccommodation(int count)
+        public static List<CustomerModel> GetCustomersWithoutAccommodation(int count)
         {
             if (count == 0)
             {
-                return new List<Customer>();
+                return new List<CustomerModel>();
             }
 
             var f = new Faker();
@@ -69,7 +69,7 @@ namespace Kontrer.Shared.Tests.FakeData
             var enumerator = unique.GetEnumerator();
 
 
-            var customers = new Faker<Customer>()
+            var customers = new Faker<CustomerModel>()
                 //.RuleFor(x => x.CustomerId, x => idCounter++)
                 .RuleFor(x => x.CustomerId, x =>
                 {

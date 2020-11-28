@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Kontrer.Shared.Models
 {
-    public class Customer
+    public class CustomerModel
     {
-        public Customer()
+        public CustomerModel()
         {
 
           

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Business.Abstraction.Customers
 {
-    public interface ICustomerRepository : IGenericRepository<Customer, int>
+    public interface ICustomerRepository : IGenericRepository<CustomerModel, int>
     {
-        Task<PageResult<Customer>> GetPageAsync(int page, int itemsPerPage, string searchedPattern);
+        Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern);
 
 
     }

@@ -11,7 +11,7 @@ namespace Kontrer.Shared.Models
     public class AccommodationModel
     {
         public int AccommodationId { get; set; }
-        public Customer Customer { get; set; }
+        public CustomerModel Customer { get; set; }
         public AccommodationCost Cost { get; set; }
         public AccommodationBlueprint Blueprint { get; set; }
         public DateTime CreationTime { get; set; }
