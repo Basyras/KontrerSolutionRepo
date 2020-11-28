@@ -1,0 +1,17 @@
+﻿using Kontrer.Shared.Models;
+using Kontrer.Shared.Models.Pricing.Blueprints;
+using Kontrer.Shared.Models.Pricing.Costs;
+using System;
+
+namespace Kontrer.OwnerServer.Data.EntityFramework
+{
+    public class AccommodationEntity
+    {
+        public int AccommodationId { get; set; }
+        public CustomerEntity Customer { get; set; }
+        public AccommodationCost Cost { get; set; }
+        public AccommodationBlueprint Blueprint { get; set; }
+        public DateTime CreationTime { get; set; }
+        public string CreationNotes { get; set; }
+    }
+}

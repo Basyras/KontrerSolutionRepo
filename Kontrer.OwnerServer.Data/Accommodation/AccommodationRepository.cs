@@ -7,8 +7,6 @@ using Kontrer.Shared.Models.Pricing.Costs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Accommodation
@@ -21,10 +19,36 @@ namespace Kontrer.OwnerServer.Data.Accommodation
         {
             this.dbContext = dbContext;
         }
+        public static AccommodationModel ToModel(AccommodationEntity entity)
+        {
+            AccommodationModel model = new AccommodationModel();
+            model.AccommodationId = entity.AccommodationId;
+            model.Blueprint = entity.Blueprint;
+            model.Cost = entity.Cost;
+            model.CreationNotes = entity.CreationNotes;
+            model.CreationTime = entity.CreationTime;
+            /*model.Customer =*/ throw new NotImplementedException();
+            
+            
+        }
+        public static List<AccommodationModel> ToModels(IEnumerable<AccommodationEntity> entities)
+        {
+            List<AccommodationModel> models = new List<AccommodationModel>();
+            foreach (var entity in entities)
+            {
+                var model = ToModel(entity);
+                models.Add(model);
+            }
+            return models;
+        }
 
         public void Cancel(int id, bool canceledByCustomer, string notes = null)
         {
-            throw new NotImplementedException();
+            AccommodationEntity entity = new AccommodationEntity();
+            entity.AccommodationId = id;
+            dbContext.Accommodations.Attach(entity);
+            dbContext.Accommodations.Remove(entity);
+           
         }
 
         public void Complete(int id)
@@ -44,11 +68,11 @@ namespace Kontrer.OwnerServer.Data.Accommodation
 
         public Task<Dictionary<int, AccommodationModel>> GetAllAsync()
         {
-            var accommodations = dbContext.Accommodations.AsQueryable().ToDictionaryAsync(x=>x.AccommodationId);                
-            return accommodations;
+            var accommodations = dbContext.Accommodations.AsQueryable().ToDictionaryAsync(x => x.AccommodationId);
+            return accommodations
 
         }
-        
+
 
         public async Task<AccommodationModel> GetAsync(int id)
         {

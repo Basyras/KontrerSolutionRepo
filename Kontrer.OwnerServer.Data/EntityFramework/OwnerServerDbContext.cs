@@ -10,6 +10,6 @@ namespace Kontrer.OwnerServer.Data.EntityFramework
 {
     public class OwnerServerDbContext : DbContext
     {
-        public virtual DbSet<AccommodationModel> Accommodations { get; set; }
+        public virtual DbSet<AccommodationEntity> Accommodations { get; set; }
     }
 }
