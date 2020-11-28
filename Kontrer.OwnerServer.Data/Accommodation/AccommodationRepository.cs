@@ -68,8 +68,8 @@ namespace Kontrer.OwnerServer.Data.Accommodation
 
         public Task<Dictionary<int, AccommodationModel>> GetAllAsync()
         {
-            var accommodations = dbContext.Accommodations.AsQueryable().ToDictionaryAsync(x => x.AccommodationId);
-            return accommodations
+            var accommodations = dbContext.Accommodations.AsQueryable().ToDictionaryAsync(x => x.AccommodationId,x=>ToModel(x));
+            return accommodations;
 
         }
 
