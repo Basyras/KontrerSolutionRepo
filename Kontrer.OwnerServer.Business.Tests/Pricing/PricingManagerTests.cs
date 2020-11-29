@@ -19,7 +19,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing
         {
             var mockRepo = new Mock<IPricingSettingsRepository>();
             var mockUoWFactory = new Mock<IUnitOfWorkFactory<IPricingSettingsUnitOfWork>>();
-            var pricingManager = new PricingManager(mockRepo.Object, mockUoWFactory.Object,null,null);
+            var pricingManager = new PricingManager(mockRepo.Object, mockUoWFactory.Object,null);
 
 
             

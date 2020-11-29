@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Abstraction.Customer
 {
-    public interface ICustomerRepository
+    public interface ICustomerRepository : IRepository
     {
         Task<Dictionary<int, CustomerModel>> GetAllAsync();
         Task<CustomerModel> GetAsync(int id);
