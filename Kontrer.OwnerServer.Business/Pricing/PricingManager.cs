@@ -24,7 +24,7 @@ namespace Kontrer.OwnerServer.Business.Pricing
         private readonly IPricingSettingsResolver settingsResolver;
         private readonly IOptions<PriceManagerOptions> options;
 
-        public PricingManager(IPricingSettingsRepository settingsRepository, IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IPricingSettingsResolver settingsResolver, IOptions<PriceManagerOptions> options)
+        public PricingManager(IPricingSettingsRepository settingsRepository, IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PriceManagerOptions> options)
         {
             this.settingsRepository = settingsRepository;
             this.unitOfWorkFactory = unitOfWorkFactory;

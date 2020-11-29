@@ -92,5 +92,10 @@ namespace Kontrer.OwnerServer.Data.Accommodation
         {
             throw new NotImplementedException();
         }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

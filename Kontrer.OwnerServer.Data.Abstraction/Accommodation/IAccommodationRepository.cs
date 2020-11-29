@@ -13,7 +13,7 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Accommodation
     /// <summary>
     /// Changes must be commited with unit of work in order to be persistent
     /// </summary>
-    public interface IAccommodationRepository
+    public interface IAccommodationRepository : IRepository
     {
         Task<Dictionary<int, AccommodationModel>> GetAllAsync();
         Task<AccommodationModel> GetAsync(int id);

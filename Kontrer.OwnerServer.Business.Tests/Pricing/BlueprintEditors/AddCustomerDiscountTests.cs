@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Data.Abstraction.Accommodation
+namespace Kontrer.OwnerServer.Business.Tests.Pricing.BlueprintEditors
 {
-    class Class1
+    class AddCustomerDiscountTests
     {
     }
 }
