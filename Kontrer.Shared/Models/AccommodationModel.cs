@@ -20,7 +20,7 @@ namespace Kontrer.Shared.Models
         public AccommodationCost Cost { get; set; }
         public AccommodationBlueprint Blueprint { get; set; }
         public DateTime CreationTime { get; set; }
-        public string CreationNotes { get; set; }
+        public string Notes { get; set; }
 
     }
 }

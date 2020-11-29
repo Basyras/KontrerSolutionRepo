@@ -25,7 +25,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation
             model.AccommodationId = entity.AccommodationId;
             model.Blueprint = entity.Blueprint;
             model.Cost = entity.Cost;
-            model.CreationNotes = entity.CreationNotes;
+            model.Notes = entity.Notes;
             model.CreationTime = entity.CreationTime;
             /*model.Customer =*/ throw new NotImplementedException();
             
@@ -44,11 +44,18 @@ namespace Kontrer.OwnerServer.Data.Accommodation
 
         public void Cancel(int id, bool canceledByCustomer, string notes = null)
         {
-            AccommodationEntity entity = new AccommodationEntity();
-            entity.AccommodationId = id;
+            AccommodationEntity entity = new AccommodationEntity()
+            {
+                AccommodationId = id,
+                IsCanceledByCustomer = canceledByCustomer,
+                Notes = notes
+            };
+
             dbContext.Accommodations.Attach(entity);
-            dbContext.Accommodations.Remove(entity);
-           
+            dbContext.Entry(entity).Property(x => x.IsCanceledByCustomer).IsModified = true;
+            dbContext.Entry(entity).Property(x => x.Notes).IsModified = true;
+            dbContext.SaveChanges();
+
         }
 
         public void Complete(int id)
