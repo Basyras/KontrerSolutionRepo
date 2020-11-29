@@ -1,4 +1,5 @@
-﻿using Kontrer.Shared.Models.Pricing.Blueprints;
+﻿using Kontrer.OwnerServer.Data.Abstraction.Pricing;
+using Kontrer.Shared.Models.Pricing.Blueprints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
         //Dictionary<string, Action<ItemBlueprint, RawItemCost>> Calls = new Dictionary<string, Action<ItemBlueprint, RawItemCost>>();
         //Action<ItemBlueprint, RawItemCost> EveryItemAction = null
 
-        public void CalculateContractCost(AccommodationBlueprint blueprint, ref RawAccommodationCost rawAccommodation, IPricingSettingsResolver resolver)
+        
+        public void CalculateContractCost(AccommodationBlueprint blueprint, RawAccommodationCost rawAccommodation, IPricingSettingsResolver resolver)
         {
             for (int i = 0; i < blueprint.AccommodationItems.Count; i++)
             {
@@ -63,7 +65,13 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
             }
         }
 
-      
+     
+
+        public List<TimedSettingSelector> GetRequiredSettings(AccommodationBlueprint blueprint)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IPricingSettingsResolver resolver)
         {
             

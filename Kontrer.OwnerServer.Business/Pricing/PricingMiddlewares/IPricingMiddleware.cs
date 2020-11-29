@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Kontrer.OwnerServer.Data.Abstraction.Pricing;
+using System.Collections.Generic;
 
 namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
 {
     public interface IPricingMiddleware<TBlueprint,TCost> : IPricingMiddleware
     {              
         void CalculateContractCost(TBlueprint blueprint, TCost rawAccommodation, IPricingSettingsResolver resolver);
-        List<SettingRequest> GetRequiredSettings(TBlueprint blueprint);
+        List<TimedSettingSelector> GetRequiredSettings(TBlueprint blueprint);
     }
 
     public interface IPricingMiddleware

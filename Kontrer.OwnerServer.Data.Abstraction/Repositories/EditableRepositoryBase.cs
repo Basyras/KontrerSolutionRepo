@@ -69,7 +69,14 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
             }
         }
 
+        public PageResult<TModel> GetPage(int page, int itemsPerPage)
+        {
+            throw new NotImplementedException();
+        }
 
-
+        public void Save()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

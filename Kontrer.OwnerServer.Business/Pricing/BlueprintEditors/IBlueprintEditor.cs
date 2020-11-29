@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kontrer.OwnerServer.Data.Abstraction.Pricing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,6 @@ namespace Kontrer.OwnerServer.Business.Pricing.BlueprintEditors
     public interface IBlueprintEditor<TBlueprint> where TBlueprint : class
     {
         void EditBlueprint(TBlueprint blueprint, IPricingSettingsResolver resolver);
-        List<SettingRequest> GetRequiredSettings(TBlueprint blueprint);
+        List<TimedSettingSelector> GetRequiredSettings(TBlueprint blueprint);
     }
 }

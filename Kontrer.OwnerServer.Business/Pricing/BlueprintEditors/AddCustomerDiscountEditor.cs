@@ -1,4 +1,5 @@
 ﻿using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
+using Kontrer.OwnerServer.Data.Abstraction.Pricing;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.BlueprintEditors
             blueprint.Discounts.Add(discountResult.Value);
         }
 
-        public List<SettingRequest> GetRequiredSettings(AccommodationBlueprint blueprint)
+        public List<TimedSettingSelector> GetRequiredSettings(AccommodationBlueprint blueprint)
         {
             throw new NotImplementedException();
         }

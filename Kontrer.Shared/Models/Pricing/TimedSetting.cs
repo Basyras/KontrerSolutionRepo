@@ -27,7 +27,7 @@ namespace Kontrer.Shared.Models.Pricing
         public Type Type { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public DateTime End { get; set; }
+        
 
 
         public TimedSetting(int settingId, Type type)
