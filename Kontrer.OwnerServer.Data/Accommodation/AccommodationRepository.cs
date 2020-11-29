@@ -25,11 +25,12 @@ namespace Kontrer.OwnerServer.Data.Accommodation
             model.AccommodationId = entity.AccommodationId;
             model.Blueprint = entity.Blueprint;
             model.Cost = entity.Cost;
-            model.CreationNotes = entity.CreationNotes;
+            model.Notes = entity.Notes;
             model.CreationTime = entity.CreationTime;
-            /*model.Customer =*/ throw new NotImplementedException();
-            
-            
+            /*model.Customer =*/
+            throw new NotImplementedException();
+
+
         }
         public static List<AccommodationModel> ToModels(IEnumerable<AccommodationEntity> entities)
         {
@@ -41,14 +42,38 @@ namespace Kontrer.OwnerServer.Data.Accommodation
             }
             return models;
         }
+        public static AccommodationEntity ToEntity(AccommodationModel model)
+        {
+            AccommodationEntity entity = new AccommodationEntity()
+            {
+                AccommodationId = model.AccommodationId,
+                Blueprint = model.Blueprint,
+                Cost = model.Cost,
+                CreationTime = model.CreationTime,
+                //Customer = 
+
+
+            };
+            throw new NotImplementedException();
+            //return entity;
+
+        }
+
 
         public void Cancel(int id, bool canceledByCustomer, string notes = null)
         {
-            AccommodationEntity entity = new AccommodationEntity();
-            entity.AccommodationId = id;
+            AccommodationEntity entity = new AccommodationEntity()
+            {
+                AccommodationId = id,
+                IsCanceledByCustomer = canceledByCustomer,
+                Notes = notes
+            };
+
             dbContext.Accommodations.Attach(entity);
-            dbContext.Accommodations.Remove(entity);
-           
+            dbContext.Entry(entity).Property(x => x.IsCanceledByCustomer).IsModified = true;
+            dbContext.Entry(entity).Property(x => x.Notes).IsModified = true;
+
+
         }
 
         public void Complete(int id)
@@ -58,17 +83,24 @@ namespace Kontrer.OwnerServer.Data.Accommodation
 
         public void Create(int customerId, AccommodationCost cost, AccommodationBlueprint blueprint)
         {
-            throw new NotImplementedException();
+            AccommodationEntity entity = new AccommodationEntity()
+            {
+                AccommodationId = customerId,
+                Cost = cost,
+                Blueprint = blueprint
+            };
         }
 
         public void Edit(AccommodationModel model)
         {
-            throw new NotImplementedException();
+            AccommodationEntity entity = ToEntity(model);
+            var entityEntry = dbContext.Attach(entity);
+            entityEntry.State = EntityState.Modified;
         }
 
         public Task<Dictionary<int, AccommodationModel>> GetAllAsync()
         {
-            var accommodations = dbContext.Accommodations.AsQueryable().ToDictionaryAsync(x => x.AccommodationId,x=>ToModel(x));
+            var accommodations = dbContext.Accommodations.AsQueryable().ToDictionaryAsync(x => x.AccommodationId, x => ToModel(x));
             return accommodations;
 
         }
@@ -88,7 +120,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation
 
         public void Save()
         {
-            throw new NotImplementedException();
+            dbContext.SaveChanges();
         }
     }
 }
