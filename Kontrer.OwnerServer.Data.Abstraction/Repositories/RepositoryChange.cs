@@ -8,10 +8,6 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
 {
     public class RepositoryChange<TModel, TKey> where TModel : class
     {
-        //public PriceChangedSettingModel()
-        //{
-
-        //}
 
         public RepositoryChange(TKey id, TModel model, PriceChangedActions action)
         {

@@ -14,6 +14,8 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
 
         protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IPricingSettingsResolver resolver)
         {
+         
+
             var newSubTotal = blueprint.Count * blueprint.CostPerOne.Amout;
             rawCost.ManipulateCost(this, newSubTotal);
             base.CallForEveryItem(blueprint, rawCost,resolver);

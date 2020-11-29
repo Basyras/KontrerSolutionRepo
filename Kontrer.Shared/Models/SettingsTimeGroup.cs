@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.Models
 {
-    public class TimedZone
+    public class SettingsTimeGroup
     {
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string TimeZoneName { get; set; }
         public int Id { get; set; }
-        public List<TimedPricingSetting> TimedSettings { get; set; }
+        public List<TimedSetting> TimedSettings { get; set; }
 
         public bool IsInZone(DateTime zoneStart, DateTime zoneEnd)
         {

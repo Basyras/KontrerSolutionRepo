@@ -1,5 +1,8 @@
 ﻿using Kontrer.OwnerServer.Data.Abstraction.Pricing;
 using Kontrer.OwnerServer.Data.Abstraction.Repositories;
+using Kontrer.OwnerServer.Data.EntityFramework;
+using Kontrer.Shared.Models;
+using Kontrer.Shared.Models.Pricing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,37 +13,32 @@ namespace Kontrer.OwnerServer.Data.Pricing
 {
     public class DefaultPricingSettingsRepository : IPricingSettingsRepository
     {
-        public List<RepositoryChange<PricingSettingsModel, int>> Changes => throw new NotImplementedException();
-
-        public void Add(int id, PricingSettingsModel model)
-        {
-           //throw new NotImplementedException();
-           //dbContext.Settings.Add();
-           
-        }
-
-        public Task<Dictionary<int, PricingSettingsModel>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-            //dbContext.Settings.ToList();
-        }
-
-        public void Remove(int id)
+        public void AddTimedSetting(TimedSetting timedSetting)
         {
             throw new NotImplementedException();
         }
 
-        public void TryAdd(int id, PricingSettingsModel model)
+        public void EditTimedSetting(TimedSettingSelector selector, TimedSetting timedSetting)
         {
             throw new NotImplementedException();
         }
 
-        public Task<PricingSettingsModel> TryGetAsync(int id)
+        public Task<NullableResult<TSetting>> GetTimedSetting<TSetting>(TimedSettingSelector request)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(int id, PricingSettingsModel model)
+        public void GetTimedSettings(List<TimedSettingSelector> requests)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveTimedSetting(TimedSettingSelector request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
         {
             throw new NotImplementedException();
         }

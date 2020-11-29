@@ -11,7 +11,7 @@ namespace Kontrer.OwnerServer.Business.Abstraction.Pricing
 {
     public interface ITimedCashRegister
     {
-        TimedZone TimeZone { get; }
+        SettingsTimeGroup TimeZone { get; }
         AccommodationCost GetContractCost(AccommodationBlueprint blueprint);
         Task<AccommodationCost> GetContractCostAsync(AccommodationBlueprint blueprint);
     }

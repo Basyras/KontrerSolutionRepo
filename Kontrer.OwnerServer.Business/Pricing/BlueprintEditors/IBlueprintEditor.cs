@@ -9,5 +9,6 @@ namespace Kontrer.OwnerServer.Business.Pricing.BlueprintEditors
     public interface IBlueprintEditor<TBlueprint> where TBlueprint : class
     {
         void EditBlueprint(TBlueprint blueprint, IPricingSettingsResolver resolver);
+        List<SettingRequest> GetRequiredSettings(TBlueprint blueprint);
     }
 }

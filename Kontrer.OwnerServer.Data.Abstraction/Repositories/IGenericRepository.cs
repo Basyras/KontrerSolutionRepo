@@ -6,15 +6,22 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
 {
-    public interface IGenericRepository<TModel, TKey>  where TModel : class
+
+    public interface IGenericRepository<TModel, TKey> : IRepository  where TModel : class
     {
+        /// <summary>
+        /// Returns all records as dictionary
+        /// </summary>
+        /// <returns></returns>
         Task<Dictionary<TKey, TModel>> GetAllAsync();
         /// <summary>
-        /// Returns null when not found
+        /// Returns default when not found, 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<TModel> TryGetAsync(TKey id);
+        #nullable enable
+        Task<TModel?> TryGetAsync(TKey id);
+        #nullable disable
         /// <summary>
         /// If id is null it will be genereted
         /// </summary>
@@ -37,6 +44,11 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
         List<RepositoryChange<TModel, TKey>> Changes { get; }
 
         //IEnumerable<TModel> Where(Expression<Func<TModel, bool>> selector);
+       
+        PageResult<TModel> GetPage(int page, int itemsPerPage);
+
+        
+     
         //IEnumerable<TModel> GetPage(int page, int itemsPerPage, Expression<Func<TModel, bool>> selector = null);
     }
 }

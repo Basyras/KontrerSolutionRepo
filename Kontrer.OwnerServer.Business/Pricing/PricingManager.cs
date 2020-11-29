@@ -36,6 +36,18 @@ namespace Kontrer.OwnerServer.Business.Pricing
 
         public Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint accommodationBlueprint)
         {
+            List<TimedSettingSelector> resolverRequests = new List<TimedSettingSelector>();
+            foreach (IAccommodationBlueprintEditor editor in options.Value.AccommodationEditors)
+            {
+                resolverRequests.AddRange(editor.GetRequiredSettings(accommodationBlueprint));
+            }
+
+            foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers.OrderBy(x => x.QueuePosition))
+            {
+                resolverRequests.AddRange(pricer.GetRequiredSettings(accommodationBlueprint));
+            }
+
+
 
             foreach (IAccommodationBlueprintEditor editor in options.Value.AccommodationEditors)
             {

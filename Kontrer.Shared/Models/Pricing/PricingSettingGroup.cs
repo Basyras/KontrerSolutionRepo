@@ -6,7 +6,20 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.Models.Pricing
 {
-    class PricingSettingGroup
+  
+
+    public class PricingSettingGroup
     {
+        public int SettingId { get; init; }
+        public string SettingName { get; set; }
+        public Type Type { get; init; }
+        public List<TimedSetting> TimedSettings { get; set; } = new List<TimedSetting>();
+
+        public PricingSettingGroup(Type type)
+        {
+            Type = type;
+        }
+
+     
     }
 }

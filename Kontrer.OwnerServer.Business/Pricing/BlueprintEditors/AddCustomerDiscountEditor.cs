@@ -12,10 +12,13 @@ namespace Kontrer.OwnerServer.Business.Pricing.BlueprintEditors
     {
         public void EditBlueprint(AccommodationBlueprint blueprint, IPricingSettingsResolver resolver)
         {
+            var discountResult = resolver.ResolveValue<DiscountBlueprint>(SettingNameConstants.CustomerLoayltyDiscount);
+            blueprint.Discounts.Add(discountResult.Value);
+        }
 
-            DiscountBlueprint discount = resolver.ResolveSettingValue<DiscountBlueprint>(SettingNameConstants.CustomerLoayltyDiscount,blueprint.Start, blueprint.End);
-            blueprint.Discounts.Add(discount);
-
+        public List<SettingRequest> GetRequiredSettings(AccommodationBlueprint blueprint)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kontrer.OwnerServer.Data.Abstraction.Repositories;
+using Kontrer.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,10 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Customer
 {
     public interface ICustomerRepository
     {
-
+        Task<Dictionary<int, CustomerModel>> GetAllAsync();
+        Task<CustomerModel> GetAsync(int id);
+        Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern);
+        void Edit(AccommodationModel model);
+        void Remove(int id);
     }
 }
