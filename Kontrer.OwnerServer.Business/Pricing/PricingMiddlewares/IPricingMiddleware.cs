@@ -5,7 +5,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
 {
     public interface IPricingMiddleware<TBlueprint,TCost> : IPricingMiddleware
     {              
-        void CalculateContractCost(TBlueprint blueprint, TCost rawAccommodation, IPricingSettingsResolver resolver);
+        void CalculateContractCost(TBlueprint blueprint, TCost rawAccommodation, ITimedSettingResolver resolver);
         List<TimedSettingSelector> GetRequiredSettings(TBlueprint blueprint);
     }
 

@@ -23,17 +23,17 @@ namespace Kontrer.OwnerServer.Data.Pricing
             throw new NotImplementedException();
         }
 
-        public Task<NullableResult<TSetting>> GetTimedSetting<TSetting>(TimedSettingSelector request)
+        public Task<NullableResult<TSetting>> GetTimedSetting<TSetting>(TimedSettingSelector selector)
         {
             throw new NotImplementedException();
         }
 
-        public void GetTimedSettings(List<TimedSettingSelector> requests)
+        public IDictionary<string, NullableResult<object>> GetTimedSettings(List<TimedSettingSelector> selectors)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveTimedSetting(TimedSettingSelector request)
+        public void RemoveTimedSetting(TimedSettingSelector selector)
         {
             throw new NotImplementedException();
         }

@@ -9,7 +9,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.BlueprintEditors
 {
     public interface IBlueprintEditor<TBlueprint> where TBlueprint : class
     {
-        void EditBlueprint(TBlueprint blueprint, IPricingSettingsResolver resolver);
+        void EditBlueprint(TBlueprint blueprint, ITimedSettingResolver resolver);
         List<TimedSettingSelector> GetRequiredSettings(TBlueprint blueprint);
     }
 }

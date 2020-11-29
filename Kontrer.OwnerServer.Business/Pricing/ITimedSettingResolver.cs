@@ -9,7 +9,7 @@ namespace Kontrer.OwnerServer.Business.Pricing
     /// Returns null when not found. Use T? for structs
     /// </summary>
     #nullable enable
-    public interface IPricingSettingsResolver
+    public interface ITimedSettingResolver
     {
         //TSetting ResolveSettingValue<TSetting>(string settingUniqueName);
         NullableResult<TSetting> ResolveValue<TSetting>(string settingUniqueName);        

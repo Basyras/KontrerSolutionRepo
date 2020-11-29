@@ -18,7 +18,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
         //Action<ItemBlueprint, RawItemCost> EveryItemAction = null
 
         
-        public void CalculateContractCost(AccommodationBlueprint blueprint, RawAccommodationCost rawAccommodation, IPricingSettingsResolver resolver)
+        public void CalculateContractCost(AccommodationBlueprint blueprint, RawAccommodationCost rawAccommodation, ITimedSettingResolver resolver)
         {
             for (int i = 0; i < blueprint.AccommodationItems.Count; i++)
             {
@@ -72,7 +72,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
             throw new NotImplementedException();
         }
 
-        protected virtual void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IPricingSettingsResolver resolver)
+        protected virtual void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, ITimedSettingResolver resolver)
         {
             
         }
@@ -82,7 +82,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
         /// <param name="blueprint"></param>
         /// <param name="rawCost"></param>
         /// <param name="resolver"></param>
-        protected virtual void CallForEveryRoom(RoomBlueprint blueprint, RawRoomCost rawCost, IPricingSettingsResolver resolver)
+        protected virtual void CallForEveryRoom(RoomBlueprint blueprint, RawRoomCost rawCost, ITimedSettingResolver resolver)
         {
 
         }

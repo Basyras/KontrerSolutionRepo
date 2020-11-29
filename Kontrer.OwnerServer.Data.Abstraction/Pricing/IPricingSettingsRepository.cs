@@ -16,7 +16,7 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Pricing
         void AddTimedSetting(TimedSetting timedSetting);
         void EditTimedSetting(TimedSettingSelector selector, TimedSetting timedSetting);
         void RemoveTimedSetting(TimedSettingSelector selector);
-        void GetTimedSettings(List<TimedSettingSelector> selectors);
+        IDictionary<string, NullableResult<object>> GetTimedSettings(List<TimedSettingSelector> selectors);
         Task<NullableResult<TSetting>> GetTimedSetting<TSetting>(TimedSettingSelector selector);
     }
 }

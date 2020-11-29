@@ -21,33 +21,38 @@ namespace Kontrer.OwnerServer.Business.Pricing
     {
         private readonly IPricingSettingsRepository settingsRepository;
         private readonly IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory;
-        private readonly IPricingSettingsResolver settingsResolver;
         private readonly IOptions<PriceManagerOptions> options;
 
         public PricingManager(IPricingSettingsRepository settingsRepository, IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PriceManagerOptions> options)
         {
             this.settingsRepository = settingsRepository;
             this.unitOfWorkFactory = unitOfWorkFactory;
-            this.settingsResolver = settingsResolver;
             this.options = options;
         }
 
 
-
-        public Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint accommodationBlueprint)
+        private ITimedSettingResolver GetResolverForBlueprint(AccommodationBlueprint accommodationBlueprint)
         {
-            List<TimedSettingSelector> resolverRequests = new List<TimedSettingSelector>();
+            List<TimedSettingSelector> settingRequests = new List<TimedSettingSelector>();
+
             foreach (IAccommodationBlueprintEditor editor in options.Value.AccommodationEditors)
             {
-                resolverRequests.AddRange(editor.GetRequiredSettings(accommodationBlueprint));
+                settingRequests.AddRange(editor.GetRequiredSettings(accommodationBlueprint));
             }
 
             foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers.OrderBy(x => x.QueuePosition))
             {
-                resolverRequests.AddRange(pricer.GetRequiredSettings(accommodationBlueprint));
+                settingRequests.AddRange(pricer.GetRequiredSettings(accommodationBlueprint));
             }
 
+            IDictionary<string, NullableResult<object>> requiredSettings = this.settingsRepository.GetTimedSettings(settingRequests);
+            var settingsResolver = new TimedSettingResolver(requiredSettings);
 
+            return settingsResolver;
+        }
+        public Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint accommodationBlueprint)
+        {
+            ITimedSettingResolver settingsResolver = GetResolverForBlueprint(accommodationBlueprint);
 
             foreach (IAccommodationBlueprintEditor editor in options.Value.AccommodationEditors)
             {
@@ -56,11 +61,11 @@ namespace Kontrer.OwnerServer.Business.Pricing
 
             RawAccommodationCost rawAccoCost = PrepareRawCost(accommodationBlueprint);
 
-            foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers.OrderBy(x=>x.QueuePosition))
+            foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers.OrderBy(x => x.QueuePosition))
             {
                 pricer.CalculateContractCost(accommodationBlueprint, rawAccoCost, settingsResolver);
             }
-            
+
             AccommodationCost accommodationCost = FinishAccommodationCost(accommodationBlueprint.Currency, rawAccoCost);
 
             return Task.FromResult(accommodationCost);
@@ -81,6 +86,7 @@ namespace Kontrer.OwnerServer.Business.Pricing
             decimal totalAmount = accoItemCosts.Sum(x => x.TotalCost.Amout) + roomCosts.Sum(x => x.TotalCost.Amout);
             Cash totalCash = new Cash(currency, totalAmount);
             AccommodationCost accommodationCost = new AccommodationCost(roomCosts.AsReadOnly(), accoItemCosts.AsReadOnly(), totalCash);
+
             return accommodationCost;
         }
 

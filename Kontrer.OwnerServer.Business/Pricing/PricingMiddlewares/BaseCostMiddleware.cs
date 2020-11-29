@@ -12,7 +12,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
         public override int QueuePosition => 1;
         public override string WorkDescription => "Calculating a basic cost by Count * CostPerOne";
 
-        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IPricingSettingsResolver resolver)
+        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, ITimedSettingResolver resolver)
         {
          
 
