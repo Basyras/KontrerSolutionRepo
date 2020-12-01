@@ -46,7 +46,7 @@ namespace Kontrer.OwnerServer.Business.Pricing
             }
 
             IDictionary<string, NullableResult<object>> requiredSettings = this.settingsRepository.GetTimedSettings(settingRequests);
-            var settingsResolver = new TimedSettingResolver(requiredSettings);
+            TimedSettingResolver settingsResolver = new TimedSettingResolver(requiredSettings);
 
             return settingsResolver;
         }
@@ -112,6 +112,7 @@ namespace Kontrer.OwnerServer.Business.Pricing
             Cash totalCash = new Cash(currency, totalAmount);
             RoomCost roomCost = new RoomCost(peopleCosts.AsReadOnly(), roomItemCosts.AsReadOnly(), totalCash);
             return roomCost;
+
         }
 
         public IPricingSettingsUnitOfWork CreatePricingSettingsUnitOfWork()
