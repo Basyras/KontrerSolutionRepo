@@ -21,6 +21,8 @@ namespace Kontrer.Shared.Models
         public AccommodationBlueprint Blueprint { get; set; }
         public DateTime CreationTime { get; set; }
         public string Notes { get; set; }
+        public AccommodationState State { get; set; }
+
 
     }
 }

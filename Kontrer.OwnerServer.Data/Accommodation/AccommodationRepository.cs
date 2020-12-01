@@ -1,5 +1,6 @@
 ﻿using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
 using Kontrer.OwnerServer.Data.Abstraction.Repositories;
+using Kontrer.OwnerServer.Data.Customer;
 using Kontrer.OwnerServer.Data.EntityFramework;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
@@ -27,8 +28,9 @@ namespace Kontrer.OwnerServer.Data.Accommodation
             model.Cost = entity.Cost;
             model.Notes = entity.Notes;
             model.CreationTime = entity.CreationTime;
-            /*model.Customer =*/
-            throw new NotImplementedException();
+            model.Customer = CustomerRepository.ToModel(entity.Customer);
+            model.State = entity.State;
+            return model;
 
 
         }
@@ -50,27 +52,28 @@ namespace Kontrer.OwnerServer.Data.Accommodation
                 Blueprint = model.Blueprint,
                 Cost = model.Cost,
                 CreationTime = model.CreationTime,
-                //Customer = 
-
+                Customer = CustomerRepository.ToEntity(model.Customer),
+                Notes = model.Notes,
+                State = model.State
 
             };
-            throw new NotImplementedException();
-            //return entity;
+
+            return entity;
 
         }
 
 
-        public void Cancel(int id, bool canceledByCustomer, string notes = null)
+        public void Cancel(int id,bool canceledByCustomer, string notes = null)
         {
             AccommodationEntity entity = new AccommodationEntity()
             {
                 AccommodationId = id,
-                IsCanceledByCustomer = canceledByCustomer,
+                State = AccommodationState.CanceledByCustomer,
                 Notes = notes
             };
 
             dbContext.Accommodations.Attach(entity);
-            dbContext.Entry(entity).Property(x => x.IsCanceledByCustomer).IsModified = true;
+            dbContext.Entry(entity).Property(x => x.State).IsModified = true;
             dbContext.Entry(entity).Property(x => x.Notes).IsModified = true;
 
 
@@ -78,7 +81,15 @@ namespace Kontrer.OwnerServer.Data.Accommodation
 
         public void Complete(int id)
         {
-            throw new NotImplementedException();
+            AccommodationEntity entity = new AccommodationEntity()
+            {
+                AccommodationId = id,
+                State = AccommodationState.Completed
+
+            };
+            dbContext.Accommodations.Attach(entity);
+            dbContext.Entry(entity).Property(x => x.State).IsModified = true;
+
         }
 
         public void Create(int customerId, AccommodationCost cost, AccommodationBlueprint blueprint)
