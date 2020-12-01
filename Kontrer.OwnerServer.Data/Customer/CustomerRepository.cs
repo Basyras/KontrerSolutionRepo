@@ -1,4 +1,6 @@
-﻿using Kontrer.OwnerServer.Data.EntityFramework;
+﻿using Kontrer.OwnerServer.Data.Abstraction.Customer;
+using Kontrer.OwnerServer.Data.Abstraction.Repositories;
+using Kontrer.OwnerServer.Data.EntityFramework;
 using Kontrer.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Customer
 {
-    class CustomerRepository
+    class CustomerRepository:ICustomerRepository
     {
         private readonly OwnerServerDbContext dbContext;
 
@@ -37,6 +39,36 @@ namespace Kontrer.OwnerServer.Data.Customer
             entity.PhoneNumber = model.PhoneNumber;
             entity.SecondName = model.SecondName;
             return entity;
+        }
+
+        public Task<Dictionary<int, CustomerModel>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CustomerModel> GetAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Edit(AccommodationModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
         }
     }
 }
