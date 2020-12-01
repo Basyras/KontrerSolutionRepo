@@ -1,5 +1,6 @@
 ﻿using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
 using Kontrer.OwnerServer.Data.Abstraction.Repositories;
+using Kontrer.OwnerServer.Data.Customer;
 using Kontrer.OwnerServer.Data.EntityFramework;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
@@ -27,8 +28,8 @@ namespace Kontrer.OwnerServer.Data.Accommodation
             model.Cost = entity.Cost;
             model.Notes = entity.Notes;
             model.CreationTime = entity.CreationTime;
-            /*model.Customer =*/
-            throw new NotImplementedException();
+            model.Customer = CustomerRepository.ToModel(entity.Customer);
+            return model;
 
 
         }
@@ -50,12 +51,13 @@ namespace Kontrer.OwnerServer.Data.Accommodation
                 Blueprint = model.Blueprint,
                 Cost = model.Cost,
                 CreationTime = model.CreationTime,
-                //Customer = 
+                Customer = CustomerRepository.ToEntity(model.Customer),
+                Notes = model.Notes
 
 
             };
-            throw new NotImplementedException();
-            //return entity;
+
+            return entity;
 
         }
 
