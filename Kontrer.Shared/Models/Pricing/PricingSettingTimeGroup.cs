@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Models
+namespace Kontrer.Shared.Models.Pricing
 {
-    public class SettingsTimeGroup
+    public class PricingSettingTimeGroup
     {
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string TimeZoneName { get; set; }
         public int Id { get; set; }
-        public List<TimedSetting> TimedSettings { get; set; }
+        public List<TimedSettingModel> TimedSettings { get; set; }
 
         public bool IsInZone(DateTime zoneStart, DateTime zoneEnd)
         {

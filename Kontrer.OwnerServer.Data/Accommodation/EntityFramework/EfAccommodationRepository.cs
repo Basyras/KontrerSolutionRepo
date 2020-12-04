@@ -22,7 +22,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
         {
             this.dbContext = dbContext;
         }
-        public static AccommodationModel ToModel(AccommodationEntity entity)
+        internal static AccommodationModel ToModel(AccommodationEntity entity)
         {
             AccommodationModel model = new AccommodationModel();
             model.AccommodationId = entity.AccommodationId;
@@ -36,7 +36,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
 
 
         }
-        public static List<AccommodationModel> ToModels(IEnumerable<AccommodationEntity> entities)
+        internal static List<AccommodationModel> ToModels(IEnumerable<AccommodationEntity> entities)
         {
             List<AccommodationModel> models = new List<AccommodationModel>();
             foreach (var entity in entities)
@@ -46,7 +46,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
             }
             return models;
         }
-        public static AccommodationEntity ToEntity(AccommodationModel model)
+        internal static AccommodationEntity ToEntity(AccommodationModel model)
         {
             AccommodationEntity entity = new AccommodationEntity()
             {

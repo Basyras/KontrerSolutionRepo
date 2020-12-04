@@ -12,7 +12,7 @@ namespace Kontrer.OwnerServer.Data.EntityFramework
         public int PhoneNumber { get; set; }
         public bool IsDeleted { get; set; }
 
-        public List<AccommodationModel> Accomodations { get; set; }
+        public List<AccommodationModel> Accomodations { get; set; } = new List<AccommodationModel>();
 
     }
     

@@ -13,7 +13,7 @@ namespace Kontrer.OwnerServer.Data.EntityFramework
     public class OwnerServerDbContext : DbContext
     {
         public virtual DbSet<AccommodationEntity> Accommodations { get; set; }
-        public virtual DbSet<PriceSettingEntity> PriceSettings { get; set; }
+        public virtual DbSet<PricingSettingGroupEntity> PriceSettings { get; set; }
         public virtual DbSet<CustomerEntity> Customers { get; set; }
 
         public void Commit()

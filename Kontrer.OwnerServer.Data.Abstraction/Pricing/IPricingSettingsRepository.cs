@@ -13,8 +13,8 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Pricing
     {
         //void AddSettingGroup();
         //void RemoveSettingGroup();
-        void AddTimedSetting(TimedSetting timedSetting);
-        void EditTimedSetting(TimedSettingSelector selector, TimedSetting timedSetting);
+        void AddTimedSetting(TimedSettingModel timedSetting);
+        void EditTimedSetting(TimedSettingSelector selector, TimedSettingModel timedSetting);
         void RemoveTimedSetting(TimedSettingSelector selector);
         IDictionary<string, NullableResult<object>> GetTimedSettings(List<TimedSettingSelector> selectors);
         Task<NullableResult<TSetting>> GetTimedSetting<TSetting>(TimedSettingSelector selector);

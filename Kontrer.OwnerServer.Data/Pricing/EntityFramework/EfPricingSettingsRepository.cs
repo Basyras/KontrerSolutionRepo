@@ -17,12 +17,77 @@ namespace Kontrer.OwnerServer.Data.Pricing.EntityFramework
     {
         private readonly OwnerServerDbContext dbContext;
 
+        internal static PricingSettingGroupModel GroupToModel(PricingSettingGroupEntity entity)
+        {
+            PricingSettingGroupModel model = new PricingSettingGroupModel(entity.Type, entity.PricingSettingGroupId, entity.SettingName, TimedSettingToModels(entity.TimedSettings));
+            return model;
+        }
+
+        internal static PricingSettingGroupEntity GroupToEntity(PricingSettingGroupModel model)
+        {
+            var entity = new PricingSettingGroupEntity();
+            entity.PricingSettingGroupId = model.SettingId;
+            entity.SettingName = model.SettingName;
+            entity.TimedSettings= TimedSettingToEntities(model.TimedSettings);
+            entity.Type= model.Type;
+            return entity;
+        }
+
+        internal static TimedSettingModel TimedSettingToModel(TimedSettingEntity entity)
+        {
+
+            TimedSettingModel model = new TimedSettingModel(entity.PricingSettingGroupId,entity.PricingSettingGroup.SettingName,entity.PricingSettingGroup.Type,entity.Start,entity.End,entity.Value);
+            return model;
+        }
+
+        internal static List<TimedSettingModel> TimedSettingToModels(List<TimedSettingEntity> entities)
+        {
+            List<TimedSettingModel> models = new List<TimedSettingModel>(entities.Count);
+            foreach (var entity in entities)
+            {
+                var model = TimedSettingToModel(entity);
+                if (model != null)
+                {
+                    models.Add(model);
+                }
+            }
+
+            return models;
+        }
+
+        internal static TimedSettingEntity TimedSettingToEntity(TimedSettingModel model)
+        {
+            TimedSettingEntity entity = new TimedSettingEntity();
+            entity.End = model.End;            
+            entity.PricingSettingGroupId= model.SettingGroupId;
+            entity.Start = model.Start;
+            entity.Value= model.Value;
+
+            return entity;
+        }
+
+        internal static List<TimedSettingEntity> TimedSettingToEntities(List<TimedSettingModel> models)
+        {
+            List<TimedSettingEntity> entities = new List<TimedSettingEntity>(models.Count);
+            foreach (var model in models)
+            {
+                var entity = TimedSettingToEntity(model);
+                if (entity != null)
+                {
+                    entities.Add(entity);
+                }
+            }
+
+            return entities;
+        }
+
+
         public EfPricingSettingsRepository(OwnerServerDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        public void AddTimedSetting(TimedSetting timedSetting)
+        public void AddTimedSetting(TimedSettingModel timedSetting)
         {
             throw new NotImplementedException();
         }
@@ -32,7 +97,7 @@ namespace Kontrer.OwnerServer.Data.Pricing.EntityFramework
             dbContext.Dispose();
         }
 
-        public void EditTimedSetting(TimedSettingSelector selector, TimedSetting timedSetting)
+        public void EditTimedSetting(TimedSettingSelector selector, TimedSettingModel timedSetting)
         {
             throw new NotImplementedException();
         }
@@ -52,14 +117,5 @@ namespace Kontrer.OwnerServer.Data.Pricing.EntityFramework
             throw new NotImplementedException();
         }
 
-        //public void Save()
-        //{
-        //    dbContext.PriceSettings.Save
-        //}
-
-        //public Task SaveAsync(CancellationToken cancellationToken = default)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

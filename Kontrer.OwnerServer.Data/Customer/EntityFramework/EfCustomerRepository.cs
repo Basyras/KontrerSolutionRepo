@@ -20,7 +20,7 @@ namespace Kontrer.OwnerServer.Data.Customer.EntityFramework
         {
             this.dbContext = dbContext;
         }
-        public static CustomerModel ToModel(CustomerEntity entity)
+        internal static CustomerModel ToModel(CustomerEntity entity)
         {
             CustomerModel model = new CustomerModel();
             model.Accomodations = entity.Accomodations;
@@ -31,7 +31,7 @@ namespace Kontrer.OwnerServer.Data.Customer.EntityFramework
             model.SecondName = entity.SecondName;
             return model;
         }
-        public static CustomerEntity ToEntity(CustomerModel model)
+        internal static CustomerEntity ToEntity(CustomerModel model)
         {
             CustomerEntity entity = new CustomerEntity();
             entity.Accomodations = model.Accomodations;
