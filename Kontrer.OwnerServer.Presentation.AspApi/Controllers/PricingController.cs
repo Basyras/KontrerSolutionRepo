@@ -24,7 +24,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
         [HttpPost]
         public async Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint blueprint)
         {
-            AccommodationCost cost = await pricingManager.CalculateAccommodationCost(blueprint);
+            AccommodationCost cost = await pricingManager.CalculateAccommodationCostAsync(blueprint);
             return cost;
         }
     }

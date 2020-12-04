@@ -24,7 +24,9 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing
         public async Task TestPriceCounting()
         {
             var mockRepo = new Mock<IPricingSettingsRepository>();
-            mockRepo.Setup(x => x.GetTimedSettings(new List<TimedSettingSelector>())).Returns(() =>new Dictionary<string,NullableResult<object>>());
+            var dic = new Dictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>();
+            IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>> parsedDic = (IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>)dic;
+            mockRepo.Setup(x => x.GetTimedSettingsAsync(new List<TimedSettingSelector>())).Returns(() => Task.FromResult(parsedDic));
 
             var mockUoW = new Mock<IPricingSettingsUnitOfWork>();
             mockUoW.Setup(x => x.PricingSettingsRepository).Returns(() => mockRepo.Object);
@@ -44,7 +46,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing
             var mockOptions = Options.Create<PricingManagerOptions>(new PricingManagerOptions() { });
             var pricingManager = new PricingManager(mockUoWFactory.Object, mockOptions,null,null);
             
-            var cost = await pricingManager.CalculateAccommodationCost(bp);                               
+            var cost = await pricingManager.CalculateAccommodationCostAsync(bp);                               
 
 
         }

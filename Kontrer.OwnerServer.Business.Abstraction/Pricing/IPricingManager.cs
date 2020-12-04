@@ -13,7 +13,7 @@ namespace Kontrer.OwnerServer.Business.Abstraction.Pricing
     public interface IPricingManager
     {        
 
-        Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint blueprint);
+        Task<AccommodationCost> CalculateAccommodationCostAsync(AccommodationBlueprint blueprint);
         IPricingSettingsUnitOfWork CreatePricingSettingsUnitOfWork();
 
 

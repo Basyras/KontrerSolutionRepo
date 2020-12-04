@@ -64,7 +64,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
         public async Task<IActionResult> Post(int customerId, [FromBody] AccommodationBlueprint blueprint)
         {
             //cost = cost ?? await pricingManager.CalculateAccommodationCost(blueprint);
-            var cost = await pricingManager.CalculateAccommodationCost(blueprint);
+            var cost = await pricingManager.CalculateAccommodationCostAsync(blueprint);
             unitOfWork.Accommodations.Create(customerId, cost, blueprint);
             try
             {

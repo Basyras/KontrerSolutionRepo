@@ -12,22 +12,27 @@ namespace Kontrer.OwnerServer.Business.Pricing
 
     public class TimedSettingResolver : ITimedSettingResolver
     {
-        private readonly IDictionary<string, NullableResult<object>> dic;
+        private readonly IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>> ResolvedSettings;
 
-        public TimedSettingResolver(IDictionary<string, NullableResult<object>> dic)
+        public TimedSettingResolver(IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>> resolvedSettings)
         {
-            this.dic = dic;
+            this.ResolvedSettings = resolvedSettings;
         }
 
-        //public NullableResult<TSetting> ResolveValue<TSetting>(string settingUniqueName)
-        //{
-        //    var result = dic[settingUniqueName];
-        //    return new NullableResult<TSetting>((TSetting)result.Value,result.WasFound,(TSetting)result.DefaultValue);
-        //}
+     
 
         public NullableResult<TSetting> ResolveValue<TSetting>(ResolveRequest<TSetting> request)
         {
-            throw new NotImplementedException();
+            NullableResult<object> setting;
+            if (request.Start.HasValue && request.End.HasValue)
+            {
+                setting = ResolvedSettings[request.UniqueSettingName][new Tuple<DateTime, DateTime>(request.Start.Value, request.End.Value)];
+            }
+            else
+            {
+                setting = ResolvedSettings[request.UniqueSettingName].First().Value;
+            }
+            return new NullableResult<TSetting>((TSetting)setting.Value,setting.WasFound, (TSetting)setting.DefaultValue);
         }
     }
 }

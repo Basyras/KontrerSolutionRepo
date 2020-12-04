@@ -10,13 +10,11 @@ using Kontrer.Shared.Models.Pricing;
 namespace Kontrer.OwnerServer.Data.Abstraction.Pricing
 {
     public interface IPricingSettingsRepository : IRepository
-    {
-        //void AddSettingGroup();
-        //void RemoveSettingGroup();
+    {      
         void AddTimedSetting(TimedSettingModel timedSetting);
-        void EditTimedSetting(TimedSettingSelector selector, TimedSettingModel timedSetting);
-        void RemoveTimedSetting(TimedSettingSelector selector);
-        IDictionary<string, NullableResult<object>> GetTimedSettings(List<TimedSettingSelector> selectors);
+        void EditTimedSetting(TimedSettingModel timedSetting);
+        void RemoveTimedSetting(int settingGroupId, DateTime start, DateTime end);
+        Task<IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>> GetTimedSettingsAsync(List<TimedSettingSelector> selectors);
         Task<NullableResult<TSetting>> GetTimedSetting<TSetting>(TimedSettingSelector selector);
     }
 }

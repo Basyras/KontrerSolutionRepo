@@ -3,6 +3,7 @@ using Kontrer.OwnerServer.Data.Abstraction.Repositories;
 using Kontrer.OwnerServer.Data.EntityFramework;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,19 +29,18 @@ namespace Kontrer.OwnerServer.Data.Pricing.EntityFramework
             var entity = new PricingSettingGroupEntity();
             entity.PricingSettingGroupId = model.SettingId;
             entity.SettingName = model.SettingName;
-            entity.TimedSettings= TimedSettingToEntities(model.TimedSettings);
-            entity.Type= model.Type;
+            entity.TimedSettings = TimedSettingToEntities(model.TimedSettings);
+            entity.Type = model.Type;
             return entity;
         }
 
-        internal static TimedSettingModel TimedSettingToModel(TimedSettingEntity entity)
+        internal static TimedSettingModel TimedSettingToModel(PricingTimedSettingEntity entity)
         {
-
-            TimedSettingModel model = new TimedSettingModel(entity.PricingSettingGroupId,entity.PricingSettingGroup.SettingName,entity.PricingSettingGroup.Type,entity.Start,entity.End,entity.Value);
+            TimedSettingModel model = new TimedSettingModel(entity.PricingSettingGroupId, entity.PricingSettingGroup.SettingName, entity.PricingSettingGroup.Type, entity.Start, entity.End, entity.Value);
             return model;
         }
 
-        internal static List<TimedSettingModel> TimedSettingToModels(List<TimedSettingEntity> entities)
+        internal static List<TimedSettingModel> TimedSettingToModels(List<PricingTimedSettingEntity> entities)
         {
             List<TimedSettingModel> models = new List<TimedSettingModel>(entities.Count);
             foreach (var entity in entities)
@@ -55,20 +55,20 @@ namespace Kontrer.OwnerServer.Data.Pricing.EntityFramework
             return models;
         }
 
-        internal static TimedSettingEntity TimedSettingToEntity(TimedSettingModel model)
+        internal static PricingTimedSettingEntity TimedSettingToEntity(TimedSettingModel model)
         {
-            TimedSettingEntity entity = new TimedSettingEntity();
-            entity.End = model.End;            
-            entity.PricingSettingGroupId= model.SettingGroupId;
+            PricingTimedSettingEntity entity = new PricingTimedSettingEntity();
+            entity.End = model.End;
+            entity.PricingSettingGroupId = model.SettingGroupId;
             entity.Start = model.Start;
-            entity.Value= model.Value;
+            entity.Value = model.Value;
 
             return entity;
         }
 
-        internal static List<TimedSettingEntity> TimedSettingToEntities(List<TimedSettingModel> models)
+        internal static List<PricingTimedSettingEntity> TimedSettingToEntities(List<TimedSettingModel> models)
         {
-            List<TimedSettingEntity> entities = new List<TimedSettingEntity>(models.Count);
+            List<PricingTimedSettingEntity> entities = new List<PricingTimedSettingEntity>(models.Count);
             foreach (var model in models)
             {
                 var entity = TimedSettingToEntity(model);
@@ -89,7 +89,7 @@ namespace Kontrer.OwnerServer.Data.Pricing.EntityFramework
 
         public void AddTimedSetting(TimedSettingModel timedSetting)
         {
-            throw new NotImplementedException();
+            dbContext.PricingTimedSettings.Add(TimedSettingToEntity(timedSetting));
         }
 
         public void Dispose()
@@ -97,24 +97,48 @@ namespace Kontrer.OwnerServer.Data.Pricing.EntityFramework
             dbContext.Dispose();
         }
 
-        public void EditTimedSetting(TimedSettingSelector selector, TimedSettingModel timedSetting)
+        public void EditTimedSetting(TimedSettingModel timedSetting)
         {
-            throw new NotImplementedException();
+            PricingTimedSettingEntity entity = TimedSettingToEntity(timedSetting);
+            var entityEntry = dbContext.Attach(entity);
+            entityEntry.State = EntityState.Modified;
         }
 
-        public Task<NullableResult<TSetting>> GetTimedSetting<TSetting>(TimedSettingSelector selector)
+        public async Task<NullableResult<TSetting>> GetTimedSetting<TSetting>(TimedSettingSelector selector)
         {
-            throw new NotImplementedException();
+            var setting = await dbContext.PricingTimedSettings.FirstOrDefaultAsync(x => x.PricingSettingGroup.SettingName == selector.SettingUniqueName && x.Start == selector.Start && x.End == selector.End);
+            if (setting != null)
+            {
+                return new NullableResult<TSetting>((TSetting)setting.Value, true, default);
+            }
+            else
+            {
+                return new NullableResult<TSetting>(default, false, default);
+            }
+        }
+     
+
+        public async Task<IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>> GetTimedSettingsAsync(List<TimedSettingSelector> selectors)
+        {
+            var query = dbContext.PricingTimedSettings.Where(x => selectors.Any(y => y.SettingUniqueName == x.PricingSettingGroup.SettingName && y.Start == x.Start && y.End == x.End));
+            var dic = await query.ToDictionaryAsync(x => x.PricingSettingGroup.SettingName, x => (IDictionary<Tuple<DateTime,DateTime>, NullableResult<object>>)x.PricingSettingGroup.TimedSettings.ToDictionary(y=>new Tuple<DateTime,DateTime>(y.Start,y.End),y=> 
+            {                
+                return y == null ? new NullableResult<object>(default, false) : new NullableResult<object>(y.Value, true);                     
+            }));
+
+            return dic;
         }
 
-        public IDictionary<string, NullableResult<object>> GetTimedSettings(List<TimedSettingSelector> selectors)
+        public void RemoveTimedSetting(int settingGroupId,DateTime start, DateTime end)
         {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveTimedSetting(TimedSettingSelector selector)
-        {
-            throw new NotImplementedException();
+            PricingTimedSettingEntity entity = new PricingTimedSettingEntity()
+            {
+                PricingSettingGroupId = settingGroupId,
+                Start = start,
+                End = end
+            };
+            var entityEntry = dbContext.Attach(entity);
+            entityEntry.State = EntityState.Deleted;
         }
 
     }

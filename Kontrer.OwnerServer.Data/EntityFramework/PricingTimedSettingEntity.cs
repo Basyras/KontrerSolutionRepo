@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Kontrer.OwnerServer.Data.EntityFramework
 {
-    public class TimedSettingEntity
+    public class PricingTimedSettingEntity
     {
         public PricingSettingGroupEntity PricingSettingGroup { get; set; }
         [Key]
