@@ -68,6 +68,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Bootstr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.PdfCreator", "Kontrer.OwnerServer.PdfCreator", "{F6F89EA0-279A-4493-AE63-B686B26CC1BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.PdfCreatorService", "Kontrer.OwnerServer.PdfCreatorService\Kontrer.OwnerServer.PdfCreatorService.csproj", "{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -158,6 +160,10 @@ Global
 		{B12C6E7A-EB68-4882-963F-700AB95E6F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B12C6E7A-EB68-4882-963F-700AB95E6F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B12C6E7A-EB68-4882-963F-700AB95E6F0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,6 +195,7 @@ Global
 		{E53AAF6E-E0B0-4508-A90C-D660B6C430F9} = {959D6E59-AADB-4AD3-B412-B3AA7ED81AB5}
 		{B12C6E7A-EB68-4882-963F-700AB95E6F0A} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
 		{F6F89EA0-279A-4493-AE63-B686B26CC1BC} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
+		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A} = {F6F89EA0-279A-4493-AE63-B686B26CC1BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}
