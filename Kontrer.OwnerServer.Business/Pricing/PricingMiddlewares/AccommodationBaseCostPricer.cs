@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
 {
-    public class BaseCostMiddleware : AccommodationPricingMiddlewareBase
+    public class AccommodationBaseCostPricer : AccommodationPricerBase
     {
         public override int QueuePosition => 1;
         public override string WorkDescription => "Calculating a basic cost by Count * CostPerOne";

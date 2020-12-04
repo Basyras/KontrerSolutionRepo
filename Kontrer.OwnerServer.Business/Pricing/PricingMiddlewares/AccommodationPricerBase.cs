@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
 {
-    public abstract class AccommodationPricingMiddlewareBase : IAccommodationPricingMiddleware
+    public abstract class AccommodationPricerBase : IAccommodationPricer
     {
         //protected const string RoomGroup = "RoomGroup";
         public abstract int QueuePosition { get; }

@@ -2,6 +2,7 @@
 using Kontrer.OwnerServer.Business.Abstraction.Pricing;
 using Kontrer.OwnerServer.Business.Pricing;
 using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
+using Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares;
 using Kontrer.OwnerServer.Data.Abstraction.Pricing;
 using Kontrer.OwnerServer.Data.Abstraction.UnitOfWork;
 using Kontrer.Shared.Models;
@@ -21,7 +22,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing
     public class PricingManagerTests
     {
         [Fact]
-        public async Task TestPriceCounting()
+        public async Task TestCalculate()
         {
             var mockRepo = new Mock<IPricingSettingsRepository>();
             var dic = new Dictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>();
@@ -38,17 +39,44 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing
             Faker faker = new Faker();
             var refDate = faker.Date.Soon();
             var end = faker.Date.Soon(10, refDate);
-            var start = faker.Date.Recent(10, refDate);
-
-            var mockEditor = new Mock<IBlueprintEditor<AccommodationBlueprint>>().Setup((x) => x.GetRequiredSettings(bp)).Returns(()=>new List<TimedSettingSelector>() {new TimedSettingSelector("test1", start,end) });
+            var start = faker.Date.Recent(10, refDate);            
                        
             
             var mockOptions = Options.Create<PricingManagerOptions>(new PricingManagerOptions() { });
-            var pricingManager = new PricingManager(mockUoWFactory.Object, mockOptions,null,null);
-            
-            var cost = await pricingManager.CalculateAccommodationCostAsync(bp);                               
+            var pricingManager = new PricingManager(mockUoWFactory.Object, mockOptions,null,null);           
+            var cost = await pricingManager.CalculateAccommodationCostAsync(bp);
+
+            var mockBpEditor = new Mock<IAccommodationBlueprintEditor>();
+            bool wasEditorRequiredCalled = false;
+            mockBpEditor.Setup(x => x.GetRequiredSettings(bp)).Returns(() =>
+            {
+                wasEditorRequiredCalled = true;
+                return new List<TimedSettingSelector>() { new TimedSettingSelector("test1", start, end) };
+            });
+            bool wasEditCalled = false;
+            mockBpEditor.Setup(x => x.EditBlueprint(It.IsAny<AccommodationBlueprint>(), It.IsAny<ITimedSettingResolver>())).Callback(() => wasEditCalled = true);
+
+            var mockPricer = new Mock<IAccommodationPricer>();
+            bool wasPricerRequiredCalled = false;
+            mockPricer.Setup((x) => x.GetRequiredSettings(bp)).Returns(() =>
+            {
+                wasPricerRequiredCalled = true;
+                return new List<TimedSettingSelector>() { new TimedSettingSelector("test1", start, end)}; 
+            });
+            bool wasCalculateCalled = false;
+            mockPricer.Setup(x => x.CalculateContractCost(It.IsAny<AccommodationBlueprint>(), It.IsAny<RawAccommodationCost>(), It.IsAny<ITimedSettingResolver>())).Callback(() => wasCalculateCalled = true);
 
 
+
+            pricingManager = new PricingManager(mockUoWFactory.Object, mockOptions, new List<IAccommodationPricer>() { mockPricer.Object }, new List<IAccommodationBlueprintEditor>() { mockBpEditor.Object });
+            cost = await pricingManager.CalculateAccommodationCostAsync(bp);
+
+            Assert.True(wasEditorRequiredCalled);
+            Assert.True(wasEditCalled);
+            Assert.True(wasPricerRequiredCalled);
+            Assert.True(wasCalculateCalled);
         }
+
+      
     }
 }

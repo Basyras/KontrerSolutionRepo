@@ -28,7 +28,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing.PricingMiddlewares
 
 
             var newSubTotal = 2* itemBb.Count * itemBb.CostPerOne.Amout;
-            var pricer = new BaseCostMiddleware();
+            var pricer = new AccommodationBaseCostPricer();
             pricer.CalculateContractCost(accoBp, rawAccoCost, null);
             Assert.Equal(newSubTotal, rawAccoCost.RawAccommodationItems.Sum(x=>x.SubTotal));
 

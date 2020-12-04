@@ -22,15 +22,15 @@ namespace Kontrer.OwnerServer.Business.Pricing
         
         private readonly IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory;
         private readonly IOptions<PricingManagerOptions> options;
-        private readonly List<IAccommodationPricingMiddleware> accommodationPricers = new List<IAccommodationPricingMiddleware>();
+        private readonly List<IAccommodationPricer> accommodationPricers = new List<IAccommodationPricer>();
         private readonly List<IAccommodationBlueprintEditor> accommodationEditors = new List<IAccommodationBlueprintEditor>();
 
-        public PricingManager(IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PricingManagerOptions> options, IEnumerable<IAccommodationPricingMiddleware> accommodationPricers, IEnumerable<IAccommodationBlueprintEditor> accommodationEditors)
+        public PricingManager(IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PricingManagerOptions> options, IEnumerable<IAccommodationPricer> accommodationPricers, IEnumerable<IAccommodationBlueprintEditor> accommodationEditors)
         {            
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.options = options;
             if(accommodationPricers != null)
-            this.accommodationPricers = new List<IAccommodationPricingMiddleware>(accommodationPricers);
+            this.accommodationPricers = new List<IAccommodationPricer>(accommodationPricers);
             if (accommodationEditors != null)
                 this.accommodationEditors = new List<IAccommodationBlueprintEditor>(accommodationEditors);
         }
@@ -49,7 +49,7 @@ namespace Kontrer.OwnerServer.Business.Pricing
                 }
             }
 
-            foreach (IAccommodationPricingMiddleware pricer in accommodationPricers.OrderBy(x => x.QueuePosition))
+            foreach (IAccommodationPricer pricer in accommodationPricers.OrderBy(x => x.QueuePosition))
             {
                 var required = pricer.GetRequiredSettings(accommodationBlueprint);
                 if (required != null && required.Count > 0)
@@ -75,7 +75,7 @@ namespace Kontrer.OwnerServer.Business.Pricing
 
             RawAccommodationCost rawAccoCost = PrepareRawCost(accommodationBlueprint);
 
-            foreach (IAccommodationPricingMiddleware pricer in accommodationPricers.OrderBy(x => x.QueuePosition))
+            foreach (IAccommodationPricer pricer in accommodationPricers.OrderBy(x => x.QueuePosition))
             {
                 pricer.CalculateContractCost(accommodationBlueprint, rawAccoCost, settingsResolver);
             }

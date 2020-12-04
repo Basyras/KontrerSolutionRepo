@@ -11,7 +11,7 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
     /// <summary>
     /// Must be called as last in pricing pipeline
     /// </summary>
-    public class ItemTaxMiddleware : AccommodationPricingMiddlewareBase
+    public class AccommodationItemTaxPricer : AccommodationPricerBase
     {
         public override string WorkDescription => "Adding taxes from ItemBlueprint";
         public override int QueuePosition => int.MaxValue;

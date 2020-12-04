@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
 {
-    public interface IPricingMiddleware<TBlueprint,TCost> : IPricingMiddleware
+    public interface IPricer<TBlueprint,TCost> : IPricingMiddleware
     {              
         void CalculateContractCost(TBlueprint blueprint, TCost rawAccommodation, ITimedSettingResolver resolver);
         List<TimedSettingSelector> GetRequiredSettings(TBlueprint blueprint);

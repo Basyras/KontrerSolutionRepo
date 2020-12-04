@@ -30,7 +30,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing.PricingMiddlewares
 
 
             var newSubTotal = baseSubTotal  + (baseSubTotal * (decimal)itemTax);
-            var pricer = new ItemTaxMiddleware();
+            var pricer = new AccommodationItemTaxPricer();
             
             pricer.CalculateContractCost(accoBp, rawAccoCost, null);
             Assert.Equal(newSubTotal, rawAccoCost.RawAccommodationItems[0].SubTotal);

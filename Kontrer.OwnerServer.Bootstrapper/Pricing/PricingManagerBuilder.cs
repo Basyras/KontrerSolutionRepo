@@ -38,8 +38,8 @@ namespace Kontrer.OwnerServer.Bootstrapper.Pricing
         private PricingManagerBuilder AddAccommodationPricing()
         {
             services.AddSingleton<IAccommodationBlueprintEditor, AddCustomerDiscountEditor>();
-            services.AddSingleton<IAccommodationPricingMiddleware, BaseCostMiddleware>();
-            services.AddSingleton<IAccommodationPricingMiddleware, ItemTaxMiddleware>();
+            services.AddSingleton<IAccommodationPricer, AccommodationBaseCostPricer>();
+            services.AddSingleton<IAccommodationPricer, AccommodationItemTaxPricer>();
 
           
 
