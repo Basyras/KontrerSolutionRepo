@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
 {
-    public class QueryableRepository<TModel, TKey> : EditableRepositoryBase<TModel, TKey>
+    public abstract class QueryableRepository<TModel, TKey> : EditableRepositoryBase<TModel, TKey>
        where TModel : class
     {
 
@@ -53,8 +54,6 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
             return Task.FromResult(models);
         }
 
-
-
-
+      
     }
 }

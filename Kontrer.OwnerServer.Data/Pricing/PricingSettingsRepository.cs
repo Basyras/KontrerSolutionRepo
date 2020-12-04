@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Pricing
@@ -14,6 +15,11 @@ namespace Kontrer.OwnerServer.Data.Pricing
     public class PricingSettingsRepository : IPricingSettingsRepository
     {
         public void AddTimedSetting(TimedSetting timedSetting)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
         {
             throw new NotImplementedException();
         }
@@ -39,6 +45,11 @@ namespace Kontrer.OwnerServer.Data.Pricing
         }
 
         public void Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

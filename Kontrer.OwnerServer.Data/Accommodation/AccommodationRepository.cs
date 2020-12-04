@@ -8,6 +8,7 @@ using Kontrer.Shared.Models.Pricing.Costs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Accommodation
@@ -132,6 +133,16 @@ namespace Kontrer.OwnerServer.Data.Accommodation
         public void Save()
         {
             dbContext.SaveChanges();
+        }
+
+        public Task SaveAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

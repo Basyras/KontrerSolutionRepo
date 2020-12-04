@@ -1,9 +1,9 @@
 ﻿using Bogus;
 using Kontrer.OwnerServer.Business.Abstraction.Pricing;
-using Kontrer.OwnerServer.Business.Abstraction.UnitOfWork;
 using Kontrer.OwnerServer.Business.Pricing;
 using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
 using Kontrer.OwnerServer.Data.Abstraction.Pricing;
+using Kontrer.OwnerServer.Data.Abstraction.UnitOfWork;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using Kontrer.Shared.Tests.FakeData;
 using Microsoft.Extensions.Options;
@@ -22,7 +22,6 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing
         [Fact]
         public async Task TestPriceCounting()
         {
-            var mockRepo = new Mock<IPricingSettingsRepository>();
             var mockUoWFactory = new Mock<IUnitOfWorkFactory<IPricingSettingsUnitOfWork>>();
 
             var bp = BlueprintFakeData.GetAccommodationBlueprints(1)[0];
@@ -36,7 +35,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing
                        
             
             var mockOptions = Options.Create<PriceManagerOptions>(new PriceManagerOptions() { });
-            var pricingManager = new PricingManager(mockRepo.Object, mockUoWFactory.Object, mockOptions);
+            var pricingManager = new PricingManager(mockUoWFactory.Object, mockOptions);
             
             var cost = await pricingManager.CalculateAccommodationCost(bp);                               
 

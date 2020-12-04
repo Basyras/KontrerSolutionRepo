@@ -1,5 +1,6 @@
 ﻿using Kontrer.OwnerServer.Business.Abstraction.Customers;
-using Kontrer.OwnerServer.Business.Abstraction.UnitOfWork;
+using Kontrer.OwnerServer.Data.Abstraction.Customers;
+using Kontrer.OwnerServer.Data.Abstraction.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;

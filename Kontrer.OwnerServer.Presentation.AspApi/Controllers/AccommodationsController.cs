@@ -1,5 +1,6 @@
 ﻿using Kontrer.OwnerServer.Business.Abstraction.Accommodations;
 using Kontrer.OwnerServer.Business.Abstraction.Pricing;
+using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using Kontrer.Shared.Models.Pricing.Costs;

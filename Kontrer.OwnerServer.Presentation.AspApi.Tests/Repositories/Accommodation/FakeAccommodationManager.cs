@@ -1,4 +1,5 @@
 ﻿using Kontrer.OwnerServer.Business.Abstraction.Accommodations;
+using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

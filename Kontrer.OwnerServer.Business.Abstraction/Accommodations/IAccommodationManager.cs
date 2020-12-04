@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Kontrer.OwnerServer.Business.Abstraction.UnitOfWork;
+using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
+using Kontrer.OwnerServer.Data.Abstraction.UnitOfWork;
 using Kontrer.Shared.Models;
 
 

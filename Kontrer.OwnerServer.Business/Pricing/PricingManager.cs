@@ -1,5 +1,5 @@
 ﻿using Kontrer.OwnerServer.Business.Abstraction.Pricing;
-using Kontrer.OwnerServer.Business.Abstraction.UnitOfWork;
+using Kontrer.OwnerServer.Data.Abstraction.UnitOfWork;
 using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
 using Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares;
 using Kontrer.OwnerServer.Data.Abstraction.Pricing;
@@ -19,13 +19,12 @@ namespace Kontrer.OwnerServer.Business.Pricing
 {
     public class PricingManager : IPricingManager
     {
-        private readonly IPricingSettingsRepository settingsRepository;
+        
         private readonly IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory;
         private readonly IOptions<PriceManagerOptions> options;
 
-        public PricingManager(IPricingSettingsRepository settingsRepository, IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PriceManagerOptions> options)
-        {
-            this.settingsRepository = settingsRepository;
+        public PricingManager(IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PriceManagerOptions> options)
+        {            
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.options = options;
         }
@@ -45,7 +44,8 @@ namespace Kontrer.OwnerServer.Business.Pricing
                 settingRequests.AddRange(pricer.GetRequiredSettings(accommodationBlueprint));
             }
 
-            IDictionary<string, NullableResult<object>> requiredSettings = this.settingsRepository.GetTimedSettings(settingRequests);
+            using var unitOfWork = unitOfWorkFactory.CreateUnitOfWork();
+            IDictionary<string, NullableResult<object>> requiredSettings = unitOfWork.PricingSettingsRepository.GetTimedSettings(settingRequests);
             TimedSettingResolver settingsResolver = new TimedSettingResolver(requiredSettings);
 
             return settingsResolver;

@@ -35,7 +35,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
         public async Task<CustomerModel> Get(int id)
         {
             using var work = customerManager.CreateUnitOfWork();
-            var customer = await work.Customers.TryGetAsync(id);
+            var customer = await work.Customers.GetAsync(id);
             return customer;
         }
 

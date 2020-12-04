@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
@@ -11,9 +12,14 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
     {
         public List<RepositoryChange<TModel, TKey>> Changes { get; private set; } = new List<RepositoryChange<TModel, TKey>>();
 
-        public abstract Task<TModel> TryGetAsync(TKey key);
-
         public abstract Task<Dictionary<TKey, TModel>> GetAllAsync();
+        public abstract Task<TModel> TryGetAsync(TKey key);
+        public abstract PageResult<TModel> GetPage(int page, int itemsPerPage);
+
+        public abstract void Save();
+        public abstract Task SaveAsync(CancellationToken cancellationToken = default);
+        public abstract void Dispose();
+
 
         public void Remove(TKey id)
         {
@@ -69,14 +75,8 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Repositories
             }
         }
 
-        public PageResult<TModel> GetPage(int page, int itemsPerPage)
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
+    
     }
 }

@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Customer
 {
-    class CustomerRepository:ICustomerRepository
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly OwnerServerDbContext dbContext;
 
@@ -67,6 +68,16 @@ namespace Kontrer.OwnerServer.Data.Customer
         }
 
         public void Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
         {
             throw new NotImplementedException();
         }
