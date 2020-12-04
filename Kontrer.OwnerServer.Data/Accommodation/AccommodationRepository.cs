@@ -100,6 +100,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation
                 Cost = cost,
                 Blueprint = blueprint
             };
+            dbContext.Accommodations.Add(entity);
         }
 
         public void Edit(AccommodationModel model)

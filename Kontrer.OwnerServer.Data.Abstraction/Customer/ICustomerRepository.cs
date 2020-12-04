@@ -13,7 +13,7 @@ namespace Kontrer.OwnerServer.Data.Abstraction.Customer
         Task<Dictionary<int, CustomerModel>> GetAllAsync();
         Task<CustomerModel> GetAsync(int id);
         Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern);
-        void Edit(AccommodationModel model);
+        void Edit(CustomerModel model);
         void Remove(int id);
     }
 }

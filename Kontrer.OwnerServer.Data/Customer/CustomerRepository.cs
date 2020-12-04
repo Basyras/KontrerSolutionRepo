@@ -2,6 +2,7 @@
 using Kontrer.OwnerServer.Data.Abstraction.Repositories;
 using Kontrer.OwnerServer.Data.EntityFramework;
 using Kontrer.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,12 +44,14 @@ namespace Kontrer.OwnerServer.Data.Customer
 
         public Task<Dictionary<int, CustomerModel>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var customers = dbContext.Customers.AsQueryable().ToDictionaryAsync(x => x.CustomerId, x => ToModel(x));
+            return customers;
         }
 
-        public Task<CustomerModel> GetAsync(int id)
+        public async Task<CustomerModel> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            var customer = await dbContext.Customers.FindAsync(id);
+            return ToModel(customer);
         }
 
         public Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
@@ -56,14 +59,19 @@ namespace Kontrer.OwnerServer.Data.Customer
             throw new NotImplementedException();
         }
 
-        public void Edit(AccommodationModel model)
+        public void Edit(CustomerModel model)
         {
-            throw new NotImplementedException();
+            CustomerEntity entity = ToEntity(model);
+            var entityEntry = dbContext.Attach(entity);
+            entityEntry.State = EntityState.Modified;
         }
 
         public void Remove(int id)
         {
-            throw new NotImplementedException();
+            CustomerEntity entity = new CustomerEntity { CustomerId = id };
+            entity.IsDeleted = true;
+            dbContext.Attach(entity);
+            dbContext.Entry(entity).Property(x => x.IsDeleted).IsModified = true;
         }
 
         public void Save()
