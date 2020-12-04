@@ -4,6 +4,7 @@ using Kontrer.OwnerServer.Business.Pricing;
 using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
 using Kontrer.OwnerServer.Data.Abstraction.Pricing;
 using Kontrer.OwnerServer.Data.Abstraction.UnitOfWork;
+using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using Kontrer.Shared.Tests.FakeData;
 using Microsoft.Extensions.Options;
@@ -22,8 +23,14 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing
         [Fact]
         public async Task TestPriceCounting()
         {
-            var mockUoWFactory = new Mock<IUnitOfWorkFactory<IPricingSettingsUnitOfWork>>();
+            var mockRepo = new Mock<IPricingSettingsRepository>();
+            mockRepo.Setup(x => x.GetTimedSettings(new List<TimedSettingSelector>())).Returns(() =>new Dictionary<string,NullableResult<object>>());
 
+            var mockUoW = new Mock<IPricingSettingsUnitOfWork>();
+            mockUoW.Setup(x => x.PricingSettingsRepository).Returns(() => mockRepo.Object);
+
+            var mockUoWFactory = new Mock<IUnitOfWorkFactory<IPricingSettingsUnitOfWork>>();
+            mockUoWFactory.Setup(x => x.CreateUnitOfWork()).Returns(() => mockUoW.Object);
             var bp = BlueprintFakeData.GetAccommodationBlueprints(1)[0];
 
             Faker faker = new Faker();

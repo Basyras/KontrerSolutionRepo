@@ -4,6 +4,16 @@ namespace Kontrer.OwnerServer.Business.Pricing
 {
     public class RawPersonCost
     {
-        public List<RawItemCost> RawPersonItems { get; set; }
+        public RawPersonCost()
+        {
+
+        }
+        public RawPersonCost(List<RawItemCost> rawPersonItems)
+        {
+            RawPersonItems = rawPersonItems;
+        }
+
+
+        public List<RawItemCost> RawPersonItems { get; set; } = new List<RawItemCost>();
     }
 }

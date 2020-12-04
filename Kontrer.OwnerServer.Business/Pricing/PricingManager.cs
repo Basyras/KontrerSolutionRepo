@@ -22,15 +22,17 @@ namespace Kontrer.OwnerServer.Business.Pricing
         
         private readonly IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory;
         private readonly IOptions<PricingManagerOptions> options;
-        private readonly List<IAccommodationPricingMiddleware> accommodationPricers;
-        private readonly List<IAccommodationBlueprintEditor> accommodationEditors;
+        private readonly List<IAccommodationPricingMiddleware> accommodationPricers = new List<IAccommodationPricingMiddleware>();
+        private readonly List<IAccommodationBlueprintEditor> accommodationEditors = new List<IAccommodationBlueprintEditor>();
 
         public PricingManager(IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PricingManagerOptions> options, IEnumerable<IAccommodationPricingMiddleware> accommodationPricers, IEnumerable<IAccommodationBlueprintEditor> accommodationEditors)
         {            
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.options = options;
+            if(accommodationPricers != null)
             this.accommodationPricers = new List<IAccommodationPricingMiddleware>(accommodationPricers);
-            this.accommodationEditors = new List<IAccommodationBlueprintEditor>(accommodationEditors);
+            if (accommodationEditors != null)
+                this.accommodationEditors = new List<IAccommodationBlueprintEditor>(accommodationEditors);
         }
 
 
@@ -110,7 +112,8 @@ namespace Kontrer.OwnerServer.Business.Pricing
 
         private PersonCost FinishPersonCost(Currencies currency, RawPersonCost rawPersonCost)
         {
-            var totalCash = new Cash(currency, rawPersonCost.RawPersonItems.Sum(x => x.SubTotal));
+            decimal totalCost = (rawPersonCost.RawPersonItems.Count > 0) ?  rawPersonCost.RawPersonItems.Sum(x => x.SubTotal) : 0m;
+            Cash totalCash = new Cash(currency, totalCost);
             var personCost = new PersonCost(rawPersonCost.RawPersonItems.Select(x => FinishItemCost(currency, x)).ToList().AsReadOnly(), totalCash);
             return personCost;
         }
