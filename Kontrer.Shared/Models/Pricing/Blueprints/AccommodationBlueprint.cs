@@ -7,8 +7,12 @@ using System.Text;
 namespace Kontrer.Shared.Models.Pricing.Blueprints
 {
     public class AccommodationBlueprint
-    {    
+    {
 
+        public AccommodationBlueprint()
+        {
+
+        }
 
         public AccommodationBlueprint(Currencies currency,DateTime start, DateTime end, List<RoomBlueprint> rooms = null, List<ItemBlueprint> contractItems = null, string customersNotes = null) 
         {

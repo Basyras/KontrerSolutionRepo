@@ -13,12 +13,12 @@ namespace Kontrer.OwnerServer.Bootstrapper
     {
         public static void Main(string[] args)
         {
+            
             AspApiBootstrapper bootstrapper = new AspApiBootstrapper();
             var host  = bootstrapper.CreateHostBuilder(args).Build();
             host.Run();
-        }
 
-      
+        }     
 
 
     }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Presentation.AspApi
 {
+    //[Obsolete]
     public class Program
     {
         public static void Main(string[] args)

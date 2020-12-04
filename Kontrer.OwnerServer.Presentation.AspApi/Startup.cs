@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Presentation.AspApi
 {
+    
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -32,9 +33,9 @@ namespace Kontrer.OwnerServer.Presentation.AspApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kontrer.OwnerServer.Presentation.AspApi", Version = "v1" });
-            });            
+            });
 
-            ApiBootstrapper.ConfigureServices(services);
+            //ApiBootstrapper.ConfigureServices(services);
 
 
         }

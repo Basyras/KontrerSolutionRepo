@@ -16,12 +16,12 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
     {
         private readonly IPricingManager pricingManager;
 
-        public PricingController(IPricingManager pricingManager = null)
+        public PricingController(IPricingManager pricingManager)
         {
             this.pricingManager = pricingManager;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint blueprint)
         {
             AccommodationCost cost = await pricingManager.CalculateAccommodationCost(blueprint);

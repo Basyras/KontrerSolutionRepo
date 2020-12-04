@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Kontrer.OwnerServer.Business.Abstraction.Pricing;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Bootstrapping
     {
         public static void ConfigureServices(IServiceCollection services)
         {
-
+            //services.AddSingleton<IPricingManager,PricingManager>
         }
     }
 }

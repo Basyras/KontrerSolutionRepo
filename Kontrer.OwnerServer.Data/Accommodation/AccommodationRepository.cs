@@ -63,7 +63,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation
         }
 
 
-        public void Cancel(int id,bool canceledByCustomer, string notes = null)
+        public void Cancel(int id, bool canceledByCustomer, string notes = null)
         {
             AccommodationEntity entity = new AccommodationEntity()
             {

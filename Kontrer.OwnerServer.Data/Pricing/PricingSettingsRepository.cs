@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Pricing
 {
-    public class DefaultPricingSettingsRepository : IPricingSettingsRepository
+    public class PricingSettingsRepository : IPricingSettingsRepository
     {
         public void AddTimedSetting(TimedSetting timedSetting)
         {
