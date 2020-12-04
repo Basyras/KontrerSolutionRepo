@@ -23,7 +23,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing.PricingMiddlewares
         public void BasicCalculation(int count,int costPerOne)
         {
             var itemBb = new ItemBlueprint(new Cash(Currencies.CZK, costPerOne), count, 0);
-            var accoBp = new AccommodationBlueprint(Currencies.CZK, DateTime.Now, DateTime.Now.AddDays(1), null, new List<ItemBlueprint>() { itemBb, itemBb });          
+            var accoBp = new AccommodationBlueprint(Currencies.CZK, DateTime.Now, DateTime.Now.AddDays(1), new Shared.Models.CustomerModel(),null, new List<ItemBlueprint>() { itemBb, itemBb });          
             RawAccommodationCost rawAccoCost = new(Currencies.CZK, new List<RawItemCost>() { new RawItemCost(itemBb), new RawItemCost(itemBb) }, new List<RawRoomCost>());
 
 

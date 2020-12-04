@@ -1,4 +1,5 @@
-﻿using Kontrer.Shared.Models.Pricing.Blueprints;
+﻿using Kontrer.OwnerServer.Data.Abstraction.Pricing;
+using Kontrer.Shared.Models.Pricing.Blueprints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,12 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
     {
         public override string WorkDescription => "Adding taxes from ItemBlueprint";
         public override int QueuePosition => int.MaxValue;
-     
+
+        public override List<TimedSettingSelector> GetRequiredSettings(AccommodationBlueprint blueprint)
+        {
+            return null;
+        }
+
         protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, ITimedSettingResolver resolver)
         {
             decimal taxAmountToAdd = rawCost.SubTotal * (decimal)blueprint.TaxPercentageToAdd;

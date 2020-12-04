@@ -8,7 +8,7 @@ namespace Kontrer.Shared.Models
 {
     public struct NullableResult<T>
     {
-        public readonly T Value { get; init; }
+        public T Value { get; set; }
         public bool WasFound { get; init; }
         public readonly T DefaultValue { get; init; }
 

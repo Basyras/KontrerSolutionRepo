@@ -10,10 +10,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Data.Pricing
+namespace Kontrer.OwnerServer.Data.Pricing.EntityFramework
 {
-    public class PricingSettingsRepository : IPricingSettingsRepository
+
+    public class EfPricingSettingsRepository : IPricingSettingsRepository
     {
+        private readonly OwnerServerDbContext dbContext;
+
+        public EfPricingSettingsRepository(OwnerServerDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
         public void AddTimedSetting(TimedSetting timedSetting)
         {
             throw new NotImplementedException();
@@ -21,7 +29,7 @@ namespace Kontrer.OwnerServer.Data.Pricing
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            dbContext.Dispose();
         }
 
         public void EditTimedSetting(TimedSettingSelector selector, TimedSetting timedSetting)
@@ -44,14 +52,14 @@ namespace Kontrer.OwnerServer.Data.Pricing
             throw new NotImplementedException();
         }
 
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
+        //public void Save()
+        //{
+        //    dbContext.PriceSettings.Save
+        //}
 
-        public Task SaveAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task SaveAsync(CancellationToken cancellationToken = default)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

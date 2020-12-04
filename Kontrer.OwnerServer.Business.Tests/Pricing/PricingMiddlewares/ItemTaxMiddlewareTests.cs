@@ -22,8 +22,8 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing.PricingMiddlewares
         {
 
 
-            var itemBb = new ItemBlueprint(new Cash(Currencies.CZK, 1), 1, itemTax);            
-            var accoBp = new AccommodationBlueprint(Currencies.CZK, DateTime.Now, DateTime.Now.AddDays(1), null, new List<ItemBlueprint>() { itemBb });
+            var itemBb = new ItemBlueprint(new Cash(Currencies.CZK, 1), 1, itemTax);
+            var accoBp = new AccommodationBlueprint(Currencies.CZK, DateTime.Now, DateTime.Now.AddDays(1), new Shared.Models.CustomerModel(), null, new List<ItemBlueprint>() { itemBb }); 
             var rawCost = new RawItemCost(itemBb);
             rawCost.ManipulateCost("test", baseSubTotal);
             RawAccommodationCost rawAccoCost = new(Currencies.CZK, new List<RawItemCost>() { rawCost }, new List<RawRoomCost>());

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kontrer.OwnerServer.Data.Abstraction.Pricing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,10 @@ namespace Kontrer.OwnerServer.Business.Pricing
 {
     public class SettingNameConstants
     {
-        public const string CustomerLoayltyDiscount = "CustomerLoayltyDiscount";
+        public const string CustomerPercentageDiscountPerAccommodation = "CustomerPercentageDiscountPerAccommodation";
+        public readonly static ResolveRequest<float> CustomerPercentageDiscountPerAccommodationRequest = new ResolveRequest<float>(CustomerPercentageDiscountPerAccommodation);
+
+        public const string MaxCustomerPercentageDiscountPerAccommodation = "MaxCustomerPercentageDiscountPerAccommodation";
+        public readonly static ResolveRequest<float> MaxCustomerPercentageDiscountPerAccommodationRequest = new ResolveRequest<float>(MaxCustomerPercentageDiscountPerAccommodation);        
     }
 }

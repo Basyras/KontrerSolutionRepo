@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Kontrer.OwnerServer.Data.Abstraction\Kontrer.OwnerServer.Data.Abstraction.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UnitOfWork\" />
+  </ItemGroup>
+
 </Project>

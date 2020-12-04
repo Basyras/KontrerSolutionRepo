@@ -11,5 +11,6 @@ namespace Kontrer.OwnerServer.Business.Abstraction.Customers
     public interface ICustomerManager 
     {
         ICustomerUnitOfWork CreateUnitOfWork();
+
     }
 }

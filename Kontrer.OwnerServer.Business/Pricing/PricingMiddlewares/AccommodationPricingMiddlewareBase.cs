@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
 {
-    public abstract class AccommodationPricingMiddlewareBase : IPricingMiddleware<AccommodationBlueprint, RawAccommodationCost>
+    public abstract class AccommodationPricingMiddlewareBase : IAccommodationPricingMiddleware
     {
         //protected const string RoomGroup = "RoomGroup";
         public abstract int QueuePosition { get; }
         public abstract string WorkDescription { get; }
+        public abstract List<TimedSettingSelector> GetRequiredSettings(AccommodationBlueprint blueprint);
 
         //Dictionary<string, Action<ItemBlueprint, RawItemCost>> Calls = new Dictionary<string, Action<ItemBlueprint, RawItemCost>>();
         //Action<ItemBlueprint, RawItemCost> EveryItemAction = null
@@ -65,12 +66,9 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
             }
         }
 
-     
 
-        public List<TimedSettingSelector> GetRequiredSettings(AccommodationBlueprint blueprint)
-        {
-            throw new NotImplementedException();
-        }
+
+        
 
         protected virtual void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, ITimedSettingResolver resolver)
         {

@@ -1,6 +1,7 @@
 ﻿using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
 using Kontrer.OwnerServer.Data.Abstraction.Repositories;
 using Kontrer.OwnerServer.Data.Customer;
+using Kontrer.OwnerServer.Data.Customer.EntityFramework;
 using Kontrer.OwnerServer.Data.EntityFramework;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
@@ -11,13 +12,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Data.Accommodation
+namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
 {
-    public class AccommodationRepository : IAccommodationRepository
+    public class EfAccommodationRepository : IAccommodationRepository
     {
         private readonly OwnerServerDbContext dbContext;
 
-        public AccommodationRepository(OwnerServerDbContext dbContext)
+        public EfAccommodationRepository(OwnerServerDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -29,7 +30,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation
             model.Cost = entity.Cost;
             model.Notes = entity.Notes;
             model.CreationTime = entity.CreationTime;
-            model.Customer = CustomerRepository.ToModel(entity.Customer);
+            model.Customer = EfCustomerRepository.ToModel(entity.Customer);
             model.State = entity.State;
             return model;
 
@@ -53,7 +54,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation
                 Blueprint = model.Blueprint,
                 Cost = model.Cost,
                 CreationTime = model.CreationTime,
-                Customer = CustomerRepository.ToEntity(model.Customer),
+                Customer = EfCustomerRepository.ToEntity(model.Customer),
                 Notes = model.Notes,
                 State = model.State
 
@@ -131,19 +132,6 @@ namespace Kontrer.OwnerServer.Data.Accommodation
             throw new NotImplementedException();
         }
 
-        public void Save()
-        {
-            dbContext.SaveChanges();
-        }
-
-        public Task SaveAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

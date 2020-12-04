@@ -21,12 +21,16 @@ namespace Kontrer.OwnerServer.Business.Pricing
     {
         
         private readonly IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory;
-        private readonly IOptions<PriceManagerOptions> options;
+        private readonly IOptions<PricingManagerOptions> options;
+        private readonly List<IAccommodationPricingMiddleware> accommodationPricers;
+        private readonly List<IAccommodationBlueprintEditor> accommodationEditors;
 
-        public PricingManager(IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PriceManagerOptions> options)
+        public PricingManager(IUnitOfWorkFactory<IPricingSettingsUnitOfWork> unitOfWorkFactory, IOptions<PricingManagerOptions> options, IEnumerable<IAccommodationPricingMiddleware> accommodationPricers, IEnumerable<IAccommodationBlueprintEditor> accommodationEditors)
         {            
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.options = options;
+            this.accommodationPricers = new List<IAccommodationPricingMiddleware>(accommodationPricers);
+            this.accommodationEditors = new List<IAccommodationBlueprintEditor>(accommodationEditors);
         }
 
 
@@ -34,14 +38,22 @@ namespace Kontrer.OwnerServer.Business.Pricing
         {
             List<TimedSettingSelector> settingRequests = new List<TimedSettingSelector>();
 
-            foreach (IAccommodationBlueprintEditor editor in options.Value.AccommodationEditors)
+            foreach (IAccommodationBlueprintEditor editor in accommodationEditors)
             {
-                settingRequests.AddRange(editor.GetRequiredSettings(accommodationBlueprint));
+                var required = editor.GetRequiredSettings(accommodationBlueprint);
+                if (required != null && required.Count > 0)
+                {
+                    settingRequests.AddRange(required);
+                }
             }
 
-            foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers.OrderBy(x => x.QueuePosition))
+            foreach (IAccommodationPricingMiddleware pricer in accommodationPricers.OrderBy(x => x.QueuePosition))
             {
-                settingRequests.AddRange(pricer.GetRequiredSettings(accommodationBlueprint));
+                var required = pricer.GetRequiredSettings(accommodationBlueprint);
+                if (required != null && required.Count > 0)
+                {
+                    settingRequests.AddRange(required);
+                }
             }
 
             using var unitOfWork = unitOfWorkFactory.CreateUnitOfWork();
@@ -54,14 +66,14 @@ namespace Kontrer.OwnerServer.Business.Pricing
         {
             ITimedSettingResolver settingsResolver = GetResolverForBlueprint(accommodationBlueprint);
 
-            foreach (IAccommodationBlueprintEditor editor in options.Value.AccommodationEditors)
+            foreach (IAccommodationBlueprintEditor editor in accommodationEditors)
             {
                 editor.EditBlueprint(accommodationBlueprint, settingsResolver);
             }
 
             RawAccommodationCost rawAccoCost = PrepareRawCost(accommodationBlueprint);
 
-            foreach (IAccommodationPricingMiddleware pricer in options.Value.AccommodationPricers.OrderBy(x => x.QueuePosition))
+            foreach (IAccommodationPricingMiddleware pricer in accommodationPricers.OrderBy(x => x.QueuePosition))
             {
                 pricer.CalculateContractCost(accommodationBlueprint, rawAccoCost, settingsResolver);
             }

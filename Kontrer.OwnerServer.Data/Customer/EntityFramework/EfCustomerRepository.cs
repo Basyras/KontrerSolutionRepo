@@ -10,13 +10,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Data.Customer
+namespace Kontrer.OwnerServer.Data.Customer.EntityFramework
 {
-    public class CustomerRepository : ICustomerRepository
+    public class EfCustomerRepository : ICustomerRepository
     {
         private readonly OwnerServerDbContext dbContext;
 
-        public CustomerRepository(OwnerServerDbContext dbContext)
+        public EfCustomerRepository(OwnerServerDbContext dbContext)
         {
             this.dbContext = dbContext;
         }

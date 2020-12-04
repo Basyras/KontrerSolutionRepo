@@ -14,21 +14,23 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
 
         }
 
-        public AccommodationBlueprint(Currencies currency,DateTime start, DateTime end, List<RoomBlueprint> rooms = null, List<ItemBlueprint> contractItems = null, string customersNotes = null) 
+        public AccommodationBlueprint(Currencies currency,DateTime start, DateTime end, CustomerModel customer,List<RoomBlueprint> rooms = null, List<ItemBlueprint> contractItems = null, string customersNotes = null) 
         {
             Currency = currency;
             Start = start;
             End = end;
+            Customer = customer;
             Rooms = rooms ?? new List<RoomBlueprint>();
             AccommodationItems = contractItems ?? new List<ItemBlueprint>();
             CustomersNotes = customersNotes;
         }
 
-        public AccommodationBlueprint(Currencies currency,DateTime start, DateTime end, Cash deposit, DateTime depositDeadline, List<RoomBlueprint> rooms = null, List<ItemBlueprint> contractItems = null, string customersNotes = null)
+        public AccommodationBlueprint(Currencies currency,DateTime start, DateTime end, CustomerModel customer, Cash deposit, DateTime depositDeadline, List<RoomBlueprint> rooms = null, List<ItemBlueprint> contractItems = null, string customersNotes = null)
         {
             Currency = currency;
             Start = start;
             End = end;
+            Customer = customer;
             Deposit = deposit;
             DepositDeadline = depositDeadline;
             Rooms = rooms ?? new List<RoomBlueprint>();
@@ -54,6 +56,8 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
 
         public Currencies Currency { get; set; }
         public List<DiscountBlueprint> Discounts { get; set; } = new List<DiscountBlueprint>();
+
+        public CustomerModel Customer { get; set; }
 
 
     }

@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Kontrer.OwnerServer.Data.Pricing.EntityFramework;
+using Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares;
+using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
 
 namespace Kontrer.OwnerServer.Bootstrapper.Pricing
 {
@@ -17,8 +20,10 @@ namespace Kontrer.OwnerServer.Bootstrapper.Pricing
         public PricingManagerBuilder(IServiceCollection services)
         {
             this.services = services;
-            services.AddSingleton<IPricingManager, PricingManager>();            
-            services.AddSingleton<IUnitOfWorkFactory<PricingSettingsUnitOfWork>, IUnitOfWorkFactory<PricingSettingsUnitOfWork>>();
+            services.AddSingleton<IPricingManager, PricingManager>();
+
+            AddEfStores();
+            AddAccommodationPricing();
 
             //services.Scan(scan => 
             //scan.FromAssemblyOf<PricingManager>()
@@ -27,15 +32,29 @@ namespace Kontrer.OwnerServer.Bootstrapper.Pricing
 
             //.FromAssemblyOf<PricingSettingsRepository>()
             //.AddClasses(x => x.InNamespaceOf<PricingSettingsRepository>())
-            //.AsImplementedInterfaces());            
-
-            
-
+            //.AsImplementedInterfaces());
         }
 
-      
+        private PricingManagerBuilder AddAccommodationPricing()
+        {
+            services.AddSingleton<IAccommodationBlueprintEditor, AddCustomerDiscountEditor>();
+            services.AddSingleton<IAccommodationPricingMiddleware, BaseCostMiddleware>();
+            services.AddSingleton<IAccommodationPricingMiddleware, ItemTaxMiddleware>();
 
-     
+          
+
+            return this;
+        }
+
+        private PricingManagerBuilder AddEfStores()
+        {
+            services.AddSingleton<IUnitOfWorkFactory<IPricingSettingsUnitOfWork>, EfPricingSettingsUnitOfWorkFactory>();
+            return this;
+        }
+
+
+
+
 
 
     }

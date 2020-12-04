@@ -19,10 +19,15 @@ namespace Kontrer.OwnerServer.Business.Pricing
             this.dic = dic;
         }
 
-        public NullableResult<TSetting> ResolveValue<TSetting>(string settingUniqueName)
+        //public NullableResult<TSetting> ResolveValue<TSetting>(string settingUniqueName)
+        //{
+        //    var result = dic[settingUniqueName];
+        //    return new NullableResult<TSetting>((TSetting)result.Value,result.WasFound,(TSetting)result.DefaultValue);
+        //}
+
+        public NullableResult<TSetting> ResolveValue<TSetting>(ResolveRequest<TSetting> request)
         {
-            var result = dic[settingUniqueName];
-            return new NullableResult<TSetting>((TSetting)result.Value,result.WasFound,(TSetting)result.DefaultValue);
+            throw new NotImplementedException();
         }
     }
 }

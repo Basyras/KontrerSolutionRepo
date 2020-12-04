@@ -1,4 +1,5 @@
-﻿using Kontrer.Shared.Models.Pricing.Blueprints;
+﻿using Kontrer.OwnerServer.Data.Abstraction.Pricing;
+using Kontrer.Shared.Models.Pricing.Blueprints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,13 @@ namespace Kontrer.OwnerServer.Business.Pricing.PricingMiddlewares
         public override int QueuePosition => 1;
         public override string WorkDescription => "Calculating a basic cost by Count * CostPerOne";
 
-        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, ITimedSettingResolver resolver)
+        public override List<TimedSettingSelector> GetRequiredSettings(AccommodationBlueprint blueprint)
         {
-         
+            return null;
+        }
+
+        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, ITimedSettingResolver resolver)
+        {        
 
             var newSubTotal = blueprint.Count * blueprint.CostPerOne.Amout;
             rawCost.ManipulateCost(this, newSubTotal);
