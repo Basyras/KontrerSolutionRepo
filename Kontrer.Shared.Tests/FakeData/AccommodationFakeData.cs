@@ -36,7 +36,7 @@ namespace Kontrer.Shared.Tests.FakeData
                 .RuleFor(x => x.AccommodationId, x => idCounter++)
                 .RuleFor(x => x.Customer, x => null)
                 .RuleFor(x => x.Cost, (Faker x, AccommodationModel a) => CostFakeData.GetAccommodationCosts(1, sharedCurrency)[0])
-                .RuleFor(x => x.Notes, x=>x.Random.Words(x.Random.Int(0,5)))
+                .RuleFor(x => x.OwnerNotes, x=>x.Random.Words(x.Random.Int(0,5)))
                 .RuleFor(x=>x.State,x=>x.Random.Enum<AccommodationState>())                          
                 .FinishWith((x, a) =>
                 {

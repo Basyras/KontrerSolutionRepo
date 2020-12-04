@@ -28,7 +28,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
             model.AccommodationId = entity.AccommodationId;
             model.Blueprint = entity.Blueprint;
             model.Cost = entity.Cost;
-            model.Notes = entity.Notes;
+            model.OwnerNotes = entity.OwnerNotes;
             model.CreationTime = entity.CreationTime;
             model.Customer = EfCustomerRepository.ToModel(entity.Customer);
             model.State = entity.State;
@@ -55,7 +55,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
                 Cost = model.Cost,
                 CreationTime = model.CreationTime,
                 Customer = EfCustomerRepository.ToEntity(model.Customer),
-                Notes = model.Notes,
+                OwnerNotes = model.OwnerNotes,
                 State = model.State
 
             };
@@ -71,12 +71,12 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
             {
                 AccommodationId = id,
                 State = AccommodationState.CanceledByCustomer,
-                Notes = notes
+                OwnerNotes = notes
             };
 
             dbContext.Accommodations.Attach(entity);
             dbContext.Entry(entity).Property(x => x.State).IsModified = true;
-            dbContext.Entry(entity).Property(x => x.Notes).IsModified = true;
+            dbContext.Entry(entity).Property(x => x.OwnerNotes).IsModified = true;
 
 
         }
