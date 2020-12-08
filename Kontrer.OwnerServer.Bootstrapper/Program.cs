@@ -13,7 +13,7 @@ namespace Kontrer.OwnerServer.Bootstrapper
     {
         public static void Main(string[] args)
         {
-            
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             AspApiBootstrapper bootstrapper = new AspApiBootstrapper();
             var host  = bootstrapper.CreateHostBuilder(args).Build();
             host.Run();

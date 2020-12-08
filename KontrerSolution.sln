@@ -56,6 +56,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A40C24CA-4030-4A7C-BEF1-22BB898CCD68}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		tye.yaml = tye.yaml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Data", "Kontrer.OwnerServer.Data\Kontrer.OwnerServer.Data.csproj", "{F24CD3A6-A53C-446C-8DB6-15E4D5BD7CDA}"
@@ -68,7 +69,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Bootstr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.PdfCreator", "Kontrer.OwnerServer.PdfCreator", "{F6F89EA0-279A-4493-AE63-B686B26CC1BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.PdfCreatorService", "Kontrer.OwnerServer.PdfCreatorService\Kontrer.OwnerServer.PdfCreatorService.csproj", "{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PdfCreatorService", "Kontrer.OwnerServer.PdfCreatorService\Kontrer.OwnerServer.PdfCreatorService.csproj", "{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{E3D7E1F0-C8F2-4DB7-8B35-6FAD2DB7D275}"
+	ProjectSection(SolutionItems) = preProject
+		pubsub.yaml = pubsub.yaml
+		statestore.yaml = statestore.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

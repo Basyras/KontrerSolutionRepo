@@ -13,8 +13,6 @@ COPY ["Kontrer.Shared/Kontrer.Shared.csproj", "Kontrer.Shared/"]
 COPY ["Kontrer.OwnerServer.Business.Abstraction/Kontrer.OwnerServer.Business.Abstraction.csproj", "Kontrer.OwnerServer.Business.Abstraction/"]
 COPY ["Kontrer.OwnerServer.Data.Abstraction/Kontrer.OwnerServer.Data.Abstraction.csproj", "Kontrer.OwnerServer.Data.Abstraction/"]
 COPY ["Kontrer.OwnerClient.Data.Abstraction/Kontrer.OwnerClient.Data.Abstraction.csproj", "Kontrer.OwnerClient.Data.Abstraction/"]
-COPY ["Kontrer.OwnerServer.Data/Kontrer.OwnerServer.Data.csproj", "Kontrer.OwnerServer.Data/"]
-COPY ["Kontrer.OwnerServer.Business/Kontrer.OwnerServer.Business.csproj", "Kontrer.OwnerServer.Business/"]
 RUN dotnet restore "Kontrer.OwnerServer.Bootstrapper/Kontrer.OwnerServer.Bootstrapper.csproj"
 COPY . .
 WORKDIR "/src/Kontrer.OwnerServer.Bootstrapper"

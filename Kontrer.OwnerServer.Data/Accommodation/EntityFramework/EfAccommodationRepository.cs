@@ -77,8 +77,6 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
             dbContext.Accommodations.Attach(entity);
             dbContext.Entry(entity).Property(x => x.State).IsModified = true;
             dbContext.Entry(entity).Property(x => x.OwnerNotes).IsModified = true;
-
-
         }
 
         public void Complete(int id)
@@ -129,6 +127,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
 
         public Task<PageResult<AccommodationModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
         {
+
             throw new NotImplementedException();
         }
 

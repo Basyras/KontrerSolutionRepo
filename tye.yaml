@@ -1,0 +1,44 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: kontrersolution
+extensions:
+- name: dapr
+  log-level: debug
+  components-path: "./components/"
+services:
+- name: kontrer-ownerserver-bootstrapper
+  project: Kontrer.OwnerServer.Bootstrapper/Kontrer.OwnerServer.Bootstrapper.csproj
+- name: kontrer-ownerserver-pdfcreatorservice
+  project: Kontrer.OwnerServer.PdfCreatorService/Kontrer.OwnerServer.PdfCreatorService.csproj    
+
+#- name: rabbitmq
+  #image: rabbitmq:3-management
+  #bindings:
+    #- name: ui
+      #protocol: http
+      #port: 15672
+      #containerPort: 15672
+    #- name: amqp
+      #protocol: amqp
+      #port: 5672
+
+# This may conflict with the redis instance that dapr manages.
+#
+# Doing a `docker ps` can show if its already running. If that's the case
+# then comment out out when running locally. 
+- name: redis
+  image: redis
+  bindings: 
+  - port: 6379
+    
+# To ensure that your are running a dapr placement container with the right binding port.
+# (50005 as HostPort)
+- name: placement
+  image: daprio/dapr
+  args: ./placement
+  bindings:
+    - port: 50005      
