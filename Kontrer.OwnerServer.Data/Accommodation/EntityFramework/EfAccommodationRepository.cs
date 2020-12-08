@@ -1,6 +1,5 @@
 ﻿using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
 using Kontrer.OwnerServer.Data.Abstraction.Repositories;
-using Kontrer.OwnerServer.Data.Customer;
 using Kontrer.OwnerServer.Data.Customer.EntityFramework;
 using Kontrer.OwnerServer.Data.EntityFramework;
 using Kontrer.Shared.Models;
@@ -9,7 +8,7 @@ using Kontrer.Shared.Models.Pricing.Costs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
@@ -129,9 +128,18 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
 
         public Task<PageResult<AccommodationModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
         {
+            searchedPattern = $"%{searchedPattern}%";
+            var result = dbContext.Accommodations.AsQueryable().Where(x => EF.Functions.Like(x.Customer.FirstName, searchedPattern) ||
+            EF.Functions.Like(x.Customer.SecondName, searchedPattern) ||
+            EF.Functions.Like(x.Customer.SecondName, searchedPattern) ||
+            EF.Functions.Like(x.Customer.Email, searchedPattern) ||
+            EF.Functions.Like(x.Customer.FirstName + " " + x.Customer.SecondName, searchedPattern) ||
+            EF.Functions.Like(x.Customer.SecondName + " " + x.Customer.FirstName, searchedPattern));
+            int totalCount = result.Count();
+            var records = ToModels(result.Skip((page - 1) * itemsPerPage).Take(itemsPerPage));
+            PageResult<AccommodationModel> pageResult = new PageResult<AccommodationModel>(records, itemsPerPage, totalCount, page, totalCount / itemsPerPage);
             throw new NotImplementedException();
-        }
 
-       
+        }
     }
 }
