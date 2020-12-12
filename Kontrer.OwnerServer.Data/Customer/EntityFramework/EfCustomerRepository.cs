@@ -55,9 +55,30 @@ namespace Kontrer.OwnerServer.Data.Customer.EntityFramework
             return ToModel(customer);
         }
 
-        public Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
+        public async Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
         {
-            throw new NotImplementedException();
+            searchedPattern = $"%{searchedPattern}%";
+            var query = dbContext.Customers.AsQueryable().Where(x => EF.Functions.Like(x.FirstName, searchedPattern) ||
+            EF.Functions.Like(x.SecondName, searchedPattern) ||
+            EF.Functions.Like(x.SecondName, searchedPattern) ||
+            EF.Functions.Like(x.Email, searchedPattern) ||
+            EF.Functions.Like(x.FirstName + " " + x.SecondName, searchedPattern) ||
+            EF.Functions.Like(x.SecondName + " " + x.FirstName, searchedPattern));
+            var recordsAndTotalCount = await query.Select(p => new {
+                Record = p,
+                TotalCount = query.Count()
+            }).Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToListAsync();
+
+            var result = recordsAndTotalCount.FirstOrDefault();
+            int totalCount = 0;
+            IEnumerable<CustomerModel> foundRecords = null;
+            if (result != null)
+            {
+                totalCount = result.TotalCount;
+                foundRecords = recordsAndTotalCount.Select(r => ToModel(r.Record));
+            }
+            return new PageResult<CustomerModel>(foundRecords, itemsPerPage, totalCount, page, (int)Math.Ceiling((double)totalCount / itemsPerPage));
+
         }
 
         public void Edit(CustomerModel model)
@@ -77,17 +98,21 @@ namespace Kontrer.OwnerServer.Data.Customer.EntityFramework
 
         public void Save()
         {
+            //dbContext.SaveChanges();
             throw new NotImplementedException();
         }
 
-        public Task SaveAsync(CancellationToken cancellationToken = default)
+        public async Task SaveAsync(CancellationToken cancellationToken = default)
         {
+            //await dbContext.SaveChangesAsync();
             throw new NotImplementedException();
         }
 
         public void Dispose()
         {
+            //dbContext.Dispose();
             throw new NotImplementedException();
         }
+        
     }
 }
