@@ -124,19 +124,32 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
 
         }
 
-        public Task<PageResult<AccommodationModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
+        public async Task<PageResult<AccommodationModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
         {
             searchedPattern = $"%{searchedPattern}%";
-            var result = dbContext.Accommodations.AsQueryable().Where(x => EF.Functions.Like(x.Customer.FirstName, searchedPattern) ||
+            var query = dbContext.Accommodations.AsQueryable().Where(x => EF.Functions.Like(x.Customer.FirstName, searchedPattern) ||
             EF.Functions.Like(x.Customer.SecondName, searchedPattern) ||
             EF.Functions.Like(x.Customer.SecondName, searchedPattern) ||
             EF.Functions.Like(x.Customer.Email, searchedPattern) ||
             EF.Functions.Like(x.Customer.FirstName + " " + x.Customer.SecondName, searchedPattern) ||
             EF.Functions.Like(x.Customer.SecondName + " " + x.Customer.FirstName, searchedPattern));
-            int totalCount = result.Count();
-            var records = ToModels(result.Skip((page - 1) * itemsPerPage).Take(itemsPerPage));
-            PageResult<AccommodationModel> pageResult = new PageResult<AccommodationModel>(records, itemsPerPage, totalCount, page, totalCount / itemsPerPage);
-            throw new NotImplementedException();
+            var recordsAndTotalCount = await query.Select(p => new{
+            Record = p,
+            TotalCount = query.Count()
+             }).Skip((page-1)*itemsPerPage).Take(itemsPerPage).ToListAsync();
+
+            var result = recordsAndTotalCount.FirstOrDefault();
+            int totalCount = 0;
+            IEnumerable<AccommodationModel> foundRecords = null;
+            if(result!=null)
+            {
+                totalCount = result.TotalCount;
+                foundRecords = recordsAndTotalCount.Select(r => ToModel(r.Record));
+            }
+            return new PageResult<AccommodationModel>(foundRecords, itemsPerPage, totalCount, page, (int)Math.Ceiling((double)totalCount / itemsPerPage));
+
+
+           
 
         }
     }
