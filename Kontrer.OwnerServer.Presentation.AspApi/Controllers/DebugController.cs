@@ -24,6 +24,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
 
         public DebugController(DaprClient dapr, ILogger<DebugController> logger)
         {
+            
             this.dapr = dapr;
             this.logger = logger;
         }
@@ -32,13 +33,14 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
         public async Task<string> CreateActor()
         {
             logger.LogDebug("Get method called, creating new IPdfCreatorActor actor");
-            var proxy = ActorProxy.Create<ITestActor>(ActorId.CreateRandom(), "PdfCreatorActor");
-            var proxy2 = ActorProxy.Create<ITestActor>(ActorId.CreateRandom(), "PdfCreatorActor");
-            var proxy3 = ActorProxy.Create<ITestActor>(ActorId.CreateRandom(), "PdfCreatorActor");
+            var proxy = ActorProxy.Create<ITestActor>(ActorId.CreateRandom(), "TestActor");            
+            //var proxy2 = ActorProxy.Create<ITestActor>(ActorId.CreateRandom(), "PdfCreatorActor");
+            //var proxy3 = ActorProxy.Create<ITestActor>(ActorId.CreateRandom(), "PdfCreatorActor");
             logger.LogDebug("new IPdfCreatorActor created, now calling");
-            
-            var results = await Task.WhenAll(proxy.TestMethod(), proxy2.TestMethod(), proxy3.TestMethod());
-            var result = String.Join(Environment.NewLine, results.Select(a => String.Join(", ", a)));
+
+            //var results = await Task.WhenAll(proxy.TestMethod(), proxy2.TestMethod(), proxy3.TestMethod());
+            //var result = String.Join(Environment.NewLine, results.Select(a => String.Join(", ", a)));
+            var result = await proxy.TestMethod();
             logger.LogDebug($"IPdfCreatorActor finished, result:{result}");
 
             return result;
@@ -60,6 +62,13 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
         public void TestStringChanged([FromBody] string value, [FromServices] ILogger<DebugController> logger)
         {
             logger.LogDebug($"TestStringChanged detected2, new value {value}");
+        }
+
+        [HttpDelete]
+        public async Task<Dictionary<string,string>> Test(string secretName)
+        {
+            var secretValue = await dapr.GetSecretAsync(Constants.SecretStoreName, secretName);
+            return secretValue;
         }
 
 

@@ -78,7 +78,7 @@ namespace Kontrer.OwnerServer.Presentation.AspApi
             {
                 endpoints.MapControllers();
                 endpoints.MapSubscribeHandler();
-
+                
                 //endpoints.MapPost("/TestStringChanged", async context =>
                 //{
                 //    //var confirmation = await JsonSerializer.DeserializeAsync<OrderConfirmation>(context.Request.Body, new JsonSerializerOptions()
@@ -91,8 +91,8 @@ namespace Kontrer.OwnerServer.Presentation.AspApi
 
                 //    var logger = endpoints.ServiceProvider.GetRequiredService<ILogger<Startup>>();
                 //    logger.LogDebug($"TestStringChanged detected, new value {newString}");
-                    
-                  
+
+
                 //}).WithTopic(Constants.MessageBusName, "TestStringChanged");
             });
         }

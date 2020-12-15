@@ -8,7 +8,8 @@ name: kontrersolution
 extensions:
 - name: dapr
   log-level: debug
-  components-path: "./components/"
+  #config: "configuration"  
+  components-path: "./components/"  
 services:
 - name: kontrer-ownerserver-bootstrapper
   project: Kontrer.OwnerServer.Bootstrapper/Kontrer.OwnerServer.Bootstrapper.csproj

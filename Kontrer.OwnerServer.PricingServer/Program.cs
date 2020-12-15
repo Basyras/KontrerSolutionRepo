@@ -6,20 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapr.Actors.AspNetCore;
-using Kontrer.OwnerServer.Shared.Actors.PdfCreator;
-using Kontrer.OwnerServer.PdfCreatorService.Actors;
-using Dapr.Actors.Runtime;
 
-namespace Kontrer.OwnerServer.PdfCreatorService
+namespace Kontrer.OwnerServer.PricingServer
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             CreateHostBuilder(args).Build().Run();
-            
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -27,14 +21,6 @@ namespace Kontrer.OwnerServer.PdfCreatorService
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseActors((ActorRuntimeOptions runtimeOptions)=>
-                    {                        
-                        runtimeOptions.RegisterActor<TestActor>();
-                    });
                 });
-
-
-      
     }
 }
-

@@ -67,15 +67,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.Tests", "Kon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Bootstrapper", "Kontrer.OwnerServer.Bootstrapper\Kontrer.OwnerServer.Bootstrapper.csproj", "{B12C6E7A-EB68-4882-963F-700AB95E6F0A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.PdfCreator", "Kontrer.OwnerServer.PdfCreator", "{F6F89EA0-279A-4493-AE63-B686B26CC1BC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.PdfCreatorService", "Kontrer.OwnerServer.PdfCreatorService", "{F6F89EA0-279A-4493-AE63-B686B26CC1BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PdfCreatorService", "Kontrer.OwnerServer.PdfCreatorService\Kontrer.OwnerServer.PdfCreatorService.csproj", "{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{E3D7E1F0-C8F2-4DB7-8B35-6FAD2DB7D275}"
-	ProjectSection(SolutionItems) = preProject
-		pubsub.yaml = pubsub.yaml
-		statestore.yaml = statestore.yaml
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.PricingService", "Kontrer.OwnerServer.PricingService", "{E67FE4DE-7AF6-4FB7-B0CD-805EC458C76A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingServer", "Kontrer.OwnerServer.PricingServer\Kontrer.OwnerServer.PricingServer.csproj", "{C99966C3-A4EE-4818-B29E-BCC0FC527015}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Abstraction", "Kontrer.OwnerServer.PricingService.Abstraction\Kontrer.OwnerServer.PricingService.Abstraction.csproj", "{9E3F0262-4ED0-4105-947A-741A7ED75206}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,6 +171,14 @@ Global
 		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3F0262-4ED0-4105-947A-741A7ED75206}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3F0262-4ED0-4105-947A-741A7ED75206}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3F0262-4ED0-4105-947A-741A7ED75206}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3F0262-4ED0-4105-947A-741A7ED75206}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -203,6 +211,9 @@ Global
 		{B12C6E7A-EB68-4882-963F-700AB95E6F0A} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
 		{F6F89EA0-279A-4493-AE63-B686B26CC1BC} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
 		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A} = {F6F89EA0-279A-4493-AE63-B686B26CC1BC}
+		{E67FE4DE-7AF6-4FB7-B0CD-805EC458C76A} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015} = {E67FE4DE-7AF6-4FB7-B0CD-805EC458C76A}
+		{9E3F0262-4ED0-4105-947A-741A7ED75206} = {E67FE4DE-7AF6-4FB7-B0CD-805EC458C76A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

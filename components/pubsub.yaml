@@ -6,6 +6,8 @@ spec:
   type: pubsub.redis
   metadata:
   - name: redisHost
-    value: localhost:6379
+    value: "localhost:6379" #localhost:6379 [redis.address]
   - name: redisPassword
     value: ""
+#auth:
+ # secretStore: localsecretstore

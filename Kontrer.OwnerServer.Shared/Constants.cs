@@ -9,6 +9,7 @@ namespace Kontrer.OwnerServer.Shared
     public static class Constants
     {
         public const string MessageBusName = "messagebus";
-        public const string StateStoreName = "default";
+        public const string StateStoreName = "statestore";
+        public const string SecretStoreName = "localsecretstore";
     }
 }

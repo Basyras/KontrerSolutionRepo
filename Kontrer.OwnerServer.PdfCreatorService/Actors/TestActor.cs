@@ -22,7 +22,7 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Actors
         public async Task<string> TestMethod()
         {
             Logger.LogDebug($"{nameof(TestMethod)} starting");
-            await Task.Delay(5000);
+            await Task.Delay(0);
             //return Task.FromResult("TestMethod test value");
             return $"TestMethod test value:{Guid.NewGuid()} actorId: {Id}";
         }
