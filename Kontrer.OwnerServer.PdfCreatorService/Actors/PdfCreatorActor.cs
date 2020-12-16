@@ -14,16 +14,18 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Actors
 {
     public class PdfCreatorActor : Actor, IPdfCreatorActor
     {
-        private readonly IAccommodationPdfCreator accommodationPdfCreator;
-
-        public PdfCreatorActor(IAccommodationPdfCreator accommodationPdfCreator, ActorService actorService, ActorId actorId, IActorStateManager actorStateManager = null) : base(actorService, actorId, actorStateManager)
+        private readonly IAccommodationPdfCreator pdfCreator;
+        private const string TimedPricesSnapshotState = "TimedPricesSnapshotState";
+        public PdfCreatorActor(IAccommodationPdfCreator pdfCreator, ActorService actorService, ActorId actorId, IActorStateManager actorStateManager = null) : base(actorService, actorId, actorStateManager)
         {
-            this.accommodationPdfCreator = accommodationPdfCreator;
+            this.pdfCreator = pdfCreator;
         }
 
-        public Task<MemoryStream> CreateAccommodationPdfAsync(PdfCreatorActorRequest request)
+        public async Task<MemoryStream> CreateAccommodationPdfAsync(PdfCreatorActorRequest request)
         {
-            return accommodationPdfCreator.CreatePdfAsync(request.Model);
+
+            //var prices  = this.StateManager.TryGetStateAsync<Dictionary<string,string>>(TimedPricesSnapshotState);
+            return await pdfCreator.CreatePdfAsync(request.Model);
         }
     }
 }

@@ -14,8 +14,8 @@ namespace Kontrer.OwnerServer.Presentation.AspApi.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerManager customerManager;
 
+        private readonly ICustomerManager customerManager;
         public CustomersController(ICustomerManager customerManager = null)
         {
             this.customerManager = customerManager;

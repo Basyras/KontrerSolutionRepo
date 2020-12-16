@@ -1,0 +1,12 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: envvar-secret-store
+  namespace: default
+spec:
+  type: secretstores.local.env
+  metadata:
+    - name: DAPR_API_TOKEN
+      value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.CBLnVonJUrzaJDglaWF3VZheJetotpfQQW_4G1WNO-M"
+      #https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.CBLnVonJUrzaJDglaWF3VZheJetotpfQQW_4G1WNO-M
+      #Secret KontrerSecret

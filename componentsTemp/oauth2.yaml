@@ -1,0 +1,22 @@
+﻿apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: oauth2
+  #namespace: default
+spec:
+  type: middleware.http.oauth2
+  metadata:
+  - name: clientId
+    value: "KontrerClientId"
+  - name: clientSecret
+    value: "KontrerClientSecret"
+  - name: scopes
+    value: "Customers, Accommodations"
+  - name: authURL
+    value: "localhost/90003"
+  - name: tokenURL
+    value: "localhost/90002"
+  - name: redirectURL
+    value: "localhost/90001"
+  - name: authHeaderName
+    value: "KontrerAuthHeaderName"

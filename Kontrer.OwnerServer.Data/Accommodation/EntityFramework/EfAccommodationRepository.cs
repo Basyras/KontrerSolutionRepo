@@ -118,7 +118,7 @@ namespace Kontrer.OwnerServer.Data.Accommodation.EntityFramework
 
 
         public async Task<AccommodationModel> GetAsync(int id)
-        {
+        {            
             var customer = await dbContext.Set<AccommodationModel>().FindAsync(id);
             return customer;
 
