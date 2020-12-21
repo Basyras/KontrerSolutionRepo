@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.Data.Abstraction\Kontrer.OwnerServer.Shared.Data.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

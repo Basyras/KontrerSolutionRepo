@@ -1,5 +1,4 @@
-﻿using Kontrer.OwnerServer.Business.Abstraction.Customers;
-using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
+﻿using Kontrer.OwnerServer.Business.Pricing.BlueprintEditors;
 using Kontrer.OwnerServer.Data.Abstraction.Pricing;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;

@@ -1,4 +1,3 @@
-using Kontrer.OwnerServer.Presentation.AspApi.Bootstrapping;
 using Kontrer.OwnerServer.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

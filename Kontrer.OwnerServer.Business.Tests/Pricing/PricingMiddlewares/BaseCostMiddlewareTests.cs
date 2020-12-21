@@ -20,7 +20,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing.PricingMiddlewares
         [InlineData(6,1)]
         [InlineData(100,50)]
         [InlineData(9,68)]
-        public void BasicCalculation(int count,int costPerOne)
+        public void CanCalculate(int count,int costPerOne)
         {
             var itemBb = new ItemBlueprint(new Cash(Currencies.CZK, costPerOne), count, 0);
             var accoBp = new AccommodationBlueprint(Currencies.CZK, DateTime.Now, DateTime.Now.AddDays(1), new Shared.Models.CustomerModel(),null, new List<ItemBlueprint>() { itemBb, itemBb });          

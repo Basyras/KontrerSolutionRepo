@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>3df620eb-3256-4f55-9607-0328aa893fa9</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapr.AspNetCore" Version="1.0.0-rc02" />
+    <PackageReference Include="Dapr.Client" Version="1.0.0-rc02" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Business.Abstraction\Kontrer.OwnerServer.CustomerService.Business.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Data.Abstraction\Kontrer.OwnerServer.CustomerService.Data.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

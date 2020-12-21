@@ -1,9 +1,9 @@
 ﻿using Kontrer.OwnerServer.Business.Abstraction.Accommodations;
-using Kontrer.OwnerServer.Business.Abstraction.Pricing;
 using Kontrer.OwnerServer.Data.Abstraction.Accommodation;
-using Kontrer.OwnerServer.Presentation.AspApi.Controllers;
-
 using Kontrer.OwnerServer.Presentation.AspApi.Tests.Repositories.Accommodation;
+
+using Kontrer.OwnerServer.Business.Abstraction.Pricing;
+using Kontrer.OwnerServer.Presentation.AspApi.Controllers;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Tests.FakeData;
 using Microsoft.AspNetCore.Mvc;

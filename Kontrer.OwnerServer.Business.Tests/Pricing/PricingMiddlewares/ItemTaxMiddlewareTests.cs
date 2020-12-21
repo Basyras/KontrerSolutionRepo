@@ -18,7 +18,7 @@ namespace Kontrer.OwnerServer.Business.Tests.Pricing.PricingMiddlewares
         [InlineData(6D,2F)]
         [InlineData(100D,0.05F)]
         [InlineData(1528D, 0.9F)]
-        public void BasicCalc(decimal baseSubTotal, float itemTax)
+        public void CanCalculate(decimal baseSubTotal, float itemTax)
         {
 
 
