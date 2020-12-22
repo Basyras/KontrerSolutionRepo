@@ -11,5 +11,18 @@ namespace Kontrer.OwnerServer.PricingServer.Controllers
     [ApiController]
     public class PricingController : ControllerBase
     {
+        private readonly IPricingManager pricingManager;
+
+        public PricingController(IPricingManager pricingManager)
+        {
+            this.pricingManager = pricingManager;
+        }
+
+        [HttpPost]
+        public async Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint blueprint)
+        {
+            AccommodationCost cost = await pricingManager.CalculateAccommodationCostAsync(blueprint);
+            return cost;
+        }
     }
 }

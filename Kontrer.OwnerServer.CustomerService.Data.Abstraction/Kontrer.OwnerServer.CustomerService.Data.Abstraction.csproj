@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapr.Actors" Version="1.0.0-rc02" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.Data.Abstraction\Kontrer.OwnerServer.Shared.Data.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
   </ItemGroup>
 
