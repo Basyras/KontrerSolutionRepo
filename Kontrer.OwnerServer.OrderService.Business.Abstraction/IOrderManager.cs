@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Kontrer.OwnerServer.OrderService.Business.Abstraction
 {
-    interface IOrderManager
+    public interface IOrderManager
     {
         void CreateOrder();
         void RemoveOrder();
         void EditOrder();
-        void GetOrders();
+        List<Order> GetOrders();
 
         
 
