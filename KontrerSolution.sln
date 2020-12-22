@@ -85,11 +85,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerServer.Ord
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Kontrer.OwnerServer.OrderService.Presentation", "3 - Kontrer.OwnerServer.OrderService.Presentation", "{E67F037B-2610-4F51-9102-04DA71FE6843}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.OrderService.Business.Abstraction", "Kontrer.OwnerServer.OrderService.Business.Abstraction\Kontrer.OwnerServer.OrderService.Business.Abstraction.csproj", "{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Business.Abstraction", "Kontrer.OwnerServer.OrderService.Business.Abstraction\Kontrer.OwnerServer.OrderService.Business.Abstraction.csproj", "{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.OrderService.Data.Abstraction", "Kontrer.OwnerServer.OrderService.Data.Abstraction\Kontrer.OwnerServer.OrderService.Data.Abstraction.csproj", "{9CCEFD04-97A8-4314-9BB4-1041FBD120CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Data.Abstraction", "Kontrer.OwnerServer.OrderService.Data.Abstraction\Kontrer.OwnerServer.OrderService.Data.Abstraction.csproj", "{9CCEFD04-97A8-4314-9BB4-1041FBD120CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.OrderService.Data", "Kontrer.OwnerServer.OrderService.Data\Kontrer.OwnerServer.OrderService.Data.csproj", "{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Data", "Kontrer.OwnerServer.OrderService.Data\Kontrer.OwnerServer.OrderService.Data.csproj", "{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -185,6 +185,14 @@ Global
 		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5D3E47F-FA07-41AE-B71F-20DA7CC2770A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C99966C3-A4EE-4818-B29E-BCC0FC527015}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3F0262-4ED0-4105-947A-741A7ED75206}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3F0262-4ED0-4105-947A-741A7ED75206}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3F0262-4ED0-4105-947A-741A7ED75206}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3F0262-4ED0-4105-947A-741A7ED75206}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
