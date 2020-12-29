@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Abstraction
 {
-    public interface IAccommodationPdfCreator
+    public interface IAccommodationOrderPdfCreator
     {        
-        Task<MemoryStream> CreatePdfAsync(AccommodationModel accommodation, CultureInfo culture = null);
+        Task<MemoryStream> CreatePdfAsync(AccommodationOrder accommodationOrder, CultureInfo culture = null);
     }
 }

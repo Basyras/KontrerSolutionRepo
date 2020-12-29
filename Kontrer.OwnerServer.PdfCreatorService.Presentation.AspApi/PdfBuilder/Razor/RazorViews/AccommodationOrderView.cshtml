@@ -1,0 +1,226 @@
+﻿@using RazorLight;
+@using Kontrer.Shared.Models
+@using Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.PdfBuilder.Razor.RazorViews
+@using Kontrer.Shared.Localizator
+@using Kontrer.Shared.Models.Pricing.Costs
+@inherits TemplatePage<RazorViewModel<OrderModel<AccommodationModel>>>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>
+
+    </title>
+</head>
+<body>
+    <header>
+        <icontContainer>
+
+            <img class="iconImg"
+                 src="@Model.MainResourcesDirectory/Resources/SmlouvyBusinessResources/PdfBuilder/MoravkaLogoGrayScale.png" />
+        </icontContainer>
+
+        <heading class="heading">
+            Hotel U Přehrady <br>
+            @Model.ViewLocalizer["Order"]
+        </heading>
+
+        <quickInfo class="quickInfo">
+            <div>
+                @Model.Data.OrderItem.AccommodationId | @(Model.Data.Customer != null ? Model.Data.Customer.SecondName : "")
+            </div>
+            <div>
+                @for (int roomsIndex = 0; roomsIndex < Model.Data.OrderItem.Blueprint.Rooms.Count; roomsIndex++)
+                {
+                    string roomSize = null;
+                    if (roomsIndex > 0)
+                    {
+                        roomSize = ", ";
+                    }
+                    roomSize += Model.Data.OrderItem.Blueprint.Rooms[roomsIndex].People.Count;
+                    @roomSize
+                } | @*@Model.ViewObjects["Pension"]*@ | @Model.Data.OrderItem.Blueprint.Rooms[0].RoomStartDate.ToShortDateString()
+            </div>
+        </quickInfo>
+    </header>
+
+
+    <divider>
+        <leftPart class="leftPart">
+            <sectionLabel class="sectionLabel">
+                @Model.ViewLocalizer["Items"]
+            </sectionLabel>
+            <section>
+                @{
+                    int peopleCounter = 0;
+                    //foreach (var room in Model.Data.Order.Cost.Rooms)
+                    for (int roomIndex = 0; roomIndex < Model.Data.OrderItem.Blueprint.Rooms.Count; roomIndex++)
+                    {
+                        var roomBlueprint = Model.Data.OrderItem.Blueprint.Rooms[roomIndex];
+                        var roomCost = Model.Data.OrderItem.Cost.Rooms[roomIndex];
+                        //foreach (var person in Model.Data.Order.Cost.Rooms.SelectMany(x => x.PersonCosts))
+                        for (int personIndex = 0; personIndex < roomBlueprint.People.Count; personIndex++)
+                        {
+                            peopleCounter++;
+                            var personBlueprint = roomBlueprint.People[personIndex];
+                            var personCost = roomCost.PersonCosts[personIndex];
+
+                            <div class="subLabel">
+                                @peopleCounter. @Model.ViewLocalizer["Person"] - @Model.ViewLocalizer[personBlueprint.PersonType.ToString()] (@Model.ViewLocalizer["_total"] @personCost.TotalCost.Amount @personCost.TotalCost.Currency.ToString())
+                            </div>
+                            <table class="costTable">
+                                @*@foreach (ItemCost item in personCost.Items)*@
+                                @for (int itemIndex = 0; itemIndex < personCost.Items.Count; itemIndex++)
+                                {
+                                    var itemBlueprint = personBlueprint.PersonItems.Count > itemIndex ? personBlueprint.PersonItems[itemIndex] : null;
+                                    var itemCost = personCost.Items[itemIndex];
+
+                                    <tr class="costRow">
+                                        <td class="costsectionLabel">
+                                            @Model.ItemsLocalizer[itemBlueprint.ItemName]
+                                            @foreach (var infos in itemBlueprint.ExtraInfo)
+                                            {
+                                                @Model.ItemsLocalizer[infos.Value]
+                                            }
+                                        </td>
+                                        <td class="costSepparator">
+                                        </td>
+                                        <td class="costPrice">
+                                            @itemCost.TotalCost.Amount @itemCost.TotalCost.Currency.ToString()
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        }
+                    }
+                }
+
+                <div class="subLabel">
+                    @Model.ViewLocalizer["Others"]
+                </div>
+
+                <table class="costTable">
+                    @foreach (var itemCost in Model.Data.OrderItem.Cost.AccomodationItems)
+                    {
+                        <tr class="costRow">
+                            <td class="costsectionLabel">
+                                @Model.ItemsLocalizer[itemCost.Name]
+                                @*@item.Name*@
+                            </td>
+                            <td class="costSepparator">
+                            </td>
+                            <td class="costPrice">
+                                @itemCost.TotalCost.Amount @itemCost.TotalCost.Currency.ToString()
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+
+                <table class="totalTable">
+                    <tr class="costRow">
+                        <td class="totalsectionLabel">
+                            @Model.ViewLocalizer["Total"]
+                        </td>
+                        <td class="totalCell">
+                            @Model.Data.OrderItem.Cost.TotalCost.Amount @@Model.Data.Order.Cost.TotalCost.Currency.ToString()
+                        </td>
+                    </tr>
+                </table>
+            </section>
+
+        </leftPart>
+
+        <rightPart class="rightPart">
+            <sectionLabel>
+                @Model.ViewLocalizer["Contacts"]
+            </sectionLabel>
+            <section>
+                <div class="subLabel">
+                    @Model.ViewLocalizer["Merchant"]
+                </div>
+                <div class="subSection">
+                    @Model.Data.Trader.TraderName <br>
+                    IČO: @Model.Data.Trader.CIN <br>
+                    DIČ: @Model.Data.Trader.VATID <br>
+                    @Model.Data.Trader.Contact.Email @Model.Data.Trader.Contact.PhoneNumber
+                    @Model.Data.Trader.Address.District @Model.Data.Trader.Address.PostCode @Model.Data.Trader.Address.Street @Model.Data.Trader.Address.HouseNumber
+                </div>
+
+                <div class="subLabel">
+                    @Model.ViewLocalizer["Customer"]
+                </div>
+                <div class="subSection">
+                    @Model.Data.OrderItem.Blueprint.Customer.FirstName @Model.Data.OrderItem.Blueprint.Customer.SecondName @Model.Data.OrderItem.Blueprint.Customer.Contact.Email <br>
+                    @Model.Data.OrderItem.Blueprint.Customer.Address.District @Model.Data.OrderItem.Blueprint.Customer.Address.PostCode @Model.Data.OrderItem.Blueprint.Customer.Address.Street @Model.Data.OrderItem.Blueprint.Customer.Address.HouseNumber
+                </div>
+
+            </section>
+
+            <sectionLabel>
+                @Model.ViewLocalizer["Accommodation"]
+            </sectionLabel>
+            <section>
+                <div class="subLabel">
+                    @Model.ViewLocalizer["CheckIn"]: @Model.Data.OrderItem.Blueprint.Rooms[0].RoomStartDate.ToShortDateString()
+                </div>
+
+                <div class="subLabel">
+                    @Model.ViewLocalizer["CheckOut"]:  @Model.Data.OrderItem.Blueprint.Rooms[0].RoomEndDate.ToShortDateString()
+                </div>
+
+                <div class="subLabel">
+                    @Model.ViewLocalizer["Rooms"]
+                </div>
+
+                <table class="costTable">
+                    @foreach (var room in Model.Data.OrderItem.Blueprint.Rooms)
+                    {
+                        <tr>
+                            <td class="costsectionLabel">
+                                @Model.ViewLocalizer["Room"] @room.RoomType
+                            </td>
+                            <td class="costPrice">
+                                @Model.ViewLocalizer["_beds"]: @room.People.Count
+                            </td>
+                            <td class="costPrice">
+                                @Model.ViewLocalizer["_days"]: @room.RoomEndDate.Subtract(room.RoomStartDate).Days
+                            </td>
+                            <td class="roomEmptyColumn"></td>
+                        </tr>
+                    }
+                </table>
+            </section>
+
+            <sectionLabel>
+                @Model.ViewLocalizer["Info"]
+            </sectionLabel>
+            <section>
+
+                @if (Model.Data.OrderItem.Blueprint.Deposit.Amount > 0)
+                {
+                    <table class="depositTable">
+                        <tr class="costRow">
+                            <td class="totalsectionLabel">
+                                @Model.ViewLocalizer["_deposit"]
+                            </td>
+
+                            <td class="totalCell">
+                                @Model.Data.OrderItem.Blueprint.Deposit.Amount @Model.Data.OrderItem.Blueprint.Deposit.Currency.ToString()
+                            </td>
+                        </tr>
+                    </table>
+                    if (String.IsNullOrEmpty(Model.Data.OwnerPublicNotes) == false)
+                    {
+                        <br />
+                        @Model.Data.OwnerPublicNotes
+                    }
+
+                }
+            </section>
+        </rightPart>
+    </divider>
+</body>
+</html>

@@ -1,10 +1,16 @@
+using Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Actors;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
+using Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
@@ -13,14 +19,22 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var builder = CreateHostBuilder(args);
+            var host = builder.Build();
+            host.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var hostBuilder = Host.CreateDefaultBuilder(args)                 
+                   .ConfigureDaprMicroservice((MicroserviceBuilder serviceBuilder) => 
+                   {   
+                       serviceBuilder.MicroserviceProvider.RegisterActor<PdfCreatorActor>();
+                       serviceBuilder.WebBuilder.UseStartup<Startup>();
+                   });
+
+            return hostBuilder;
+
+        }
     }
 }

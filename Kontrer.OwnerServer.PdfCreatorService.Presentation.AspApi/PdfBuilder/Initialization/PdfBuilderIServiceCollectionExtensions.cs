@@ -10,19 +10,20 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.PdfCreatorService.PdfBuilder
+namespace Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Initialization
 {
     public static class PdfBuilderIServiceCollectionExtensions
     {
         public static IServiceCollection AddPdfBuilder(this IServiceCollection services)
         {
-            services.AddSingleton<IAccommodationPdfCreator, RazorAccommodationPdfCreator>();
+            services.AddSingleton<IAccommodationOrderPdfCreator, RazorAccommodationOrderPdfCreator>();
             services.AddSingleton<IHtmlToPdfConverter, SelectPdfHtmlToPdfConverter>();
-            services.AddSingleton<IAccommodationToHtmlConverter, RazorLightAccommodationToHtmlConverter>();
-            services.Configure<AccommodationToHtmlConverterOptions>(x => 
+            services.AddSingleton<IAccommodationOrderToHtmlConverter, RazorLightAccommodationOrderToHtmlConverter>();
+            services.Configure<RazorLightPdfBuilderOptions>(x => 
             {
                 x.TemplateName = "AccommodationRazorTemplate";
-                x.TemplatesDirectory = $"{Directory.GetCurrentDirectory()}/Resources/PdfRazorTemplates";
+                x.TemplatesDirectory = $"{Directory.GetCurrentDirectory()}/Resources/PdfBuilder/Views";
+                x.RootResourceDirectory = $"{Directory.GetCurrentDirectory()}/Resources/PdfBuilder/ViewResources";
             });
 
 

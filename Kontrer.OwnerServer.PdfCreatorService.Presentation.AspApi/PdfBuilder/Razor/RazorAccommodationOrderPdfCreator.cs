@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Razor
 {
-    public class RazorAccommodationPdfCreator : IAccommodationPdfCreator
+    public class RazorAccommodationOrderPdfCreator : IAccommodationOrderPdfCreator
     {
         private readonly IHtmlToPdfConverter htmlToPdfConverter;
-        private readonly IAccommodationToHtmlConverter accommodationPdfCreator;
+        private readonly IAccommodationOrderToHtmlConverter accommodationPdfConverter;
 
-        public RazorAccommodationPdfCreator(IHtmlToPdfConverter htmlToPdfConverter, IAccommodationToHtmlConverter modelToHtmlConverter)
+        public RazorAccommodationOrderPdfCreator(IHtmlToPdfConverter htmlToPdfConverter, IAccommodationOrderToHtmlConverter modelToHtmlConverter)
         {
             this.htmlToPdfConverter = htmlToPdfConverter;
-            this.accommodationPdfCreator = modelToHtmlConverter;
+            this.accommodationPdfConverter = modelToHtmlConverter;
         }
 
-        public async Task<MemoryStream> CreatePdfAsync(AccommodationModel accommodation, CultureInfo culture = null)
+        public async Task<MemoryStream> CreatePdfAsync(AccommodationOrder order, CultureInfo culture = null)
         {
-            var html = await accommodationPdfCreator.ToHtmlAsync(accommodation);
+            var html = await accommodationPdfConverter.ToHtmlAsync(order);
             var pdf =  await htmlToPdfConverter.ToPdfAsync(html);
             return pdf;
         }

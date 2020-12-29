@@ -11,11 +11,11 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Actors
 {
     public class PdfCreatorActor : Actor, IPdfCreatorActor
     {
-        private readonly IAccommodationPdfCreator pdfCreator;
+        private readonly IAccommodationOrderPdfCreator pdfCreator;
         private const string TimedPricesSnapshot = "TimedPricesSnapshot";
 
 
-        public PdfCreatorActor(ActorHost actorHost, IAccommodationPdfCreator pdfCreator) : base(actorHost)
+        public PdfCreatorActor(ActorHost actorHost, IAccommodationOrderPdfCreator pdfCreator) : base(actorHost)
         {
 
             this.pdfCreator = pdfCreator;
@@ -34,7 +34,7 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Actors
 
 
 
-            return await pdfCreator.CreatePdfAsync(request.Model);
+            return await pdfCreator.CreatePdfAsync(request.Order);
         }
     }
 }

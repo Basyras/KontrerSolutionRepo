@@ -9,11 +9,11 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract.Actors.Pdf
 {
     public class PdfCreatorActorRequest
     {
-        public PdfCreatorActorRequest(AccommodationModel model)
+        public PdfCreatorActorRequest(AccommodationOrder order)
         {
-            Model = model;
+            Order = order;
         }
 
-        public AccommodationModel Model { get; }
+        public AccommodationOrder Order { get; }
     }
 }
