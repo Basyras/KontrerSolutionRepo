@@ -32,15 +32,19 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
 
         public void RegisterActor<TActor>()
         {
+
+            RegisterActor(typeof(TActor));
+        }
+
+        public void RegisterActor(Type actorType)
+        {
             webBuilder.UseActors(x =>
             {
-                var actorTypeInfo = ActorTypeInformation.Get(typeof(TActor));
+                ActorTypeInformation actorTypeInfo = ActorTypeInformation.Get(actorType);
                 var registration = new ActorRegistration(actorTypeInfo);
                 x.Actors.Add(registration);
 
             });
         }
-
-      
     }
 }

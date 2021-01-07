@@ -30,32 +30,16 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
 
         private void Configure(IApplicationBuilder app)
         {
-            var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", env.ApplicationName + " v1"));
-            }
-
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseCloudEvents();
-            app.UseAuthorization();
-
+            var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();        
             app.UseEndpoints(endpoints =>
             {
-
                 endpoints.MapSubscribeHandler();
                 endpoints.MapControllers().Add(builder=> 
                 {
                     var controllerDesc = builder.Metadata.First(x => x.GetType() == typeof(ControllerActionDescriptor)) as ControllerActionDescriptor;                                      
                     builder.Metadata.Add(new TopicAttribute(messageBusManager.BusName, controllerDesc.ActionName));
-                });
+                });                
                 
-
-                //IMessageBusManager messageBusManager = endpoints.ServiceProvider.GetRequiredService<IMessageBusManager>();
                 foreach (var subs in messageBusManager.BusSubscriptions)
                 {
                     
@@ -64,6 +48,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                 }
 
             });
+            app.UseCloudEvents();
         }
     }
 }

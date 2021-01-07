@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Dapr\Kontrer.OwnerServer.Shared.MicroService.Dapr.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -20,12 +20,11 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
     public static class IHostBuilderDaprExtensions
     {
 
-        public static IHostBuilder ConfigureDaprMicroservice(this IHostBuilder builder, Action<MicroserviceBuilder> configure)
+        public static IHostBuilder ConfigureDapr(this IHostBuilder builder, Action<MicroserviceBuilder> configure)
         {
-            
+
             builder.ConfigureWebHostDefaults(webBuilder =>
-            {
-                var entryAssembly = Assembly.GetEntryAssembly();
+            {              
 
                 webBuilder
                 .ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
@@ -37,23 +36,16 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                         PropertyNameCaseInsensitive = true,
                     });
 
-                    services.AddControllers().AddDapr();
-                    services.AddSwaggerGen(c =>
-                    {
-                        c.SwaggerDoc("v1", new OpenApiInfo { Title = context.HostingEnvironment.ApplicationName, Version = "v1" });
-                    });
+                    services.AddControllers().AddDapr();              
 
-                    services.AddSingleton<IMessageBusManager, DaprMessageBusManager>();
                     services.Configure<DaprMessageBusManagerOptions>(options =>
                     {
                         options.PubSubName = MessageBusConstants.MessageBusName;
                     });
-                    services.AddTransient<IStartupFilter,DaprStartupFilter>(); //Configure
-                })
-                .UseSetting(WebHostDefaults.ApplicationKey, entryAssembly.GetName().Name); //workaround because: https://github.com/dotnet/aspnetcore/issues/7315                      
 
+                    services.AddTransient<IStartupFilter, DaprStartupFilter>(); //Configure
+                });
 
-                
                 var serviceBuilder = new MicroserviceBuilder(webBuilder).AddDaprProvider();
                 configure(serviceBuilder);
 
