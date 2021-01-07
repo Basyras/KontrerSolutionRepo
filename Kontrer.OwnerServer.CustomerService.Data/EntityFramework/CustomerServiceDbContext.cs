@@ -12,7 +12,7 @@ namespace Kontrer.OwnerServer.CustomerService.Data.EntityFramework
 {
     public class CustomerServiceDbContext : DbContext
     {
-        public virtual DbSet<AccommodationEntity> Accommodations { get; set; }
+        public virtual DbSet<FinishedAccommodationEntity> Accommodations { get; set; }
         public virtual DbSet<CustomerEntity> Customers { get; set; }  
 
         public void Commit()
@@ -20,6 +20,10 @@ namespace Kontrer.OwnerServer.CustomerService.Data.EntityFramework
             this.SaveChanges();
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {            
+            base.OnModelCreating(modelBuilder);
+        }
         public Task CommitAsync(CancellationToken cancellationToken = default)
         {
             return this.SaveChangesAsync(cancellationToken);

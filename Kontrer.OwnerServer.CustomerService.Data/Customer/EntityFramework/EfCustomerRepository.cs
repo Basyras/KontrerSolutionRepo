@@ -23,23 +23,23 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Customer.EntityFramework
         internal static CustomerModel ToModel(CustomerEntity entity)
         {
             CustomerModel model = new CustomerModel();
-            model.Accomodations = entity.Accomodations;
             model.CustomerId = entity.CustomerId;
-            model.Email = entity.Email;
+            model.Accomodations = entity.Accomodations;
+
             model.FirstName = entity.FirstName;
-            model.PhoneNumber = entity.PhoneNumber;
-            model.SecondName = entity.SecondName;
+            model.LastName = entity.LastName;
+            model.Contact = entity.Contact;            
             return model;
         }
         internal static CustomerEntity ToEntity(CustomerModel model)
         {
             CustomerEntity entity = new CustomerEntity();
-            entity.Accomodations = model.Accomodations;
             entity.CustomerId = model.CustomerId;
-            entity.Email = model.Email;
+            entity.Accomodations = model.Accomodations;
+
             entity.FirstName = model.FirstName;
-            entity.PhoneNumber = model.PhoneNumber;
-            entity.SecondName = model.SecondName;
+            entity.LastName = model.LastName;
+            entity.Contact = model.Contact;
             return entity;
         }
 
@@ -59,11 +59,11 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Customer.EntityFramework
         {
             searchedPattern = $"%{searchedPattern}%";
             var query = dbContext.Customers.AsQueryable().Where(x => EF.Functions.Like(x.FirstName, searchedPattern) ||
-            EF.Functions.Like(x.SecondName, searchedPattern) ||
-            EF.Functions.Like(x.SecondName, searchedPattern) ||
-            EF.Functions.Like(x.Email, searchedPattern) ||
-            EF.Functions.Like(x.FirstName + " " + x.SecondName, searchedPattern) ||
-            EF.Functions.Like(x.SecondName + " " + x.FirstName, searchedPattern));
+            EF.Functions.Like(x.FirstName, searchedPattern) ||
+            EF.Functions.Like(x.LastName, searchedPattern) ||
+            EF.Functions.Like(x.Contact.Email, searchedPattern) ||
+            EF.Functions.Like(x.FirstName + " " + x.LastName, searchedPattern) ||
+            EF.Functions.Like(x.LastName + " " + x.FirstName, searchedPattern));
             var recordsAndTotalCount = await query.Select(p => new {
                 Record = p,
                 TotalCount = query.Count()

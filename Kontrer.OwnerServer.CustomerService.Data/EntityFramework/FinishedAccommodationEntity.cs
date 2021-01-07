@@ -5,16 +5,13 @@ using System;
 
 namespace Kontrer.OwnerServer.CustomerService.Data.EntityFramework
 {
-    public class AccommodationEntity
+    public class FinishedAccommodationEntity
     {
         public int AccommodationId { get; set; }
-        public CustomerEntity Customer { get; set; }
+        //public CustomerEntity Customer { get; set; }
+        public int CustomerId { get; set; }
         public AccommodationCost Cost { get; set; }
-        public AccommodationBlueprint Blueprint { get; set; }
-        public DateTime CreationTime { get; set; }
-        public string OwnerNotes { get; set; }
-        public AccommodationState State { get; set; }
-       
-
+        public AccommodationOrder Order { get; set; }                
+        public string Notes { get; set; }
     }
 }

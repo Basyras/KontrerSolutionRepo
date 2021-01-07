@@ -7,12 +7,13 @@ namespace Kontrer.OwnerServer.CustomerService.Data.EntityFramework
     {
         public int CustomerId { get; set; }
         public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string Email { get; set; }
-        public int PhoneNumber { get; set; }
+        public string LastName { get; set; }
+        //public string Email { get; set; }
+        //public string  PhoneNumber { get; set; }
+        public ContactModel Contact { get; set; }
         public bool IsDeleted { get; set; }
 
-        public List<AccommodationModel> Accomodations { get; set; } = new List<AccommodationModel>();
+        public List<FinishedAccommodationModel> Accomodations { get; set; } = new List<FinishedAccommodationModel>();
 
     }
     

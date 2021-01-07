@@ -15,21 +15,17 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Abstraction.Accommodation
     /// </summary>
     public interface IAccommodationRepository : IRepository
     {
-        Task<Dictionary<int, AccommodationModel>> GetAllAsync();
-        Task<AccommodationModel> GetAsync(int id);
-        Task<PageResult<AccommodationModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern);
-        void Create(int customerId, AccommodationCost cost, AccommodationBlueprint blueprint);
-        /// <summary>
-        /// Customer payed the deposit
-        /// </summary>
-        /// <param name="id"></param>
-        void Complete(int id);
+        Task<Dictionary<int, FinishedAccommodationModel>> GetAllAsync();
+        Task<FinishedAccommodationModel> GetAsync(int id);
+        Task<PageResult<FinishedAccommodationModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern);
+
+        void Add(FinishedAccommodationModel model);      
         /// <summary>
         /// Customer canceled the order of accommodation
         /// </summary>
         /// <param name="id"></param>
-        void Cancel(int id, bool canceledByCustomer, string notes = null);
+        void Remove(int id);
 
-        void Edit(AccommodationModel model);
+        void Edit(FinishedAccommodationModel model);
     }
 }
