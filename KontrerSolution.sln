@@ -145,6 +145,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi", "OwnerServer\IdGeneratorService\Presentation\Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi\Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.csproj", "{8B52CDDE-F9B2-4F86-B3DB-3AEB8E9603F3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.IdGeneratorService", "Kontrer.OwnerServer.IdGeneratorService", "{871B6CBE-70DF-47D3-AD00-E23DF3FEA266}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.IdGeneratorService.Presentation", "Kontrer.OwnerServer.IdGeneratorService.Presentation", "{4D52BD97-C994-4652-AB94-E404AAE3F540}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -383,6 +387,9 @@ Global
 		{B3871DC5-D19D-45AA-BDEE-DD90D3225BBC} = {BCCAB445-1862-4094-A69F-295C850674B7}
 		{D2F2E6EF-3315-4E07-A447-5DE5A503F5EE} = {E67F037B-2610-4F51-9102-04DA71FE6843}
 		{D333CD98-F7DA-4DEF-BACF-C816DA23A725} = {63568DA1-5067-4909-8FE5-F402D8407720}
+		{8B52CDDE-F9B2-4F86-B3DB-3AEB8E9603F3} = {4D52BD97-C994-4652-AB94-E404AAE3F540}
+		{871B6CBE-70DF-47D3-AD00-E23DF3FEA266} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
+		{4D52BD97-C994-4652-AB94-E404AAE3F540} = {871B6CBE-70DF-47D3-AD00-E23DF3FEA266}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}
