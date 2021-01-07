@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.PricingServer
+namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi
 {
     public class Startup
     {
@@ -26,11 +26,10 @@ namespace Kontrer.OwnerServer.PricingServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kontrer.OwnerServer.PricingServer", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kontrer.OwnerServer.PricingService.Presentation.AspApi", Version = "v1" });
             });
         }
 
@@ -41,7 +40,7 @@ namespace Kontrer.OwnerServer.PricingServer
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kontrer.OwnerServer.PricingServer v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kontrer.OwnerServer.PricingService.Presentation.AspApi v1"));
             }
 
             app.UseHttpsRedirection();

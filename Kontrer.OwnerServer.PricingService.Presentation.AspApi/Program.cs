@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.PricingServer
+namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi
 {
     public class Program
     {

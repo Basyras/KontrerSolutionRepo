@@ -22,7 +22,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
         public async Task TestGetOneNull()
         {
             var mockRepo = new Mock<IAccommodationRepository>();
-            mockRepo.Setup(x => x.GetAsync(It.IsAny<int>())).Returns(() => Task.FromResult<AccommodationModel>(null));
+            mockRepo.Setup(x => x.GetAsync(It.IsAny<int>())).Returns(() => Task.FromResult<FinishedAccommodationModel>(null));
 
             var uow = new Mock<IAccommodationUnitOfWork>();
             uow.Setup(x => x.Accommodations).Returns(mockRepo.Object);
@@ -34,7 +34,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
             AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
-            ActionResult<AccommodationModel> result = await controller.Get(int.MaxValue);
+            ActionResult<FinishedAccommodationModel> result = await controller.Get(int.MaxValue);
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.NotFound, objectResult.StatusCode);
@@ -46,7 +46,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
         public async Task TestGetOneNotNull()
         {
             var mockRepo = new Mock<IAccommodationRepository>();
-            var record = new AccommodationModel() { AccommodationId = 68 };
+            var record = new FinishedAccommodationModel() { AccommodationId = 68 };
 
             mockRepo.Setup(x => x.GetAsync(It.Is<int>(x => x == record.AccommodationId))).Returns(Task.FromResult(record));
 
@@ -60,7 +60,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
             AccommodationsController controller = new AccommodationsController(mockAccoManager.Object,mockLogger.Object);
-            ActionResult<AccommodationModel> result = await controller.Get(record.AccommodationId);
+            ActionResult<FinishedAccommodationModel> result = await controller.Get(record.AccommodationId);
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.OK, objectResult.StatusCode);
@@ -71,7 +71,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
         public async Task TestGetAllNotNull()
         {
             var mockRepo = new Mock<IAccommodationRepository>();
-            Dictionary<int, AccommodationModel> records = AccommodationFakeData.GetAccommodationsWithoutCustomers(15).ToDictionary(x => x.AccommodationId);
+            Dictionary<int, FinishedAccommodationModel> records = AccommodationFakeData.GetAccommodationsWithoutCustomers(15).ToDictionary(x => x.AccommodationId);
 
             mockRepo.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(records));
 
@@ -86,7 +86,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
             AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
-            ActionResult<Dictionary<int, AccommodationModel>> result = await controller.Get();
+            ActionResult<Dictionary<int, FinishedAccommodationModel>> result = await controller.Get();
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             ObjectResult objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.OK, objectResult.StatusCode);
@@ -97,7 +97,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
         public async Task TestGetAllNull()
         {
             var mockRepo = new Mock<IAccommodationRepository>();
-            Dictionary<int, AccommodationModel> records = null;
+            Dictionary<int, FinishedAccommodationModel> records = null;
 
             mockRepo.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(records));
 
@@ -110,7 +110,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
             AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
-            ActionResult<Dictionary<int, AccommodationModel>> result = await controller.Get();
+            ActionResult<Dictionary<int, FinishedAccommodationModel>> result = await controller.Get();
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.OK, objectResult.StatusCode);

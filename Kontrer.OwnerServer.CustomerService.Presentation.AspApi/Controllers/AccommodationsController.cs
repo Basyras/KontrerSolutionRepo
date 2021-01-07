@@ -33,11 +33,11 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
 
         // GET: api/<AccomodationsController>
         [HttpGet]
-        public async Task<ActionResult<Dictionary<int, AccommodationModel>>> Get()
+        public async Task<ActionResult<Dictionary<int, FinishedAccommodationModel>>> Get()
         {
             try
             {
-                Dictionary<int, AccommodationModel> records = await unitOfWork.Accommodations.GetAllAsync();
+                Dictionary<int, FinishedAccommodationModel> records = await unitOfWork.Accommodations.GetAllAsync();
                 return this.Ok(records);
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
 
         // GET api/<AccomodationsController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<AccommodationModel>> Get(int id)
+        public async Task<ActionResult<FinishedAccommodationModel>> Get(int id)
         {
             var record = await unitOfWork.Accommodations.GetAsync(id);
             return record == null ? this.NotFound(null) : this.Ok(record);
@@ -62,10 +62,10 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
         public async Task<IActionResult> Post(int customerId, [FromBody] AccommodationBlueprint blueprint)
         {           
             
-            unitOfWork.Accommodations.Create(customerId, null, blueprint);
+            unitOfWork.Accommodations.Add(customerId, null, blueprint);
             try
             {
-                unitOfWork.Commit();
+                await unitOfWork.CommitAsync();
                 return Ok();
             }
             catch (Exception ex)
@@ -79,17 +79,17 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
 
         // PUT api/<AccomodationsController>/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] AccommodationModel value)
+        public async Task<ActionResult> Put(int id, [FromBody] FinishedAccommodationModel value)
         {
             unitOfWork.Accommodations.Edit(value);
             try
             {
-                unitOfWork.Commit();
+                await unitOfWork.CommitAsync();
                 return Ok();
             }
             catch (Exception ex)
             {
-                string message = $"Error with edit of accommodation, customerId {value.Customer.CustomerId} and accommodation start: {value.Blueprint.Start}";
+                string message = $"Error with edit of accommodation, customerId {value.CustomerId} and accommodation start: {value.Order.Blueprint.Start}";
                 logger.LogError(ex, message);
                 return Problem(message);
             }
@@ -98,12 +98,12 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
 
         // DELETE api/<AccomodationsController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id, bool canceledByCustomer, string notes = null)
+        public async Task<ActionResult> Delete(int id)
         {
-            unitOfWork.Accommodations.Cancel(id, canceledByCustomer, notes);
+            unitOfWork.Accommodations.Remove(id);
             try
             {
-                unitOfWork.Commit();
+                await unitOfWork.CommitAsync();
                 return Ok();
             }
             catch (Exception ex)

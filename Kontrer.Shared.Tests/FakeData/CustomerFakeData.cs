@@ -34,22 +34,22 @@ namespace Kontrer.Shared.Tests.FakeData
                     return enumerator.Current;
                 })
                 .RuleFor(x => x.Accomodations, (Faker faker, CustomerModel customer) =>
-                   {
-                       var accos = AccommodationFakeData.GetAccommodationsWithoutCustomer(faker.Random.Int(0,5));
-                       foreach (var acco in accos)
-                       {
-                           acco.Customer = customer;
-                           acco.Cost = CostFakeData.GetAccommodationCosts(1)[0];
-                       }
+                {
+                    var accos = AccommodationFakeData.GetAccommodationsWithoutCustomer(faker.Random.Int(0, 5));
+                    foreach (var acco in accos)
+                    {
+                        acco.Customer = customer;
+                        acco.Cost = CostFakeData.GetAccommodationCosts(1)[0];
+                    }
 
-                       return accos;
+                    return accos;
 
-                   })
-                .RuleFor(x => x.Email, x => x.Person.Email)
+                })
+                .RuleFor(x => x.Contact.Email, x => x.Person.Email)
                 .RuleFor(x => x.FirstName, x => x.Person.FirstName)
-                .RuleFor(x => x.SecondName, x => x.Person.LastName)
+                .RuleFor(x => x.LastName, x => x.Person.LastName)
                 //.RuleFor(x=>x.PhoneNumber,x=>new Random().Next(000000000,99999999))                
-                .RuleFor(x => x.PhoneNumber, (x) => int.Parse(x.Random.Replace("#########")))
+                .RuleFor(x => x.Contact.PhoneNumber, (x) => x.Random.Replace("#########"))
                 .Generate(count);
             return customers;
         }
@@ -76,11 +76,11 @@ namespace Kontrer.Shared.Tests.FakeData
                     enumerator.MoveNext();
                     return enumerator.Current;
                 })
-                .RuleFor(x => x.Email, x => x.Person.Email)
+                .RuleFor(x => x.Contact.Email, x => x.Person.Email)
                 .RuleFor(x => x.FirstName, x => x.Person.FirstName)
-                .RuleFor(x => x.SecondName, x => x.Person.LastName)
+                .RuleFor(x => x.LastName, x => x.Person.LastName)
                 //.RuleFor(x=>x.PhoneNumber,x=>new Random().Next(000000000,99999999))                
-                .RuleFor(x => x.PhoneNumber, (x) => int.Parse(x.Random.Replace("#########")))
+                .RuleFor(x => x.Contact.PhoneNumber, (x) => x.Random.Replace("#########"))
                 .Generate(count);
             return customers;
         }

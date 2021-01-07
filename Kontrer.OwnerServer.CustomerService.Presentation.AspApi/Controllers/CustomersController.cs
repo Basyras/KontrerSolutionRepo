@@ -19,6 +19,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
         public CustomersController(ICustomerManager customerManager = null)
         {
             this.customerManager = customerManager;
+            
         }
 
         // GET: api/<CustomersController>

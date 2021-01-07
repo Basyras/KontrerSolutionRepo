@@ -11,10 +11,8 @@ extensions:
   #config: "configuration"  
   components-path: "./components/"  
 services:
-- name: kontrer-ownerserver-bootstrapper
-  project: Kontrer.OwnerServer.Bootstrapper/Kontrer.OwnerServer.Bootstrapper.csproj
 - name: kontrer-ownerserver-pdfcreatorservice
-  project: Kontrer.OwnerServer.PdfCreatorService/Kontrer.OwnerServer.PdfCreatorService.csproj    
+  project: Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi/Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.csproj    
 
 #- name: rabbitmq
   #image: rabbitmq:3-management

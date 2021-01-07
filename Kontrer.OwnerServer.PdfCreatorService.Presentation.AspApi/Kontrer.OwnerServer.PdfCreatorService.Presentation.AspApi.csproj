@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract\Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr.csproj" />
     <ProjectReference Include="..\Kontrer.Shared.Localizator.Abstraction\Kontrer.Shared.Localizator.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.Shared.Localizator.EF\Kontrer.Shared.Localizator.EF.csproj" />

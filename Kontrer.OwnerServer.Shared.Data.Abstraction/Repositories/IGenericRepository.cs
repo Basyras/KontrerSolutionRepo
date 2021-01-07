@@ -42,13 +42,8 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
         void Update(TKey id, TModel model);
         void Remove(TKey id);
         List<RepositoryChange<TModel, TKey>> Changes { get; }
-
-        //IEnumerable<TModel> Where(Expression<Func<TModel, bool>> selector);
-       
-        PageResult<TModel> GetPage(int page, int itemsPerPage);
-
-        
+        PageResult<TModel> GetPage(int page, int itemsPerPage);        
      
-        //IEnumerable<TModel> GetPage(int page, int itemsPerPage, Expression<Func<TModel, bool>> selector = null);
+        
     }
 }

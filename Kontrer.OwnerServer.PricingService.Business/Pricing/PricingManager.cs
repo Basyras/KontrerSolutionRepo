@@ -97,7 +97,7 @@ namespace Kontrer.OwnerServer.PricingService.Business.Pricing
         {
             List<ItemCost> accoItemCosts = rawAccommodationCost.RawAccommodationItems.Select(x => FinishItemCost(currency, x)).ToList();
             List<RoomCost> roomCosts = rawAccommodationCost.RawRooms.Select(x => FinishRoomCost(currency, x)).ToList();
-            decimal totalAmount = accoItemCosts.Sum(x => x.TotalCost.Amout) + roomCosts.Sum(x => x.TotalCost.Amout);
+            decimal totalAmount = accoItemCosts.Sum(x => x.TotalCost.Amount) + roomCosts.Sum(x => x.TotalCost.Amount);
             Cash totalCash = new Cash(currency, totalAmount);
             AccommodationCost accommodationCost = new AccommodationCost(roomCosts.AsReadOnly(), accoItemCosts.AsReadOnly(), totalCash);
 
@@ -123,7 +123,7 @@ namespace Kontrer.OwnerServer.PricingService.Business.Pricing
         {
             List<ItemCost> roomItemCosts = rawRoomCost.RawRoomItems.Select(x => FinishItemCost(currency, x)).ToList();
             List<PersonCost> peopleCosts = rawRoomCost.RawPeople.Select(x => FinishPersonCost(currency, x)).ToList();
-            decimal totalAmount = roomItemCosts.Sum(x => x.TotalCost.Amout) + peopleCosts.Sum(x => x.TotalCost.Amout);
+            decimal totalAmount = roomItemCosts.Sum(x => x.TotalCost.Amount) + peopleCosts.Sum(x => x.TotalCost.Amount);
             Cash totalCash = new Cash(currency, totalAmount);
             RoomCost roomCost = new RoomCost(peopleCosts.AsReadOnly(), roomItemCosts.AsReadOnly(), totalCash);
             return roomCost;

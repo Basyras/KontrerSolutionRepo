@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
+    <Folder Include="Actors\" />
   </ItemGroup>
 
 </Project>

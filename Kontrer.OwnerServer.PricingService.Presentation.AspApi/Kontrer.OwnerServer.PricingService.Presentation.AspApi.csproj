@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>1e01a58b-a4c6-4f11-b5c5-ef5a7e49ca6c</UserSecretsId>
+    <UserSecretsId>7f9a4c08-80ea-4f68-8809-7d039765387e</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
@@ -11,6 +11,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Business.Abstraction\Kontrer.OwnerServer.PricingService.Business.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Presentation.Abstraction\Kontrer.OwnerServer.PricingService.Presentation.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

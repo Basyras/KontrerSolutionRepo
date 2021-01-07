@@ -25,15 +25,15 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Initialization;
+using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 
 namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
 {
-    public class Startup
+    public class Startup : IStartupClass
     {
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
         }
 
         public IConfiguration Configuration { get; }
@@ -43,7 +43,7 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
         {
 
             services.AddPdfBuilder();
-            services.AddLocalizator().AddEfStorage();          
+            services.AddLocalizator().AddEfStorage();
 
         }
 
@@ -51,7 +51,9 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-          
+
         }
+
+
     }
 }

@@ -1,5 +1,6 @@
 using Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Actors;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
+using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,13 +27,8 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var hostBuilder = Host.CreateDefaultBuilder(args)                 
-                   .ConfigureDaprMicroservice((MicroserviceBuilder serviceBuilder) => 
-                   {   
-                       serviceBuilder.MicroserviceProvider.RegisterActor<PdfCreatorActor>();
-                       serviceBuilder.WebBuilder.UseStartup<Startup>();
-                   });
-
+            var hostBuilder = Host.CreateDefaultBuilder(args);
+            hostBuilder.ConfigureMicroservice<Startup>();
             return hostBuilder;
 
         }

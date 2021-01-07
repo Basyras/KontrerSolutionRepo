@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Kontrer.OwnerServer.PricingService.Business.Abstraction.Pricing;
+using Kontrer.Shared.Models.Pricing.Blueprints;
+using Kontrer.Shared.Models.Pricing.Costs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.PricingServer.Controllers
+namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
