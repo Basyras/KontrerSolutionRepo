@@ -13,6 +13,7 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
         public List<ItemBlueprint> RoomItems {get; set;}
         public List<PersonBlueprint> People { get; set; }
         public List<DiscountBlueprint> Discounts { get; set; }
+        public string RoomType { get; set; }
 
 
     }

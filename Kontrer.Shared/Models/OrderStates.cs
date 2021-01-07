@@ -1,9 +1,9 @@
 ﻿namespace Kontrer.Shared.Models
 {
-    public enum AccommodationState
+    public enum OrderStates
     {
        Unsaved = 0,     
-       WaitingForConfirmation = 1,
+       WaitingForCustomerResponse = 1,
        Ready = 2,
        Completed = 3,
        CanceledByCustomer = 4,

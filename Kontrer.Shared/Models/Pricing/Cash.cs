@@ -4,6 +4,6 @@ using System.Text;
 
 namespace Kontrer.Shared.Models.Pricing
 {
-    public record Cash(Currencies Currency, decimal Amout);
+    public record Cash(Currencies Currency, decimal Amount);
 
 }

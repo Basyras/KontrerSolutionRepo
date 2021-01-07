@@ -9,17 +9,16 @@ namespace Kontrer.Shared.Models
     {
         public CustomerModel()
         {
-
-          
+            
         }
 
         public int CustomerId { get; set; }
         public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string Email { get; set; }
-        public int PhoneNumber { get; set; }
+        public string LastName { get; set; }
+        public ContactModel Contact { get; set; }
+        public AddressModel Address { get; set; }
 
-        public List<AccommodationModel> Accomodations { get; set; }
+        public List<FinishedAccommodationModel> Accomodations { get; set; }
 
 
 

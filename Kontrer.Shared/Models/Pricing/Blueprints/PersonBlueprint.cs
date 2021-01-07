@@ -8,6 +8,23 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
 {
     public class PersonBlueprint
     {
+        public PersonBlueprint(List<ItemBlueprint> personItems, List<DiscountBlueprint> discounts, PersonTypes personType)
+        {
+            PersonItems = personItems ?? new List<ItemBlueprint>();
+            Discounts = discounts ?? new List<DiscountBlueprint>();
+            PersonType = personType;
+        }
+
+        public PersonBlueprint(PersonTypes personType) : this(null,null,personType)
+        {
+
+        }
+
+        public PersonBlueprint()
+        {
+
+        }
+
         public List<ItemBlueprint> PersonItems { get; set; }
         public List<DiscountBlueprint> Discounts { get; set; }
         public PersonTypes PersonType { get; set; }
