@@ -1,3 +1,4 @@
+using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
 {
-    public class Startup
+    public class Startup : IStartupClass
     {
         public Startup(IConfiguration configuration)
         {
@@ -26,34 +27,13 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi", Version = "v1" });
-            });
+               
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi v1"));
-            }
+        {         
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
         }
     }
 }
