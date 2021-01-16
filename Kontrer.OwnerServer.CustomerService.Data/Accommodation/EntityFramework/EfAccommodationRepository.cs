@@ -27,7 +27,7 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Accommodation.EntityFramework
             model.AccommodationId = entity.AccommodationId;
             model.CustomerId = entity.CustomerId;
             model.Cost = entity.Cost;
-            model.Order = entity.Order;            
+            
             model.OwnersPrivateNotes = entity.Notes;
             return model;
 
@@ -48,10 +48,8 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Accommodation.EntityFramework
         {
             FinishedAccommodationEntity entity = new FinishedAccommodationEntity()
             {
-                AccommodationId = model.AccommodationId,
-                Customer = EfCustomerRepository.ToEntity(model.Customer),
-                Cost = model.Cost,
-                Order = model.Order,                
+                AccommodationId = model.AccommodationId,                
+                Cost = model.Cost,                             
                 Notes = model.OwnersPrivateNotes
             };
             return entity;
@@ -100,13 +98,17 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Accommodation.EntityFramework
 
         public async Task<PageResult<FinishedAccommodationModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
         {
-            searchedPattern = $"%{searchedPattern}%";
-            var query = dbContext.Accommodations.AsQueryable().Where(x => EF.Functions.Like(x.Customer.FirstName, searchedPattern) ||
-            EF.Functions.Like(x.Customer.LastName, searchedPattern) ||
-            EF.Functions.Like(x.Customer.LastName, searchedPattern) ||
-            EF.Functions.Like(x.Customer.Contact.Email, searchedPattern) ||
-            EF.Functions.Like(x.Customer.FirstName + " " + x.Customer.LastName, searchedPattern) ||
-            EF.Functions.Like(x.Customer.LastName + " " + x.Customer.FirstName, searchedPattern));
+            //searchedPattern = $"%{searchedPattern}%";
+            //var query = dbContext.Accommodations.AsQueryable().Where(x => EF.Functions.Like(x.Customer.FirstName, searchedPattern) ||
+            //EF.Functions.Like(x.Customer.LastName, searchedPattern) ||
+            //EF.Functions.Like(x.Customer.LastName, searchedPattern) ||
+            //EF.Functions.Like(x.Customer.Contact.Email, searchedPattern) ||
+            //EF.Functions.Like(x.Customer.FirstName + " " + x.Customer.LastName, searchedPattern) ||
+            //EF.Functions.Like(x.Customer.LastName + " " + x.Customer.FirstName, searchedPattern));
+
+
+            var query = dbContext.Accommodations.AsQueryable();
+
             var recordsAndTotalCount = await query.Select(p => new
             {
                 Record = p,
