@@ -12,5 +12,7 @@ namespace Kontrer.OwnerServer.OrderService.Data.Abstraction
         void RemoveOrder(int orderId);
         void EditOrder(AccommodationOrder order);
         Task<Dictionary<string,AccommodationOrder>> GetOrders();
+
+        Task CommitAsync();
     }
 }
