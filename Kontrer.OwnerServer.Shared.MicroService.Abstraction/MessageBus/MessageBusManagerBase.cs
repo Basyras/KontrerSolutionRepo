@@ -39,9 +39,9 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus
 
 
         public abstract void RegisterPull<TRequest>(Action<TRequest> pullHandler);
-        public abstract Task PushAsync<TRequest>(TRequest request);
+        public abstract Task PushAsync<TRequest>(TRequest request, CancellationToken cancellationToken);
 
-        public abstract Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request) where TRequest : IRequest<TResponse>;
-        public abstract Task RequestAsync<TRequest>(TRequest request) where TRequest : IRequest;
+        public abstract Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest<TResponse>;
+        public abstract Task RequestAsync<TRequest>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest;
     }
 }
