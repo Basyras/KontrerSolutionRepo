@@ -42,8 +42,6 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                 
                 foreach (var subs in messageBusManager.BusSubscriptions)
                 {
-                    
-                    //var subEndpoint = subs.RequestType.Name;
                     endpoints.MapPost(subs.Topic, (Microsoft.AspNetCore.Http.RequestDelegate)subs.Handler).WithTopic(messageBusManager.BusName, subs.Topic);
                 }
 

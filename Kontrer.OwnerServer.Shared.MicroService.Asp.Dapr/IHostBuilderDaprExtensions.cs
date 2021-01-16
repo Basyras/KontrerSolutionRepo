@@ -20,6 +20,12 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
     public static class IHostBuilderDaprExtensions
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="configure"></param>
+        /// <returns></returns>
         public static IHostBuilder ConfigureDapr(this IHostBuilder builder, Action<MicroserviceBuilder> configure)
         {
 

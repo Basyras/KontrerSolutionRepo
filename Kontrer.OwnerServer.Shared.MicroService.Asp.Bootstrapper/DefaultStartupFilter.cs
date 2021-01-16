@@ -13,6 +13,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
          
             return (IApplicationBuilder app) =>
             {
+                
                 var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
 
                 if (env.IsDevelopment())

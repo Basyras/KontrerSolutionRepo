@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
-    public interface IStartupClass
+    public interface IStartupClass 
     {
         void ConfigureServices(IServiceCollection services);
         void Configure(IApplicationBuilder app, IWebHostEnvironment env);

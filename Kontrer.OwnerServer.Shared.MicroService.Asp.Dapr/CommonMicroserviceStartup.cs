@@ -45,7 +45,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = _environment.ApplicationName, Version = "v1" });
             });
 
-            services.AddSingleton<IMessageBusManager, DaprMessageBusManager>();
+            //services.AddSingleton<IMessageBusManager, DaprMessageBusManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

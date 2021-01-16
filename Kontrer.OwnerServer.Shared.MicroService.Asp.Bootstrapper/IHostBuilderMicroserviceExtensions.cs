@@ -13,14 +13,21 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
+using MassTransit;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
     public static class IHostBuilderMicroserviceExtensions
     {
+        private static readonly Assembly entryAssembly;
+        static IHostBuilderMicroserviceExtensions()
+        {
+            entryAssembly = Assembly.GetEntryAssembly();
+        }
+
         public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder builder) where TStartup : class, IStartupClass
         {
-            var entryAssembly = Assembly.GetEntryAssembly();
+            
 
             builder.ConfigureWebHostDefaults(webBuilder =>
             {
@@ -28,6 +35,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
                 webBuilder.UseSetting(WebHostDefaults.ApplicationKey, entryAssembly.GetName().Name); //workaround because: https://github.com/dotnet/aspnetcore/issues/7315                      
                 webBuilder.UseStartup<TStartup>();
             });
+
 
             builder.ConfigureDapr((MicroserviceBuilder serviceBuilder) =>
             {                             
@@ -47,6 +55,11 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 
             services.AddSingleton<IMessageBusManager, DefaultMessageBusManager>();
             services.AddTransient<IStartupFilter, DefaultStartupFilter>(); //Configure
+            services.AddMassTransit(x => 
+            {
+                x.AddConsumers(entryAssembly);                 
+            });
+
         }
 
     }

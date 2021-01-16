@@ -50,7 +50,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
 
 
 
-        public override Task PushAsync<TRequest>(TRequest request)
+        public override Task PushAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -58,19 +58,17 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
         public override void RegisterPull<TRequest>(Action<TRequest> pullHandler)
         {
             throw new NotImplementedException();
-        }
-
-
-      
+        }      
 
 
 
-        public override Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request)
+        public override Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request,CancellationToken cancellationToken)
         {
+            //daprClient.InvokeMethodAsync<TResponse>()
             throw new NotImplementedException();
         }
 
-        public override Task RequestAsync<TRequest>(TRequest request)
+        public override Task RequestAsync<TRequest>(TRequest request,CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

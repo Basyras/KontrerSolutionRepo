@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Dapr\Kontrer.OwnerServer.Shared.MicroService.Dapr.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Masstransit\" />
+  </ItemGroup>
+
 </Project>
