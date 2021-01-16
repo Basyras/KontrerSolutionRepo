@@ -32,12 +32,11 @@ namespace Kontrer.Shared.Tests.FakeData
             int idCounter = 0;
             var accommodations = new Faker<FinishedAccommodationModel>()
                 .StrictMode(true)
-                .RuleFor(x => x.Order, (Faker x) => BlueprintFakeData.GetAccommodationBlueprints(1, true, sharedCurrency)[0])
+                .RuleFor(x => x.Blueprint, (Faker x) => BlueprintFakeData.GetAccommodationBlueprints(1, true, sharedCurrency)[0])
                 .RuleFor(x => x.AccommodationId, x => idCounter++)
-                .RuleFor(x => x.Customer, x => null)
+                .RuleFor(x => x.Blueprint.Customer, x => null)
                 .RuleFor(x => x.Cost, (Faker x, FinishedAccommodationModel a) => CostFakeData.GetAccommodationCosts(1, sharedCurrency)[0])
-                .RuleFor(x => x.OwnerNotes, x=>x.Random.Words(x.Random.Int(0,5)))
-                .RuleFor(x=>x.State,x=>x.Random.Enum<OrderStates>())                          
+                .RuleFor(x => x.OwnersPrivateNotes, x => x.Random.Words(x.Random.Int(0, 5)))                
                 .FinishWith((x, a) =>
                 {
                     sharedCurrency = hasSharedCurrencies ? sharedCurrency : x.Random.Enum<Currencies>();
