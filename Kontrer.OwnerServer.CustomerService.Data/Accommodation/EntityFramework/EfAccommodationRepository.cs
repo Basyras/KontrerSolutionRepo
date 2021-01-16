@@ -26,8 +26,7 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Accommodation.EntityFramework
             FinishedAccommodationModel model = new FinishedAccommodationModel();
             model.AccommodationId = entity.AccommodationId;
             model.CustomerId = entity.CustomerId;
-            model.Cost = entity.Cost;
-            
+            model.Cost = entity.Cost;            
             model.OwnersPrivateNotes = entity.Notes;
             return model;
 

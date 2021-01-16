@@ -11,7 +11,9 @@ namespace Kontrer.OwnerServer.CustomerService.Data.EntityFramework
         //public CustomerEntity Customer { get; set; }
         public int CustomerId { get; set; }
         public AccommodationCost Cost { get; set; }
-        public AccommodationOrder Order { get; set; }                
+
+        public int OrderId { get; set; }
+        //public AccommodationOrder Order { get; set; }                
         public string Notes { get; set; }
     }
 }
