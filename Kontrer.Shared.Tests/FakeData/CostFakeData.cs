@@ -33,7 +33,7 @@ namespace Kontrer.Shared.Tests.FakeData
                   .RuleFor(x => x.Rooms, (Faker x) => GetRoomCosts(x.Random.Int(0, 5), sharedCurrency).AsReadOnly())                  
                   .RuleFor(x => x.TotalCost, (Faker x, AccommodationCost r) =>
                   {                     
-                      return new Cash(sharedCurrency.Value, r.AccomodationItems.Sum(x => x.CostPerOne.Amout) + r.Rooms.Sum(x => x.TotalCost.Amout));
+                      return new Cash(sharedCurrency.Value, r.AccomodationItems.Sum(x => x.CostPerOne.Amount) + r.Rooms.Sum(x => x.TotalCost.Amount));
                   })
 
                 .Generate(count);
@@ -88,7 +88,7 @@ namespace Kontrer.Shared.Tests.FakeData
                 .RuleFor(x => x.TotalCost, (Faker x, RoomCost r) =>
                    {
                        Currencies cur = r.RoomItems.Count == 0 ? x.Random.Enum<Currencies>() : r.RoomItems[0].CostPerOne.Currency;
-                       return new Cash(cur, r.RoomItems.Sum(x => x.CostPerOne.Amout));
+                       return new Cash(cur, r.RoomItems.Sum(x => x.CostPerOne.Amount));
                    })
                 .Generate(count);
 
@@ -110,7 +110,7 @@ namespace Kontrer.Shared.Tests.FakeData
                    .RuleFor(x => x.TotalCost, (Faker x, PersonCost r) =>
                    {
                        Currencies cur = r.Items.Count == 0 ? x.Random.Enum<Currencies>() : r.Items[0].CostPerOne.Currency;
-                       return new Cash(cur, r.Items.Sum(x => x.CostPerOne.Amout));
+                       return new Cash(cur, r.Items.Sum(x => x.CostPerOne.Amount));
                    })
                 .Generate(count);
             return people;
