@@ -10,9 +10,9 @@ namespace Kontrer.OwnerServer.OrderService.Business.Abstraction.Accommodation
 {
     public interface IAccommodationOrderManager
     {
-        Task<AccommodationOrder> CreateOrder(int customerId, AccommodationBlueprint blueprint, CultureInfo customersCulture);
-        void CancelOrder(int orderId, string reason, bool isCanceledByCustomer);
-        void EditOrder();
+        Task<AccommodationOrder> CreateOrderAsync(int customerId, AccommodationBlueprint blueprint, CultureInfo customersCulture);
+        Task CancelOrderAsync(int orderId, string reason, bool isCanceledByCustomer);
+        Task EditOrderAsync(int orderId, AccommodationBlueprint accommodationBlueprint);
         Task<List<AccommodationOrder>> GetOrders();
 
     }

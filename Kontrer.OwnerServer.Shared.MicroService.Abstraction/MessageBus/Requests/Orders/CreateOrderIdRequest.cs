@@ -11,7 +11,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.Request
     {
         public CreateOrderIdRequest()
         {
-
+                        
         }
     }
 }

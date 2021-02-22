@@ -15,10 +15,8 @@ using System.Threading.Tasks;
 namespace Kontrer.OwnerServer.OrderService.Business.Accommodation
 {
     public class AccommodationOrderManager : IAccommodationOrderManager
-    {
-       
+    {       
         private readonly IAccommodaionOrderRepository orderRepository;
-
         public AccommodationOrderManager(IAccommodaionOrderRepository orderRepository,IMessageBusManager messageBus)
         {
             this.orderRepository = orderRepository;
@@ -27,22 +25,23 @@ namespace Kontrer.OwnerServer.OrderService.Business.Accommodation
 
         private readonly IMessageBusManager messageBus;  
 
-
-        public async Task<AccommodationOrder> CreateOrder(int customerId, AccommodationBlueprint blueprint, CultureInfo orderCulture)
+        public async Task<AccommodationOrder> CreateOrderAsync(int customerId, AccommodationBlueprint blueprint, CultureInfo orderCulture)
         {
+
             int orderId = await messageBus.RequestAsync<CreateOrderIdRequest,int>();
             var order = new AccommodationOrder(orderId, customerId, blueprint, DateTime.Now, OrderStates.WaitingForCustomerResponse, orderCulture, null, null);
             orderRepository.AddOrder(order);
             await orderRepository.CommitAsync();
             return order;
+
         }
 
-        public void CancelOrder(int orderId, string reason, bool isCanceledByCustomer)
+        public Task CancelOrderAsync(int orderId, string reason, bool isCanceledByCustomer)
         {
             throw new NotImplementedException();
         }
 
-        public void EditOrder()
+        public Task EditOrderAsync(int orderId, AccommodationBlueprint accommodationBlueprint)
         {
             throw new NotImplementedException();
         }

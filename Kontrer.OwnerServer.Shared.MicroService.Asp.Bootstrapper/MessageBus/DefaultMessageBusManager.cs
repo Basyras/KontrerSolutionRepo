@@ -78,7 +78,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
              where TRequest : class, IRequest<TResponse>, new()
              where TResponse : class
         {
-            var request = new TRequest();
+            var request = new TRequest();            
             var response = await massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
             return response.Message;
 
