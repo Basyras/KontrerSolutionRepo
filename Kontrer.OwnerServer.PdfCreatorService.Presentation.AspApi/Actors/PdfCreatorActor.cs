@@ -34,7 +34,7 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Actors
 
 
 
-            return await pdfCreator.CreatePdfAsync(request.Order);
+            return await pdfCreator.CreatePdfAsync(request.Offer);
         }
     }
 }

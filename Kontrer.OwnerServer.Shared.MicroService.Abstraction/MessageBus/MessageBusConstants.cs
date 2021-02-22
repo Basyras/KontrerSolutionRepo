@@ -8,6 +8,9 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus
 {
     public static class MessageBusConstants
     {
+
         public const string MessageBusName = "messagebus";
+
+
     }
 }

@@ -19,30 +19,41 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator
         public async Task<int> GetLastUsedId(string groupName)
         {
             var record = await dbContext.Set<LastUsedIdEntity>().FindAsync(groupName);
-            return record.LastUsedId;
+            if (record is null)
+            {
+                var newEntity = new LastUsedIdEntity() { GroupName = groupName, LastUsedId = 1 };
+                dbContext.Set<LastUsedIdEntity>().Add(newEntity);
+                await dbContext.SaveChangesAsync();
+                return newEntity.LastUsedId;
+            }
+            else
+            {
+                return record.LastUsedId;
+            }
         }
 
         public Task SetLastUsedId(string groupName, int lastUsedId)
-        {
-            var newEntity = new LastUsedIdEntity()
-            {
-                GroupName = groupName,
-                LastUsedId = lastUsedId
-            };
+        {         
 
             var oldEntity = dbContext.Set<LastUsedIdEntity>().Find(groupName);
 
             if (oldEntity is null)
-            {                
+            {
+                var newEntity = new LastUsedIdEntity()
+                {
+                    GroupName = groupName,
+                    LastUsedId = lastUsedId
+                };
                 dbContext.Set<LastUsedIdEntity>().Add(newEntity);
             }
             else
             {
-                dbContext.Set<LastUsedIdEntity>().Update(newEntity);
+                oldEntity.LastUsedId = lastUsedId;
+                dbContext.Set<LastUsedIdEntity>().Update(oldEntity);
             }
 
             return dbContext.SaveChangesAsync();
-              
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            Microservice.CreateMicroservice<Startup>(args).Build().Run();
+            MicroserviceBootstrapper.CreateMicroservice<Startup>(args).Build().Run();
         }      
     }
 }

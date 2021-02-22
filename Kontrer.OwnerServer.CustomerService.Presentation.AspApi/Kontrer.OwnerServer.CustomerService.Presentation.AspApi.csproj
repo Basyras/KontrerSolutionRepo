@@ -9,8 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Dapr.AspNetCore" Version="1.0.0-rc02" />
     <PackageReference Include="Dapr.Client" Version="1.0.0-rc02" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.2" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
@@ -18,7 +18,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Business.Abstraction\Kontrer.OwnerServer.CustomerService.Business.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Data.Abstraction\Kontrer.OwnerServer.CustomerService.Data.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
+    <ProjectReference Include="..\OwnerServer\IdGeneratorService\Presentation\Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction\Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

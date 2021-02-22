@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MassTransit.AspNetCore" Version="7.1.2" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.1.4-develop.3245" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.1.4-develop.3245" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Masstransit\" />
+    <Folder Include="MassTransit\" />
   </ItemGroup>
 
 </Project>

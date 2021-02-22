@@ -1,3 +1,4 @@
+using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -13,14 +14,9 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            MicroserviceBootstrapper.CreateMicroservice<Startup>(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+       
     }
 }

@@ -14,52 +14,70 @@ using System.Reflection;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using MassTransit;
+using MassTransit.Definition;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
-    public static class IHostBuilderMicroserviceExtensions
+    public static class IHostBuilderBootstrapperExtensions
     {
         private static readonly Assembly entryAssembly;
-        static IHostBuilderMicroserviceExtensions()
+        static IHostBuilderBootstrapperExtensions()
         {
             entryAssembly = Assembly.GetEntryAssembly();
         }
 
         public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder builder) where TStartup : class, IStartupClass
         {
-            
-
             builder.ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.ConfigureServices(ConfigureMicroservicesDefaults);
-                webBuilder.UseSetting(WebHostDefaults.ApplicationKey, entryAssembly.GetName().Name); //workaround because: https://github.com/dotnet/aspnetcore/issues/7315                      
+
+                //workaround because: https://github.com/dotnet/aspnetcore/issues/7315                      
+                webBuilder.UseSetting(WebHostDefaults.ApplicationKey, entryAssembly.GetName().Name); 
                 webBuilder.UseStartup<TStartup>();
-            });
+
+                webBuilder.ConfigureDapr((MicroserviceBuilder serviceBuilder) =>
+                {
+                    var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
+                    actorRegistrator.RegisterActors<TStartup>();
+                });
 
 
-            builder.ConfigureDapr((MicroserviceBuilder serviceBuilder) =>
-            {                             
-                var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
-                actorRegistrator.RegisterActors<TStartup>();                
-            });
+            });          
 
             return builder;
         }
 
         private static void ConfigureMicroservicesDefaults(WebHostBuilderContext context, IServiceCollection services)
         {
+            services.AddTransient<IStartupFilter, BootstrapperStartupFilter>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = context.HostingEnvironment.ApplicationName, Version = "v1" });
             });
 
             services.AddSingleton<IMessageBusManager, DefaultMessageBusManager>();
-            services.AddTransient<IStartupFilter, DefaultStartupFilter>(); //Configure
-            services.AddMassTransit(x => 
+            services.AddMassTransit(x =>
             {
-                x.AddConsumers(entryAssembly);                 
-            });
+                x.AddConsumers(entryAssembly);
+                
+                x.UsingRabbitMq((transitContext, rabbitConfig) =>
+                {
 
+#warning finish automatic consumer registration
+                    //var settings = new EndpointSettings<ConsumerEndpointDefinition<IConsumer>>();
+                    //new ConsumerEndpointDefinition<IConsumer>(settings)
+                    //var definition = new NamedEndpointDefinition(context.HostingEnvironment.ApplicationName);
+                    rabbitConfig.ConfigureEndpoints(transitContext);
+                    //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
+                    //{                    
+                    //});
+                });
+
+                services.AddMassTransitHostedService();
+
+            });
         }
 
     }

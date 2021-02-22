@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -6,14 +7,14 @@ using System;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
-    public class DefaultStartupFilter : IStartupFilter
+    public class BootstrapperStartupFilter : IStartupFilter
     {
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-         
+
             return (IApplicationBuilder app) =>
             {
-                
+
                 var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
 
                 if (env.IsDevelopment())
@@ -27,11 +28,15 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
                 app.UseRouting();
 
                 app.UseAuthorization();
+
+                var massTransitBus = app.ApplicationServices.GetRequiredService<IBusControl>();
+                massTransitBus.Start();
+
                 next(app);
             };
 
         }
 
-     
+
     }
 }

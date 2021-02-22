@@ -15,13 +15,13 @@ namespace Kontrer.Shared.Models
 
         }
 
-        public FinishedAccommodationModel(int accommodationId, int customerId, int orderId, AccommodationCost cost, AccommodationOrder order, string ownersPrivateNotes = null)
+        public FinishedAccommodationModel(int accommodationId, int customerId, int orderId, AccommodationCost cost, string ownersPrivateNotes = null)
         {
             AccommodationId = accommodationId;
             CustomerId = customerId;
+            OrderId = orderId;
             Cost = cost;
             OwnersPrivateNotes = ownersPrivateNotes;
-            OrderId = orderId;
         }
 
         public int AccommodationId { get; set; }

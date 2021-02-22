@@ -12,8 +12,6 @@ namespace Kontrer.OwnerServer.CustomerService.Business.Abstraction.Accommodation
 {
     public interface IAccommodationManager
     {
-
         IAccommodationUnitOfWork CreateUnitOfWork();        
-
     }
 }

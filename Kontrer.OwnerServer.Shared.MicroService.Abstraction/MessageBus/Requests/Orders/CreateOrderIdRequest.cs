@@ -1,5 +1,4 @@
-﻿using Kontrer.Shared.Models;
-using MediatR;
+﻿using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +11,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.Request
     {
         public CreateOrderIdRequest()
         {
-            
-        }
 
-    
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Razor.Abstraction;
+using Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract.Actors.PdfCreator;
 using Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.PdfBuilder.Razor.RazorViews;
 using Kontrer.Shared.Localizator;
 using Kontrer.Shared.Models;
@@ -33,11 +34,11 @@ namespace Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Razor.RazorLight
             itemLocalizationSection = localizationManager.GetSection(nameof(AccommodationBlueprint.AccommodationItems));
         }
 
-        public async Task<string> ToHtmlAsync(AccommodationOrder accommodation, CultureInfo culture = null)
+        public async Task<string> ToHtmlAsync(AccommodationOfferViewModel offer, CultureInfo culture = null)
         {
             var viewLocalizator = await viewLocalizationSection.GetLocalizatorAsync(culture);
             var itemLocalizator = await itemLocalizationSection.GetLocalizatorAsync(culture);
-            RazorViewModel<AccommodationOrder> razorVM = new RazorViewModel<AccommodationOrder>(viewLocalizator, itemLocalizator, accommodation, options.Value.RootResourceDirectory, culture, null);
+            RazorViewModel<AccommodationOfferViewModel> razorVM = new RazorViewModel<AccommodationOfferViewModel>(viewLocalizator, itemLocalizator, offer, options.Value.RootResourceDirectory, culture, null);
             var html = await engine.CompileRenderAsync(options.Value.TemplateName, razorVM);
             return html;
         }

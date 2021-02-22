@@ -28,7 +28,7 @@ namespace Kontrer.OwnerServer.PricingService.Business.Tests.Pricing.PricingMiddl
             RawAccommodationCost rawAccoCost = new(Currencies.CZK, new List<RawItemCost>() { new RawItemCost(itemBb), new RawItemCost(itemBb) }, new List<RawRoomCost>());
 
 
-            var newSubTotal = 2* itemBb.Count * itemBb.CostPerOne.Amout;
+            var newSubTotal = 2* itemBb.Count * itemBb.CostPerOne.Amount;
             var pricer = new AccommodationBaseCostPricer();
             pricer.CalculateContractCost(accoBp, rawAccoCost, null);
             Assert.Equal(newSubTotal, rawAccoCost.RawAccommodationItems.Sum(x=>x.SubTotal));

@@ -15,7 +15,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests.IdGene
     public class IdGeneratorManagerTests
     {
         [Fact]
-        public void ManagerReturnsUniqueIdBeyondCache()
+        public void ReturnsIncrementedIdBeyondCache()
         {
             var storageMoq = new InMemoryIdGeneratorStorage();
             var manager = new IdGeneratorManager(storageMoq);
@@ -25,8 +25,8 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests.IdGene
 
             for (int i = 0; i < manager.CacheSize + 2; i++)
             {
-                currentId = manager.CreateNewId(IdGeneratorManager.OrdersGroupName);
-                nextId = manager.CreateNewId(IdGeneratorManager.OrdersGroupName);
+                currentId = manager.CreateNewId(IIdGeneratorManager.OrdersGroupName);
+                nextId = manager.CreateNewId(IIdGeneratorManager.OrdersGroupName);
                 nextId.Should().Be(currentId + 1, "Generator managers must return only unique values");
                 currentId = nextId;
             }
@@ -40,8 +40,8 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests.IdGene
             var storageMoq = new InMemoryIdGeneratorStorage();
 
             var manager = new IdGeneratorManager(storageMoq);
-            var group1Id = manager.CreateNewId(IdGeneratorManager.OrdersGroupName);
-            var group2Id = manager.CreateNewId(IdGeneratorManager.CustomersGroupName);
+            var group1Id = manager.CreateNewId(IIdGeneratorManager.OrdersGroupName);
+            var group2Id = manager.CreateNewId(IIdGeneratorManager.CustomersGroupName);
             group1Id.Should().Be(group2Id, "Two id groups should be independent of each other");
         }
 
@@ -60,8 +60,9 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests.IdGene
         {
             var storageMoq = new InMemoryIdGeneratorStorage();
             var manager = new IdGeneratorManager(storageMoq);
-            _ = manager.CreateNewId(IdGeneratorManager.OrdersGroupName);
-
+            _ = manager.CreateNewId(IIdGeneratorManager.OrdersGroupName);
         }
+
+   
     }
 }

@@ -149,7 +149,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.IdGener
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.IdGeneratorService.Presentation", "Kontrer.OwnerServer.IdGeneratorService.Presentation", "{4D52BD97-C994-4652-AB94-E404AAE3F540}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests", "OwnerServer\IdGeneratorService\Presentation\Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests\Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests.csproj", "{9B3BF23F-8E2C-4F73-BB37-D906820D36C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests", "OwnerServer\IdGeneratorService\Presentation\Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests\Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests.csproj", "{9B3BF23F-8E2C-4F73-BB37-D906820D36C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction", "OwnerServer\IdGeneratorService\Presentation\Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction\Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction.csproj", "{DAB28584-4F8A-46DE-B46C-5799FD298C9C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.OfferService", "Kontrer.OwnerServer.OfferService", "{AF685BC0-4C70-4017-B228-3D2ED3B504A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -325,6 +329,10 @@ Global
 		{9B3BF23F-8E2C-4F73-BB37-D906820D36C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B3BF23F-8E2C-4F73-BB37-D906820D36C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B3BF23F-8E2C-4F73-BB37-D906820D36C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAB28584-4F8A-46DE-B46C-5799FD298C9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAB28584-4F8A-46DE-B46C-5799FD298C9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAB28584-4F8A-46DE-B46C-5799FD298C9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAB28584-4F8A-46DE-B46C-5799FD298C9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -398,6 +406,8 @@ Global
 		{871B6CBE-70DF-47D3-AD00-E23DF3FEA266} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
 		{4D52BD97-C994-4652-AB94-E404AAE3F540} = {871B6CBE-70DF-47D3-AD00-E23DF3FEA266}
 		{9B3BF23F-8E2C-4F73-BB37-D906820D36C4} = {4D52BD97-C994-4652-AB94-E404AAE3F540}
+		{DAB28584-4F8A-46DE-B46C-5799FD298C9C} = {4D52BD97-C994-4652-AB94-E404AAE3F540}
+		{AF685BC0-4C70-4017-B228-3D2ED3B504A0} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

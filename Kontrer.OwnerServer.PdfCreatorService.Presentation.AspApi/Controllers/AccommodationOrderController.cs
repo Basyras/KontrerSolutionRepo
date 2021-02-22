@@ -1,4 +1,5 @@
 ﻿using Dapr;
+using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder;
 using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Abstraction;
 using Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract.Actors.PdfCreator;
 using Kontrer.OwnerServer.Shared;
@@ -29,10 +30,10 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Controllers
 
         //[Topic(MessageBusConstants.MessageBusName, nameof(CreateAccommodationPdf))]
         [HttpGet]
-        public async Task<byte[]> CreatePdfForAccommodationOrder(AccommodationOrder order)
+        public async Task<byte[]> CreatePdfForAccommodationOrder(AccommodationOfferViewModel offer)
         {            
-            logger.LogDebug($"{nameof(CreatePdfForAccommodationOrder)} called, customer second name: {order.Blueprint.Customer.LastName}");
-            var pdf = await creator.CreatePdfAsync(order);            
+            logger.LogDebug($"{nameof(CreatePdfForAccommodationOrder)} called, customer second name: {offer.Blueprint.Customer.LastName}");
+            var pdf = await creator.CreatePdfAsync(offer);            
             return pdf.ToArray();
         }
     }

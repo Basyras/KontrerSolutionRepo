@@ -1,6 +1,7 @@
 ﻿using Kontrer.OwnerServer.CustomerService.Business.Abstraction.Accommodations;
 using Kontrer.OwnerServer.CustomerService.Data.Abstraction.Accommodation;
 using Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Tests.FakeData;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +29,13 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
             uow.Setup(x => x.Accommodations).Returns(mockRepo.Object);
 
             var mockManager = new Mock<IAccommodationManager>();
-            mockManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);            
+            mockManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
 
-
+            var mockBus = new Mock<IMessageBusManager>();
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
-            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
-            ActionResult<FinishedAccommodationModel> result = await controller.Get(int.MaxValue);
+            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockBus.Object, mockLogger.Object);
+            ActionResult<FinishedAccommodationModel> result = await controller.GetAccommodation(int.MaxValue);
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.NotFound, objectResult.StatusCode);
@@ -54,13 +55,13 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
             uow.Setup(x => x.Accommodations).Returns(mockRepo.Object);
 
             var mockAccoManager = new Mock<IAccommodationManager>();
-            mockAccoManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);           
-
+            mockAccoManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
+            var mockBus = new Mock<IMessageBusManager>();
 
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
-            AccommodationsController controller = new AccommodationsController(mockAccoManager.Object,mockLogger.Object);
-            ActionResult<FinishedAccommodationModel> result = await controller.Get(record.AccommodationId);
+            AccommodationsController controller = new AccommodationsController(mockAccoManager.Object, mockBus.Object,mockLogger.Object);
+            ActionResult<FinishedAccommodationModel> result = await controller.GetAccommodation(record.AccommodationId);
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.OK, objectResult.StatusCode);
@@ -81,12 +82,12 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
             var mockManager = new Mock<IAccommodationManager>();
             mockManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
 
-            
 
+            var mockBus = new Mock<IMessageBusManager>();
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
-            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
-            ActionResult<Dictionary<int, FinishedAccommodationModel>> result = await controller.Get();
+            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockBus.Object, mockLogger.Object);
+            ActionResult<Dictionary<int, FinishedAccommodationModel>> result = await controller.GetAccommodations();
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             ObjectResult objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.OK, objectResult.StatusCode);
@@ -106,11 +107,12 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.Tests.Controllers
 
             var mockManager = new Mock<IAccommodationManager>();
             mockManager.Setup(x => x.CreateUnitOfWork()).Returns(uow.Object);
-            
+            var mockBus = new Mock<IMessageBusManager>();
+
             var mockLogger = new Mock<ILogger<AccommodationsController>>();
 
-            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockLogger.Object);
-            ActionResult<Dictionary<int, FinishedAccommodationModel>> result = await controller.Get();
+            AccommodationsController controller = new AccommodationsController(mockManager.Object, mockBus.Object, mockLogger.Object);
+            ActionResult<Dictionary<int, FinishedAccommodationModel>> result = await controller.GetAccommodations();
             Assert.IsAssignableFrom<ObjectResult>(result.Result);
             var objectResult = (result.Result as ObjectResult);
             Assert.Equal((int)HttpStatusCode.OK, objectResult.StatusCode);

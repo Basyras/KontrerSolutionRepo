@@ -3,7 +3,8 @@
 @using Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.PdfBuilder.Razor.RazorViews
 @using Kontrer.Shared.Localizator
 @using Kontrer.Shared.Models.Pricing.Costs
-@inherits TemplatePage<RazorViewModel<OrderModel<AccommodationModel>>>
+@using Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract.Actors.PdfCreator
+@inherits TemplatePage<RazorViewModel<AccommodationOfferViewModel>>
 
 <!DOCTYPE html>
 
@@ -29,19 +30,19 @@
 
         <quickInfo class="quickInfo">
             <div>
-                @Model.Data.OrderItem.AccommodationId | @(Model.Data.Customer != null ? Model.Data.Customer.SecondName : "")
+                @Model.Data.OrderId | @(Model.Data.Blueprint.Customer != null ? Model.Data.Blueprint.Customer.LastName: "")
             </div>
             <div>
-                @for (int roomsIndex = 0; roomsIndex < Model.Data.OrderItem.Blueprint.Rooms.Count; roomsIndex++)
+                @for (int roomsIndex = 0; roomsIndex < Model.Data.Blueprint.Rooms.Count; roomsIndex++)
                 {
                     string roomSize = null;
                     if (roomsIndex > 0)
                     {
                         roomSize = ", ";
                     }
-                    roomSize += Model.Data.OrderItem.Blueprint.Rooms[roomsIndex].People.Count;
+                    roomSize += Model.Data.Blueprint.Rooms[roomsIndex].People.Count;
                     @roomSize
-                } | @*@Model.ViewObjects["Pension"]*@ | @Model.Data.OrderItem.Blueprint.Rooms[0].RoomStartDate.ToShortDateString()
+                } | @*@Model.ViewObjects["Pension"]*@ | @Model.Data.Blueprint.Rooms[0].RoomStartDate.ToShortDateString()
             </div>
         </quickInfo>
     </header>
@@ -56,10 +57,10 @@
                 @{
                     int peopleCounter = 0;
                     //foreach (var room in Model.Data.Order.Cost.Rooms)
-                    for (int roomIndex = 0; roomIndex < Model.Data.OrderItem.Blueprint.Rooms.Count; roomIndex++)
+                    for (int roomIndex = 0; roomIndex < Model.Data.Blueprint.Rooms.Count; roomIndex++)
                     {
-                        var roomBlueprint = Model.Data.OrderItem.Blueprint.Rooms[roomIndex];
-                        var roomCost = Model.Data.OrderItem.Cost.Rooms[roomIndex];
+                        var roomBlueprint = Model.Data.Blueprint.Rooms[roomIndex];
+                        var roomCost = Model.Data.Cost.Rooms[roomIndex];
                         //foreach (var person in Model.Data.Order.Cost.Rooms.SelectMany(x => x.PersonCosts))
                         for (int personIndex = 0; personIndex < roomBlueprint.People.Count; personIndex++)
                         {
@@ -102,7 +103,7 @@
                 </div>
 
                 <table class="costTable">
-                    @foreach (var itemCost in Model.Data.OrderItem.Cost.AccomodationItems)
+                    @foreach (var itemCost in Model.Data.Cost.AccomodationItems)
                     {
                         <tr class="costRow">
                             <td class="costsectionLabel">
@@ -125,7 +126,7 @@
                             @Model.ViewLocalizer["Total"]
                         </td>
                         <td class="totalCell">
-                            @Model.Data.OrderItem.Cost.TotalCost.Amount @@Model.Data.Order.Cost.TotalCost.Currency.ToString()
+                            @Model.Data.Cost.TotalCost.Amount @@Model.Data.Order.Cost.TotalCost.Currency.ToString()
                         </td>
                     </tr>
                 </table>
@@ -153,8 +154,8 @@
                     @Model.ViewLocalizer["Customer"]
                 </div>
                 <div class="subSection">
-                    @Model.Data.OrderItem.Blueprint.Customer.FirstName @Model.Data.OrderItem.Blueprint.Customer.SecondName @Model.Data.OrderItem.Blueprint.Customer.Contact.Email <br>
-                    @Model.Data.OrderItem.Blueprint.Customer.Address.District @Model.Data.OrderItem.Blueprint.Customer.Address.PostCode @Model.Data.OrderItem.Blueprint.Customer.Address.Street @Model.Data.OrderItem.Blueprint.Customer.Address.HouseNumber
+                    @Model.Data.Blueprint.Customer.FirstName @Model.Data.Blueprint.Customer.LastName @Model.Data.Blueprint.Customer.Contact.Email <br>
+                    @Model.Data.Blueprint.Customer.Address.District @Model.Data.Blueprint.Customer.Address.PostCode @Model.Data.Blueprint.Customer.Address.Street @Model.Data.Blueprint.Customer.Address.HouseNumber
                 </div>
 
             </section>
@@ -164,11 +165,11 @@
             </sectionLabel>
             <section>
                 <div class="subLabel">
-                    @Model.ViewLocalizer["CheckIn"]: @Model.Data.OrderItem.Blueprint.Rooms[0].RoomStartDate.ToShortDateString()
+                    @Model.ViewLocalizer["CheckIn"]: @Model.Data.Blueprint.Rooms[0].RoomStartDate.ToShortDateString()
                 </div>
 
                 <div class="subLabel">
-                    @Model.ViewLocalizer["CheckOut"]:  @Model.Data.OrderItem.Blueprint.Rooms[0].RoomEndDate.ToShortDateString()
+                    @Model.ViewLocalizer["CheckOut"]:  @Model.Data.Blueprint.Rooms[0].RoomEndDate.ToShortDateString()
                 </div>
 
                 <div class="subLabel">
@@ -176,7 +177,7 @@
                 </div>
 
                 <table class="costTable">
-                    @foreach (var room in Model.Data.OrderItem.Blueprint.Rooms)
+                    @foreach (var room in Model.Data.Blueprint.Rooms)
                     {
                         <tr>
                             <td class="costsectionLabel">
@@ -199,7 +200,7 @@
             </sectionLabel>
             <section>
 
-                @if (Model.Data.OrderItem.Blueprint.Deposit.Amount > 0)
+                @if (Model.Data.Blueprint.Deposit.Amount > 0)
                 {
                     <table class="depositTable">
                         <tr class="costRow">
@@ -208,7 +209,7 @@
                             </td>
 
                             <td class="totalCell">
-                                @Model.Data.OrderItem.Blueprint.Deposit.Amount @Model.Data.OrderItem.Blueprint.Deposit.Currency.ToString()
+                                @Model.Data.Blueprint.Deposit.Amount @Model.Data.Blueprint.Deposit.Currency.ToString()
                             </td>
                         </tr>
                     </table>

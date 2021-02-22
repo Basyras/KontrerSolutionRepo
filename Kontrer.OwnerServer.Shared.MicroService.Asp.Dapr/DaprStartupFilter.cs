@@ -34,16 +34,18 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapSubscribeHandler();
-                endpoints.MapControllers().Add(builder=> 
-                {
-                    var controllerDesc = builder.Metadata.First(x => x.GetType() == typeof(ControllerActionDescriptor)) as ControllerActionDescriptor;                                      
-                    builder.Metadata.Add(new TopicAttribute(messageBusManager.BusName, controllerDesc.ActionName));
-                });                
-                
-                foreach (var subs in messageBusManager.BusSubscriptions)
-                {
-                    endpoints.MapPost(subs.Topic, (Microsoft.AspNetCore.Http.RequestDelegate)subs.Handler).WithTopic(messageBusManager.BusName, subs.Topic);
-                }
+                endpoints.MapControllers();
+
+                //endpoints.MapControllers().Add(builder=> 
+                //{
+                //    var controllerDesc = builder.Metadata.First(x => x.GetType() == typeof(ControllerActionDescriptor)) as ControllerActionDescriptor;                                      
+                //    builder.Metadata.Add(new TopicAttribute(messageBusManager.BusName, controllerDesc.ActionName));
+                //});                
+
+                //foreach (var subs in messageBusManager.BusSubscriptions)
+                //{
+                //    endpoints.MapPost(subs.Topic, (Microsoft.AspNetCore.Http.RequestDelegate)subs.Handler).WithTopic(messageBusManager.BusName, subs.Topic);
+                //}
 
             });
             app.UseCloudEvents();

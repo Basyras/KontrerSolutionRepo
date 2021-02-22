@@ -4,15 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Business.Abstraction.Accommodation
 {
     public interface IAccommodationOrderManager
     {
-        void CreateOrder(CustomerModel customer, AccommodationBlueprint blueprint, CultureInfo customersCulture, string customerNotes = null);
+        Task<AccommodationOrder> CreateOrder(int customerId, AccommodationBlueprint blueprint, CultureInfo customersCulture);
         void CancelOrder(int orderId, string reason, bool isCanceledByCustomer);
         void EditOrder();
-        void GetOrders();
+        Task<List<AccommodationOrder>> GetOrders();
 
     }
 }

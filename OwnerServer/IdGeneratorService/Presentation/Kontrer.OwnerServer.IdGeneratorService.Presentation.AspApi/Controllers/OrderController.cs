@@ -1,4 +1,6 @@
-﻿using Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator;
+﻿using Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction;
+using Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,17 +14,22 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IdGeneratorManager idGenerator;
+        private readonly IIdGeneratorManager idGenerator;
+        private readonly IMessageBusManager busManager;
 
-        public OrderController(IdGeneratorManager idGenerator)
+
+        public OrderController(IIdGeneratorManager idGenerator,IMessageBusManager busManager)
         {
             this.idGenerator = idGenerator;
+            this.busManager = busManager;
         }
 
         [HttpGet]
         public int GetNewOrderId()
         {
-            return idGenerator.CreateNewId(IdGeneratorManager.OrdersGroupName);
+            busManager.PublishAsync<AccommodationIdRequestedMessage>(new($"GetNewOrderId request, time:{DateTime.Now.ToString("HH:mm:ss")}"),default,"testTopic1").GetAwaiter().GetResult();
+            return idGenerator.CreateNewId(IIdGeneratorManager.OrdersGroupName);
+            
         }
     }
 }

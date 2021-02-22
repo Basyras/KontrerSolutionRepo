@@ -1,5 +1,6 @@
 ﻿using Kontrer.OwnerServer.OrderService.Business.Abstraction;
 using Kontrer.OwnerServer.OrderService.Business.Abstraction.Accommodation;
+using Kontrer.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,11 +20,14 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
         {
             this.manager = manager;
         }
+
         [HttpGet]
-        public async Task<IActionResult>GetOrders()
+        public async Task<ActionResult<List<AccommodationOrder>>>GetOrders()
         {
-#warning finish
-            throw new NotImplementedException();
+            var orders = await manager.GetOrders();
+            return orders;
         }
+
+
     }
 }

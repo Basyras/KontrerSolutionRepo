@@ -23,8 +23,6 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
     public class DaprMicroserviceProvider : IMicroserviceProvider
     {
         private readonly IWebHostBuilder webBuilder;
-
-
         public DaprMicroserviceProvider(IWebHostBuilder webBuilder)
         {          
             this.webBuilder = webBuilder;   

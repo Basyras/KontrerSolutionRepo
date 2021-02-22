@@ -2,75 +2,96 @@
 using FluentAssertions;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MediatR;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
 {
-    public class DefaultMessageBusManager : MessageBusManagerBase
+    public class DefaultMessageBusManager : IMessageBusManager
     {
         private readonly DaprClient daprClient;
+        private readonly IBusControl massTransitBus;
         private readonly IOptions<DaprMessageBusManagerOptions> options;
         private readonly JsonSerializerOptions serializerOptions;
 
-        public DefaultMessageBusManager(DaprClient daprClient, IOptions<DaprMessageBusManagerOptions> options, JsonSerializerOptions serializerOptions)
+
+#warning this manager may need options with pull handlers and register them while creating new instance of massTransitBus inside this ctor, or use options if massTransit has one
+        public DefaultMessageBusManager(DaprClient daprClient, IBusControl massTransitBus, IOptions<DaprMessageBusManagerOptions> options, JsonSerializerOptions serializerOptions)
         {
-            
+
             this.daprClient = daprClient;
+            this.massTransitBus = massTransitBus;
             this.options = options;
-            this.serializerOptions = serializerOptions;
-            BusName = options.Value.PubSubName;
+            this.serializerOptions = serializerOptions;            
+        }     
+
+        public void RegisterConsumer<IConsumer>()
+        {
+            //massTransitBus.Saga
+            massTransitBus.
         }
 
-        public override string BusName { get; }
+        //public void RegisterSubscribe<TResponse>(Func<TResponse, Task> asyncHandler, string topicName = null)
+        //{
+        //    //Dapr implementation
+        //    //IsSubscriptionLocked.Should().BeFalse("Can not add new subcription after StartSubscribtions has been called");
+        //    //Microsoft.AspNetCore.Http.RequestDelegate handler = async (HttpContext context) =>
+        //    //{
+        //    //    TResponse requestData = await JsonSerializer.DeserializeAsync<TResponse>(context.Request.Body, serializerOptions);
+        //    //    await asyncHandler.Invoke(requestData);
+        //    //};
+        //    //tempSubscriptions.Add(new BusSubscription(topicName, typeof(TResponse), handler));
 
-        public override Task PublishAsync<TRequest>(TRequest data, CancellationToken cancellationToken = default, string topicName = null)
+        //    //massTransitBus.ConnectConsumer<>()
+        //}
+
+        public Task PublishAsync<TRequest>(TRequest data, CancellationToken cancellationToken = default, string topicName = null)
+            where TRequest : class
         {
             topicName ??= nameof(TRequest);
-            return daprClient.PublishEventAsync(BusName, topicName, data, cancellationToken);            
+            //Can be implemented also with dapr
+            return massTransitBus.Publish<TRequest>(data, cancellationToken);
         }
-        public override void RegisterSubscribe<TRequest, TResponse>(Func<TRequest, Task> asyncHandler, string topicName = null)
+        public Task RequestAsync<TRequest>(CancellationToken cancellationToken = default)
+              where TRequest : class, IRequest, new()
         {
-            IsSubscriptionLocked.Should().BeFalse("Can not add new subcription after StartSubscribtions has been called");
-            Microsoft.AspNetCore.Http.RequestDelegate handler = async (HttpContext context) =>
-            {
-                TRequest requestData = await JsonSerializer.DeserializeAsync<TRequest>(context.Request.Body, serializerOptions);
-                await asyncHandler.Invoke(requestData);
-            };
-            tempSubscriptions.Add(new BusSubscription(topicName, typeof(TRequest), handler));
+            var request = new TRequest();
+            return massTransitBus.Send<TRequest>(request, cancellationToken);
         }
 
-
-
-
-        public override Task PushAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+        public Task RequestAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+            where TRequest : class, IRequest
         {
-            throw new NotImplementedException();
+            return massTransitBus.Send<TRequest>(request, cancellationToken);
         }
 
-        public override void RegisterPull<TRequest>(Action<TRequest> pullHandler)
+        public async Task<TResponse> RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken = default)
+             where TRequest : class, IRequest<TResponse>, new()
+             where TResponse : class
         {
-            throw new NotImplementedException();
-        }      
+            var request = new TRequest();
+            var response = await massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
+            return response.Message;
 
-
-
-        public override Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request,CancellationToken cancellationToken)
-        {
-            //daprClient.InvokeMethodAsync<TResponse>()
-            throw new NotImplementedException();
         }
 
-        public override Task RequestAsync<TRequest>(TRequest request,CancellationToken cancellationToken)
+        public async Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
+            where TRequest : class, IRequest<TResponse>
+            where TResponse : class
         {
-            throw new NotImplementedException();
+            var response = await massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
+            return response.Message;
         }
+
+     
     }
 }

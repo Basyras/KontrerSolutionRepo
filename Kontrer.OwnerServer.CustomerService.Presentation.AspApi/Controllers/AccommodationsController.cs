@@ -1,5 +1,7 @@
 ﻿using Kontrer.OwnerServer.CustomerService.Business.Abstraction.Accommodations;
 using Kontrer.OwnerServer.CustomerService.Data.Abstraction.Accommodation;
+using Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using Kontrer.Shared.Models.Pricing.Costs;
@@ -19,21 +21,21 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
     public class AccommodationsController : ControllerBase
     {
         private readonly IAccommodationManager accommodationManager;
-        
+        private readonly IMessageBusManager messageBusManager;
         private readonly ILogger<AccommodationsController> logger;
         private readonly IAccommodationUnitOfWork unitOfWork;
 
-        public AccommodationsController(IAccommodationManager accommodationManager,  ILogger<AccommodationsController> logger)
+        public AccommodationsController(IAccommodationManager accommodationManager, IMessageBusManager messageBusManager, ILogger<AccommodationsController> logger)
         {
             this.accommodationManager = accommodationManager;
-            
+            this.messageBusManager = messageBusManager;
             this.logger = logger;
             unitOfWork = this.accommodationManager.CreateUnitOfWork();
         }
 
         // GET: api/<AccomodationsController>
         [HttpGet]
-        public async Task<ActionResult<Dictionary<int, FinishedAccommodationModel>>> Get()
+        public async Task<ActionResult<Dictionary<int, FinishedAccommodationModel>>> GetAccommodations()
         {
             try
             {
@@ -50,7 +52,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
 
         // GET api/<AccomodationsController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FinishedAccommodationModel>> Get(int id)
+        public async Task<ActionResult<FinishedAccommodationModel>> GetAccommodation(int id)
         {
             var record = await unitOfWork.Accommodations.GetAsync(id);
             return record == null ? this.NotFound(null) : this.Ok(record);
@@ -58,11 +60,13 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
         }
 
         // POST api/<AccomodationsController>
-        [HttpPost]        
-        public async Task<IActionResult> Post(int customerId, [FromBody] AccommodationBlueprint blueprint)
-        {           
-            
-            unitOfWork.Accommodations.Add(customerId, null, blueprint);
+        [HttpPost]
+        public async Task<IActionResult> AddAccommodation(int customerId, int orderId, string privateOwnersNotes, [FromBody] AccommodationBlueprint blueprint, [FromBody] AccommodationCost cost)
+        {
+            var accommodationId = await messageBusManager.RequestAsync<CreateAccommodationIdRequest, int>();
+
+            unitOfWork.Accommodations.Add(new FinishedAccommodationModel(accommodationId, customerId, orderId, cost, privateOwnersNotes));
+
             try
             {
                 await unitOfWork.CommitAsync();
@@ -70,7 +74,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Error while creating accommodation, customerId {customerId} and accommodation start: {blueprint.Start}";
+                string message = $"Error while {nameof(AddAccommodation)}, customerId: {customerId}, accommodation start: {blueprint.Start}";
                 logger.LogError(ex, message);
                 return Problem(message);
             }
@@ -79,9 +83,9 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
 
         // PUT api/<AccomodationsController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] FinishedAccommodationModel value)
+        public async Task<ActionResult> UpdateAccommodation([FromBody] FinishedAccommodationModel newAccommodation)
         {
-            unitOfWork.Accommodations.Edit(value);
+            unitOfWork.Accommodations.Edit(newAccommodation);
             try
             {
                 await unitOfWork.CommitAsync();
@@ -89,7 +93,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Error with edit of accommodation, customerId {value.CustomerId} and accommodation start: {value.Order.Blueprint.Start}";
+                string message = $"Error with {nameof(UpdateAccommodation)}, customerId {newAccommodation.CustomerId} and accommodation start: {newAccommodation.Blueprint.Start}";
                 logger.LogError(ex, message);
                 return Problem(message);
             }
@@ -98,7 +102,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
 
         // DELETE api/<AccomodationsController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteAccommodation(int id)
         {
             unitOfWork.Accommodations.Remove(id);
             try
@@ -108,7 +112,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Error when Delete, accommodationId {id}";
+                string message = $"Error with {nameof(DeleteAccommodation)}, accommodationId {id}";
                 logger.LogError(ex, message);
                 return Problem(message);
             }

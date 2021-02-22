@@ -16,7 +16,7 @@ namespace Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Initialization
     {
         public static IServiceCollection AddPdfBuilder(this IServiceCollection services)
         {
-            services.AddSingleton<IAccommodationOrderPdfCreator, RazorAccommodationOrderPdfCreator>();
+            services.AddSingleton<IAccommodationOrderPdfCreator, RazorAccommodationOfferPdfCreator>();
             services.AddSingleton<IHtmlToPdfConverter, SelectPdfHtmlToPdfConverter>();
             services.AddSingleton<IAccommodationOrderToHtmlConverter, RazorLightAccommodationOrderToHtmlConverter>();
             services.Configure<RazorLightPdfBuilderOptions>(x => 

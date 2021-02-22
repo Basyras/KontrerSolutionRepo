@@ -10,8 +10,8 @@ namespace Kontrer.Shared.Models
 {
     public class AccommodationOrder : GenericOrderModel<AccommodationBlueprint>
     {
-        public AccommodationOrder(int orderId, int customerId, AccommodationBlueprint blueprint, DateTime creationDate, OrderStates state,CultureInfo culture, string customerNotes = null, string ownerPublicNotes = null, string ownerPrivateNotes = null)
-            : base(orderId,customerId, blueprint, creationDate, state,culture, customerNotes, ownerPublicNotes, ownerPrivateNotes)
+        public AccommodationOrder(int orderId, int customerId, AccommodationBlueprint blueprint, DateTime creationDate, OrderStates state,CultureInfo culture, string customerPrivateNotes = null, string ownerPrivateNotes = null)
+            : base(orderId,customerId, blueprint, creationDate, state,culture, customerPrivateNotes, ownerPrivateNotes)
         {
             
         }
