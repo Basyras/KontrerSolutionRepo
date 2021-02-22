@@ -33,7 +33,7 @@ namespace Kontrer.OwnerServer.OrderService.Data
             throw new NotImplementedException();
         }
 
-        public Task<Dictionary<string, AccommodationOrder>> GetOrders()
+        public Task<Dictionary<string, AccommodationOrder>> GetOrdersAsync()
         {
             throw new NotImplementedException();
         }

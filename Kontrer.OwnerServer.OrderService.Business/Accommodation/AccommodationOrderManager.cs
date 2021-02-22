@@ -15,40 +15,51 @@ using System.Threading.Tasks;
 namespace Kontrer.OwnerServer.OrderService.Business.Accommodation
 {
     public class AccommodationOrderManager : IAccommodationOrderManager
-    {       
+    {
         private readonly IAccommodaionOrderRepository orderRepository;
-        public AccommodationOrderManager(IAccommodaionOrderRepository orderRepository,IMessageBusManager messageBus)
+        public AccommodationOrderManager(IAccommodaionOrderRepository orderRepository, IMessageBusManager messageBus)
         {
             this.orderRepository = orderRepository;
             this.messageBus = messageBus;
         }
 
-        private readonly IMessageBusManager messageBus;  
+        private readonly IMessageBusManager messageBus;
 
         public async Task<AccommodationOrder> CreateOrderAsync(int customerId, AccommodationBlueprint blueprint, CultureInfo orderCulture)
         {
 
-            int orderId = await messageBus.RequestAsync<CreateOrderIdRequest,int>();
-            var order = new AccommodationOrder(orderId, customerId, blueprint, DateTime.Now, OrderStates.WaitingForCustomerResponse, orderCulture, null, null);
+            CreateOrderIdResponse orderIdResponse = await messageBus.RequestAsync<CreateOrderIdRequest, CreateOrderIdResponse>();
+            int orderId = orderIdResponse.Data;
+            AccommodationOrder order = new AccommodationOrder(orderId, customerId, blueprint, DateTime.Now, OrderStates.WaitingForCustomerResponse, orderCulture, null, null);
             orderRepository.AddOrder(order);
             await orderRepository.CommitAsync();
             return order;
 
         }
 
-        public Task CancelOrderAsync(int orderId, string reason, bool isCanceledByCustomer)
+        public async Task CancelOrderAsync(int orderId, string reason, bool isCanceledByCustomer)
         {
-            throw new NotImplementedException();
+            var oldOrder = await orderRepository.GetOrderAsync(orderId);
+            oldOrder.State = isCanceledByCustomer ? OrderStates.CanceledByCustomer : OrderStates.CanceledByOwner;
+            orderRepository.EditOrder(oldOrder);
+            await orderRepository.CommitAsync();            
         }
 
-        public Task EditOrderAsync(int orderId, AccommodationBlueprint accommodationBlueprint)
+        public async Task EditOrderAsync(int orderId, AccommodationBlueprint accommodationBlueprint)
         {
-            throw new NotImplementedException();
+            var oldOrder = await orderRepository.GetOrderAsync(orderId);
+            oldOrder.Blueprint = accommodationBlueprint;
+            orderRepository.EditOrder(oldOrder);
+            await orderRepository.CommitAsync();
+
         }
 
-        public Task<List<AccommodationOrder>> GetOrders()
+        public async Task<List<AccommodationOrder>> GetOrders()
         {
-            throw new NotImplementedException();
+            var dic = await orderRepository.GetOrdersAsync();
+            var orders = dic.Select(x => x.Value).ToList();
+            return orders;
+            
         }
     }
 }
