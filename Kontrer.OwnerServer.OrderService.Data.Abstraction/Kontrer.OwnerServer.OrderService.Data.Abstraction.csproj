@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.Data.Abstraction\Kontrer.OwnerServer.Shared.Data.Abstraction.csproj" />
+    <ProjectReference Include="..\src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.Abstraction\Kontrer.OwnerServer.Shared.Data.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
   </ItemGroup>
 
