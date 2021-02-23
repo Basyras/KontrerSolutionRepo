@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
-    public abstract class EditableRepositoryBase<TModel, TKey> : IGenericRepository<TModel, TKey>
+    public abstract class CrudRepositoryBase<TModel, TKey> : ICrudRepository<TModel, TKey>
            where TModel : class
     {
         public List<RepositoryChange<TModel, TKey>> Changes { get; private set; } = new List<RepositoryChange<TModel, TKey>>();
 
         public abstract Task<Dictionary<TKey, TModel>> GetAllAsync();
         public abstract Task<TModel> TryGetAsync(TKey key);
-        public abstract PageResult<TModel> GetPage(int page, int itemsPerPage);
-
-        public abstract void Save();
-        public abstract Task SaveAsync(CancellationToken cancellationToken = default);
-        public abstract void Dispose();
+        public abstract PageResult<TModel> GetPage(int page, int itemsPerPage);    
+        
+    
 
 
         public void Remove(TKey id)

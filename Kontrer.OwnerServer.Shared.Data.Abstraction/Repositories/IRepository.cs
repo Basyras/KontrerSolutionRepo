@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
-    public interface IRepository //: IDisposable
+    public interface IRepository 
     {
-        //void Save();
-        //Task SaveAsync(CancellationToken cancellationToken = default);        
+        //Should not implement save method when used with unit of work pattern
     }
 }

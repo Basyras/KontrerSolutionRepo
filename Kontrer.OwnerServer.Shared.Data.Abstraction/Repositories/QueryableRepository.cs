@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
-    public abstract class QueryableRepository<TModel, TKey> : EditableRepositoryBase<TModel, TKey>
+    public abstract class QueryableRepository<TModel, TKey> : CrudRepositoryBase<TModel, TKey>
        where TModel : class
     {
 

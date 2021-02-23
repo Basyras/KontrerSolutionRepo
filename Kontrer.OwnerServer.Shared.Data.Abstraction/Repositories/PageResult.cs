@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
-    public class PageResult<T>
+    public class PageResult<TModel>
     {
-        public PageResult(IEnumerable<T> records, int itemsPerPage, int totalCount, int currentPage, int totalPages)
+        public PageResult(IEnumerable<TModel> records, int itemsPerPage, int totalCount, int currentPage, int totalPages)
         {
             Records = records;
             ItemsPerPage = itemsPerPage;
@@ -17,7 +17,7 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
             TotalPages = totalPages;
         }
 
-        public IEnumerable<T> Records { get; }
+        public IEnumerable<TModel> Records { get; }
         public int ItemsPerPage { get; }
         public int TotalCount { get; }
         public int CurrentPage { get; }

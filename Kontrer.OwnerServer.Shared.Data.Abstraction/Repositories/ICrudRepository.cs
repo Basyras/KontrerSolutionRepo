@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
 
-    public interface IGenericRepository<TModel, TKey> : IRepository  where TModel : class
+    public interface ICrudRepository<TModel, TKey> : IRepository where TModel : class
     {
         /// <summary>
         /// Returns all records as dictionary
@@ -35,14 +35,18 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
         /// <param name="model"></param>
         void TryAdd(TKey id, TModel model);
         /// <summary>
-        /// Calling save is required to see results
+        /// Updates record
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
         void Update(TKey id, TModel model);
+        /// <summary>
+        /// Deletes items with same id.
+        /// </summary>
+        /// <param name="id"></param>
         void Remove(TKey id);
-        List<RepositoryChange<TModel, TKey>> Changes { get; }
-        PageResult<TModel> GetPage(int page, int itemsPerPage);        
+        
+             
      
         
     }
