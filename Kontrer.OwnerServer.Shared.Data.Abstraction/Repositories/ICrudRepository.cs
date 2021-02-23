@@ -29,7 +29,7 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
         /// <param name="model"></param>
         void Add(TKey id, TModel model);
         /// <summary>
-        /// If id is null it will be genereted
+        /// Adds new elemnts if element with same id doesnt not exist. If id is null it will be genereted
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>

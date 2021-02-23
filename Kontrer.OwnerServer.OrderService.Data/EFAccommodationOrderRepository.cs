@@ -18,7 +18,8 @@ namespace Kontrer.OwnerServer.OrderService.Data
         {
             this.dbContext = dbContext;
         }
-        public void AddOrder(AccommodationOrder order)
+
+        public void Add(int id, AccommodationOrder model)
         {
             throw new NotImplementedException();
         }
@@ -28,17 +29,27 @@ namespace Kontrer.OwnerServer.OrderService.Data
             return dbContext.SaveChangesAsync();
         }
 
-        public void EditOrder(AccommodationOrder order)
+        public Task<Dictionary<int, AccommodationOrder>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Dictionary<string, AccommodationOrder>> GetOrdersAsync()
+        public void Remove(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveOrder(int orderId)
+        public void TryAdd(int id, AccommodationOrder model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<AccommodationOrder> TryGetAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(int id, AccommodationOrder model)
         {
             throw new NotImplementedException();
         }
