@@ -10,7 +10,7 @@ namespace Kontrer.Shared.Models
 {
     public class AccommodationOrder : GenericOrderModel<AccommodationBlueprint>
     {
-        public AccommodationOrder()
+        public AccommodationOrder() : base(default, default,default, default, default, default, default, default)
         {
 
         }
