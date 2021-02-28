@@ -6,50 +6,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Kontrer.OwnerServer.Shared.Data.EF.Repositories;
+using Kontrer.OwnerServer.OrderService.Data.EntityFramework;
 
 namespace Kontrer.OwnerServer.OrderService.Data
 {
-    public class EFAccommodationOrderRepository : IAccommodaionOrderRepository
+    public class EFAccommodationOrderRepository : EFCrudRepositoryBase<AccommodationOrderEntity,AccommodationOrder,int,int>,IAccommodaionOrderRepository
     {
-        private readonly DbContext dbContext;
-
-        public EFAccommodationOrderRepository(DbContext dbContext)
+        public EFAccommodationOrderRepository(DbContext dbContext)  : base(dbContext,entity=>entity.OrderId)
         {
-            this.dbContext = dbContext;
+            
         }
 
-        public void Add(int id, AccommodationOrder model)
+    
+
+        protected override int GetModelId(AccommodationOrder model)
         {
-            throw new NotImplementedException();
+            return model.OrderId;
         }
 
-        public Task CommitAsync()
+        protected override void SetEntityId(int id, AccommodationOrderEntity entity)
         {
-            return dbContext.SaveChangesAsync();
+            entity.OrderId = id;
         }
 
-        public Task<Dictionary<int, AccommodationOrder>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(int id)
+        protected override AccommodationOrderEntity ToEntity(AccommodationOrder model)
         {
             throw new NotImplementedException();
         }
 
-        public void TryAdd(int id, AccommodationOrder model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AccommodationOrder> TryGetAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(int id, AccommodationOrder model)
+        protected override AccommodationOrder ToModel(AccommodationOrderEntity entity)
         {
             throw new NotImplementedException();
         }

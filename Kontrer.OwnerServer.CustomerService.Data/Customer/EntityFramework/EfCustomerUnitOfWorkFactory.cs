@@ -1,6 +1,6 @@
 ﻿using Kontrer.OwnerServer.CustomerService.Data.Abstraction.Customers;
 using Kontrer.OwnerServer.CustomerService.Data.EntityFramework;
-using Kontrer.OwnerServer.Shared.Data.Abstraction.UnitOfWork;
+using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

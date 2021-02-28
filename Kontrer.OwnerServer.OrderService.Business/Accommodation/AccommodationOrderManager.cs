@@ -31,7 +31,7 @@ namespace Kontrer.OwnerServer.OrderService.Business.Accommodation
             CreateOrderIdResponse orderIdResponse = await messageBus.RequestAsync<CreateOrderIdRequest, CreateOrderIdResponse>();
             int orderId = orderIdResponse.Data;
             AccommodationOrder order = new AccommodationOrder(orderId, customerId, blueprint, DateTime.Now, OrderStates.WaitingForCustomerResponse, orderCulture, null, null);
-            orderRepository.AddOrder(order);
+            orderRepository.AddAsync(order);
             await orderRepository.CommitAsync();
             return order;
 
@@ -39,24 +39,24 @@ namespace Kontrer.OwnerServer.OrderService.Business.Accommodation
 
         public async Task CancelOrderAsync(int orderId, string reason, bool isCanceledByCustomer)
         {
-            var oldOrder = await orderRepository.GetOrderAsync(orderId);
+            var oldOrder = await orderRepository.TryGetAsync(orderId);
             oldOrder.State = isCanceledByCustomer ? OrderStates.CanceledByCustomer : OrderStates.CanceledByOwner;
-            orderRepository.EditOrder(oldOrder);
+            orderRepository.UpdateAsync(oldOrder);
             await orderRepository.CommitAsync();            
         }
 
         public async Task EditOrderAsync(int orderId, AccommodationBlueprint accommodationBlueprint)
         {
-            var oldOrder = await orderRepository.GetOrderAsync(orderId);
+            var oldOrder = await orderRepository.TryGetAsync(orderId);
             oldOrder.Blueprint = accommodationBlueprint;
-            orderRepository.EditOrder(oldOrder);
+            orderRepository.UpdateAsync(oldOrder);
             await orderRepository.CommitAsync();
 
         }
 
         public async Task<List<AccommodationOrder>> GetOrders()
         {
-            var dic = await orderRepository.GetOrdersAsync();
+            var dic = await orderRepository.TryGetAsync();
             var orders = dic.Select(x => x.Value).ToList();
             return orders;
             

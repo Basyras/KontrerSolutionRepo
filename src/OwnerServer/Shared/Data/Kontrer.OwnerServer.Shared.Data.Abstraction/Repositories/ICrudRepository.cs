@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
 
-    public interface ICrudRepository<TModel, TKey> : IRepository where TModel : class
+    /// <summary>
+    /// Choose between <see cref="IBulkRepository"/>, <see cref="ICrudRepository{TModel, TKey}"/> or <see cref="IInstantRepository"/>.
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    public interface ICrudRepository<TModel, TKey>
     {
         /// <summary>
         /// Returns all records as dictionary
@@ -27,24 +32,18 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
-        void Add(TKey id, TModel model);
-        /// <summary>
-        /// Adds new elemnts if element with same id doesnt not exist. If id is null it will be genereted
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="model"></param>
-        void TryAdd(TKey id, TModel model);
+        Task<TModel> AddAsync(TModel model);
         /// <summary>
         /// Updates record
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
-        void Update(TKey id, TModel model);
+        Task<TModel> UpdateAsync(TModel model);
         /// <summary>
         /// Deletes items with same id.
         /// </summary>
         /// <param name="id"></param>
-        void Remove(TKey id);
+        Task RemoveAsync(TKey id);
         
              
      

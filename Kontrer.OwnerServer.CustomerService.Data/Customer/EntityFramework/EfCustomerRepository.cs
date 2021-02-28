@@ -49,13 +49,34 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Customer.EntityFramework
             return customers;
         }
 
-        public async Task<CustomerModel> GetAsync(int id)
+        public async Task<CustomerModel> TryGetAsync(int id)
         {
             var customer = await dbContext.Customers.FindAsync(id);
             return ToModel(customer);
         }
 
-        public async Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern)
+        public async Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage)
+        {
+            var query = dbContext.Customers.AsQueryable();          
+            var recordsAndTotalCount = await query.Select(p => new {
+                Record = p,
+                TotalCount = query.Count()
+            }).Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToListAsync();
+
+            var result = recordsAndTotalCount.FirstOrDefault();
+            int totalCount = 0;
+            IEnumerable<CustomerModel> foundRecords = null;
+
+            if (result != null)
+            {
+                totalCount = result.TotalCount;
+                foundRecords = recordsAndTotalCount.Select(r => ToModel(r.Record));
+            }
+            return new PageResult<CustomerModel>(foundRecords, itemsPerPage, totalCount, page, (int)Math.Ceiling((double)totalCount / itemsPerPage));
+
+        }
+
+        public async Task<PageResult<CustomerModel>> GetPageByPatternAsync(int page, int itemsPerPage, string searchedPattern)
         {
             searchedPattern = $"%{searchedPattern}%";
             var query = dbContext.Customers.AsQueryable().Where(x => EF.Functions.Like(x.FirstName, searchedPattern) ||
@@ -81,11 +102,13 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Customer.EntityFramework
 
         }
 
-        public void Edit(CustomerModel model)
+        public CustomerModel Update(CustomerModel model)
         {
             CustomerEntity entity = ToEntity(model);
             var entityEntry = dbContext.Attach(entity);
             entityEntry.State = EntityState.Modified;
+
+            return model;
         }
 
         public void Remove(int id)
@@ -96,23 +119,21 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Customer.EntityFramework
             dbContext.Entry(entity).Property(x => x.IsDeleted).IsModified = true;
         }
 
+        public CustomerModel AddAsync(CustomerModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+      
+
         public void Save()
         {
-            //dbContext.SaveChanges();
-            throw new NotImplementedException();
+            dbContext.SaveChanges();
         }
 
-        public async Task SaveAsync(CancellationToken cancellationToken = default)
+        public Task SaveAsync(CancellationToken cancellationToken = default)
         {
-            //await dbContext.SaveChangesAsync();
-            throw new NotImplementedException();
+            return dbContext.SaveChangesAsync(cancellationToken);
         }
-
-        public void Dispose()
-        {
-            //dbContext.Dispose();
-            throw new NotImplementedException();
-        }
-        
     }
 }

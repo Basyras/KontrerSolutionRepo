@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Data.Abstraction
 {
-   public interface IAccommodaionOrderRepository : ICrudRepository<AccommodationOrder,int>
-    { 
+    public interface IAccommodaionOrderRepository : ICrudRepository<AccommodationOrder, int>
+    {
 
-        Task CommitAsync();
+
     }
 }

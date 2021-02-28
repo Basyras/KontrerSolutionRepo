@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.Data.Abstraction.UnitOfWork
+namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {

@@ -13,19 +13,8 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Abstraction.Accommodation
     /// <summary>
     /// Changes must be commited with unit of work in order to be persistent
     /// </summary>
-    public interface IAccommodationRepository : IRepository
+    public interface IAccommodationRepository : ICrudRepository<FinishedAccommodationModel, int>, IPageRepository<FinishedAccommodationModel>, IBulkRepository
     {
-        Task<Dictionary<int, FinishedAccommodationModel>> GetAllAsync();
-        Task<FinishedAccommodationModel> GetAsync(int id);
-        Task<PageResult<FinishedAccommodationModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern);
-
-        void Add(FinishedAccommodationModel model);      
-        /// <summary>
-        /// Customer canceled the order of accommodation
-        /// </summary>
-        /// <param name="id"></param>
-        void Remove(int id);
-
-        void Edit(FinishedAccommodationModel model);
+        
     }
 }

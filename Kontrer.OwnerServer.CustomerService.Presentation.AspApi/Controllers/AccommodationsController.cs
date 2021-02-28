@@ -65,7 +65,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
         {
             var accommodationId = await messageBusManager.RequestAsync<CreateAccommodationIdRequest, int>();
 
-            unitOfWork.Accommodations.Add(new FinishedAccommodationModel(accommodationId, customerId, orderId, cost, privateOwnersNotes));
+            unitOfWork.Accommodations.AddAsync(new FinishedAccommodationModel(accommodationId, customerId, orderId, cost, privateOwnersNotes));
 
             try
             {
@@ -104,7 +104,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAccommodation(int id)
         {
-            unitOfWork.Accommodations.Remove(id);
+            unitOfWork.Accommodations.RemoveAsync(id);
             try
             {
                 await unitOfWork.CommitAsync();

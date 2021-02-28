@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Data.Abstraction\Kontrer.OwnerServer.CustomerService.Data.Abstraction.csproj" />
     <ProjectReference Include="..\src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.Abstraction\Kontrer.OwnerServer.Shared.Data.Abstraction.csproj" />
+    <ProjectReference Include="..\src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.EF\Kontrer.OwnerServer.Shared.Data.EF.csproj" />
   </ItemGroup>
 
 </Project>

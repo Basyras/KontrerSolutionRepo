@@ -1,5 +1,5 @@
 ﻿using Kontrer.OwnerServer.PricingService.Business.Abstraction.Pricing;
-using Kontrer.OwnerServer.Shared.Data.Abstraction.UnitOfWork;
+using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using Kontrer.OwnerServer.PricingService.Business.Pricing.BlueprintEditors;
 using Kontrer.OwnerServer.PricingService.Business.Pricing.PricingMiddlewares;
 using Kontrer.OwnerServer.PricingService.Data.Abstraction.Pricing;

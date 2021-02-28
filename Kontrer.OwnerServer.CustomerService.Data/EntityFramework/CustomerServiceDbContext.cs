@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.Shared.Data.Abstraction.UnitOfWork;
+﻿using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using Kontrer.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

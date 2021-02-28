@@ -8,12 +8,9 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.CustomerService.Data.Abstraction.Customer
 {
-    public interface ICustomerRepository : IRepository
+    public interface ICustomerRepository : ICrudRepository<CustomerModel,int>, IPageRepository<CustomerModel>,IBulkRepository
     {
-        Task<Dictionary<int, CustomerModel>> GetAllAsync();
-        Task<CustomerModel> GetAsync(int id);
-        Task<PageResult<CustomerModel>> GetPageAsync(int page, int itemsPerPage, string searchedPattern);
-        void Edit(CustomerModel model);
-        void Remove(int id);
+        Task<PageResult<CustomerModel>> GetPageByPatternAsync(int page, int itemsPerPage, string searchPattern);
+        Task<bool> CustomerExitsAsync(int customerId);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.CustomerService.Business.Abstraction.Customers;
+﻿using Kontrer.OwnerServer.CustomerService.Business.Abstraction;
 using Kontrer.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,50 +15,46 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
     public class CustomersController : ControllerBase
     {
 
-        private readonly ICustomerManager customerManager;
-        public CustomersController(ICustomerManager customerManager = null)
+        private readonly ICustomerService customerService;
+        public CustomersController(ICustomerService customerService)
         {
-            this.customerManager = customerManager;
+            this.customerService = customerService;
             
         }
 
         // GET: api/<CustomersController>
         [HttpGet]
-        public async Task<Dictionary<int, CustomerModel>> Get()
+        public Task<Dictionary<int, CustomerModel>> GetAllCustomers()
         {
-            using var work = customerManager.CreateUnitOfWork();
-            Dictionary<int, CustomerModel> customers = await work.Customers.GetAllAsync();
-            return customers;
+            return customerService.GetAllCustomersAsync();
         }
 
         // GET api/<CustomersController>/5
         [HttpGet("{id}")]
-        public async Task<CustomerModel> Get(int id)
+        public Task<CustomerModel> GetCustomer(int customerId)
         {
-            using var work = customerManager.CreateUnitOfWork();
-            var customer = await work.Customers.GetAsync(id);
-            return customer;
+            return customerService.GetCustomerAsync(customerId);
         }
 
         // POST api/<CustomersController>
         [HttpPost]
-        public void Post([FromBody] CustomerModel value)
+        public Task CreateCustomer([FromBody] CustomerModel customer)
         {
-
+            return customerService.CreateCustomerAsync(customer);
         }
 
         // PUT api/<CustomersController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] CustomerModel value)
+        public Task UpdateCustomer(int id, [FromBody] CustomerModel customer)
         {
-
+            return customerService.ChangeCustomerDetailsAsync(customer);
         }
 
         // DELETE api/<CustomersController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public Task DeleteCustomer(int customerId)
         {
-
+            return customerService.DeleteCustomerAsync(customerId);
         }
     }
 }

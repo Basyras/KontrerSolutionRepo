@@ -1,6 +1,6 @@
 ﻿
 using Kontrer.OwnerServer.PricingService.Data.Abstraction.Pricing;
-using Kontrer.OwnerServer.Shared.Data.Abstraction.UnitOfWork;
+using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
 
