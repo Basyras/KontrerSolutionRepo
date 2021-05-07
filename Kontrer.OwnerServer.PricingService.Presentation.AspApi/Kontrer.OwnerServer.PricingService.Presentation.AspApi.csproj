@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Business.Abstraction\Kontrer.OwnerServer.PricingService.Business.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Presentation.Abstraction\Kontrer.OwnerServer.PricingService.Presentation.Abstraction.csproj" />
   </ItemGroup>
 

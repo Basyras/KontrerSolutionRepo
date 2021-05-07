@@ -97,19 +97,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Data", "Kontrer.OwnerServer.OrderService.Data\Kontrer.OwnerServer.OrderService.Data.csproj", "{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerServer.PricingService.Data", "1 - Kontrer.OwnerServer.PricingService.Data", "{E4789728-07E7-431E-BD89-52F5D7E1C69E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerServer.PricingService.Infrastructure", "1 - Kontrer.OwnerServer.PricingService.Infrastructure", "{E4789728-07E7-431E-BD89-52F5D7E1C69E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Data.Abstraction", "Kontrer.OwnerServer.PricingService.Data.Abstraction\Kontrer.OwnerServer.PricingService.Data.Abstraction.csproj", "{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction", "Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction\Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction.csproj", "{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Data", "Kontrer.OwnerServer.PricingService.Data\Kontrer.OwnerServer.PricingService.Data.csproj", "{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Infrastructure", "Kontrer.OwnerServer.PricingService.Infrastructure\Kontrer.OwnerServer.PricingService.Infrastructure.csproj", "{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerServer.PricingService.Business", "2 - Kontrer.OwnerServer.PricingService.Business", "{5A3CEB08-57CC-4E59-82F3-930A1CC685CF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerServer.PricingService.Application", "2 - Kontrer.OwnerServer.PricingService.Application", "{5A3CEB08-57CC-4E59-82F3-930A1CC685CF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Business.Abstraction", "Kontrer.OwnerServer.PricingService.Business.Abstraction\Kontrer.OwnerServer.PricingService.Business.Abstraction.csproj", "{55D5F8DD-7113-4206-8B8D-660B9B8C35A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Application", "Kontrer.OwnerServer.PricingService.Application\Kontrer.OwnerServer.PricingService.Application.csproj", "{76BB30E3-1F19-4161-B9D9-3E088F33F9CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Business", "Kontrer.OwnerServer.PricingService.Business\Kontrer.OwnerServer.PricingService.Business.csproj", "{76BB30E3-1F19-4161-B9D9-3E088F33F9CD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Business.Tests", "Kontrer.OwnerServer.PricingService.Business.Tests\Kontrer.OwnerServer.PricingService.Business.Tests.csproj", "{DB931DC3-BC9E-4187-A8DC-9B84C4B6E934}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Application.Tests", "Kontrer.OwnerServer.PricingService.Application.Tests\Kontrer.OwnerServer.PricingService.Application.Tests.csproj", "{DB931DC3-BC9E-4187-A8DC-9B84C4B6E934}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.Shared.MicroService", "Kontrer.OwnerServer.Shared.MicroService", "{5AA9BA8F-745B-4513-88A1-F5CD7043C51E}"
 EndProject
@@ -269,10 +267,6 @@ Global
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55D5F8DD-7113-4206-8B8D-660B9B8C35A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55D5F8DD-7113-4206-8B8D-660B9B8C35A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55D5F8DD-7113-4206-8B8D-660B9B8C35A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55D5F8DD-7113-4206-8B8D-660B9B8C35A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{76BB30E3-1F19-4161-B9D9-3E088F33F9CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{76BB30E3-1F19-4161-B9D9-3E088F33F9CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76BB30E3-1F19-4161-B9D9-3E088F33F9CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -396,7 +390,6 @@ Global
 		{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3} = {E4789728-07E7-431E-BD89-52F5D7E1C69E}
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96} = {E4789728-07E7-431E-BD89-52F5D7E1C69E}
 		{5A3CEB08-57CC-4E59-82F3-930A1CC685CF} = {E67FE4DE-7AF6-4FB7-B0CD-805EC458C76A}
-		{55D5F8DD-7113-4206-8B8D-660B9B8C35A4} = {5A3CEB08-57CC-4E59-82F3-930A1CC685CF}
 		{76BB30E3-1F19-4161-B9D9-3E088F33F9CD} = {5A3CEB08-57CC-4E59-82F3-930A1CC685CF}
 		{DB931DC3-BC9E-4187-A8DC-9B84C4B6E934} = {5A3CEB08-57CC-4E59-82F3-930A1CC685CF}
 		{5AA9BA8F-745B-4513-88A1-F5CD7043C51E} = {43515AD6-D565-4FD8-9328-C7E53E12692A}
