@@ -9,7 +9,7 @@ using Kontrer.Shared.Models.Pricing;
 
 namespace Kontrer.OwnerServer.PricingService.Data.Abstraction.Pricing
 {
-    public interface IPricingSettingsRepository : ITrackingRepository
+    public interface IPricingSettingsRepository : ITrackingRepository<TimedSettingModel,int>
     {      
         void AddTimedSetting(TimedSettingModel timedSetting);
         void EditTimedSetting(TimedSettingModel timedSetting);

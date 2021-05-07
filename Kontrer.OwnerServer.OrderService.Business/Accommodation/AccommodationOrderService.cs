@@ -14,10 +14,10 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Business.Accommodation
 {
-    public class AccommodationOrderManager : IAccommodationOrderManager
+    public class AccommodationOrderService : IAccommodationOrderService
     {
         private readonly IAccommodaionOrderRepository orderRepository;
-        public AccommodationOrderManager(IAccommodaionOrderRepository orderRepository, IMessageBusManager messageBus)
+        public AccommodationOrderService(IAccommodaionOrderRepository orderRepository, IMessageBusManager messageBus)
         {
             this.orderRepository = orderRepository;
             this.messageBus = messageBus;
@@ -31,9 +31,8 @@ namespace Kontrer.OwnerServer.OrderService.Business.Accommodation
             CreateOrderIdResponse orderIdResponse = await messageBus.RequestAsync<CreateOrderIdRequest, CreateOrderIdResponse>();
             int orderId = orderIdResponse.Data;
             AccommodationOrder order = new AccommodationOrder(orderId, customerId, blueprint, DateTime.Now, OrderStates.WaitingForCustomerResponse, orderCulture, null, null);
-            orderRepository.AddAsync(order);
-            await orderRepository.CommitAsync();
-            return order;
+            return await orderRepository.AddAsync(order);           
+            
 
         }
 
@@ -41,22 +40,22 @@ namespace Kontrer.OwnerServer.OrderService.Business.Accommodation
         {
             var oldOrder = await orderRepository.TryGetAsync(orderId);
             oldOrder.State = isCanceledByCustomer ? OrderStates.CanceledByCustomer : OrderStates.CanceledByOwner;
-            orderRepository.UpdateAsync(oldOrder);
-            await orderRepository.CommitAsync();            
+            await orderRepository.UpdateAsync(oldOrder);
+                 
         }
 
         public async Task EditOrderAsync(int orderId, AccommodationBlueprint accommodationBlueprint)
         {
             var oldOrder = await orderRepository.TryGetAsync(orderId);
             oldOrder.Blueprint = accommodationBlueprint;
-            orderRepository.UpdateAsync(oldOrder);
-            await orderRepository.CommitAsync();
+            await orderRepository.UpdateAsync(oldOrder);
+            
 
         }
 
         public async Task<List<AccommodationOrder>> GetOrders()
         {
-            var dic = await orderRepository.TryGetAsync();
+            var dic = await orderRepository.GetAllAsync();
             var orders = dic.Select(x => x.Value).ToList();
             return orders;
             

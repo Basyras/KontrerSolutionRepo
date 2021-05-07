@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Business.Abstraction.Accommodation
 {
-    public interface IAccommodationOrderManager
+    public interface IAccommodationOrderService
     {
         Task<AccommodationOrder> CreateOrderAsync(int customerId, AccommodationBlueprint blueprint, CultureInfo customersCulture);
         Task CancelOrderAsync(int orderId, string reason, bool isCanceledByCustomer);

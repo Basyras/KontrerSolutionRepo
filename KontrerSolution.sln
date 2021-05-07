@@ -157,7 +157,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.OfferSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.Data.EF", "src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.EF\Kontrer.OwnerServer.Shared.Data.EF.csproj", "{536A334D-121E-41DD-9CC4-5B703AE66137}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.Shared.Data.EF.Tests", "src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.EF.Tests\Kontrer.OwnerServer.Shared.Data.EF.Tests.csproj", "{7FEEAE11-047B-4488-AACD-D3950157CB32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.Data.EF.Tests", "src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.EF.Tests\Kontrer.OwnerServer.Shared.Data.EF.Tests.csproj", "{7FEEAE11-047B-4488-AACD-D3950157CB32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

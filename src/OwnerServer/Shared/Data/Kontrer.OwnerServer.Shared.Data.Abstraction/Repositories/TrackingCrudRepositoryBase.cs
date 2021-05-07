@@ -23,13 +23,13 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 
         public abstract Task<Dictionary<TKey, TModel>> GetAllAsync();
         public abstract Task<TModel> TryGetAsync(TKey key);
-        public abstract PageResult<TModel> GetPage(int page, int itemsPerPage);
+        
 
         protected abstract TKey GetModelId(TModel model);
     
 
 
-        public void Remove(TKey id)
+        public Task RemoveAsync(TKey id)
         {
             var oldUpdate = Actions.FirstOrDefault(x => x.Id.Equals(id));
             if (oldUpdate == null)
@@ -50,18 +50,20 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
                         break;
                 }
             }
+
+            return Task.CompletedTask;            
         }
       
 
-        public TModel AddAsync(TModel model)
+        public Task<TModel> AddAsync(TModel model)
         {
             var id = GetModelId(model);
             var newUpdate = new RepositoryAction<TModel, TKey>(id, model, CrudActions.Added);
             Actions.Add(newUpdate);
-            return model;
+            return Task.FromResult(model);
         }
 
-        public TModel Update(TModel model)
+        public Task<TModel> UpdateAsync(TModel model)
         {
             var id = GetModelId(model);
             var newUpdate = new RepositoryAction<TModel, TKey>(id, model, CrudActions.Modified);
@@ -77,7 +79,7 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
                 Actions[index] = newUpdate;
             }
 
-            return model;
+            return Task.FromResult(model);
         }
 
         

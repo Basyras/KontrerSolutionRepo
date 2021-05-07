@@ -37,7 +37,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
         public void RegisterConsumer<IConsumer>()
         {
             //massTransitBus.Saga
-            massTransitBus.
+            //massTransitBus.
         }
 
         //public void RegisterSubscribe<TResponse>(Func<TResponse, Task> asyncHandler, string topicName = null)

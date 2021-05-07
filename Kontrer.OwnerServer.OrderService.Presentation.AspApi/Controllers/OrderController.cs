@@ -16,9 +16,9 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IAccommodationOrderManager manager;
+        private readonly IAccommodationOrderService manager;
 
-        public OrderController(IAccommodationOrderManager manager)
+        public OrderController(IAccommodationOrderService manager)
         {
             this.manager = manager;
         }

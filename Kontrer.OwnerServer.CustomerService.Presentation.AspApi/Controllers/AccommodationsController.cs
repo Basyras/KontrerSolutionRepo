@@ -19,11 +19,10 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AccommodationsController : ControllerBase
-    {
-        private readonly IAccommodationManager accommodationManager;
+    {        
         private readonly IMessageBusManager messageBusManager;
         private readonly ILogger<AccommodationsController> logger;
-        private readonly IAccommodationUnitOfWork unitOfWork;
+        
 
         public AccommodationsController(IAccommodationManager accommodationManager, IMessageBusManager messageBusManager, ILogger<AccommodationsController> logger)
         {
