@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
+    /// <summary>
+    /// All repositories must inherit <see cref="IUnitOfWorkRepository{TModel, TKey}"/>
+    /// <br/> This class should containg all repositories as readonly properties 
+    /// </summary>
     public interface IUnitOfWork : IDisposable
     {
         void Commit();

@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.PricingService.Application.Pricing;
-using Kontrer.OwnerServer.PricingService.Application.Pricing.Pricers;
+﻿using Kontrer.OwnerServer.PricingService.Application.Processing;
+using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing;
 using Kontrer.Shared.Models.Pricing.Blueprints;
@@ -29,7 +29,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing.Pricers
 
 
             var newSubTotal = 2* itemBb.Count * itemBb.CostPerOne.Amount;
-            var pricer = new AccommodationBaseCostPricer();
+            var pricer = new AccommodationBasicCostPricer();
             pricer.CalculateContractCost(accoBp, rawAccoCost, null);           
             Assert.Equal(newSubTotal, rawAccoCost.RawAccommodationItems.Sum(x=>x.SubTotal));
 

@@ -20,7 +20,7 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
             DiscountName = discountName;            
             AmountDiscount = amountDiscount;
             DiscountId = discountId;
-            IsPercentage = false;
+            IsPercentageDiscount = false;
         }
 
         public DiscountBlueprint(string discountName, float percentageDiscount, int? discountId = null)
@@ -28,14 +28,14 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
             DiscountName = discountName;
             PercentageDiscount = percentageDiscount;
             DiscountId = discountId;
-            IsPercentage = true;
+            IsPercentageDiscount = true;
         }
 
 
 
         public int? DiscountId { get; set; }
         public string DiscountName { get; set; }
-        public bool IsPercentage { get; set; }
+        public bool IsPercentageDiscount { get; set; }
         public Cash AmountDiscount { get; set; }
         public float PercentageDiscount { get; set; }
     }

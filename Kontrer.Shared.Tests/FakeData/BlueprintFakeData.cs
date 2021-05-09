@@ -136,13 +136,13 @@ namespace Kontrer.Shared.Tests.FakeData
                .StrictMode(true)               
                .RuleFor(x => x.DiscountId, x => x.UniqueIndex)
                .RuleFor(x => x.DiscountName, x => x.Random.Words(x.Random.Int(0, 5)))
-               .RuleFor(x => x.IsPercentage, x => x.Random.Bool())
+               .RuleFor(x => x.IsPercentageDiscount, x => x.Random.Bool())
                .RuleFor(x=>x.PercentageDiscount, x=>0F)
                .RuleFor(x=>x.AmountDiscount, x=>null)
                .FinishWith((x, a) =>
                {
                    sharedCurrency = hasSharedCurrency ? sharedCurrency : x.Random.Enum<Currencies>();
-                   if (a.IsPercentage)
+                   if (a.IsPercentageDiscount)
                    {
                        a.PercentageDiscount = x.Random.Float(0, 2);
                    }

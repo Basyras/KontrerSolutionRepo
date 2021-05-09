@@ -1,8 +1,8 @@
 ﻿using Bogus;
-using Kontrer.OwnerServer.PricingService.Application.Pricing;
-using Kontrer.OwnerServer.PricingService.Application.Pricing.BlueprintEditors;
-using Kontrer.OwnerServer.PricingService.Application.Pricing.Pricers;
-using Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction.Pricing;
+using Kontrer.OwnerServer.PricingService.Application.Processing;
+using Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEditors;
+using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
+using Kontrer.OwnerServer.PricingService.Application.Settings;
 using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
@@ -23,15 +23,15 @@ namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing
         [Fact]
         public async Task TestCalculate()
         {
-            var mockRepo = new Mock<IPricingSettingsRepository>();
+            var mockRepo = new Mock<ISettingsRepository>();
             var dic = new Dictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>();
             IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>> parsedDic = (IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>)dic;
-            mockRepo.Setup(x => x.GetTimedSettingsAsync(new List<TimedSettingSelector>())).Returns(() => Task.FromResult(parsedDic));
+            mockRepo.Setup(x => x.GetScopedSettingsAsync(new List<SettingRequest>())).Returns(() => Task.FromResult(parsedDic));
 
-            var mockUoW = new Mock<IPricingSettingsUnitOfWork>();
+            var mockUoW = new Mock<ISettingsUnitOfWork>();
             mockUoW.Setup(x => x.PricingSettingsRepository).Returns(() => mockRepo.Object);
 
-            var mockUoWFactory = new Mock<IUnitOfWorkFactory<IPricingSettingsUnitOfWork>>();
+            var mockUoWFactory = new Mock<IUnitOfWorkFactory<ISettingsUnitOfWork>>();
             mockUoWFactory.Setup(x => x.CreateUnitOfWork()).Returns(() => mockUoW.Object);
             var bp = BlueprintFakeData.GetAccommodationBlueprints(1)[0];
 
@@ -50,20 +50,20 @@ namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing
             mockBpEditor.Setup(x => x.GetRequiredSettings(bp)).Returns(() =>
             {
                 wasEditorRequiredCalled = true;
-                return new List<TimedSettingSelector>() { new TimedSettingSelector("test1", start, end) };
+                return new List<SettingRequest>() { new SettingRequest<int>("test1", start, end) };
             });
             bool wasEditCalled = false;
-            mockBpEditor.Setup(x => x.EditBlueprint(It.IsAny<AccommodationBlueprint>(), It.IsAny<ITimedSettingResolver>())).Callback(() => wasEditCalled = true);
+            mockBpEditor.Setup(x => x.EditBlueprint(It.IsAny<AccommodationBlueprint>(), It.IsAny<IScopedSettings>())).Callback(() => wasEditCalled = true);
 
             var mockPricer = new Mock<IAccommodationPricer>();
             bool wasPricerRequiredCalled = false;
             mockPricer.Setup((x) => x.GetRequiredSettings(bp)).Returns(() =>
             {
                 wasPricerRequiredCalled = true;
-                return new List<TimedSettingSelector>() { new TimedSettingSelector("test1", start, end)}; 
+                return new List<SettingRequest>() { new SettingRequest<int>("test1", start, end)}; 
             });
             bool wasCalculateCalled = false;
-            mockPricer.Setup(x => x.CalculateContractCost(It.IsAny<AccommodationBlueprint>(), It.IsAny<RawAccommodationCost>(), It.IsAny<ITimedSettingResolver>())).Callback(() => wasCalculateCalled = true);
+            mockPricer.Setup(x => x.CalculateContractCost(It.IsAny<AccommodationBlueprint>(), It.IsAny<RawAccommodationCost>(), It.IsAny<IScopedSettings>())).Callback(() => wasCalculateCalled = true);
 
 
 

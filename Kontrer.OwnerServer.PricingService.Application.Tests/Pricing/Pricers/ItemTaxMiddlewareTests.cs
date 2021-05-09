@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.PricingService.Application.Pricing;
-using Kontrer.OwnerServer.PricingService.Application.Pricing.Pricers;
+﻿using Kontrer.OwnerServer.PricingService.Application.Processing;
+using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing;
 using Kontrer.Shared.Models.Pricing.Blueprints;

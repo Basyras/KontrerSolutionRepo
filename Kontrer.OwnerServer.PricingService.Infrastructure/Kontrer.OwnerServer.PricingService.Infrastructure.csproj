@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction\Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Application\Kontrer.OwnerServer.PricingService.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Abstraction.Accommodation
     /// <summary>
     /// Changes must be commited with unit of work in order to be persistent
     /// </summary>
-    public interface IAccommodationRepository : ICrudRepository<FinishedAccommodationModel, int>, IPageRepository<FinishedAccommodationModel>, IBulkRepository
+    public interface IAccommodationRepository : IInstantCrudRepository<FinishedAccommodationModel, int>, IPageRepository<FinishedAccommodationModel>, IBulkRepository
     {
         
     }

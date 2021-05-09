@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.Data.EF.Repositories
 {
-    public abstract class EFCrudRepositoryBase<TEntity, TModel, TKey, TEntityKey> : EFRepositoryBase<TEntity, TModel>, ICrudRepository<TModel, TKey>
+    public abstract class EFCrudRepositoryBase<TEntity, TModel, TKey, TEntityKey> : EFRepositoryBase<TEntity, TModel>, IInstantCrudRepository<TModel, TKey>
         where TModel : class
         where TEntity : class, new()
         where TEntityKey : TKey

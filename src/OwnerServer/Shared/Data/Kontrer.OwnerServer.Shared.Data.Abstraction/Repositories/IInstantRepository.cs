@@ -9,7 +9,7 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
     /// <summary>
     /// Performs actions instatly when called. Repository should not have save/commint/complete implementation
     /// <br/>
-    /// Choose between <see cref="IBulkRepository"/>, <see cref="ICrudRepository{TModel, TKey}"/> or <see cref="IInstantRepository"/>.
+    /// Choose between <see cref="IBulkRepository"/>, <see cref="IInstantCrudRepository{TModel, TKey}"/> or <see cref="IInstantRepository"/>.
     /// </summary>
     public interface IInstantRepository
     {

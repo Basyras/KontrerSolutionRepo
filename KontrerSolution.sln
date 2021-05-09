@@ -99,8 +99,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderSe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerServer.PricingService.Infrastructure", "1 - Kontrer.OwnerServer.PricingService.Infrastructure", "{E4789728-07E7-431E-BD89-52F5D7E1C69E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction", "Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction\Kontrer.OwnerServer.PricingService.Infrastructure.Abstraction.csproj", "{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Infrastructure", "Kontrer.OwnerServer.PricingService.Infrastructure\Kontrer.OwnerServer.PricingService.Infrastructure.csproj", "{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerServer.PricingService.Application", "2 - Kontrer.OwnerServer.PricingService.Application", "{5A3CEB08-57CC-4E59-82F3-930A1CC685CF}"
@@ -259,10 +257,6 @@ Global
 		{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -387,7 +381,6 @@ Global
 		{9CCEFD04-97A8-4314-9BB4-1041FBD120CA} = {1D71FED1-7832-4461-A59D-1129ED91E2F6}
 		{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99} = {1D71FED1-7832-4461-A59D-1129ED91E2F6}
 		{E4789728-07E7-431E-BD89-52F5D7E1C69E} = {E67FE4DE-7AF6-4FB7-B0CD-805EC458C76A}
-		{7CF9205C-CCB9-485C-A21C-0A6E16A8C6C3} = {E4789728-07E7-431E-BD89-52F5D7E1C69E}
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96} = {E4789728-07E7-431E-BD89-52F5D7E1C69E}
 		{5A3CEB08-57CC-4E59-82F3-930A1CC685CF} = {E67FE4DE-7AF6-4FB7-B0CD-805EC458C76A}
 		{76BB30E3-1F19-4161-B9D9-3E088F33F9CD} = {5A3CEB08-57CC-4E59-82F3-930A1CC685CF}
