@@ -5,14 +5,16 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
 {
     public class PricingScopedSettingEntity
     {
-        public PricingSettingGroupEntity PricingSettingGroup { get; set; }
         [Key]
-        public int PricingSettingGroupId { get; set; }
+        public string PricingScopedSettingEntityId { get; set; }
+        [Key]
+        public DateTime From { get; set; }
+        [Key]
+        public DateTime To { get; set; }
+
+        public PricingSettingEntity Setting { get; set; }
         public object Value { get; set; }
-        [Key]
-        public DateTime Start { get; set; }
-        [Key]
-        public DateTime End { get; set; }
+    
 
 
 

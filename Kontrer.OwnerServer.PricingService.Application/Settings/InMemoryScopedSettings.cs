@@ -25,22 +25,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
 
         public NullableResult<TSetting> GetSetting<TSetting>(SettingRequest<TSetting> request)
         {
-            NullableResult<object> setting;
-            //if (request.Start.HasValue && request.End.HasValue)
-            //{
-            //    setting = CachedSettings[request.UniqueSettingName][new Tuple<DateTime, DateTime>(request.Start.Value, request.End.Value)];
-            //}
-            //else
-            //{
-            //    setting = CachedSettings[request.UniqueSettingName][new Tuple<DateTime, DateTime>(default, default)];
-            //}
-
-            //if(setting.WasFound == false)
-            //{
-            //    setting = CachedSettings[request.UniqueSettingName].First().Value;
-            //}
-
-            setting = CachedSettings[request.UniqueSettingName];
+            NullableResult<object> setting = CachedSettings[request.UniqueSettingName];
             return new NullableResult<TSetting>((TSetting)setting.Value,setting.WasFound, (TSetting)setting.DefaultValue);
         }
     }

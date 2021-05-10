@@ -11,20 +11,29 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
 {
     public interface ISettingsRepository : IBulkRepository
     {
-        void RemoveScopedSetting(string settingUniqueName, DateTime start, DateTime end);
-        void AddScopedSetting<TSetting>(string settingUniqueName, DateTime start, DateTime end, TSetting value);
-        void RemoveDefaultScopedSetting(string settingUniqueName);
-        void AddDefaultScopedSetting<TSetting>(string settingUniqueName, TSetting value);
-
-        void UpdateScopedSettings<TSetting>(string settingUniqueName, TSetting value);
-
-
-        void RemoveTimeScope(int scopeId);
-        void AddTimeScope(string scopeName, DateTime from, DateTime to);
-        void UpdateTimeScope(TimeScope scope);
+        void AddScopedSetting<TSetting>(string settingName, DateTime from, DateTime to, TSetting value);
+        void RemoveScopedSetting(string settingName, DateTime from, DateTime to);
+        void UpdateScopedSetting<TSetting>(string settingName, DateTime from, DateTime to, TSetting value);
 
         Task<IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>> GetAllScopedSettingsAsync();
-        Task<IDictionary<string, NullableResult<object>>> GetScopedSettingsAsync(DateTime from, DateTime to,List<SettingRequest> requests);
         Task<NullableResult<TSetting>> GetScopedSettingAsync<TSetting>(DateTime from, DateTime to, SettingRequest<TSetting> request);
+        /// <summary>
+        /// Returnes settings with best matching scope, value is of tybe object but should match request type!!
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="requests"></param>
+        /// <returns></returns>
+        Task<IDictionary<string, NullableResult<object>>> GetScopedSettingsAsync(DateTime from, DateTime to, List<SettingRequest> requests);
+
+
+        void AddTimeScope(string scopeName, DateTime from, DateTime to);
+        void RemoveTimeScope(int scopeId);
+        void UpdateTimeScope(TimeScope scope);
+        Task<TimeScope> GetTimeScope(int scopeId);
+        Task<List<TimeScope>> GetTimeScopes();
+        
+
+       
     }
 }

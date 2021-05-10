@@ -30,15 +30,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
             SettingType = settingType;
         }
 
-        //public SettingRequest(string uniqueSettingName, DateTime start, DateTime end, Type settingType) : this(uniqueSettingName,settingType)
-        //{         
-        //    Start = start;
-        //    End = end;
-        //}
-
         public string UniqueSettingName { get; }
-        //public DateTime? Start { get; }
-        //public DateTime? End { get; }
         public Type SettingType { get; }
     }
 }

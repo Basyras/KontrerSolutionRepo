@@ -20,4 +20,5 @@ namespace Kontrer.Shared.Models
             DefaultValue = defaultValue;
         }
     }
+
 }

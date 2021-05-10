@@ -14,9 +14,15 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
 
         }
 
-        public DateTime From { get; }
-        public DateTime To { get; }
-        public string Name { get; }
-        public int Id { get; }
+        public TimeScope(int id)
+        {
+            Id = id;
+        }
+
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
+        public string Name { get; set; }
+        public int Id { get; init; }
+        
     }
 }
