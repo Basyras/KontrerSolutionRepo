@@ -12,18 +12,17 @@ using Xunit;
 
 namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing.Pricers
 {
-    public class ItemTaxMiddlewareTests
+    public class ItemTaxPricerTests
     {
         [Theory]
         [InlineData(1D,0.2F)]
         [InlineData(6D,2F)]
         [InlineData(100D,0.05F)]
         [InlineData(1528D, 0.9F)]
-        public void CanCalculate(decimal baseSubTotal, float itemTax)
+        public void Should_Calculate_Tax(decimal baseSubTotal, float itemTax)
         {
 
-
-            var itemBb = new ItemBlueprint(new Cash(Currencies.CZK, 1), 1, itemTax);
+            var itemBb = new ItemBlueprint(new Cash(Currencies.CZK, 1), 1, itemTax,"name");
             var accoBp = new AccommodationBlueprint(Currencies.CZK, DateTime.Now, DateTime.Now.AddDays(1), new CustomerModel(), null, new List<ItemBlueprint>() { itemBb }); 
             var rawCost = new RawItemCost(itemBb);
             rawCost.ManipulateCost("test", baseSubTotal);

@@ -15,6 +15,11 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
         public List<DiscountBlueprint> Discounts { get; set; }
         public string RoomType { get; set; }
 
-
+        public static readonly IReadOnlyList<string> RoomTypes = new List<string>()
+        {
+            "standard",
+            "economy",
+            "luxury"
+        };
     }
 }

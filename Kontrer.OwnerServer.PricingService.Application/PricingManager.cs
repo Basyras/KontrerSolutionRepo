@@ -58,7 +58,7 @@ namespace Kontrer.OwnerServer.PricingService.Application
 
         private async Task<IScopedSettings> GetSettingsCacheAsync(AccommodationBlueprint accommodationBlueprint)
         {
-            //TODO can implement caching
+            //TODO can implement caching, or actor model?
             List<SettingRequest> settingRequests = new List<SettingRequest>();
 
             foreach (IAccommodationBlueprintEditor editor in accommodationEditors)

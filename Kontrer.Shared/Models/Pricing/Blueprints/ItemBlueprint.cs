@@ -13,11 +13,12 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
 
         }
 
-        public ItemBlueprint(Cash costPerOne, int count,float taxPercentageToAdd)
+        public ItemBlueprint(Cash costPerOne, int count, float taxPercentageToAdd, string itemName)
         {
             CostPerOne = costPerOne;
             TaxPercentageToAdd = taxPercentageToAdd;
             Count = count;
+            ItemName = itemName;
         }
 
 

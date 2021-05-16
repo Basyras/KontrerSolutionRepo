@@ -28,11 +28,12 @@ namespace Kontrer.Shared.Tests.FakeData
                 .RuleFor(x => x.RoomEndDate, (Faker x) => x.Date.Future(1, x.Date.Soon(x.Random.Int(0, 20), x.Date.Between(default, DateTime.MaxValue))))
                 .RuleFor(x => x.People, x => GetPeopleBlueprints(x.Random.Int(0, 6), true, sharedCurrency))
                 .RuleFor(x => x.RoomItems, x => GetItemBlueprints(x.Random.Int(0, 5), true, sharedCurrency))
-                .RuleFor(x=>x.Discounts,x=>GetDiscountBlueprints(x.Random.Int(0,5),hasSharedCurrency,sharedCurrency))
-                  .FinishWith((x, a) =>
-                  {
-                      sharedCurrency = hasSharedCurrency ? sharedCurrency : x.Random.Enum<Currencies>();
-                  })
+                .RuleFor(x => x.Discounts, x => GetDiscountBlueprints(x.Random.Int(0, 5), hasSharedCurrency, sharedCurrency))
+                .RuleFor(x => x.RoomType, x => RoomBlueprint.RoomTypes[x.Random.Int(0, RoomBlueprint.RoomTypes.Count - 1)])
+                .FinishWith((x, a) =>
+                {
+                   sharedCurrency = hasSharedCurrency ? sharedCurrency : x.Random.Enum<Currencies>();
+                })
                 .Generate(count);
             return rooms;
         }
@@ -92,6 +93,7 @@ namespace Kontrer.Shared.Tests.FakeData
 
         public static List<AccommodationBlueprint> GetAccommodationBlueprints(int count, bool hasSharedCurrency = true, Currencies? sharedCurrency = null)
         {
+            
             sharedCurrency ??= new Faker().Random.Enum<Currencies>();
 
             if (count == 0)
