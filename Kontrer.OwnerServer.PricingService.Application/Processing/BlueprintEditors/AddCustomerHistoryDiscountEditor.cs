@@ -14,7 +14,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEdi
     {
 
 
-        public void EditBlueprint(AccommodationBlueprint blueprint, IScopedSettings resolver)
+        public void EditBlueprint(AccommodationBlueprint blueprint, IResolvedScopedSettings resolver)
         {
 
             var accommodationCount = blueprint.Customer.Accomodations.Count();

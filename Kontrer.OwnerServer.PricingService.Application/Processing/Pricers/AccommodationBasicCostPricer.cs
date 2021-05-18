@@ -13,7 +13,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.Pricers
         public override int QueuePosition => 1;
         public override string WorkDescription => $"Adding items base costs. {nameof(RawItemCost.SubTotal)} + {nameof(ItemBlueprint.CostPerOne.Amount)} * {nameof(ItemBlueprint.Count)}";     
 
-        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IScopedSettings resolver)
+        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IResolvedScopedSettings resolver)
         {
             var newSubTotal = rawCost.SubTotal +  blueprint.Count * blueprint.CostPerOne.Amount;
             rawCost.ManipulateCost(this, newSubTotal);

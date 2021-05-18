@@ -104,12 +104,12 @@ namespace Kontrer.Shared.Tests.FakeData
             var accos = new Faker<AccommodationBlueprint>()
                 .StrictMode(true)
                 .RuleFor(x => x.Deposit, x => x.Random.Bool() == true ? new Cash(sharedCurrency.Value, x.Random.Decimal(0, 500)) : null)
-                .RuleFor(x => x.Start, (Faker x) => x.Date.Between(x.Date.Recent(3000), x.Date.Recent(3000)))
-                .RuleFor(x => x.End, (Faker x, AccommodationBlueprint a) => x.Date.Soon(x.Random.Int(0, 30), a.Start))
+                .RuleFor(x => x.From, (Faker x) => x.Date.Between(x.Date.Recent(3000), x.Date.Recent(3000)))
+                .RuleFor(x => x.To, (Faker x, AccommodationBlueprint a) => x.Date.Soon(x.Random.Int(0, 30), a.From))
                 .RuleFor(x => x.Rooms, x => GetRoomBlueprints(x.Random.Int(0, 5), true, sharedCurrency))
                 .RuleFor(x => x.DepositDeadline, (Faker x, AccommodationBlueprint a) =>
                    {
-                       DateTime? rss = (a.Deposit == null) ? null : x.Date.Soon(15, a.End);
+                       DateTime? rss = (a.Deposit == null) ? null : x.Date.Soon(15, a.To);
                        return rss;
                    })
                 .RuleFor(x => x.AccommodationItems, (Faker x, AccommodationBlueprint a) => GetItemBlueprints(x.Random.Int(0, 5), true, sharedCurrency))

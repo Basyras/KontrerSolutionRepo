@@ -36,7 +36,7 @@ namespace Kontrer.OwnerServer.PricingService.Application
 
         public async Task<AccommodationCost> CalculateAccommodationCostAsync(AccommodationBlueprint accommodationBlueprint)
         {
-            IScopedSettings settings = await GetSettingsCacheAsync(accommodationBlueprint);
+            IResolvedScopedSettings settings = await GetSettingsCacheAsync(accommodationBlueprint);
 
             foreach (IAccommodationBlueprintEditor editor in accommodationEditors)
             {
@@ -55,8 +55,13 @@ namespace Kontrer.OwnerServer.PricingService.Application
             return accommodationCost;
         }
 
+        public ISettingsUnitOfWork CreatePricingSettingsUnitOfWork()
+        {
+            return unitOfWorkFactory.CreateUnitOfWork();
+        }
 
-        private async Task<IScopedSettings> GetSettingsCacheAsync(AccommodationBlueprint accommodationBlueprint)
+
+        private async Task<IResolvedScopedSettings> GetSettingsCacheAsync(AccommodationBlueprint accommodationBlueprint)
         {
             //TODO can implement caching, or actor model?
             List<SettingRequest> settingRequests = new List<SettingRequest>();
@@ -80,8 +85,10 @@ namespace Kontrer.OwnerServer.PricingService.Application
             }
 
             using var unitOfWork = unitOfWorkFactory.CreateUnitOfWork();
-            var scopedSettings = await unitOfWork.PricingSettingsRepository.GetScopedSettingsAsync(accommodationBlueprint.Start,accommodationBlueprint.End,settingRequests);
-            InMemoryScopedSettings settingsResolver = new InMemoryScopedSettings(accommodationBlueprint.Start, accommodationBlueprint.End, scopedSettings);
+            var scopedRequestsTasks = settingRequests.Select(x => GetBestScopedSettingRequest(x, unitOfWork.PricingSettingsRepository, accommodationBlueprint.From, accommodationBlueprint.To)).ToList();            
+            var scopedRequests = await Task.WhenAll(scopedRequestsTasks);
+            var scopedSettings = await unitOfWork.PricingSettingsRepository.GetScopedSettingsAsync(scopedRequests);
+            InMemoryResolvedScopedSettings settingsResolver = new InMemoryResolvedScopedSettings(accommodationBlueprint.From, accommodationBlueprint.To, scopedSettings);
 
             return settingsResolver;
         }
@@ -141,9 +148,31 @@ namespace Kontrer.OwnerServer.PricingService.Application
 
         }
 
-        public ISettingsUnitOfWork CreatePricingSettingsUnitOfWork()
+        private async Task<ScopedSettingRequest> GetBestScopedSettingRequest(SettingRequest request, ISettingsRepository settingsRepository,DateTime from, DateTime to)
         {
-            return unitOfWorkFactory.CreateUnitOfWork();
+            var allScopes = await settingsRepository.GetTimeScopes();
+            var scopesCandidates = allScopes.Where(scope => scope.From <= from && scope.To >= to).ToList();
+            TimeScope finalScope = null;
+            if (scopesCandidates.Count > 0)
+            {
+                finalScope = scopesCandidates.OrderBy(scope => Math.Abs((scope.From - from).TotalDays)).First();
+            }
+            else
+            {
+                scopesCandidates = scopesCandidates.Where(scope => scope.From.Month <= from.Month && scope.To.Month >= to.Month).ToList();
+                if (scopesCandidates.Count > 0)
+                {
+                    finalScope = scopesCandidates.OrderBy(scope => Math.Abs((scope.From.Month - from.Month))).ThenByDescending(x => x.From.Year).First();
+                }
+                else
+                {
+                    throw new Exception("No suitable scopes in this year nor in previous years");
+                }
+            }
+            
+
+            return new ScopedSettingRequest(request, finalScope.Id);
         }
+     
     }
 }

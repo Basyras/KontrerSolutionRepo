@@ -11,20 +11,19 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
 {
     public interface ISettingsRepository : IBulkRepository
     {
-        void AddScopedSetting<TSetting>(string settingName, DateTime from, DateTime to, TSetting value);
-        void RemoveScopedSetting(string settingName, DateTime from, DateTime to);
-        void UpdateScopedSetting<TSetting>(string settingName, DateTime from, DateTime to, TSetting value);
+        void AddSetting<TSetting>(string settindId);
+        void RemoveSetting(string settindId);
+
+        void AddScopedSetting<TSetting>(string settingId, int timeScopeId, TSetting value);
+        void RemoveScopedSetting(string settingId, int timeScopeId);
+        void UpdateScopedSetting<TSetting>(string settingId, int timeScopeId, TSetting value);
 
         Task<IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>> GetAllScopedSettingsAsync();
-        Task<NullableResult<TSetting>> GetScopedSettingAsync<TSetting>(DateTime from, DateTime to, SettingRequest<TSetting> request);
+        Task<NullableResult<TSetting>> GetScopedSettingAsync<TSetting>(ScopedSettingRequest<TSetting> request);
         /// <summary>
         /// Returnes settings with best matching scope, value is of tybe object but should match request type!!
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="requests"></param>
-        /// <returns></returns>
-        Task<IDictionary<string, NullableResult<object>>> GetScopedSettingsAsync(DateTime from, DateTime to, List<SettingRequest> requests);
+        /// </summary>      
+        Task<IDictionary<string, NullableResult<object>>> GetScopedSettingsAsync(IEnumerable<ScopedSettingRequest> requests);
 
 
         void AddTimeScope(string scopeName, DateTime from, DateTime to);
@@ -33,7 +32,5 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
         Task<TimeScope> GetTimeScope(int scopeId);
         Task<List<TimeScope>> GetTimeScopes();
         
-
-       
     }
 }

@@ -21,12 +21,12 @@ namespace Kontrer.OwnerServer.Shared.Data.EF.Tests.Repositories
         public PersonEFCrudRepository People { get; } 
         public CarEFCrudRepository Cars { get; }
 
-        public void Commit()
+        public void Save()
         {
             dbContext.SaveChanges();
         }
 
-        public Task CommitAsync(CancellationToken cancellationToken = default)
+        public Task SaveAsync(CancellationToken cancellationToken = default)
         {
             return dbContext.SaveChangesAsync(cancellationToken);
         }

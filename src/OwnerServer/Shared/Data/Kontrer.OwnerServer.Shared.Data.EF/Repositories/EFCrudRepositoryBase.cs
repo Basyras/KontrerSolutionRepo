@@ -47,9 +47,10 @@ namespace Kontrer.OwnerServer.Shared.Data.EF.Repositories
             return finalSelector;
         }
 
-        public TModel AddAsync(TModel model)
+        public async Task<TModel> AddAsync(TModel model)
         {
             dbContext.Add(ToEntity(model));
+            await dbContext.SaveChangesAsync();
             return model;
         }
 
@@ -95,7 +96,14 @@ namespace Kontrer.OwnerServer.Shared.Data.EF.Repositories
 
         }
 
+        public Task<TModel> UpdateAsync(TModel model)
+        {
+            throw new NotImplementedException();
+        }
 
-
+        public Task RemoveAsync(TKey id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.Pricers
 
     public interface IPricer<TBlueprint,TCost> : IPriceManipulationDescription
     {              
-        void CalculateContractCost(TBlueprint blueprint, TCost rawAccommodation, IScopedSettings settings);
+        void CalculateContractCost(TBlueprint blueprint, TCost rawAccommodation, IResolvedScopedSettings settings);
         List<SettingRequest> GetRequiredSettings(TBlueprint blueprint);
     }
 

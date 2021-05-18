@@ -16,7 +16,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.Pricers
         public override string WorkDescription => "Adding taxes from ItemBlueprint as last in queue";
         public override int QueuePosition => int.MaxValue;
 
-        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IScopedSettings settings)
+        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IResolvedScopedSettings settings)
         {
             decimal taxAmountToAdd = rawCost.SubTotal * (decimal)blueprint.TaxPercentageToAdd;
             decimal newSubTotal = rawCost.SubTotal + taxAmountToAdd;

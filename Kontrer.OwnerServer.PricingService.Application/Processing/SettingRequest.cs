@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.PricingService.Application.Settings
+namespace Kontrer.OwnerServer.PricingService.Application.Processing
 {
     public class SettingRequest<TValue> : SettingRequest
     {

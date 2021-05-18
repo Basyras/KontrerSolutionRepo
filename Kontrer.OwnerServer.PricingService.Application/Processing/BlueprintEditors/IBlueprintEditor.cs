@@ -13,7 +13,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEdi
     /// <typeparam name="TBlueprint"></typeparam>
     public interface IBlueprintEditor<TBlueprint> where TBlueprint : class
     {
-        void EditBlueprint(TBlueprint blueprint, IScopedSettings settings);
+        void EditBlueprint(TBlueprint blueprint, IResolvedScopedSettings settings);
         List<SettingRequest> GetRequiredSettings(TBlueprint blueprint);
     }
 }

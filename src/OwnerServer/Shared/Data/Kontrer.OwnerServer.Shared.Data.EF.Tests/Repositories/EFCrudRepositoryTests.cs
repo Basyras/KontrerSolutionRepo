@@ -54,7 +54,7 @@ namespace Kontrer.OwnerServer.Shared.Data.EF.Tests.Repositories
             model.Name = "1";
 
             unitOfWork.People.AddAsync(model);
-            unitOfWork.Commit();
+            unitOfWork.Save();
             model.Name = newName;
             unitOfWork.People.Update(model);
 

@@ -21,12 +21,12 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
 
         public ISettingsRepository PricingSettingsRepository { get; }
 
-        public void Commit()
+        public void Save()
         {
             dbContext.SaveChanges();
         }
 
-        public Task CommitAsync(CancellationToken cancellationToken = default)
+        public Task SaveAsync(CancellationToken cancellationToken = default)
         {
            return  dbContext.SaveChangesAsync();
         }

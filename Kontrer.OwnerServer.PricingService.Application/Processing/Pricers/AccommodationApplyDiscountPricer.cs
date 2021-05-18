@@ -14,7 +14,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.Pricers
 
         public override string WorkDescription => "Applies discount before applying taxes";
 
-        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IScopedSettings resolver)
+        protected override void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IResolvedScopedSettings resolver)
         {
             foreach (var discount in blueprint.Discounts.Where(x => x.IsPercentageDiscount == false))
             {

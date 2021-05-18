@@ -1,4 +1,5 @@
-﻿using Kontrer.Shared.Models;
+﻿using Kontrer.OwnerServer.PricingService.Application.Processing;
+using Kontrer.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 namespace Kontrer.OwnerServer.PricingService.Application.Settings
 {
 
-    public class InMemoryScopedSettings : IScopedSettings
+    public class InMemoryResolvedScopedSettings : IResolvedScopedSettings
     {        
         //private readonly IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>> CachedSettings;
         private readonly IDictionary<string, NullableResult<object>> CachedSettings;
 
-        public InMemoryScopedSettings(DateTime timeFrom, DateTime timeTo, IDictionary<string, NullableResult<object>> settings)
+        public InMemoryResolvedScopedSettings(DateTime timeFrom, DateTime timeTo, IDictionary<string, NullableResult<object>> settings)
         {
             TimeFrom = timeFrom;
             TimeTo = timeTo;

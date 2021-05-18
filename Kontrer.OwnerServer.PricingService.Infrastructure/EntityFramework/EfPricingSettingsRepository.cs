@@ -26,153 +26,178 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             this.dbContext = dbContext;
         }
 
-        public void AddScopedSetting<TSetting>(string settingName, DateTime from, DateTime to, TSetting value)
+        public void AddScopedSetting<TSetting>(string settingName, int timeScopeId, TSetting value)
         {
             dbContext.ScopedSettings.Add(new PricingScopedSettingEntity()
             {
-                From = from,
-                To = to,
-                Value = value,
-                Setting = new PricingSettingEntity() { PricingSettingEntityId = settingName }
+                SettingId = settingName,
+                TimeScopeId = timeScopeId,
+                Value = Serialize(value),
             });
         }
 
 
-        public void RemoveScopedSetting(string settingName, DateTime from, DateTime to)
+        public void RemoveScopedSetting(string settingName, int timeScopeId)
         {
             PricingScopedSettingEntity entity = new PricingScopedSettingEntity()
             {
-                PricingScopedSettingEntityId = settingName,
-                From = from,
-                To = to,
+                Setting = new PricingSettingEntity() { PricingSettingEntityId = settingName },
+                TimeScope = new PricingSettingTimeScopeEntity() { PricingSettingScopeEntityId = timeScopeId },
             };
             var entityEntry = dbContext.Attach(entity);
             entityEntry.State = EntityState.Deleted;
         }
 
-        public void UpdateScopedSetting<TSetting>(string settingName, DateTime from, DateTime to, TSetting value)
+        public void UpdateScopedSetting<TSetting>(string settingName, int timeScopeId, TSetting value)
         {
             PricingScopedSettingEntity newEntity = new PricingScopedSettingEntity();
-            newEntity.PricingScopedSettingEntityId = settingName;
-            newEntity.From = from;
-            newEntity.To = to;
-            newEntity.Value = value;
+            newEntity.Setting = new PricingSettingEntity { PricingSettingEntityId = settingName };
+            newEntity.TimeScope = new PricingSettingTimeScopeEntity() { PricingSettingScopeEntityId = timeScopeId };
+            newEntity.Value = Serialize(value);
 
             var entityEntry = dbContext.Attach(newEntity);
             entityEntry.State = EntityState.Modified;
         }
 
-        public async Task<NullableResult<TSetting>> GetScopedSettingAsync<TSetting>(DateTime from, DateTime to, SettingRequest<TSetting> request)
+        public async Task<NullableResult<TSetting>> GetScopedSettingAsync<TSetting>(ScopedSettingRequest<TSetting> request)
         {
+
+
             var settingEntity = await dbContext.Settings.AsQueryable()
-                .Where(x => x.PricingSettingEntityId == request.UniqueSettingName)
+                .Where(x => x.PricingSettingEntityId == request.SettingRequest.UniqueSettingName)
                 .SelectMany(x => x.ScopedSettings)
-                .Where(x => x.From <= from && x.To >= to)
-                .OrderBy(x => Math.Abs((x.From - from).TotalDays))
-                .FirstAsync();
+                .FirstAsync(x => x.TimeScope.PricingSettingScopeEntityId == request.TimeScopeId);
+                
 
             if (settingEntity != null)
             {
-                return new NullableResult<TSetting>((TSetting)settingEntity.Value, true, default);
+                return new NullableResult<TSetting>((TSetting)Deserialize(settingEntity.Value,settingEntity.Setting.Type), true);
             }
             else
             {
-                return new NullableResult<TSetting>(default, false, default);
+                return new NullableResult<TSetting>(default, false);
             }
         }
 
         public async Task<IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>> GetAllScopedSettingsAsync()
         {
-            var settingEntities = await dbContext.Settings
-                .Select(settingEntity => new { Name = settingEntity.PricingSettingEntityId, Settings = settingEntity.ScopedSettings.ToDictionary(scopedEntity => new Tuple<DateTime, DateTime>(scopedEntity.From, scopedEntity.To), scopedEntity => new NullableResult<object>(scopedEntity.Value, true, default)) })
-                .ToDictionaryAsync(dicPair => dicPair.Name, dicPair => dicPair.Settings);
+            //var settingEntities = await dbContext.Settings
+            //    .Select(settingEntity =>
+            //    new 
+            //    {
+            //        Name = settingEntity.PricingSettingEntityId, 
+            //        Settings = settingEntity.ScopedSettings.ToDictionary(scopedEntity => new Tuple<DateTime, DateTime>(scopedEntity.TimeScope.From, scopedEntity.TimeScope.To), scopedEntity => new NullableResult<object>(scopedEntity.Value, true, default)) 
+            //    })
+            //    .ToDictionaryAsync(dicPair => dicPair.Name, dicPair => dicPair.Settings);
 
-            return settingEntities as IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>;
+            var settingEntities = await dbContext.Settings
+              .Select(settingEntity =>
+              new
+              {
+                  Name = settingEntity.PricingSettingEntityId,
+                  Settings = settingEntity.ScopedSettings
+              })
+              .ToListAsync();
+
+            var settings = settingEntities
+                .ToDictionary(
+                entity => entity.Name,
+                settingEntity => settingEntity.Settings
+                   .ToDictionary(scopedEntity => new Tuple<DateTime, DateTime>(scopedEntity.TimeScope.From, scopedEntity.TimeScope.To), y => new NullableResult<object>(y.Value, true)) as IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>
+                ) as IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>;
+
+            return settings;
         }
 
 
-        public async Task<IDictionary<string, NullableResult<object>>> GetScopedSettingsAsync(DateTime from, DateTime to, List<SettingRequest> requests)
-        {
-            //var query = dbContext.PricingTimedSettings.Where(x => selectors.Any(y => y.UniqueSettingName == x.PricingSettingGroup.SettingName && y.Start == x.Start && y.End == x.End));
-            //var dic = await query.ToDictionaryAsync(x => x.PricingSettingGroup.SettingName, x => (IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>)x.PricingSettingGroup.TimedSettings.ToDictionary(y => new Tuple<DateTime, DateTime>(y.Start, y.End), y =>
-            //      {
-            //          return y == null ? new NullableResult<object>(default, false) : new NullableResult<object>(y.Value, true);
-            //      }));
+        public async Task<IDictionary<string, NullableResult<object>>> GetScopedSettingsAsync(IEnumerable<ScopedSettingRequest> requests)
+        {             
+            List<string> settingsKeys = requests.Select(x => x.SettingRequest.UniqueSettingName).ToList();
+            List<int> scopedKeys = requests.Select(x => x.TimeScopeId).ToList();
 
-            //return dic;
+            //Dictionary<string, PricingScopedSettingEntity> scopedSettingsEntitites = await dbContext.Settings
+            //    .Include(x => x.ScopedSettings)
+            //    .ThenInclude(x => x.TimeScope)
+            //    .Where(x => settingsKeys.Contains(x.PricingSettingEntityId))
+            //    .SelectMany(x => x.ScopedSettings.Where(x => scopedKeys.Contains(x.TimeScope.PricingSettingScopeEntityId)))
+            //    .ToDictionaryAsync(x => x.Setting.PricingSettingEntityId);
 
 
-            //var scopedSettingsEntities = new Dictionary<string, PricingScopedSettingEntity>();
-            //var scopes = await dbContext.PricingSettingTimeScopes.Where(x => x.Start <= from && x.End >= to).ToListAsync();
-            //foreach (var scopedSetting in scopes.SelectMany(x => x.ScopedSettings))
+            //TODO TEST WITH UNIT TEST SQL QUERY WITH DEBUG VIEW PROPERTY
+            //var scopedSettingsEntitites = dbContext.Settings
+            //     .Include(x => x.ScopedSettings)
+            //     .ThenInclude(x => x.TimeScope)
+            //     .Where(x => settingsKeys.Contains(x.PricingSettingEntityId))
+            //     .Join(requests, x => x.PricingSettingEntityId, x => x.SettingRequest.UniqueSettingName, (x, y) => new { Setting = x, TimeScopeId = y.TimeScopeId })
+            //     .Select(x => x.Setting.ScopedSettings.First(y => y.TimeScope.PricingSettingScopeEntityId == x.TimeScopeId));
+
+            //var scopedSettingsEntitites = dbContext.Settings.Where(x => x.PricingSettingEntityId == "asd");
+
+            var settingEntities = await dbContext.Settings
+                 .Include(x => x.ScopedSettings)
+                 .ThenInclude(x => x.TimeScope)
+                 .Where(x => settingsKeys.Contains(x.PricingSettingEntityId)).ToListAsync();
+
+            var settings = settingEntities
+                .Join(requests, x => x.PricingSettingEntityId, x => x.SettingRequest.UniqueSettingName, (x, y) => new { Setting = x, TimeScopeId = y.TimeScopeId })
+                .Select(x =>
+                {
+                   
+                    var entity = x.Setting.ScopedSettings.FirstOrDefault(y => y.TimeScope.PricingSettingScopeEntityId == x.TimeScopeId);
+                    NullableResult<object> nullableResult;
+                    if (entity != null)
+                    {
+                        nullableResult =  new NullableResult<object>(Deserialize(entity.Value,entity.Setting.Type), true);
+                    }
+                    else
+                    {
+                        nullableResult = new NullableResult<object>(null,false);
+                    }
+                    return new { SettingName = x.Setting.PricingSettingEntityId, Result = nullableResult };
+                }).ToDictionary(x=>x.SettingName,x=>x.Result) as IDictionary<string, NullableResult<object>>;
+
+            return settings ;
+
+            //var sql = scopedSettingsEntitites.ToQueryString();
+
+            //throw new NotImplementedException();
+            //IDictionary<string, NullableResult<object>> scopedSettings = new Dictionary<string, NullableResult<object>>();
+            //foreach (var request in requests)
             //{
-            //    if (scopedSettingsEntities.TryGetValue(scopedSetting.PricingSettingGroup.SettingName, out PricingScopedSettingEntity foundSetting))
+            //    if (scopedSettingsEntitites.TryGetValue(request.SettingRequest.UniqueSettingName, out PricingScopedSettingEntity foundSetting))
             //    {
-            //        if (foundSetting.Start < scopedSetting.Start)
-            //        {
-            //            scopedSettingsEntities[scopedSetting.PricingSettingGroup.SettingName] = scopedSetting;
-            //        }
+            //        scopedSettings.Add(request.SettingRequest.UniqueSettingName, new NullableResult<object>(foundSetting.Value, true));
             //    }
             //    else
             //    {
-            //        scopedSettingsEntities.Add(scopedSetting.PricingSettingGroup.SettingName, scopedSetting);
+            //        scopedSettings.Add(request.SettingRequest.UniqueSettingName, new NullableResult<object>(default, false));
             //    }
             //}
-
-            //Good solution, goind thru scopes and filter their settings - maybe not effective
-            //var scopedSettingsEntitites = await dbContext.PricingSettingTimeScopes.Where(x => x.Start <= from && x.End >= to)
-            //    .SelectMany(x=>x.ScopedSettings)
-            //    .GroupBy(x=>x.PricingSettingGroup.SettingName)
-            //    .Select(x=> x.OrderBy(x=>Math.Abs((x.Start - from).TotalDays)).First())  
-            //    .ToDictionaryAsync(x=>x.PricingSettingGroup.SettingName);
-
-            var scopedSettingsEntitites = await dbContext.Settings
-                .Where(x => requests.Select(x => x.UniqueSettingName).Contains(x.PricingSettingEntityId))
-                .SelectMany(x => x.ScopedSettings)
-                .Where(x => x.From <= from && x.To >= to)
-                .GroupBy(x => x.Setting.PricingSettingEntityId)
-                .Select(x => x.OrderBy(y => Math.Abs((y.From - from).TotalDays)).First())
-                .ToDictionaryAsync(x => x.Setting.PricingSettingEntityId);
-
-
-
-            IDictionary<string, NullableResult<object>> scopedSettings = new Dictionary<string, NullableResult<object>>();
-            foreach (var request in requests)
-            {
-                if (scopedSettingsEntitites.TryGetValue(request.UniqueSettingName, out PricingScopedSettingEntity foundSetting))
-                {
-                    scopedSettings.Add(request.UniqueSettingName, new NullableResult<object>(foundSetting.Value, true));
-                }
-                else
-                {
-                    scopedSettings.Add(request.UniqueSettingName, new NullableResult<object>(default, false));
-                }
-            }
-            return scopedSettings;
+            //return scopedSettings;
         }
 
         public void AddTimeScope(string scopeName, DateTime from, DateTime to)
         {
-            dbContext.SettingScopes.Add(new PricingSettingScopeEntity() { Name = scopeName, From = from, To = to });
+            dbContext.SettingTimeScopes.Add(new PricingSettingTimeScopeEntity() { Name = scopeName, From = from, To = to });
         }
         public void RemoveTimeScope(int scopeId)
-        {            
-            dbContext.SettingScopes.Remove(new PricingSettingScopeEntity() { PricingSettingScopeEntityId = scopeId});
+        {
+            dbContext.SettingTimeScopes.Remove(new PricingSettingTimeScopeEntity() { PricingSettingScopeEntityId = scopeId });
         }
 
         public void UpdateTimeScope(TimeScope scope)
         {
-            PricingSettingScopeEntity newEntity = new PricingSettingScopeEntity();
+            PricingSettingTimeScopeEntity newEntity = new PricingSettingTimeScopeEntity();
             newEntity.PricingSettingScopeEntityId = scope.Id;
             newEntity.From = scope.From;
-            newEntity.To = scope.To;            
+            newEntity.To = scope.To;
             var entityEntry = dbContext.Attach(newEntity);
             entityEntry.State = EntityState.Modified;
         }
 
         public async Task<TimeScope> GetTimeScope(int scopeId)
         {
-            var scopeEntity = await dbContext.SettingScopes.FindAsync(scopeId);
+            var scopeEntity = await dbContext.SettingTimeScopes.FindAsync(scopeId);
             var scope = new TimeScope()
             {
                 Id = scopeEntity.PricingSettingScopeEntityId
@@ -185,7 +210,7 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
 
         public async Task<List<TimeScope>> GetTimeScopes()
         {
-            var scopes = (await dbContext.SettingScopes.ToListAsync()).Select(x=>new TimeScope(x.PricingSettingScopeEntityId) {Name = x.Name, From = x.From, To = x.To });
+            var scopes = (await dbContext.SettingTimeScopes.ToListAsync()).Select(x => new TimeScope(x.PricingSettingScopeEntityId) { Name = x.Name, From = x.From, To = x.To });
             return scopes.ToList();
         }
 
@@ -203,5 +228,29 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             dbContext.Dispose();
         }
 
+        private static string Serialize(object value)
+        {
+            return System.Text.Json.JsonSerializer.Serialize(value);
+        }
+
+        private static TValue Deserialize<TValue>(string value)
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<TValue>(value);
+        }
+
+        private static object Deserialize(string value, Type type)
+        {
+            return System.Text.Json.JsonSerializer.Deserialize(value, type);
+        }
+
+        public void AddSetting<TSetting>(string settindId)
+        {
+            dbContext.Settings.Add(new PricingSettingEntity() { PricingSettingEntityId = settindId, Type = typeof(TSetting) });
+        }
+
+        public void RemoveSetting(string settindId)
+        {
+            dbContext.Settings.Remove(new PricingSettingEntity() { PricingSettingEntityId = settindId });
+        }
     }
 }

@@ -1,3 +1,6 @@
+using Kontrer.OwnerServer.PricingService.Application;
+using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
+using Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +34,10 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kontrer.OwnerServer.PricingService.Presentation.AspApi", Version = "v1" });
             });
+
+            services.AddPricingService()
+                .AddEFRepository()
+                .AddPricer<AccommodationBasicCostPricer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

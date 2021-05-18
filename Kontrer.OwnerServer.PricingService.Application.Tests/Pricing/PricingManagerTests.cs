@@ -32,7 +32,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing
             faker = new Faker();
             mockSettingsRepo = new Mock<ISettingsRepository>();
             var settings = (IDictionary<string, NullableResult<object>>)new Dictionary<string, NullableResult<object>>();
-            mockSettingsRepo.Setup(x => x.GetScopedSettingsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<SettingRequest>>())).Returns(() => Task.FromResult(settings));
+            mockSettingsRepo.Setup(x => x.GetScopedSettingsAsync(It.IsAny<List<ScopedSettingRequest>>())).Returns(() => Task.FromResult(settings));
             mockUoW = new Mock<ISettingsUnitOfWork>();
             mockUoW.Setup(x => x.PricingSettingsRepository).Returns(() => mockSettingsRepo.Object);
 
@@ -68,8 +68,8 @@ namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing
                     return new List<SettingRequest>() { new SettingRequest<int>(settingTest1) };
                 });
             bool wasEditCalled = false;
-            mockBpEditor.Setup(x => x.EditBlueprint(It.IsAny<AccommodationBlueprint>(), It.IsAny<IScopedSettings>()))
-                .Callback((AccommodationBlueprint blueprint, IScopedSettings settings) => 
+            mockBpEditor.Setup(x => x.EditBlueprint(It.IsAny<AccommodationBlueprint>(), It.IsAny<IResolvedScopedSettings>()))
+                .Callback((AccommodationBlueprint blueprint, IResolvedScopedSettings settings) => 
                 {
                     wasEditCalled = true;           
                     blueprint.AccommodationItems.Add(new ItemBlueprint(new Kontrer.Shared.Models.Pricing.Cash(blueprint.Currency,0),1,15, editorItem));
@@ -98,7 +98,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing
                 return new List<SettingRequest>() { new SettingRequest<int>(settingTest1) };
             });
             bool wasCalculateCalled = false;
-            mockPricer.Setup(x => x.CalculateContractCost(It.IsAny<AccommodationBlueprint>(), It.IsAny<RawAccommodationCost>(), It.IsAny<IScopedSettings>())).Callback(() => wasCalculateCalled = true);
+            mockPricer.Setup(x => x.CalculateContractCost(It.IsAny<AccommodationBlueprint>(), It.IsAny<RawAccommodationCost>(), It.IsAny<IResolvedScopedSettings>())).Callback(() => wasCalculateCalled = true);
 
             var mockOptions = Options.Create<PricingManagerOptions>(new PricingManagerOptions());
             var pricingManager = new PricingManager(mockUoWFactory.Object, mockOptions, new List<IAccommodationPricer>() { mockPricer.Object },Enumerable.Empty<IAccommodationBlueprintEditor>());

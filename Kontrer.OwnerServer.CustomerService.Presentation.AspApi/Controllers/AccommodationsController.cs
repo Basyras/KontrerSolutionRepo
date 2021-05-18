@@ -73,7 +73,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Error while {nameof(AddAccommodation)}, customerId: {customerId}, accommodation start: {blueprint.Start}";
+                string message = $"Error while {nameof(AddAccommodation)}, customerId: {customerId}, accommodation start: {blueprint.From}";
                 logger.LogError(ex, message);
                 return Problem(message);
             }
@@ -92,7 +92,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Error with {nameof(UpdateAccommodation)}, customerId {newAccommodation.CustomerId} and accommodation start: {newAccommodation.Blueprint.Start}";
+                string message = $"Error with {nameof(UpdateAccommodation)}, customerId {newAccommodation.CustomerId} and accommodation start: {newAccommodation.Blueprint.From}";
                 logger.LogError(ex, message);
                 return Problem(message);
             }

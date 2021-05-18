@@ -18,7 +18,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.Pricers
       
 
         
-        public void CalculateContractCost(AccommodationBlueprint blueprint, RawAccommodationCost rawAccommodation, IScopedSettings resolver)
+        public void CalculateContractCost(AccommodationBlueprint blueprint, RawAccommodationCost rawAccommodation, IResolvedScopedSettings resolver)
         {
             for (int i = 0; i < blueprint.AccommodationItems.Count; i++)
             {
@@ -62,12 +62,12 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.Pricers
         }
         
 
-        protected virtual void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IScopedSettings settings)
+        protected virtual void CallForEveryItem(ItemBlueprint blueprint, RawItemCost rawCost, IResolvedScopedSettings settings)
         {
             
         }
      
-        protected virtual void CallForEveryRoom(RoomBlueprint blueprint, RawRoomCost rawCost, IScopedSettings settings)
+        protected virtual void CallForEveryRoom(RoomBlueprint blueprint, RawRoomCost rawCost, IResolvedScopedSettings settings)
         {
 
         }
