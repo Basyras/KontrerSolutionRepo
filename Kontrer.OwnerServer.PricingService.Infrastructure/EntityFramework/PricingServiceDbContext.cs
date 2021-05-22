@@ -14,9 +14,11 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
         {
 
         }
+
         //For unit testing
         public PricingServiceDbContext(DbContextOptions<PricingServiceDbContext> options) : base(options)
         {
+
         }
 
         public virtual DbSet<PricingSettingEntity> Settings { get; set; }

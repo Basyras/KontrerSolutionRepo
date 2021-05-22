@@ -1,4 +1,5 @@
-﻿using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
+﻿using Kontrer.OwnerServer.Shared.Asp;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
 using Microsoft.AspNetCore.Builder;
@@ -19,14 +20,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
 {
     public static class IWebHostBuilderDaprExtensions
     {
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="webBuilder"></param>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        public static IWebHostBuilder ConfigureDapr(this IWebHostBuilder webBuilder, Action<MicroserviceBuilder> configure)
+        public static IWebHostBuilder ConfigureServicesForDapr(this IWebHostBuilder webBuilder, Action<MicroserviceBuilder> configure)
         {
 
             webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
@@ -39,7 +33,9 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                     PropertyNameCaseInsensitive = true,
                 });
 
-                services.AddControllers().AddDapr();
+                services.AddControllers()
+                .FixSerialization()
+                .AddDapr();
 
                 services.Configure<DaprMessageBusManagerOptions>(options =>
                 {

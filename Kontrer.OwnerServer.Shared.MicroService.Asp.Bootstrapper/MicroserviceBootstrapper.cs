@@ -9,9 +9,9 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
     public static class MicroserviceBootstrapper
     {
-        public static IHostBuilder CreateMicroservice<TStartup>(string[] args) where TStartup : class, IStartupClass
+        public static IHostBuilder CreateMicroserviceHostBuilder<TStartup>(string[] args) where TStartup : class, IStartupClass
         {
-            return Host.CreateDefaultBuilder().ConfigureMicroservice<TStartup>();
+            return Host.CreateDefaultBuilder().ConfigureServicesForMicroservice<TStartup>();
         }
     }
 }

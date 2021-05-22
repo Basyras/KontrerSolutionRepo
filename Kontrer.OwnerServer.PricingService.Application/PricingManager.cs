@@ -17,20 +17,22 @@ namespace Kontrer.OwnerServer.PricingService.Application
 {
     public class PricingManager
     {
-        
-        private readonly IUnitOfWorkFactory<ISettingsUnitOfWork> unitOfWorkFactory;
+        public ISettingsRepository SettingRepository { get; }
         private readonly IOptions<PricingManagerOptions> options;
         private readonly List<IAccommodationPricer> accommodationPricers = new List<IAccommodationPricer>();
         private readonly List<IAccommodationBlueprintEditor> accommodationEditors = new List<IAccommodationBlueprintEditor>();
 
-        public PricingManager(IUnitOfWorkFactory<ISettingsUnitOfWork> unitOfWorkFactory, IOptions<PricingManagerOptions> options, IEnumerable<IAccommodationPricer> accommodationPricers, IEnumerable<IAccommodationBlueprintEditor> accommodationEditors)
-        {            
-            this.unitOfWorkFactory = unitOfWorkFactory;
+        public PricingManager(ISettingsRepository settingRepository, IOptions<PricingManagerOptions> options, IEnumerable<IAccommodationPricer> accommodationPricers, IEnumerable<IAccommodationBlueprintEditor> accommodationEditors)
+        {
+            this.SettingRepository = settingRepository;
             this.options = options;
             if(accommodationPricers != null)
             this.accommodationPricers = new List<IAccommodationPricer>(accommodationPricers);
             if (accommodationEditors != null)
                 this.accommodationEditors = new List<IAccommodationBlueprintEditor>(accommodationEditors);
+
+
+
         }
 
 
@@ -55,12 +57,6 @@ namespace Kontrer.OwnerServer.PricingService.Application
             return accommodationCost;
         }
 
-        public ISettingsUnitOfWork CreatePricingSettingsUnitOfWork()
-        {
-            return unitOfWorkFactory.CreateUnitOfWork();
-        }
-
-
         private async Task<IResolvedScopedSettings> GetSettingsCacheAsync(AccommodationBlueprint accommodationBlueprint)
         {
             //TODO can implement caching, or actor model?
@@ -83,11 +79,9 @@ namespace Kontrer.OwnerServer.PricingService.Application
                     settingRequests.AddRange(required);
                 }
             }
-
-            using var unitOfWork = unitOfWorkFactory.CreateUnitOfWork();
-            var scopedRequestsTasks = settingRequests.Select(x => GetBestScopedSettingRequest(x, unitOfWork.PricingSettingsRepository, accommodationBlueprint.From, accommodationBlueprint.To)).ToList();            
+            var scopedRequestsTasks = settingRequests.Select(x => GetBestScopedSettingRequest(x, SettingRepository, accommodationBlueprint.From, accommodationBlueprint.To)).ToList();            
             var scopedRequests = await Task.WhenAll(scopedRequestsTasks);
-            var scopedSettings = await unitOfWork.PricingSettingsRepository.GetScopedSettingsAsync(scopedRequests);
+            var scopedSettings = await SettingRepository.GetScopedSettingsAsync(scopedRequests);
             InMemoryResolvedScopedSettings settingsResolver = new InMemoryResolvedScopedSettings(accommodationBlueprint.From, accommodationBlueprint.To, scopedSettings);
 
             return settingsResolver;
@@ -145,12 +139,11 @@ namespace Kontrer.OwnerServer.PricingService.Application
             Cash totalCash = new Cash(currency, totalAmount);
             RoomCost roomCost = new RoomCost(peopleCosts.AsReadOnly(), roomItemCosts.AsReadOnly(), totalCash);
             return roomCost;
-
         }
 
         private async Task<ScopedSettingRequest> GetBestScopedSettingRequest(SettingRequest request, ISettingsRepository settingsRepository,DateTime from, DateTime to)
         {
-            var allScopes = await settingsRepository.GetTimeScopes();
+            var allScopes = await settingsRepository.GetTimeScopesAsync();
             var scopesCandidates = allScopes.Where(scope => scope.From <= from && scope.To >= to).ToList();
             TimeScope finalScope = null;
             if (scopesCandidates.Count > 0)
@@ -166,10 +159,9 @@ namespace Kontrer.OwnerServer.PricingService.Application
                 }
                 else
                 {
-                    throw new Exception("No suitable scopes in this year nor in previous years");
+                    throw new NoSuitableTimeScopeFoundException(from,to);
                 }
-            }
-            
+            }            
 
             return new ScopedSettingRequest(request, finalScope.Id);
         }

@@ -11,7 +11,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
 {
     public interface ISettingsRepository : IBulkRepository
     {
-        void AddSetting<TSetting>(string settindId);
+        void AddSetting<TSetting>(string settingId);
         void RemoveSetting(string settindId);
 
         void AddScopedSetting<TSetting>(string settingId, int timeScopeId, TSetting value);
@@ -30,7 +30,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
         void RemoveTimeScope(int scopeId);
         void UpdateTimeScope(TimeScope scope);
         Task<TimeScope> GetTimeScope(int scopeId);
-        Task<List<TimeScope>> GetTimeScopes();
+        Task<List<TimeScope>> GetTimeScopesAsync();
         
     }
 }

@@ -27,11 +27,18 @@ namespace Kontrer.Shared.Models
             DefaultValue = defaultValue;
         }
 
-        private static object GetDefaultValue(Type valueType)
-        {            
-            if (valueType.IsValueType)
+        private static object GetDefaultValue(Type type)
+        {
+            if (type.IsValueType)
             {
-                return Activator.CreateInstance(valueType);
+                if (type == typeof(string))
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    return Activator.CreateInstance(type);
+                }
             }
             else
             {

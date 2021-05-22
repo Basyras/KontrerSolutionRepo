@@ -15,18 +15,15 @@ using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using MassTransit;
 using MassTransit.Definition;
+using MassTransit.Monitoring.Health;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
     public static class IHostBuilderBootstrapperExtensions
     {
-        private static readonly Assembly entryAssembly;
-        static IHostBuilderBootstrapperExtensions()
-        {
-            entryAssembly = Assembly.GetEntryAssembly();
-        }
+        private static readonly Assembly entryAssembly  = Assembly.GetEntryAssembly();
 
-        public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder builder) where TStartup : class, IStartupClass
+        public static IHostBuilder ConfigureServicesForMicroservice<TStartup>(this IHostBuilder builder) where TStartup : class, IStartupClass
         {
             builder.ConfigureWebHostDefaults(webBuilder =>
             {
@@ -36,7 +33,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
                 webBuilder.UseSetting(WebHostDefaults.ApplicationKey, entryAssembly.GetName().Name); 
                 webBuilder.UseStartup<TStartup>();
 
-                webBuilder.ConfigureDapr((MicroserviceBuilder serviceBuilder) =>
+                webBuilder.ConfigureServicesForDapr((MicroserviceBuilder serviceBuilder) =>
                 {
                     var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
                     actorRegistrator.RegisterActors<TStartup>();
@@ -60,6 +57,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
             services.AddSingleton<IMessageBusManager, DefaultMessageBusManager>();
             services.AddMassTransit(x =>
             {
+                
                 x.AddConsumers(entryAssembly);
                 
                 x.UsingRabbitMq((transitContext, rabbitConfig) =>
@@ -73,8 +71,11 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
                     //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
                     //{                    
                     //});
+                    rabbitConfig.UseHealthCheck(transitContext);
+
                 });
 
+                
                 services.AddMassTransitHostedService();
 
             });

@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Application\Kontrer.OwnerServer.PricingService.Application.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Infrastructure\Kontrer.OwnerServer.PricingService.Infrastructure.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.PricingService.Presentation.Abstraction\Kontrer.OwnerServer.PricingService.Presentation.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj" />
   </ItemGroup>
 
 </Project>

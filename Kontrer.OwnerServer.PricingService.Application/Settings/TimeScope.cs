@@ -8,12 +8,10 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
 {
     public class TimeScope
     {      
-
         public TimeScope()
         {
 
         }
-
         public TimeScope(int id)
         {
             Id = id;

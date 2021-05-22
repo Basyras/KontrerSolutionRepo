@@ -8,7 +8,8 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
 {
     public class ItemBlueprint
     {
-        public ItemBlueprint()
+        [Obsolete("Workaround for bogus",true)]
+        public ItemBlueprint() //Workaround for bogus
         {
 
         }

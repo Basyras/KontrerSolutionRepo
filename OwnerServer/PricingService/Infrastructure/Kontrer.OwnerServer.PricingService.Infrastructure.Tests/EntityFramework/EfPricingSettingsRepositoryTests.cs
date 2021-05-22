@@ -17,7 +17,10 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.Tests.EntityFramewor
         public EfPricingSettingsRepositoryTests()
         {
             //var dbOptions = new DbContextOptionsBuilder<PricingServiceDbContext>().UseInMemoryDatabase("TestDbContextInMemoryDb").Options;
+                                                                                                 
+                                                                                                 //"Data Source=(localdb)\\MSSQLLocalDB;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultipleActiveResultSets=true;Database=PricingServiceDB;Trusted_Connection=True"
             var dbOptions = new DbContextOptionsBuilder<PricingServiceDbContext>().UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultipleActiveResultSets=true;Database=PricingServiceTest").Options;
+            //var dbOptions = new DbContextOptionsBuilder<PricingServiceDbContext>().UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultipleActiveResultSets=true;Database=PricingServiceDB;Trusted_Connection=True").Options;
             var dbContext = new PricingServiceDbContext(dbOptions);
             dbContext.Database.EnsureDeleted();
             dbContext.Database.EnsureCreated();
@@ -41,7 +44,7 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.Tests.EntityFramewor
             repository.Save();
 
 
-            var allScopes = await repository.GetTimeScopes();
+            var allScopes = await repository.GetTimeScopesAsync();
             repository.AddScopedSetting<int>("setting1", allScopes.First(x => x.Name == "scope1").Id, 11);
             repository.AddScopedSetting<int>("setting1", allScopes.First(x => x.Name == "scope2").Id, 12);
             repository.AddScopedSetting<int>("setting1", allScopes.First(x => x.Name == "scope3").Id, 13);
@@ -62,6 +65,13 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.Tests.EntityFramewor
             { 
                 new ScopedSettingRequest(new Application.Processing.SettingRequest("setting2"),allScopes.First(x=>x.Name == "scope2").Id), 
             });
+        }
+
+        [Fact]
+        public async Task GetTimeScopes_When_Empty_Should_Return_Empty_Collection()
+        {
+            var scopes = await repository.GetTimeScopesAsync();
+            Assert.NotNull(scopes);
         }
     }
 }

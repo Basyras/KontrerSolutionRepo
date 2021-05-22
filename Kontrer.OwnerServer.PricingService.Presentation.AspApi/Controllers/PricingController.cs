@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.PricingService.Business.Abstraction.Pricing;
+﻿using Kontrer.OwnerServer.PricingService.Application;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using Kontrer.Shared.Models.Pricing.Costs;
 using Microsoft.AspNetCore.Http;
@@ -14,18 +14,28 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi.Controllers
     [ApiController]
     public class PricingController : ControllerBase
     {
-        private readonly IPricingManager pricingManager;
+        private readonly PricingManager _pricingManager;
 
-        public PricingController(IPricingManager pricingManager)
+        public PricingController(PricingManager pricingManager)
         {
-            this.pricingManager = pricingManager;
+            _pricingManager = pricingManager;
         }
 
         [HttpPost]
-        public async Task<AccommodationCost> CalculateAccommodationCost(AccommodationBlueprint blueprint)
-        {
-            AccommodationCost cost = await pricingManager.CalculateAccommodationCostAsync(blueprint);
-            return cost;
+        public async Task<ActionResult<AccommodationCost>> CalculateAccommodationCost(AccommodationBlueprint blueprint)
+        {          
+            try
+            {
+                AccommodationCost cost = await _pricingManager.CalculateAccommodationCostAsync(blueprint);
+                return Ok(cost);
+            }
+            catch(NoSuitableTimeScopeFoundException ex)
+            {
+                return Problem(ex.Message);
+            }
+           
         }
+
+
     }
 }

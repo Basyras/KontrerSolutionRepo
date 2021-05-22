@@ -1,4 +1,5 @@
 ﻿using Dapr;
+using Kontrer.OwnerServer.Shared.Asp;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

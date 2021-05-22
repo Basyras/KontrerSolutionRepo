@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MassTransit.Monitoring.Health;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +31,17 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
                 app.UseAuthorization();
 
                 var massTransitBus = app.ApplicationServices.GetRequiredService<IBusControl>();
+
+                var busHealth = app.ApplicationServices.GetRequiredService<IBusHealth>();
+                //var health = busHealth.CheckHealth();
+                //if(health.Status == BusHealthStatus.Unhealthy) throw new Exception("");
+                var health2 = busHealth.WaitForHealthStatus( BusHealthStatus.Healthy,TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+                if (health2 == BusHealthStatus.Unhealthy) throw new Exception("");
+
+                //RabbitMQ must be running here! or it will hold for ever
                 massTransitBus.Start();
+
+
 
                 next(app);
             };

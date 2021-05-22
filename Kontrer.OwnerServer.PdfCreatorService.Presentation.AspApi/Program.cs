@@ -20,7 +20,7 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            MicroserviceBootstrapper.CreateMicroservice<Startup>(args);
+            MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup>(args);
         }
 
      

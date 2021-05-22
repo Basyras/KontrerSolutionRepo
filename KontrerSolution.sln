@@ -155,7 +155,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.Data.EF.Tests", "src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.EF.Tests\Kontrer.OwnerServer.Shared.Data.EF.Tests.csproj", "{7FEEAE11-047B-4488-AACD-D3950157CB32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.PricingService.Infrastructure.Tests", "OwnerServer\PricingService\Infrastructure\Kontrer.OwnerServer.PricingService.Infrastructure.Tests\Kontrer.OwnerServer.PricingService.Infrastructure.Tests.csproj", "{4436EC88-11DD-4FD6-8D2C-41D560D953D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Infrastructure.Tests", "OwnerServer\PricingService\Infrastructure\Kontrer.OwnerServer.PricingService.Infrastructure.Tests\Kontrer.OwnerServer.PricingService.Infrastructure.Tests.csproj", "{4436EC88-11DD-4FD6-8D2C-41D560D953D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.Shared.Asp", "OwnerServer\Shared\Kontrer.OwnerServer.Shared.Asp\Kontrer.OwnerServer.Shared.Asp.csproj", "{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerClient.Blazor", "Kontrer.OwnerClient.Blazor", "{507DCAC1-4874-41B1-BB44-76EFD2EA532B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerClient.Web.Infrastructure", "Kontrer.OwnerClient.Web.Infrastructure", "{2CACDB07-74F5-4863-884E-890545A4093D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerClient.Web.Application", "Kontrer.OwnerClient.Web.Application", "{7E4B8269-983D-4A2A-B1EB-94BBC0943EA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerClient.Web.Presentation", "Kontrer.OwnerClient.Web.Presentation", "{454BEA1B-F02C-413C-8229-62CC28CCC49A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -339,6 +349,10 @@ Global
 		{4436EC88-11DD-4FD6-8D2C-41D560D953D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4436EC88-11DD-4FD6-8D2C-41D560D953D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4436EC88-11DD-4FD6-8D2C-41D560D953D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -415,6 +429,11 @@ Global
 		{536A334D-121E-41DD-9CC4-5B703AE66137} = {49B07044-BACA-4E0E-9B58-87583883FDED}
 		{7FEEAE11-047B-4488-AACD-D3950157CB32} = {49B07044-BACA-4E0E-9B58-87583883FDED}
 		{4436EC88-11DD-4FD6-8D2C-41D560D953D0} = {E4789728-07E7-431E-BD89-52F5D7E1C69E}
+		{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096} = {43515AD6-D565-4FD8-9328-C7E53E12692A}
+		{507DCAC1-4874-41B1-BB44-76EFD2EA532B} = {57BBB39E-7EE9-4C90-8CBB-3820E13E5E01}
+		{2CACDB07-74F5-4863-884E-890545A4093D} = {507DCAC1-4874-41B1-BB44-76EFD2EA532B}
+		{7E4B8269-983D-4A2A-B1EB-94BBC0943EA7} = {507DCAC1-4874-41B1-BB44-76EFD2EA532B}
+		{454BEA1B-F02C-413C-8229-62CC28CCC49A} = {507DCAC1-4874-41B1-BB44-76EFD2EA532B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

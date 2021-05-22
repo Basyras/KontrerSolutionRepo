@@ -141,8 +141,7 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             var settings = settingEntities
                 .Join(requests, x => x.PricingSettingEntityId, x => x.SettingRequest.UniqueSettingName, (x, y) => new { Setting = x, TimeScopeId = y.TimeScopeId })
                 .Select(x =>
-                {
-                   
+                {                   
                     var entity = x.Setting.ScopedSettings.FirstOrDefault(y => y.TimeScope.PricingSettingScopeEntityId == x.TimeScopeId);
                     NullableResult<object> nullableResult;
                     if (entity != null)
@@ -208,7 +207,7 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             return scope;
         }
 
-        public async Task<List<TimeScope>> GetTimeScopes()
+        public async Task<List<TimeScope>> GetTimeScopesAsync()
         {
             var scopes = (await dbContext.SettingTimeScopes.ToListAsync()).Select(x => new TimeScope(x.PricingSettingScopeEntityId) { Name = x.Name, From = x.From, To = x.To });
             return scopes.ToList();

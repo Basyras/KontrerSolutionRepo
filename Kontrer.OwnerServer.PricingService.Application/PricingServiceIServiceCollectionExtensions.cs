@@ -11,7 +11,7 @@ namespace Kontrer.OwnerServer.PricingService.Application
     {
         public static PricingServiceBuilder AddPricingService(this IServiceCollection services)
         {
-            services.AddSingleton<PricingManager>();
+            services.AddScoped<PricingManager>();
             return new PricingServiceBuilder(services);            
         }
     }

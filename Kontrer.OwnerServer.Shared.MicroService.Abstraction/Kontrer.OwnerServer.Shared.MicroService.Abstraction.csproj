@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
+    <ProjectReference Include="..\OwnerServer\Shared\Kontrer.OwnerServer.Shared.Asp\Kontrer.OwnerServer.Shared.Asp.csproj" />
   </ItemGroup>
 
 </Project>
