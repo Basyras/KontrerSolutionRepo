@@ -48,7 +48,7 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateSetting(string settingId, string settingTypeName) //Generics does not work as HTTP endpoint (they are not shown in swagger)
+        public async Task<ActionResult> CreateSetting(string settingId, string settingTypeName)
         {
             var settingType = Type.GetType(settingTypeName);
             if (settingType == null) throw new Exception("Unknown type");
@@ -59,9 +59,9 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, Kontrer.Shared.Models.NullableResult<object>>>>> GetScopedSettings()
+        public async Task<ActionResult<Dictionary<string, Dictionary<Tuple<DateTime, DateTime>, Kontrer.Shared.Models.NullableResult<object>>>>> GetScopedSettings()
         {
-            IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, Kontrer.Shared.Models.NullableResult<object>>> scopedSettings = await _pricingManager.SettingRepository.GetAllScopedSettingsAsync();
+            Dictionary<string, Dictionary<Tuple<DateTime, DateTime>, Kontrer.Shared.Models.NullableResult<object>>> scopedSettings = (Dictionary<string, Dictionary<Tuple<DateTime, DateTime>, Kontrer.Shared.Models.NullableResult<object>>>) (await _pricingManager.SettingRepository.GetAllScopedSettingsAsync());
             return Ok(scopedSettings);
         }
 

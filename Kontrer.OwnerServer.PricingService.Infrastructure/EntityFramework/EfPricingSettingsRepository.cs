@@ -100,14 +100,16 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             //    })
             //    .ToDictionaryAsync(dicPair => dicPair.Name, dicPair => dicPair.Settings);
 
-            var settingEntities = await dbContext.Settings
-              .Select(settingEntity =>
-              new
-              {
-                  Name = settingEntity.PricingSettingEntityId,
-                  Settings = settingEntity.ScopedSettings
-              })
-              .ToListAsync();
+            var settingEntities = await dbContext.Settings               
+                .Include(x=>x.ScopedSettings)
+                .ThenInclude(x=>x.TimeScope)
+                .Select(settingEntity =>
+                new
+                {
+                    Name = settingEntity.PricingSettingEntityId,
+                    Settings = settingEntity.ScopedSettings
+                })              
+                .ToListAsync();
 
             var settings = settingEntities
                 .ToDictionary(

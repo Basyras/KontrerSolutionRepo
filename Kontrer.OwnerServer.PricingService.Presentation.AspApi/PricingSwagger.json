@@ -1,0 +1,770 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kontrer.OwnerServer.PricingService.Presentation.AspApi",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Pricing": {
+      "post": {
+        "tags": [
+          "Pricing"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccommodationBlueprint"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccommodationBlueprint"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccommodationBlueprint"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccommodationBlueprint"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccommodationCost"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccommodationCost"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccommodationCost"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Settings/GetTimeScopes": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimeScope"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimeScope"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimeScope"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Settings/CreateTimeScope": {
+      "post": {
+        "tags": [
+          "Settings"
+        ],
+        "parameters": [
+          {
+            "name": "timeScopeName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Settings/GetSettings": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Settings/CreateSetting": {
+      "post": {
+        "tags": [
+          "Settings"
+        ],
+        "parameters": [
+          {
+            "name": "settingId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "settingTypeName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Settings/GetScopedSettings": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "$ref": "#/components/schemas/ObjectNullableResult"
+                    }
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "$ref": "#/components/schemas/ObjectNullableResult"
+                    }
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "$ref": "#/components/schemas/ObjectNullableResult"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Settings/CreateScopedSetting": {
+      "post": {
+        "tags": [
+          "Settings"
+        ],
+        "parameters": [
+          {
+            "name": "settingId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "timeScopeId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "settingTypeName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "nullable": true
+              }
+            },
+            "application/json": {
+              "schema": {
+                "nullable": true
+              }
+            },
+            "text/json": {
+              "schema": {
+                "nullable": true
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "nullable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Currencies": {
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Cash": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/Currencies"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DiscountBlueprint": {
+        "type": "object",
+        "properties": {
+          "discountId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "discountName": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPercentageDiscount": {
+            "type": "boolean"
+          },
+          "amountDiscount": {
+            "$ref": "#/components/schemas/Cash"
+          },
+          "percentageDiscount": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemBlueprint": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemName": {
+            "type": "string",
+            "nullable": true
+          },
+          "extraInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "costPerOne": {
+            "$ref": "#/components/schemas/Cash"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountBlueprint"
+            },
+            "nullable": true
+          },
+          "canParentApplyDiscount": {
+            "type": "boolean"
+          },
+          "taxPercentageToAdd": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonTypes": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "PersonBlueprint": {
+        "type": "object",
+        "properties": {
+          "personItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemBlueprint"
+            },
+            "nullable": true
+          },
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountBlueprint"
+            },
+            "nullable": true
+          },
+          "personType": {
+            "$ref": "#/components/schemas/PersonTypes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RoomBlueprint": {
+        "type": "object",
+        "properties": {
+          "roomStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "roomEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "roomItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemBlueprint"
+            },
+            "nullable": true
+          },
+          "people": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PersonBlueprint"
+            },
+            "nullable": true
+          },
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountBlueprint"
+            },
+            "nullable": true
+          },
+          "roomType": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddressModel": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "region": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "town": {
+            "type": "string",
+            "nullable": true
+          },
+          "street": {
+            "type": "string",
+            "nullable": true
+          },
+          "postCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "houseNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContactModel": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemCost": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "descriptions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "costPerOne": {
+            "$ref": "#/components/schemas/Cash"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCost": {
+            "$ref": "#/components/schemas/Cash"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonCost": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemCost"
+            },
+            "nullable": true
+          },
+          "totalCost": {
+            "$ref": "#/components/schemas/Cash"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RoomCost": {
+        "type": "object",
+        "properties": {
+          "personCosts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PersonCost"
+            },
+            "nullable": true
+          },
+          "roomItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemCost"
+            },
+            "nullable": true
+          },
+          "totalCost": {
+            "$ref": "#/components/schemas/Cash"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccommodationCost": {
+        "type": "object",
+        "properties": {
+          "rooms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomCost"
+            },
+            "nullable": true
+          },
+          "accomodationItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemCost"
+            },
+            "nullable": true
+          },
+          "totalCost": {
+            "$ref": "#/components/schemas/Cash"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FinishedAccommodationModel": {
+        "type": "object",
+        "properties": {
+          "accommodationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "orderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "blueprint": {
+            "$ref": "#/components/schemas/AccommodationBlueprint"
+          },
+          "cost": {
+            "$ref": "#/components/schemas/AccommodationCost"
+          },
+          "ownersPrivateNotes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerModel": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "contact": {
+            "$ref": "#/components/schemas/ContactModel"
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressModel"
+          },
+          "accomodations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinishedAccommodationModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccommodationBlueprint": {
+        "type": "object",
+        "properties": {
+          "customersNotes": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deposit": {
+            "$ref": "#/components/schemas/Cash"
+          },
+          "depositDeadline": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomBlueprint"
+            },
+            "nullable": true
+          },
+          "accommodationItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemBlueprint"
+            },
+            "nullable": true
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currencies"
+          },
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountBlueprint"
+            },
+            "nullable": true
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CustomerModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TimeScope": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjectNullableResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "nullable": true
+          },
+          "wasFound": {
+            "type": "boolean"
+          },
+          "defaultValue": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -39,14 +39,14 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi
                 .AddPricer<AccommodationApplyDiscountPricer>()
                 .AddPricer<AccommodationItemTaxPricer>()
                 .AddPricer<AccommodationBasicCostPricer>();
-
+            
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
+
         }
     }
 }

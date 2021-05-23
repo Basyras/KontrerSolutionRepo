@@ -31,7 +31,13 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
 
         private void Configure(IApplicationBuilder app)
         {
-            var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();        
+            var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
+
+            app.UseCors(x => x //CORS must be called before calling UseEndpoints!   //https://github.com/dotnet/AspNetCore.Docs/pull/21043
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          .AllowAnyOrigin());
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapSubscribeHandler();

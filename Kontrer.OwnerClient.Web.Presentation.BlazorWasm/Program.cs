@@ -1,3 +1,4 @@
+using Kontrer.OwnerClient.Application.Pricing;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped(x => new PricingSwaggerClient("https://localhost:44347/", x.GetRequiredService<HttpClient>()));
 
             await builder.Build().RunAsync();
         }

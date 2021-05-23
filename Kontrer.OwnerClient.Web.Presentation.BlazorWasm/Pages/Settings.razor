@@ -1,12 +1,25 @@
-﻿@page "/settings"
+﻿@inject Kontrer.OwnerClient.Application.Pricing.PricingSwaggerClient client
+@page "/settings"
 <h3>Settings</h3>
-@foreach(var setting in new List<string> {"1","2" })
+@foreach (var setting in AllSettings)
 {
-    @:setting
+    @setting.Key; @:-  @setting.Value;
+    <br/>
+
 }
 
 
 @code {
 
+    private Dictionary<string, string> AllSettings = new Dictionary<string, string>();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        AllSettings = (Dictionary<string, string>)(await client.GetSettingsAsync());
+        await  base.OnAfterRenderAsync(firstRender);
+
+        var s = await client.GetScopedSettingsAsync();
+
+        this.StateHasChanged();
+    }
 
 }
