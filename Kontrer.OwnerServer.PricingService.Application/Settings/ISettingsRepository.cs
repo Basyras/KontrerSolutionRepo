@@ -11,12 +11,17 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
 {
     public interface ISettingsRepository : IBulkRepository
     {
-        void AddSetting<TSetting>(string settingId);
+        //Settings
+        Task<Dictionary<string, Type>> GetSettingsAsync();
+        void CreateNewSetting<TSetting>(string settingId);
+        void CreateNewSetting(string settingId, Type settingType);
         void RemoveSetting(string settindId);
 
+        //Scoped settings
         void AddScopedSetting<TSetting>(string settingId, int timeScopeId, TSetting value);
+        void AddScopedSetting(string settingId, int timeScopeId, object value, Type settingType);
         void RemoveScopedSetting(string settingId, int timeScopeId);
-        void UpdateScopedSetting<TSetting>(string settingId, int timeScopeId, TSetting value);
+        void UpdateScopedSetting(string settingId, int timeScopeId, object value, Type settingType);
 
         Task<IDictionary<string, IDictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>> GetAllScopedSettingsAsync();
         Task<NullableResult<TSetting>> GetScopedSettingAsync<TSetting>(ScopedSettingRequest<TSetting> request);
@@ -25,8 +30,8 @@ namespace Kontrer.OwnerServer.PricingService.Application.Settings
         /// </summary>      
         Task<IDictionary<string, NullableResult<object>>> GetScopedSettingsAsync(IEnumerable<ScopedSettingRequest> requests);
 
-
-        void AddTimeScope(string scopeName, DateTime from, DateTime to);
+        //TimeScopes
+        void CreateNewTimeScope(string scopeName, DateTime from, DateTime to);
         void RemoveTimeScope(int scopeId);
         void UpdateTimeScope(TimeScope scope);
         Task<TimeScope> GetTimeScope(int scopeId);

@@ -81,7 +81,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing
                 });
 
             var mockOptions = Options.Create(new PricingManagerOptions());
-            var pricingManager = new PricingManager(mockUoWFactory.Object, mockOptions, Enumerable.Empty<IAccommodationPricer>(), new List<IAccommodationBlueprintEditor>() { mockBpEditor.Object });
+            var pricingManager = new PricingManager(mockSettingsRepo.Object, mockOptions, Enumerable.Empty<IAccommodationPricer>(), new List<IAccommodationBlueprintEditor>() { mockBpEditor.Object });
             AccommodationBlueprint accoBlueprint = BlueprintFakeData.GetAccommodationBlueprints(1)[0];
             var cost = await pricingManager.CalculateAccommodationCostAsync(accoBlueprint);
 
@@ -113,7 +113,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Tests.Pricing
             });
 
             var mockOptions = Options.Create<PricingManagerOptions>(new PricingManagerOptions());
-            var pricingManager = new PricingManager(mockUoWFactory.Object, mockOptions, new List<IAccommodationPricer>() { mockPricer.Object }, Enumerable.Empty<IAccommodationBlueprintEditor>());
+            var pricingManager = new PricingManager(mockSettingsRepo.Object, mockOptions, new List<IAccommodationPricer>() { mockPricer.Object }, Enumerable.Empty<IAccommodationBlueprintEditor>());
             AccommodationBlueprint accoBlueprint = BlueprintFakeData.GetAccommodationBlueprints(1)[0];
             var cost = await pricingManager.CalculateAccommodationCostAsync(accoBlueprint);
             wasPricerRequiredCalled.Should().BeTrue();

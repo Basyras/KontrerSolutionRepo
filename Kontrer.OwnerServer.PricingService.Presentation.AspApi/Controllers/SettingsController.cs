@@ -30,18 +30,29 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateTimeScope(string timeScopeName, DateTime from, DateTime to)
         {
-            _pricingManager.SettingRepository.AddTimeScope(timeScopeName, from, to);
+            _pricingManager.SettingRepository.CreateNewTimeScope(timeScopeName, from, to);
             await _pricingManager.SettingRepository.SaveAsync();
             return Ok();
         }
 
 
-      
+        /// <summary>
+        /// Key is setting name, value is <see cref="Type.AssemblyQualifiedName"/>
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]        
+        public async Task<ActionResult<Dictionary<string,string>>> GetSettings()
+        {                  
+            var settings = await _pricingManager.SettingRepository.GetSettingsAsync();            
+            return Ok(settings.ToDictionary(x=>x.Key,x=>x.Value.AssemblyQualifiedName));
+        }
 
         [HttpPost]
-        public async Task<ActionResult> CreateSetting<TSetting>(string settingId) //Generics does not work as HTTP endpoint (they are not shown in swagger)
+        public async Task<ActionResult> CreateSetting(string settingId, string settingTypeName) //Generics does not work as HTTP endpoint (they are not shown in swagger)
         {
-            _pricingManager.SettingRepository.AddSetting<TSetting>(settingId);
+            var settingType = Type.GetType(settingTypeName);
+            if (settingType == null) throw new Exception("Unknown type");
+            _pricingManager.SettingRepository.CreateNewSetting(settingId, settingType);
             await _pricingManager.SettingRepository.SaveAsync();
             return Ok();
         }
@@ -55,9 +66,9 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateScopedSetting<TSetting>(string settingId,int timeScopeId,TSetting value)
+        public async Task<ActionResult> CreateScopedSetting(string settingId,int timeScopeId,object value,string settingTypeName)
         {
-            _pricingManager.SettingRepository.AddScopedSetting<TSetting>(settingId,timeScopeId, value);
+            _pricingManager.SettingRepository.AddScopedSetting(settingId,timeScopeId, value, Type.GetType(settingTypeName));
             await _pricingManager.SettingRepository.SaveAsync();
             return Ok();
         }

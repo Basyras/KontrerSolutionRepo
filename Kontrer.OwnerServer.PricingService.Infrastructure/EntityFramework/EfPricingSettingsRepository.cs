@@ -36,6 +36,16 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             });
         }
 
+        public void AddScopedSetting(string settingName, int timeScopeId, object value, Type settingType)
+        {
+            dbContext.ScopedSettings.Add(new PricingScopedSettingEntity()
+            {
+                SettingId = settingName,
+                TimeScopeId = timeScopeId,
+                Value = Serialize(value, settingType),
+            });
+        }
+
 
         public void RemoveScopedSetting(string settingName, int timeScopeId)
         {
@@ -48,12 +58,12 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             entityEntry.State = EntityState.Deleted;
         }
 
-        public void UpdateScopedSetting<TSetting>(string settingName, int timeScopeId, TSetting value)
+        public void UpdateScopedSetting(string settingName, int timeScopeId, object value,Type settingType)
         {
             PricingScopedSettingEntity newEntity = new PricingScopedSettingEntity();
             newEntity.Setting = new PricingSettingEntity { PricingSettingEntityId = settingName };
             newEntity.TimeScope = new PricingSettingTimeScopeEntity() { PricingSettingScopeEntityId = timeScopeId };
-            newEntity.Value = Serialize(value);
+            newEntity.Value = Serialize(value, settingType);
 
             var entityEntry = dbContext.Attach(newEntity);
             entityEntry.State = EntityState.Modified;
@@ -155,7 +165,7 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
                     return new { SettingName = x.Setting.PricingSettingEntityId, Result = nullableResult };
                 }).ToDictionary(x=>x.SettingName,x=>x.Result) as IDictionary<string, NullableResult<object>>;
 
-            return settings ;
+            return settings;
 
             //var sql = scopedSettingsEntitites.ToQueryString();
 
@@ -175,7 +185,7 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             //return scopedSettings;
         }
 
-        public void AddTimeScope(string scopeName, DateTime from, DateTime to)
+        public void CreateNewTimeScope(string scopeName, DateTime from, DateTime to)
         {
             dbContext.SettingTimeScopes.Add(new PricingSettingTimeScopeEntity() { Name = scopeName, From = from, To = to });
         }
@@ -213,6 +223,29 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             return scopes.ToList();
         }
 
+
+
+
+        public async Task<Dictionary<string, Type>> GetSettingsAsync()
+        {
+            var settings = await dbContext.Settings.ToDictionaryAsync(x => x.PricingSettingEntityId, x => x.Type);
+            return settings;
+        }
+        public void CreateNewSetting<TSetting>(string settindId)
+        {
+            CreateNewSetting(settindId, typeof(TSetting));
+        }
+        public void CreateNewSetting(string settindId, Type settingType)
+        {            
+            dbContext.Settings.Add(new PricingSettingEntity() { PricingSettingEntityId = settindId, Type = settingType });
+        }
+
+
+        public void RemoveSetting(string settindId)
+        {
+            dbContext.Settings.Remove(new PricingSettingEntity() { PricingSettingEntityId = settindId });
+        }
+
         public void Save()
         {
             dbContext.SaveChanges();
@@ -227,9 +260,14 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
             dbContext.Dispose();
         }
 
-        private static string Serialize(object value)
+        private static string Serialize<TSetting>(TSetting value)
         {
             return System.Text.Json.JsonSerializer.Serialize(value);
+        }
+
+        private static string Serialize(object value,Type setingType)
+        {
+            return System.Text.Json.JsonSerializer.Serialize(value, setingType);
         }
 
         private static TValue Deserialize<TValue>(string value)
@@ -240,16 +278,6 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
         private static object Deserialize(string value, Type type)
         {
             return System.Text.Json.JsonSerializer.Deserialize(value, type);
-        }
-
-        public void AddSetting<TSetting>(string settindId)
-        {
-            dbContext.Settings.Add(new PricingSettingEntity() { PricingSettingEntityId = settindId, Type = typeof(TSetting) });
-        }
-
-        public void RemoveSetting(string settindId)
-        {
-            dbContext.Settings.Remove(new PricingSettingEntity() { PricingSettingEntityId = settindId });
         }
     }
 }

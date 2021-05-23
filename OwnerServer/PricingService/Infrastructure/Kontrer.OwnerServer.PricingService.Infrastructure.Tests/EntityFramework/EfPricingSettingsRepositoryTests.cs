@@ -32,15 +32,15 @@ namespace Kontrer.OwnerServer.PricingService.Infrastructure.Tests.EntityFramewor
         [Fact]
         public async Task GetScopedSettingsAsync_Should_Have_Unique_SettingIds()
         {
-            repository.AddSetting<int>("setting1");
-            repository.AddSetting<int>("setting2");
-            repository.AddSetting<int>("setting3");
-            repository.AddSetting<int>("setting4");
+            repository.CreateNewSetting<int>("setting1");
+            repository.CreateNewSetting<int>("setting2");
+            repository.CreateNewSetting<int>("setting3");
+            repository.CreateNewSetting<int>("setting4");
 
-            repository.AddTimeScope("scope1", DateTime.Now, DateTime.Now.AddDays(1));
-            repository.AddTimeScope("scope2", DateTime.Now.AddMonths(-1), DateTime.Now.AddMonths(1));
-            repository.AddTimeScope("scope3", DateTime.Now.AddMonths(-2), DateTime.Now.AddMonths(2));
-            repository.AddTimeScope("scope4", DateTime.Now.AddMonths(-3), DateTime.Now.AddMonths(3));
+            repository.CreateNewTimeScope("scope1", DateTime.Now, DateTime.Now.AddDays(1));
+            repository.CreateNewTimeScope("scope2", DateTime.Now.AddMonths(-1), DateTime.Now.AddMonths(1));
+            repository.CreateNewTimeScope("scope3", DateTime.Now.AddMonths(-2), DateTime.Now.AddMonths(2));
+            repository.CreateNewTimeScope("scope4", DateTime.Now.AddMonths(-3), DateTime.Now.AddMonths(3));
             repository.Save();
 
 
