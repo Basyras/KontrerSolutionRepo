@@ -32,11 +32,11 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 
                 var massTransitBus = app.ApplicationServices.GetRequiredService<IBusControl>();
 
-                var busHealth = app.ApplicationServices.GetRequiredService<IBusHealth>();
+                var busHealthService = app.ApplicationServices.GetRequiredService<IBusHealth>();
                 //var health = busHealth.CheckHealth();
                 //if(health.Status == BusHealthStatus.Unhealthy) throw new Exception("");
-                var health2 = busHealth.WaitForHealthStatus( BusHealthStatus.Healthy,TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
-                if (health2 == BusHealthStatus.Unhealthy) throw new Exception("");
+                var healthStatus = busHealthService.WaitForHealthStatus( BusHealthStatus.Healthy,TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+                if (healthStatus == BusHealthStatus.Unhealthy) throw new Exception("Message bus is unhealthy! (probablly not running)");
 
                 //RabbitMQ must be running here! or it will hold for ever
                 massTransitBus.Start();

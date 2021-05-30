@@ -3,8 +3,8 @@
 <h3>Settings</h3>
 @foreach (var setting in AllSettings)
 {
-    @setting.Key; @:-  @setting.Value;
-    <br/>
+    @setting.Key; @: -  @setting.Value;
+    <br />
 
 }
 
@@ -14,12 +14,13 @@
     private Dictionary<string, string> AllSettings = new Dictionary<string, string>();
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AllSettings = (Dictionary<string, string>)(await client.GetSettingsAsync());
-        await  base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            AllSettings = (Dictionary<string, string>)(await client.GetSettingsAsync());
+            await base.OnAfterRenderAsync(firstRender);
+            this.StateHasChanged();
 
-        var s = await client.GetScopedSettingsAsync();
-
-        this.StateHasChanged();
+        }
     }
 
 }
