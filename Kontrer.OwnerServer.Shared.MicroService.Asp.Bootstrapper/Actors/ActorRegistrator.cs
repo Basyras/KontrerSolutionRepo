@@ -18,6 +18,10 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.Actors
             this.microserviceProvider = microserviceProvider;
         }
 
+        /// <summary>
+        /// <typeparamref name="TStartup"/> must be in default namespace besides Actors folder
+        /// </summary>
+        /// <typeparam name="TStartup"></typeparam>
         public void RegisterActors<TStartup>()
         {
             RegisterActors(typeof(TStartup).Namespace + "/Actors");

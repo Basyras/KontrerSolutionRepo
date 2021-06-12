@@ -1,3 +1,5 @@
+@inject IBusControl busControl
+
 <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -8,3 +10,15 @@
         </LayoutView>
     </NotFound>
 </Router>
+@code
+{ 
+    protected override Task OnInitializedAsync()
+    {
+        var healthStatus = busControl.WaitForHealthStatus(BusHealthStatus.Healthy, TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+        if (healthStatus == BusHealthStatus.Unhealthy) throw new Exception("Message bus is unhealthy! (probablly not running)");
+
+        //RabbitMQ must be running here! or it will hold for ever
+        busControl.Start();
+        return base.OnInitializedAsync();
+    }
+}

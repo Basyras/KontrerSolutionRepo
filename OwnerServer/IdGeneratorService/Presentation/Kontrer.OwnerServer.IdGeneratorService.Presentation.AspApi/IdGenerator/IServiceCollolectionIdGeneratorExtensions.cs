@@ -13,8 +13,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator
         public static IServiceCollection AddIdGenerator(this IServiceCollection services)
         {
             services.AddSingleton<IIdGeneratorManager, IdGeneratorManager>();
-            services.AddSingleton<IIdGeneratorStorage, EFIdGeneratorStorage>();
-            
+            services.AddSingleton<IIdGeneratorStorage, EFIdGeneratorStorage>();            
 
             return services;
         }

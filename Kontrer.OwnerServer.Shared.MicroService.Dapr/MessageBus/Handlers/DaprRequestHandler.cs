@@ -20,7 +20,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus.Handlers
             this.appName = appName;
         }
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
-        {
+        {            
             return daprClient.InvokeMethodAsync<TRequest, TResponse>(appName, nameof(TResponse), request, null, cancellationToken).AsTask();
         }
     }

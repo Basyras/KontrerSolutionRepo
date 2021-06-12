@@ -5,18 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MassTransit.AspNetCore" Version="7.1.4-develop.3245" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="7.1.4-develop.3245" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Dapr\Kontrer.OwnerServer.Shared.MicroService.Dapr.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="MassTransit\" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.Requests.Customers
+namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse.Customers
 {
     public class TryCreateCustomerRequest : IRequest<CustomerModel>
     {

@@ -1,5 +1,5 @@
 ﻿using Dapr.Client;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.Requests.Customers;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse.Customers;
 using Kontrer.Shared.Models;
 using MediatR;
 using System;

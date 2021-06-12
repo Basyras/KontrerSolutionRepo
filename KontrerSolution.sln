@@ -157,7 +157,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PricingService.Infrastructure.Tests", "OwnerServer\PricingService\Infrastructure\Kontrer.OwnerServer.PricingService.Infrastructure.Tests\Kontrer.OwnerServer.PricingService.Infrastructure.Tests.csproj", "{4436EC88-11DD-4FD6-8D2C-41D560D953D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.Shared.Asp", "OwnerServer\Shared\Kontrer.OwnerServer.Shared.Asp\Kontrer.OwnerServer.Shared.Asp.csproj", "{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.Asp", "OwnerServer\Shared\Kontrer.OwnerServer.Shared.Asp\Kontrer.OwnerServer.Shared.Asp.csproj", "{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerClient.Presentation.Web", "Kontrer.OwnerClient.Presentation.Web", "{507DCAC1-4874-41B1-BB44-76EFD2EA532B}"
 EndProject
@@ -165,7 +165,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerClient.Web.Pre
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerClient.Presentation.Windows", "Kontrer.OwnerClient.Presentation.Windows", "{6E22EF35-749B-46EF-AC3C-90E38184C24A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Web.Presentation.BlazorWasm", "Kontrer.OwnerClient.Web.Presentation.BlazorWasm\Kontrer.OwnerClient.Web.Presentation.BlazorWasm.csproj", "{E76F3582-17B1-4684-9C4C-B6D64E7419A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Web.Presentation.BlazorWasm", "Kontrer.OwnerClient.Web.Presentation.BlazorWasm\Kontrer.OwnerClient.Web.Presentation.BlazorWasm.csproj", "{E76F3582-17B1-4684-9C4C-B6D64E7419A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerClient.Application", "2 - Kontrer.OwnerClient.Application", "{680E2AA9-26EE-42DB-B7DC-7CE7EBD3A076}"
 EndProject
@@ -173,7 +173,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerClient.Inf
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Kontrer.OwnerClient.Presentation", "3 - Kontrer.OwnerClient.Presentation", "{FF054EF1-DCC0-4632-8488-B3CF9634CBFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerClient.Application", "OwnerClient\Application\Kontrer.OwnerClient.Application\Kontrer.OwnerClient.Application.csproj", "{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Application", "OwnerClient\Application\Kontrer.OwnerClient.Application\Kontrer.OwnerClient.Application.csproj", "{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerServer.OfferService.Application", "2 - Kontrer.OwnerServer.OfferService.Application", "{800386C7-3801-42CE-AB6D-91BC9CF3D773}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.OfferService.Application", "OwnerServer\OfferService\Application\Kontrer.OwnerServer.OfferService.Application\Kontrer.OwnerServer.OfferService.Application.csproj", "{342498A8-4D77-4F35-841E-E69F02CDD52B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -369,6 +373,10 @@ Global
 		{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{342498A8-4D77-4F35-841E-E69F02CDD52B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{342498A8-4D77-4F35-841E-E69F02CDD52B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{342498A8-4D77-4F35-841E-E69F02CDD52B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{342498A8-4D77-4F35-841E-E69F02CDD52B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -454,6 +462,8 @@ Global
 		{5BD2881B-BE00-42D5-8EEF-FA8CE14E77F4} = {57BBB39E-7EE9-4C90-8CBB-3820E13E5E01}
 		{FF054EF1-DCC0-4632-8488-B3CF9634CBFA} = {57BBB39E-7EE9-4C90-8CBB-3820E13E5E01}
 		{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578} = {680E2AA9-26EE-42DB-B7DC-7CE7EBD3A076}
+		{800386C7-3801-42CE-AB6D-91BC9CF3D773} = {AF685BC0-4C70-4017-B228-3D2ED3B504A0}
+		{342498A8-4D77-4F35-841E-E69F02CDD52B} = {800386C7-3801-42CE-AB6D-91BC9CF3D773}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

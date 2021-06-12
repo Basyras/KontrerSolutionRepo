@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
+namespace Kontrer.OwnerServer.Shared.Asp
 {
     public interface IStartupClass 
     {

@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Folder Include="Actors\" />
+    <Folder Include="MessageBus\Send\" />
   </ItemGroup>
 
   <ItemGroup>

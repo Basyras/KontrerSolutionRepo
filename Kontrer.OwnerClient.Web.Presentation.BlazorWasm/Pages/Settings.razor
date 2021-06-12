@@ -14,13 +14,16 @@
     private Dictionary<string, string> AllSettings = new Dictionary<string, string>();
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            AllSettings = (Dictionary<string, string>)(await client.GetSettingsAsync());
-            await base.OnAfterRenderAsync(firstRender);
-            this.StateHasChanged();
+        //if (firstRender)
+        //{
+        //    AllSettings = (Dictionary<string, string>)(await client.GetSettingsAsync());
+        //    this.StateHasChanged();
+        //}
 
-        }
+
+
+
+        await base.OnAfterRenderAsync(firstRender);
     }
 
 }

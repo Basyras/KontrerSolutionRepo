@@ -2,6 +2,7 @@ using Kontrer.OwnerServer.PricingService.Application;
 using Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEditors;
 using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
 using Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework;
+using Kontrer.OwnerServer.Shared.Asp;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

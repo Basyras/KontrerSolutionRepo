@@ -21,7 +21,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.Controllers
         public OrderController(IIdGeneratorManager idGenerator,IMessageBusManager busManager)
         {
             this.idGenerator = idGenerator;
-            this.busManager = busManager;
+            this.busManager = busManager;            
         }
 
         [HttpGet]

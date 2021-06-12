@@ -18,26 +18,24 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
 {
     public class DefaultMessageBusManager : IMessageBusManager
     {
-        private readonly DaprClient daprClient;
-        private readonly IBusControl massTransitBus;
+        private readonly IBusControl _massTransitBus;
         private readonly IOptions<DaprMessageBusManagerOptions> options;
         private readonly JsonSerializerOptions serializerOptions;
 
 
 #warning this manager may need options with pull handlers and register them while creating new instance of massTransitBus inside this ctor, or use options if massTransit has one
-        public DefaultMessageBusManager(DaprClient daprClient, IBusControl massTransitBus, IOptions<DaprMessageBusManagerOptions> options, JsonSerializerOptions serializerOptions)
+        public DefaultMessageBusManager(IBusControl massTransitBus, IOptions<DaprMessageBusManagerOptions> options, JsonSerializerOptions serializerOptions)
         {
-
-            this.daprClient = daprClient;
-            this.massTransitBus = massTransitBus;
+            _massTransitBus = massTransitBus;
             this.options = options;
             this.serializerOptions = serializerOptions;            
-        }     
+        }
 
-        public void RegisterConsumer<IConsumer>()
+        public void RegisterConsumer<TConsumer>() where TConsumer : class, IConsumer, new()
         {
-            //massTransitBus.Saga
-            //massTransitBus.
+            
+            _massTransitBus.ConnectConsumer<TConsumer>();
+            
         }
 
         //public void RegisterSubscribe<TResponse>(Func<TResponse, Task> asyncHandler, string topicName = null)
@@ -59,19 +57,19 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
         {
             topicName ??= nameof(TRequest);
             //Can be implemented also with dapr
-            return massTransitBus.Publish<TRequest>(data, cancellationToken);
+            return _massTransitBus.Publish<TRequest>(data, cancellationToken);
         }
         public Task RequestAsync<TRequest>(CancellationToken cancellationToken = default)
               where TRequest : class, IRequest, new()
         {
             var request = new TRequest();
-            return massTransitBus.Send<TRequest>(request, cancellationToken);
+            return _massTransitBus.Send<TRequest>(request, cancellationToken);
         }
 
         public Task RequestAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
             where TRequest : class, IRequest
         {
-            return massTransitBus.Send<TRequest>(request, cancellationToken);
+            return _massTransitBus.Send<TRequest>(request, cancellationToken);
         }
 
         public async Task<TResponse> RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken = default)
@@ -79,7 +77,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
              where TResponse : class
         {
             var request = new TRequest();            
-            var response = await massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
+            var response = await _massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
             return response.Message;
 
         }
@@ -88,7 +86,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
             where TRequest : class, IRequest<TResponse>
             where TResponse : class
         {
-            var response = await massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
+            var response = await _massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
             return response.Message;
         }
 

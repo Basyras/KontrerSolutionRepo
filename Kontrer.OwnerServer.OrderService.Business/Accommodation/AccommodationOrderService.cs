@@ -1,8 +1,8 @@
 ﻿using Kontrer.OwnerServer.OrderService.Business.Abstraction.Accommodation;
 using Kontrer.OwnerServer.OrderService.Data.Abstraction;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.Requests.Customers;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.Requests.Orders;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse.Customers;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse.Orders;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using System;

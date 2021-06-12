@@ -16,6 +16,8 @@ using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using MassTransit;
 using MassTransit.Definition;
 using MassTransit.Monitoring.Health;
+using Kontrer.OwnerServer.Shared.Asp;
+using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
@@ -23,63 +25,29 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
     {
         private static readonly Assembly entryAssembly  = Assembly.GetEntryAssembly();
 
-        public static IHostBuilder ConfigureServicesForMicroservice<TStartup>(this IHostBuilder builder) where TStartup : class, IStartupClass
-        {
-            builder.ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.ConfigureServices(ConfigureMicroservicesDefaults);
+        public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder hostBuilder) where TStartup : class, IStartupClass
+        {          
+            hostBuilder.ConfigureWebHostDefaults(webBuilder =>
+            {               
+                webBuilder.ConfigureAspServices();
+                webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
+                webBuilder.ConfigureMicroServiceServices<TStartup>();            
+            });           
 
-                //workaround because: https://github.com/dotnet/aspnetcore/issues/7315                      
-                webBuilder.UseSetting(WebHostDefaults.ApplicationKey, entryAssembly.GetName().Name); 
-                webBuilder.UseStartup<TStartup>();
-
-                webBuilder.ConfigureServicesForDapr((MicroserviceBuilder serviceBuilder) =>
-                {
-                    var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
-                    actorRegistrator.RegisterActors<TStartup>();
-                });
-
-
-            });          
-
-            return builder;
+            return hostBuilder;
         }
 
-        private static void ConfigureMicroservicesDefaults(WebHostBuilderContext context, IServiceCollection services)
+        public static IWebHostBuilder ConfigureMicroServiceServices<TStartup>(this IWebHostBuilder webBuilder) where TStartup : class, IStartupClass
         {
-            services.AddTransient<IStartupFilter, BootstrapperStartupFilter>();
-
-            services.AddSwaggerGen(c =>
+            webBuilder.ConfigureMassTransitServices(entryAssembly);
+            webBuilder.ConfigureDaprServices((MicroserviceBuilder serviceBuilder) =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = context.HostingEnvironment.ApplicationName, Version = "v1" });
+                var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
+                actorRegistrator.RegisterActors<TStartup>();
             });
-
-            services.AddSingleton<IMessageBusManager, DefaultMessageBusManager>();
-            services.AddMassTransit(x =>
-            {
-                
-                x.AddConsumers(entryAssembly);
-                
-                x.UsingRabbitMq((transitContext, rabbitConfig) =>
-                {
-
-#warning finish automatic consumer registration
-                    //var settings = new EndpointSettings<ConsumerEndpointDefinition<IConsumer>>();
-                    //new ConsumerEndpointDefinition<IConsumer>(settings)
-                    //var definition = new NamedEndpointDefinition(context.HostingEnvironment.ApplicationName);
-                    rabbitConfig.ConfigureEndpoints(transitContext);
-                    //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
-                    //{                    
-                    //});
-                    rabbitConfig.UseHealthCheck(transitContext);
-
-                });
-
-                
-                services.AddMassTransitHostedService();
-
-            });
+            return webBuilder;
         }
+
 
     }
 }

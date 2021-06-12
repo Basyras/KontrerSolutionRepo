@@ -1,4 +1,5 @@
 ﻿using Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction;
+using Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator;
 using MassTransit;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,23 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.Consumers
 {
     public class AccommodationIdCreatedConsumer : IConsumer<AccommodationIdRequestedMessage>
     {
-        public Task Consume(ConsumeContext<AccommodationIdRequestedMessage> context)
-        {                      
-            return Task.CompletedTask;
+        private readonly IIdGeneratorManager _idGenerator;
+
+        public AccommodationIdCreatedConsumer(IIdGeneratorManager idGenerator)
+        {
+            _idGenerator = idGenerator;
+        }
+
+        public async Task Consume(ConsumeContext<AccommodationIdRequestedMessage> context)
+        {
+            var newId = _idGenerator.CreateNewId(IIdGeneratorManager.OrdersGroupName);
+            await context.RespondAsync<OrderStatusResult>(new
+            {
+                OrderId = order.Id,
+                order.Timestamp,
+                order.StatusCode,
+                order.StatusText
+            });
         }
     }
 }
