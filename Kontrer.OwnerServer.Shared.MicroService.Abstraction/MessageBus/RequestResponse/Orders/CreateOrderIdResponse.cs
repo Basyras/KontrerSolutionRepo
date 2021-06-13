@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse.Orders
 {
-    public class CreateOrderIdResponse : GenericRequestBase<int>
+    public class CreateOrderIdResponse
     {
-        public CreateOrderIdResponse(int id) : base(id)
+        public CreateOrderIdResponse(int id)
         {
-
+            Id = id;
         }
+
+        public int Id { get; }
     }
 }

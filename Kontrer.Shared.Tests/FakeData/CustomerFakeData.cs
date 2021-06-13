@@ -38,7 +38,7 @@ namespace Kontrer.Shared.Tests.FakeData
                     var accos = AccommodationFakeData.GetAccommodationsWithoutCustomer(faker.Random.Int(0, 5));
                     foreach (var acco in accos)
                     {
-                        acco.Blueprint.Customer = customer;
+                        acco.Blueprint.CustomerId = customer;
                         acco.Cost = CostFakeData.GetAccommodationCosts(1)[0];
                     }
 

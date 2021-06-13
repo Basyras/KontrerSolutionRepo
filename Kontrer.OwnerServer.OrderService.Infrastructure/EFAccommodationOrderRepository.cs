@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.OrderService.Data.Abstraction;
+﻿using Kontrer.OwnerServer.OrderService.Infrastructure.Abstraction;
 using Kontrer.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,18 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Kontrer.OwnerServer.Shared.Data.EF.Repositories;
-using Kontrer.OwnerServer.OrderService.Data.EntityFramework;
+using Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework;
 
-namespace Kontrer.OwnerServer.OrderService.Data
+namespace Kontrer.OwnerServer.OrderService.Infrastructure
 {
-    public class EFAccommodationOrderRepository : EFCrudRepositoryBase<AccommodationOrderEntity,AccommodationOrder,int,int>,IAccommodaionOrderRepository
+    public class EFAccommodationOrderRepository : EFCrudRepositoryBase<AccommodationOrderEntity, AccommodationOrder, int, int>, IAccommodaionOrderRepository
     {
-        public EFAccommodationOrderRepository(DbContext dbContext)  : base(dbContext,entity=>entity.OrderId)
+        public EFAccommodationOrderRepository(DbContext dbContext) : base(dbContext, entity => entity.OrderId)
         {
-            
         }
-
-    
 
         protected override int GetModelId(AccommodationOrder model)
         {

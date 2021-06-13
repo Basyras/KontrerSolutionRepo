@@ -9,10 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MediatR;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.PublishSubscribe;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
 {
@@ -22,20 +23,13 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
         private readonly IOptions<DaprMessageBusManagerOptions> options;
         private readonly JsonSerializerOptions serializerOptions;
 
-
 #warning this manager may need options with pull handlers and register them while creating new instance of massTransitBus inside this ctor, or use options if massTransit has one
+
         public DefaultMessageBusManager(IBusControl massTransitBus, IOptions<DaprMessageBusManagerOptions> options, JsonSerializerOptions serializerOptions)
         {
             _massTransitBus = massTransitBus;
             this.options = options;
-            this.serializerOptions = serializerOptions;            
-        }
-
-        public void RegisterConsumer<TConsumer>() where TConsumer : class, IConsumer, new()
-        {
-            
-            _massTransitBus.ConnectConsumer<TConsumer>();
-            
+            this.serializerOptions = serializerOptions;
         }
 
         //public void RegisterSubscribe<TResponse>(Func<TResponse, Task> asyncHandler, string topicName = null)
@@ -52,44 +46,32 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
         //    //massTransitBus.ConnectConsumer<>()
         //}
 
-        public Task PublishAsync<TRequest>(TRequest data, CancellationToken cancellationToken = default, string topicName = null)
-            where TRequest : class
+        public Task PublishAsync<TEvent>(CancellationToken cancellationToken = default)
+        where TEvent : class, IBusEvent, new()
         {
-            topicName ??= nameof(TRequest);
-            //Can be implemented also with dapr
-            return _massTransitBus.Publish<TRequest>(data, cancellationToken);
-        }
-        public Task RequestAsync<TRequest>(CancellationToken cancellationToken = default)
-              where TRequest : class, IRequest, new()
-        {
-            var request = new TRequest();
-            return _massTransitBus.Send<TRequest>(request, cancellationToken);
+            return _massTransitBus.Publish<TEvent>(cancellationToken);
         }
 
-        public Task RequestAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
-            where TRequest : class, IRequest
+        public Task PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken = default)
+                where TEvent : class, IBusEvent
         {
-            return _massTransitBus.Send<TRequest>(request, cancellationToken);
+            return _massTransitBus.Publish<TEvent>(data, cancellationToken);
         }
 
         public async Task<TResponse> RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken = default)
              where TRequest : class, IRequest<TResponse>, new()
              where TResponse : class
         {
-            var request = new TRequest();            
-            var response = await _massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
+            var response = await _massTransitBus.Request<TRequest, TResponse>(cancellationToken);
             return response.Message;
-
         }
 
-        public async Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
+        public async Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : class, IRequest<TResponse>
             where TResponse : class
         {
             var response = await _massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
             return response.Message;
         }
-
-     
     }
 }

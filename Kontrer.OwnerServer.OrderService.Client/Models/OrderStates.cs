@@ -1,4 +1,4 @@
-﻿namespace Kontrer.Shared.Models
+﻿namespace Kontrer.OwnerServer.OrderService.Client.Models
 {
     public enum OrderStates
     {

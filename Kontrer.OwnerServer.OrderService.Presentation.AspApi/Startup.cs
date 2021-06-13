@@ -1,3 +1,4 @@
+using Kontrer.OwnerServer.Shared.Asp;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,8 +28,6 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

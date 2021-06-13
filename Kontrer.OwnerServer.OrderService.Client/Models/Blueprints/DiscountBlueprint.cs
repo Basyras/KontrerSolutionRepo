@@ -1,23 +1,22 @@
-﻿using System;
+﻿using Kontrer.Shared.Models.Pricing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Models.Pricing.Blueprints
+namespace Kontrer.OwnerServer.OrderService.Client.Models.Blueprints
 {
-    
     public class DiscountBlueprint
     {
         public DiscountBlueprint()
         {
-
         }
 
         public DiscountBlueprint(string discountName, Cash amountDiscount, int? discountId = null)
         {
-            DiscountName = discountName;            
+            DiscountName = discountName;
             AmountDiscount = amountDiscount;
             DiscountId = discountId;
             IsPercentageDiscount = false;
@@ -30,8 +29,6 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
             DiscountId = discountId;
             IsPercentageDiscount = true;
         }
-
-
 
         public int? DiscountId { get; set; }
         public string DiscountName { get; set; }

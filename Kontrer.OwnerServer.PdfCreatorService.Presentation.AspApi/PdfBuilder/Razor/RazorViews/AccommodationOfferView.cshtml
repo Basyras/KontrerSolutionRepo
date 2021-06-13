@@ -30,7 +30,7 @@
 
         <quickInfo class="quickInfo">
             <div>
-                @Model.Data.OrderId | @(Model.Data.Blueprint.Customer != null ? Model.Data.Blueprint.Customer.LastName: "")
+                @Model.Data.OrderId | @(Model.Data.Blueprint.CustomerId != null ? Model.Data.Blueprint.CustomerId.LastName: "")
             </div>
             <div>
                 @for (int roomsIndex = 0; roomsIndex < Model.Data.Blueprint.Rooms.Count; roomsIndex++)
@@ -154,8 +154,8 @@
                     @Model.ViewLocalizer["Customer"]
                 </div>
                 <div class="subSection">
-                    @Model.Data.Blueprint.Customer.FirstName @Model.Data.Blueprint.Customer.LastName @Model.Data.Blueprint.Customer.Contact.Email <br>
-                    @Model.Data.Blueprint.Customer.Address.District @Model.Data.Blueprint.Customer.Address.PostCode @Model.Data.Blueprint.Customer.Address.Street @Model.Data.Blueprint.Customer.Address.HouseNumber
+                    @Model.Data.Blueprint.CustomerId.FirstName @Model.Data.Blueprint.CustomerId.LastName @Model.Data.Blueprint.CustomerId.Contact.Email <br>
+                    @Model.Data.Blueprint.CustomerId.Address.District @Model.Data.Blueprint.CustomerId.Address.PostCode @Model.Data.Blueprint.CustomerId.Address.Street @Model.Data.Blueprint.CustomerId.Address.HouseNumber
                 </div>
 
             </section>

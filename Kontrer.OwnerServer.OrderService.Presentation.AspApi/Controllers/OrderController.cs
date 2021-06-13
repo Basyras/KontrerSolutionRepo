@@ -1,7 +1,7 @@
-﻿using Kontrer.OwnerServer.OrderService.Business.Abstraction;
-using Kontrer.OwnerServer.OrderService.Business.Abstraction.Accommodation;
+﻿using Kontrer.OwnerServer.OrderService.Application.Accommodation;
+using Kontrer.OwnerServer.OrderService.Client.Models;
+using Kontrer.OwnerServer.OrderService.Client.Models.Blueprints;
 using Kontrer.Shared.Models;
-using Kontrer.Shared.Models.Pricing.Blueprints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +16,17 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IAccommodationOrderService manager;
+        private readonly AccommodationOrderManager manager;
 
-        public OrderController(IAccommodationOrderService manager)
+        public OrderController(AccommodationOrderManager manager)
         {
             this.manager = manager;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<AccommodationOrder>>> GetOrders()
+        public async Task<ActionResult<List<AccommodationOrder>>> GetNewOrders()
         {
-            var orders = await manager.GetOrders();
+            var orders = await manager.GetNewAsync();
             return orders;
         }
 
@@ -37,18 +37,16 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
             return manager.CreateOrderAsync(customerId, accommodationBlueprint, culture);
         }
 
-        [HttpDelete]
-        public Task CancelOrder(int orderId,string reason, bool isCanceledByCustomer)
-        {         
-            return manager.CancelOrderAsync(orderId, reason, isCanceledByCustomer);            
-        }
-
-
         [HttpPut]
         public Task UpdateOrder(int orderId, AccommodationBlueprint accommodationBlueprint)
         {
-            return manager.EditOrderAsync(orderId, accommodationBlueprint);            
+            return manager.EditOrderAsync(orderId, accommodationBlueprint);
         }
 
+        [HttpDelete]
+        public Task CancelOrder(int orderId, string reason, bool isCanceledByCustomer)
+        {
+            return manager.CancelOrderAsync(orderId, reason, isCanceledByCustomer);
+        }
     }
 }

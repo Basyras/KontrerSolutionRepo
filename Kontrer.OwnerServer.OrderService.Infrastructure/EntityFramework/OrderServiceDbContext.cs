@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.OrderService.Data.EntityFramework
+namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
 {
     public class OrderServiceDbContext:DbContext
     {

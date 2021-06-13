@@ -31,9 +31,9 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Controllers
         //[Topic(MessageBusConstants.MessageBusName, nameof(CreateAccommodationPdf))]
         [HttpGet]
         public async Task<byte[]> CreatePdfForAccommodationOrder(AccommodationOfferViewModel offer)
-        {            
-            logger.LogDebug($"{nameof(CreatePdfForAccommodationOrder)} called, customer second name: {offer.Blueprint.Customer.LastName}");
-            var pdf = await creator.CreatePdfAsync(offer);            
+        {
+            logger.LogDebug($"{nameof(CreatePdfForAccommodationOrder)} called, customer id: {offer.Blueprint.CustomerId}");
+            var pdf = await creator.CreatePdfAsync(offer);
             return pdf.ToArray();
         }
     }

@@ -1,5 +1,4 @@
-﻿@inject Kontrer.OwnerClient.Application.Pricing.PricingSwaggerClient client
-@page "/settings"
+﻿@page "/settings"
 <h3>Settings</h3>
 @foreach (var setting in AllSettings)
 {
@@ -7,7 +6,6 @@
     <br />
 
 }
-
 
 @code {
 
@@ -19,9 +17,6 @@
         //    AllSettings = (Dictionary<string, string>)(await client.GetSettingsAsync());
         //    this.StateHasChanged();
         //}
-
-
-
 
         await base.OnAfterRenderAsync(firstRender);
     }

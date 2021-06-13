@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Kontrer.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Models.Pricing.Blueprints
+namespace Kontrer.OwnerServer.OrderService.Client.Models.Blueprints
 {
     public class PersonBlueprint
     {
@@ -15,19 +16,16 @@ namespace Kontrer.Shared.Models.Pricing.Blueprints
             PersonType = personType;
         }
 
-        public PersonBlueprint(PersonTypes personType) : this(null,null,personType)
+        public PersonBlueprint(PersonTypes personType) : this(null, null, personType)
         {
-
         }
 
         public PersonBlueprint()
         {
-
         }
 
         public List<ItemBlueprint> PersonItems { get; set; }
         public List<DiscountBlueprint> Discounts { get; set; }
         public PersonTypes PersonType { get; set; }
-
     }
 }

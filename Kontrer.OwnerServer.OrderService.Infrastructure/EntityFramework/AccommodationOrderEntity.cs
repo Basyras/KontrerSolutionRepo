@@ -1,4 +1,4 @@
-﻿namespace Kontrer.OwnerServer.OrderService.Data.EntityFramework
+﻿namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
 {
     public class AccommodationOrderEntity
     {

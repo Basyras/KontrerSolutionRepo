@@ -34,7 +34,7 @@ namespace Kontrer.Shared.Tests.FakeData
                 .StrictMode(true)
                 .RuleFor(x => x.Blueprint, (Faker x) => BlueprintFakeData.GetAccommodationBlueprints(1, true, sharedCurrency)[0])
                 .RuleFor(x => x.AccommodationId, x => idCounter++)
-                .RuleFor(x => x.Blueprint.Customer, x => null)
+                .RuleFor(x => x.Blueprint.CustomerId, x => null)
                 .RuleFor(x => x.Cost, (Faker x, FinishedAccommodationModel a) => CostFakeData.GetAccommodationCosts(1, sharedCurrency)[0])
                 .RuleFor(x => x.OwnersPrivateNotes, x => x.Random.Words(x.Random.Int(0, 5)))                
                 .FinishWith((x, a) =>

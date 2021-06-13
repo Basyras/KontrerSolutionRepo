@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30711.63
@@ -85,17 +84,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.PdfCrea
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.OrderService", "Kontrer.OwnerServer.OrderService", "{63568DA1-5067-4909-8FE5-F402D8407720}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerServer.OrderService.Data", "1 - Kontrer.OwnerServer.OrderService.Data", "{1D71FED1-7832-4461-A59D-1129ED91E2F6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerServer.OrderService.Infrastructure", "1 - Kontrer.OwnerServer.OrderService.Infrastructure", "{1D71FED1-7832-4461-A59D-1129ED91E2F6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerServer.OrderService.Business", "2 - Kontrer.OwnerServer.OrderService.Business", "{9E697CB0-2AA9-4472-989A-737CFD83B260}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerServer.OrderService.Application", "2 - Kontrer.OwnerServer.OrderService.Application", "{9E697CB0-2AA9-4472-989A-737CFD83B260}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Kontrer.OwnerServer.OrderService.Presentation", "3 - Kontrer.OwnerServer.OrderService.Presentation", "{E67F037B-2610-4F51-9102-04DA71FE6843}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Business.Abstraction", "Kontrer.OwnerServer.OrderService.Business.Abstraction\Kontrer.OwnerServer.OrderService.Business.Abstraction.csproj", "{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Data.Abstraction", "Kontrer.OwnerServer.OrderService.Data.Abstraction\Kontrer.OwnerServer.OrderService.Data.Abstraction.csproj", "{9CCEFD04-97A8-4314-9BB4-1041FBD120CA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Data", "Kontrer.OwnerServer.OrderService.Data\Kontrer.OwnerServer.OrderService.Data.csproj", "{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Infrastructure", "Kontrer.OwnerServer.OrderService.Infrastructure\Kontrer.OwnerServer.OrderService.Infrastructure.csproj", "{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerServer.PricingService.Infrastructure", "1 - Kontrer.OwnerServer.PricingService.Infrastructure", "{E4789728-07E7-431E-BD89-52F5D7E1C69E}"
 EndProject
@@ -131,13 +126,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.Localizator.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.Localizator.EF", "Kontrer.Shared.Localizator.EF\Kontrer.Shared.Localizator.EF.csproj", "{09E7B628-E0D4-45A8-9ABE-A9EAFC7923CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Business", "Kontrer.OwnerServer.OrderService.Business\Kontrer.OwnerServer.OrderService.Business.csproj", "{E23E192F-FC3C-4C20-9C6E-6362F343D2D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Application", "OwnerServer\OrderService\Application\Kontrer.OwnerServer.OrderService.Application\Kontrer.OwnerServer.OrderService.Application.csproj", "{E23E192F-FC3C-4C20-9C6E-6362F343D2D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper", "Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj", "{B3871DC5-D19D-45AA-BDEE-DD90D3225BBC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Presentation.AspApi", "Kontrer.OwnerServer.OrderService.Presentation.AspApi\Kontrer.OwnerServer.OrderService.Presentation.AspApi.csproj", "{D2F2E6EF-3315-4E07-A447-5DE5A503F5EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Shared", "Kontrer.OwnerServer.OrderService.Shared\Kontrer.OwnerServer.OrderService.Shared.csproj", "{D333CD98-F7DA-4DEF-BACF-C816DA23A725}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OrderService.Client", "Kontrer.OwnerServer.OrderService.Client\Kontrer.OwnerServer.OrderService.Client.csproj", "{D333CD98-F7DA-4DEF-BACF-C816DA23A725}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi", "OwnerServer\IdGeneratorService\Presentation\Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi\Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.csproj", "{8B52CDDE-F9B2-4F86-B3DB-3AEB8E9603F3}"
 EndProject
@@ -177,7 +172,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Applica
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerServer.OfferService.Application", "2 - Kontrer.OwnerServer.OfferService.Application", "{800386C7-3801-42CE-AB6D-91BC9CF3D773}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.OfferService.Application", "OwnerServer\OfferService\Application\Kontrer.OwnerServer.OfferService.Application\Kontrer.OwnerServer.OfferService.Application.csproj", "{342498A8-4D77-4F35-841E-E69F02CDD52B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.OfferService.Application", "OwnerServer\OfferService\Application\Kontrer.OwnerServer.OfferService.Application\Kontrer.OwnerServer.OfferService.Application.csproj", "{342498A8-4D77-4F35-841E-E69F02CDD52B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -269,14 +264,6 @@ Global
 		{64509147-2180-49DA-958B-4DDF88CE2B60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64509147-2180-49DA-958B-4DDF88CE2B60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64509147-2180-49DA-958B-4DDF88CE2B60}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9CCEFD04-97A8-4314-9BB4-1041FBD120CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9CCEFD04-97A8-4314-9BB4-1041FBD120CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9CCEFD04-97A8-4314-9BB4-1041FBD120CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9CCEFD04-97A8-4314-9BB4-1041FBD120CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -421,8 +408,6 @@ Global
 		{1D71FED1-7832-4461-A59D-1129ED91E2F6} = {63568DA1-5067-4909-8FE5-F402D8407720}
 		{9E697CB0-2AA9-4472-989A-737CFD83B260} = {63568DA1-5067-4909-8FE5-F402D8407720}
 		{E67F037B-2610-4F51-9102-04DA71FE6843} = {63568DA1-5067-4909-8FE5-F402D8407720}
-		{F893245A-D3B7-4B1B-A96A-2740DC0EEE8C} = {9E697CB0-2AA9-4472-989A-737CFD83B260}
-		{9CCEFD04-97A8-4314-9BB4-1041FBD120CA} = {1D71FED1-7832-4461-A59D-1129ED91E2F6}
 		{DCDBBA0D-52FE-4775-88C6-C4724F9CBD99} = {1D71FED1-7832-4461-A59D-1129ED91E2F6}
 		{E4789728-07E7-431E-BD89-52F5D7E1C69E} = {E67FE4DE-7AF6-4FB7-B0CD-805EC458C76A}
 		{D712DF91-2190-4BC9-ACF7-161E2D8F0D96} = {E4789728-07E7-431E-BD89-52F5D7E1C69E}

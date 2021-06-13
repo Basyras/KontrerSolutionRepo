@@ -17,7 +17,7 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEdi
         public void EditBlueprint(AccommodationBlueprint blueprint, IResolvedScopedSettings resolver)
         {
 
-            var accommodationCount = blueprint.Customer.Accomodations.Count();
+            var accommodationCount = blueprint.CustomerId.Accomodations.Count();
             NullableResult<float> loyaltyPercentagePerAcco = resolver.GetSetting(SettingNameConstants.CustomerPercentageDiscountPerAccommodationRequest);
             NullableResult<float> maxLoyaltyPercentage = resolver.GetSetting(SettingNameConstants.MaxCustomerPercentageDiscountPerAccommodationRequest);
             loyaltyPercentagePerAcco.Value *= accommodationCount;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Kontrer.Shared.Models.Pricing.Blueprints
+namespace Kontrer.OwnerServer.OrderService.Client.Models.Blueprints
 {
     public class BlueprintGroup
     {

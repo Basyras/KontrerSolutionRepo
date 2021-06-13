@@ -115,7 +115,7 @@ namespace Kontrer.Shared.Tests.FakeData
                 .RuleFor(x => x.AccommodationItems, (Faker x, AccommodationBlueprint a) => GetItemBlueprints(x.Random.Int(0, 5), true, sharedCurrency))
                 .RuleFor(x => x.Currency, x => sharedCurrency)
                 .RuleFor(x => x.Discounts, x => GetDiscountBlueprints(x.Random.Int(0,5), hasSharedCurrency, sharedCurrency))
-                .RuleFor(x=>x.Customer, x=>new CustomerModel())
+                .RuleFor(x=>x.CustomerId, x=>new CustomerModel())
                 .RuleFor(x=>x.CustomersNotes,x=>x.Random.Words(x.Random.Int(0,5)))
                 .FinishWith((x, a) =>
                 {

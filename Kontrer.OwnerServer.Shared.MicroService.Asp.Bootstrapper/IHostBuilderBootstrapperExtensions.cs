@@ -23,23 +23,23 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
     public static class IHostBuilderBootstrapperExtensions
     {
-        private static readonly Assembly entryAssembly  = Assembly.GetEntryAssembly();
+        private static readonly Assembly entryAssembly = Assembly.GetEntryAssembly();
 
-        public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder hostBuilder) where TStartup : class, IStartupClass
-        {          
+        public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder hostBuilder, Assembly consumerAssembly) where TStartup : class, IStartupClass
+        {
             hostBuilder.ConfigureWebHostDefaults(webBuilder =>
-            {               
+            {
                 webBuilder.ConfigureAspServices();
                 webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
-                webBuilder.ConfigureMicroServiceServices<TStartup>();            
-            });           
+                webBuilder.ConfigureMicroServiceServices<TStartup>(consumerAssembly);
+            });
 
             return hostBuilder;
         }
 
-        public static IWebHostBuilder ConfigureMicroServiceServices<TStartup>(this IWebHostBuilder webBuilder) where TStartup : class, IStartupClass
+        public static IWebHostBuilder ConfigureMicroServiceServices<TStartup>(this IWebHostBuilder webBuilder, Assembly consumersAssembly) where TStartup : class, IStartupClass
         {
-            webBuilder.ConfigureMassTransitServices(entryAssembly);
+            webBuilder.ConfigureMassTransitServices(consumersAssembly);
             webBuilder.ConfigureDaprServices((MicroserviceBuilder serviceBuilder) =>
             {
                 var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
@@ -47,7 +47,5 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
             });
             return webBuilder;
         }
-
-
     }
 }

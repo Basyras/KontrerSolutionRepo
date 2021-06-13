@@ -12,12 +12,10 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus
     public interface IMessageBusManager
     {
         Task PublishAsync<TEvent>(CancellationToken cancellationToken = default)
-              where TEvent : IBusEvent, new();
+              where TEvent : class, IBusEvent, new();
 
         Task PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken = default)
-               where TEvent : IBusEvent;
-
-
+               where TEvent : class, IBusEvent;
 
         Task<TResponse> RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken = default)
              where TRequest : class, IRequest<TResponse>, new()
@@ -26,12 +24,5 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus
         Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : class, IRequest<TResponse>
             where TResponse : class;
-
-
-
-
-
-
-
     }
 }

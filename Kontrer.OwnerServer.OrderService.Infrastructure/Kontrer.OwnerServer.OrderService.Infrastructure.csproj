@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kontrer.OwnerServer.OrderService.Data.Abstraction\Kontrer.OwnerServer.OrderService.Data.Abstraction.csproj" />
     <ProjectReference Include="..\src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.EF\Kontrer.OwnerServer.Shared.Data.EF.csproj" />
   </ItemGroup>
 

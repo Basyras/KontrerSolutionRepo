@@ -1,6 +1,5 @@
 ﻿using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using Kontrer.Shared.Models;
-using Kontrer.Shared.Models.Pricing.Blueprints;
 using Kontrer.Shared.Models.Pricing.Costs;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,5 @@ namespace Kontrer.OwnerServer.CustomerService.Data.Abstraction.Accommodation
     /// </summary>
     public interface IAccommodationRepository : IInstantCrudRepository<FinishedAccommodationModel, int>, IPageRepository<FinishedAccommodationModel>, IBulkRepository
     {
-        
     }
 }
