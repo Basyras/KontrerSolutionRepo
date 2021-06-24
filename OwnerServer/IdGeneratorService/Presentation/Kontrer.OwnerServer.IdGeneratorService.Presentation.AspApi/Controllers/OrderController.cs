@@ -17,19 +17,18 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.Controllers
         private readonly IIdGeneratorManager idGenerator;
         private readonly IMessageBusManager busManager;
 
-
-        public OrderController(IIdGeneratorManager idGenerator,IMessageBusManager busManager)
+        public OrderController(IIdGeneratorManager idGenerator, IMessageBusManager busManager)
         {
             this.idGenerator = idGenerator;
-            this.busManager = busManager;            
+            this.busManager = busManager;
         }
 
         [HttpGet]
         public int GetNewOrderId()
         {
-            busManager.PublishAsync<AccommodationIdRequestedMessage>(new($"GetNewOrderId request, time:{DateTime.Now.ToString("HH:mm:ss")}"),default,"testTopic1").GetAwaiter().GetResult();
+            AccommodationIdRequestedMessage message = new($"GetNewOrderId request, time:{DateTime.Now.ToString("HH:mm:ss")}");
+            busManager.PublishAsync<AccommodationIdRequestedMessage>(message, default).GetAwaiter().GetResult();
             return idGenerator.CreateNewId(IIdGeneratorManager.OrdersGroupName);
-            
         }
     }
 }

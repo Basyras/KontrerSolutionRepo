@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
-    <ProjectReference Include="..\src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.Abstraction\Kontrer.OwnerServer.Shared.Data.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

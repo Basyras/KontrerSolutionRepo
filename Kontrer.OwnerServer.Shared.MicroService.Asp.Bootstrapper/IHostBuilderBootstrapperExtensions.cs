@@ -18,6 +18,7 @@ using MassTransit.Definition;
 using MassTransit.Monitoring.Health;
 using Kontrer.OwnerServer.Shared.Asp;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit;
+using Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
@@ -45,6 +46,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
                 var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
                 actorRegistrator.RegisterActors<TStartup>();
             });
+            //webBuilder.RegisterCommnandQueriesEndpoints<TCommand>();
             return webBuilder;
         }
     }

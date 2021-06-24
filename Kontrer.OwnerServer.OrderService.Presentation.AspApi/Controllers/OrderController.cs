@@ -1,6 +1,5 @@
-﻿using Kontrer.OwnerServer.OrderService.Application.Accommodation;
-using Kontrer.OwnerServer.OrderService.Client.Models;
-using Kontrer.OwnerServer.OrderService.Client.Models.Blueprints;
+﻿using Kontrer.OwnerServer.OrderService.Dtos.Models;
+using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
 using Kontrer.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
@@ -16,37 +15,29 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly AccommodationOrderManager manager;
-
-        public OrderController(AccommodationOrderManager manager)
-        {
-            this.manager = manager;
-        }
-
         [HttpGet]
         public async Task<ActionResult<List<AccommodationOrder>>> GetNewOrders()
         {
-            var orders = await manager.GetNewAsync();
-            return orders;
+            throw new NotImplementedException();
         }
 
         [HttpPost]
         public Task CreateOrder(int customerId, AccommodationBlueprint accommodationBlueprint)
         {
             var culture = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture;
-            return manager.CreateOrderAsync(customerId, accommodationBlueprint, culture);
+            throw new NotImplementedException();
         }
 
         [HttpPut]
         public Task UpdateOrder(int orderId, AccommodationBlueprint accommodationBlueprint)
         {
-            return manager.EditOrderAsync(orderId, accommodationBlueprint);
+            throw new NotImplementedException();
         }
 
         [HttpDelete]
         public Task CancelOrder(int orderId, string reason, bool isCanceledByCustomer)
         {
-            return manager.CancelOrderAsync(orderId, reason, isCanceledByCustomer);
+            throw new NotImplementedException();
         }
     }
 }

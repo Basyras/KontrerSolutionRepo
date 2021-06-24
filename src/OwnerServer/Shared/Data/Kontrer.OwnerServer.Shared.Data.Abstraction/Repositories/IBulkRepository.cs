@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
 {
     /// <summary>
-    /// Repository wich does not contain any navigation properties/other repositories types. 
+    /// Repository wich does not contain any navigation properties/other repositories types.
     /// Use when this repository is not used with unit of work.
-    /// <br/>    
+    /// <br/>
     /// Choose between <see cref="IBulkRepository"/>, <see cref="IInstantCrudRepository{TModel, TKey}"/> or <see cref="IInstantRepository"/>.
     /// </summary>
     public interface IBulkRepository
@@ -19,7 +19,7 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
         /// Saves changes made only with this repository
         /// </summary>
         void Save();
-        
+
         /// <summary>
         /// Saves changes made only with this repository
         /// </summary>

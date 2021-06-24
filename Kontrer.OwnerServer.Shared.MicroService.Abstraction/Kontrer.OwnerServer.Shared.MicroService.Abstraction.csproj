@@ -6,13 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Actors\" />
-    <Folder Include="MessageBus\Send\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.0.0-alpha0002" />
-    <PackageReference Include="MassTransit" Version="7.1.4-develop.3245" />
+    <PackageReference Include="MassTransit" Version="7.2.0" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />

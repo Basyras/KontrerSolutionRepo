@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Dapr\Kontrer.OwnerServer.Shared.MicroService.Dapr.csproj" />
+    <ProjectReference Include="..\OwnerServer\MicroService\MessageBus\Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp\Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp.csproj" />
   </ItemGroup>
 
 </Project>

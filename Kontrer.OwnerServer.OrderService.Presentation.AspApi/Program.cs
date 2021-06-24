@@ -1,4 +1,5 @@
-using Kontrer.OwnerServer.OrderService.Application.Accommodation.Consumers;
+using Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +16,7 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup, CreateNewAccommodationOrderConsumer>(args).Build().Run();
+            MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup, CreateAccommodationOrderCommandHandler>(args).Build().Run();
         }
     }
 }

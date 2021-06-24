@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using MassTransit.Monitoring.Health;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,23 +13,38 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
     {
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-
             return (IApplicationBuilder app) =>
             {
+                //app.UseEndpoints(endpoints =>
+                //{
+                //    endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
+                //    {
+                //        Predicate = (check) => check.Tags.Contains("ready"),
+                //    });
+
+                //    endpoints.MapHealthChecks("/health/live", new HealthCheckOptions());
+                //});
+
                 var massTransitBus = app.ApplicationServices.GetRequiredService<IBusControl>();
                 //var health = massTransitBus.CheckHealth();
                 //if(health.Status == BusHealthStatus.Unhealthy) throw new Exception("");
-                var healthStatus = massTransitBus.WaitForHealthStatus( BusHealthStatus.Healthy,TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
-                if (healthStatus == BusHealthStatus.Unhealthy) throw new Exception("Message bus is unhealthy! (probablly not running)");
+                //var healthStatus = massTransitBus.WaitForHealthStatus(BusHealthStatus.Healthy, TimeSpan.FromSeconds(50)).GetAwaiter().GetResult();
+                //if (healthStatus == BusHealthStatus.Unhealthy)
+                //    throw new Exception("Message bus is unhealthy! (probablly not running)");
 
-                //RabbitMQ must be running here! or it will hold for ever
-                massTransitBus.Start();
+                //RabbitMQ must be running here! or it will hold for ever - not true
+                try
+                {
+                    massTransitBus.Start(new TimeSpan(0, 0, 5));
+                    massTransitBus.CheckHealth();
+                }
+                catch (Exception ex)
+                {
+                    //Could not connect to RabbitMQ?
+                }
 
                 next(app);
             };
-
         }
-
-
     }
 }

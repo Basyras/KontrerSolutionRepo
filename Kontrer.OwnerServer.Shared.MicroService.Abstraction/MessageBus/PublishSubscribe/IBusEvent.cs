@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.PublishSubscribe
 {
+    /// <summary>
+    /// Should be simple DTO
+    /// </summary>
     public interface IBusEvent
     {
     }

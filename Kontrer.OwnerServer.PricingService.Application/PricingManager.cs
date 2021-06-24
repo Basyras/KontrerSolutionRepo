@@ -2,10 +2,9 @@
 using Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEditors;
 using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
 using Kontrer.OwnerServer.PricingService.Application.Settings;
-using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing;
-using Kontrer.Shared.Models.Pricing.Blueprints;
+
 using Kontrer.Shared.Models.Pricing.Costs;
 using Microsoft.Extensions.Options;
 using System;
@@ -26,15 +25,11 @@ namespace Kontrer.OwnerServer.PricingService.Application
         {
             this.SettingRepository = settingRepository;
             this.options = options;
-            if(accommodationPricers != null)
-            this.accommodationPricers = new List<IAccommodationPricer>(accommodationPricers);
+            if (accommodationPricers != null)
+                this.accommodationPricers = new List<IAccommodationPricer>(accommodationPricers);
             if (accommodationEditors != null)
                 this.accommodationEditors = new List<IAccommodationBlueprintEditor>(accommodationEditors);
-
-
-
         }
-
 
         public async Task<AccommodationCost> CalculateAccommodationCostAsync(AccommodationBlueprint accommodationBlueprint)
         {
@@ -79,7 +74,7 @@ namespace Kontrer.OwnerServer.PricingService.Application
                     settingRequests.AddRange(required);
                 }
             }
-            var scopedRequestsTasks = settingRequests.Select(x => GetBestScopedSettingRequest(x, SettingRepository, accommodationBlueprint.From, accommodationBlueprint.To)).ToList();            
+            var scopedRequestsTasks = settingRequests.Select(x => GetBestScopedSettingRequest(x, SettingRepository, accommodationBlueprint.From, accommodationBlueprint.To)).ToList();
             var scopedRequests = await Task.WhenAll(scopedRequestsTasks);
             var scopedSettings = await SettingRepository.GetScopedSettingsAsync(scopedRequests);
             InMemoryResolvedScopedSettings settingsResolver = new InMemoryResolvedScopedSettings(accommodationBlueprint.From, accommodationBlueprint.To, scopedSettings);
@@ -99,6 +94,7 @@ namespace Kontrer.OwnerServer.PricingService.Application
             RawAccommodationCost rawAccoCost = new RawAccommodationCost(blueprint.Currency, rawItems, rawRooms);
             return rawAccoCost;
         }
+
         /// <summary>
         /// Sum up all rawcosts into final costs
         /// </summary>
@@ -124,12 +120,11 @@ namespace Kontrer.OwnerServer.PricingService.Application
 
         private PersonCost FinishPersonCost(Currencies currency, RawPersonCost rawPersonCost)
         {
-            decimal totalCost = (rawPersonCost.RawPersonItems.Count > 0) ?  rawPersonCost.RawPersonItems.Sum(x => x.SubTotal) : 0m;
+            decimal totalCost = (rawPersonCost.RawPersonItems.Count > 0) ? rawPersonCost.RawPersonItems.Sum(x => x.SubTotal) : 0m;
             Cash totalCash = new Cash(currency, totalCost);
             var personCost = new PersonCost(rawPersonCost.RawPersonItems.Select(x => FinishItemCost(currency, x)).ToList().AsReadOnly(), totalCash);
             return personCost;
         }
-
 
         private RoomCost FinishRoomCost(Currencies currency, RawRoomCost rawRoomCost)
         {
@@ -141,7 +136,7 @@ namespace Kontrer.OwnerServer.PricingService.Application
             return roomCost;
         }
 
-        private async Task<ScopedSettingRequest> GetBestScopedSettingRequest(SettingRequest request, ISettingsRepository settingsRepository,DateTime from, DateTime to)
+        private async Task<ScopedSettingRequest> GetBestScopedSettingRequest(SettingRequest request, ISettingsRepository settingsRepository, DateTime from, DateTime to)
         {
             var allScopes = await settingsRepository.GetTimeScopesAsync();
             var scopesCandidates = allScopes.Where(scope => scope.From <= from && scope.To >= to).ToList();
@@ -159,12 +154,11 @@ namespace Kontrer.OwnerServer.PricingService.Application
                 }
                 else
                 {
-                    throw new NoSuitableTimeScopeFoundException(from,to);
+                    throw new NoSuitableTimeScopeFoundException(from, to);
                 }
-            }            
+            }
 
             return new ScopedSettingRequest(request, finalScope.Id);
         }
-     
     }
 }

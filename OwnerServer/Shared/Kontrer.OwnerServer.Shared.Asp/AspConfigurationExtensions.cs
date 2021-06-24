@@ -24,16 +24,17 @@ namespace Kontrer.OwnerServer.Shared.Asp
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = context.HostingEnvironment.ApplicationName, Version = "v1" });
                 });
+                services.AddHealthChecks();
             });
-               
+
             return webBuilder;
         }
 
         /// <summary>
-        /// Workaround to setup Startup class from different assembly. Bug described here: https://github.com/dotnet/aspnetcore/issues/7315 
-        /// </summary>        
-        public static IWebHostBuilder UseStartupWorkaround<TStartup>(this IWebHostBuilder webBuilder,string assemblyName = null) where TStartup : class, IStartupClass
-        {                   
+        /// Workaround to setup Startup class from different assembly. Bug described here: https://github.com/dotnet/aspnetcore/issues/7315
+        /// </summary>
+        public static IWebHostBuilder UseStartupWorkaround<TStartup>(this IWebHostBuilder webBuilder, string assemblyName = null) where TStartup : class, IStartupClass
+        {
             webBuilder.UseSetting(WebHostDefaults.ApplicationKey, assemblyName);
             webBuilder.UseStartup<TStartup>();
             return webBuilder;
@@ -41,12 +42,12 @@ namespace Kontrer.OwnerServer.Shared.Asp
 
         /// <summary>
         /// Using the old school NewtonsoftJson istead of new microsoft seriliazer
-        /// </summary>        
+        /// </summary>
         public static IMvcBuilder FixJsonSerialization(this IMvcBuilder mvcBuilder)
         {
             //mvcBuilder.AddJsonOptions()
             //var jsonSeri  =services.GetRequiredService<>
-            //JsonConvert.DefaultSettings = 
+            //JsonConvert.DefaultSettings =
             mvcBuilder.AddNewtonsoftJson();
             return mvcBuilder;
         }

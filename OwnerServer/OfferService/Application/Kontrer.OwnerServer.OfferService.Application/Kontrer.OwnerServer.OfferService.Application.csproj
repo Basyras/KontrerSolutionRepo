@@ -4,4 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Kontrer.OwnerServer.OfferService.Domain\Kontrer.OwnerServer.OfferService.Domain.csproj" />
+  </ItemGroup>
 </Project>

@@ -20,13 +20,14 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.Consumers
         public async Task Consume(ConsumeContext<AccommodationIdRequestedMessage> context)
         {
             var newId = _idGenerator.CreateNewId(IIdGeneratorManager.OrdersGroupName);
-            await context.RespondAsync<OrderStatusResult>(new
-            {
-                OrderId = order.Id,
-                order.Timestamp,
-                order.StatusCode,
-                order.StatusText
-            });
+            throw new NotImplementedException();
+            //await context.RespondAsync<OrderStatusResult>(new
+            //{
+            //    OrderId = order.Id,
+            //    order.Timestamp,
+            //    order.StatusCode,
+            //    order.StatusText
+            //});
         }
     }
 }

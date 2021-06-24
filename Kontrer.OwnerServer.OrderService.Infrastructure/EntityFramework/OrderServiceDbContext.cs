@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
 {
-    public class OrderServiceDbContext:DbContext
+    public class OrderServiceDbContext : DbContext
     {
         public List<AccommodationOrderEntity> Orders { get; set; }
     }

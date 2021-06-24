@@ -26,6 +26,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Initialization;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
+using Kontrer.OwnerServer.Shared.Asp;
 
 namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
 {
@@ -41,19 +42,13 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddPdfBuilder();
             services.AddLocalizator().AddEfStorage();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
-
         }
-
-
     }
 }

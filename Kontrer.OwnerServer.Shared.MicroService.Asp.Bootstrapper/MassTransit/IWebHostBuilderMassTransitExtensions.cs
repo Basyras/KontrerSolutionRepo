@@ -3,6 +3,7 @@ using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,16 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
             {
                 services.AddTransient<IStartupFilter, MasstransitStartupFilter>();
                 services.AddSingleton<IMessageBusManager, DefaultMessageBusManager>();
+
+                services.AddHealthChecks();
+                //services.Configure<HealthCheckPublisherOptions>(options =>
+                //{
+                //    options.Delay = TimeSpan.FromSeconds(2);
+                //    options.Predicate = (check) => check.Tags.Contains("ready");
+                //});
+
                 services.AddMassTransit(x =>
-                {                   
+                {
                     x.AddConsumers(consumerAssemblies);
                     x.UsingRabbitMq((transitContext, rabbitConfig) =>
                     {
@@ -30,13 +39,13 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
                         //new ConsumerEndpointDefinition<IConsumer>(settings)
                         //var definition = new NamedEndpointDefinition(context.HostingEnvironment.ApplicationName);
                         rabbitConfig.ConfigureEndpoints(transitContext);
+                        //rabbitConfig.UseHealthCheck(transitContext);
                         //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
-                        //{                    
+                        //{
                         //});
                     });
-                    services.AddMassTransitHostedService();
-
                 });
+                services.AddMassTransitHostedService();
             });
 
             return webBuilder;

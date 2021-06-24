@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
-{ 
+{
     public interface IInstantCrudRepository<TModel, TKey> : IInstantRepository
     {
         /// <summary>
@@ -13,34 +13,43 @@ namespace Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories
         /// </summary>
         /// <returns></returns>
         Task<Dictionary<TKey, TModel>> GetAllAsync();
+
         /// <summary>
-        /// Returns default when not found, 
+        /// Throws exception when not found,
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        #nullable enable
+        Task<TModel> GetAsync(TKey id);
+
+        /// <summary>
+        /// Returns default when not found,
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+#nullable enable
+
         Task<TModel?> TryGetAsync(TKey id);
-        #nullable disable
+
+#nullable disable
+
         /// <summary>
         /// If id is null it will be genereted
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
         Task<TModel> AddAsync(TModel model);
+
         /// <summary>
         /// Updates record
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
         Task<TModel> UpdateAsync(TModel model);
+
         /// <summary>
         /// Deletes items with same id.
         /// </summary>
         /// <param name="id"></param>
         Task RemoveAsync(TKey id);
-        
-             
-     
-        
     }
 }

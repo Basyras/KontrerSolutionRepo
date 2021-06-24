@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kontrer.OwnerServer.OrderService.Client\Kontrer.OwnerServer.OrderService.Client.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.OrderService.Dtos\Kontrer.OwnerServer.OrderService.Dtos.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.OrderService.Infrastructure\Kontrer.OwnerServer.OrderService.Infrastructure.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj" />
     <ProjectReference Include="..\OwnerServer\OrderService\Application\Kontrer.OwnerServer.OrderService.Application\Kontrer.OwnerServer.OrderService.Application.csproj" />
   </ItemGroup>
 

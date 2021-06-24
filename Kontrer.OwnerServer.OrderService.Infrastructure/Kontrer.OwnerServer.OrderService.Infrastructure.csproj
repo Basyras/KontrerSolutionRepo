@@ -9,7 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\OwnerServer\Shared\Data\Kontrer.OwnerServer.Shared.Data.EF\Kontrer.OwnerServer.Shared.Data.EF.csproj" />
+    <ProjectReference Include="..\OwnerServer\OrderService\Application\Kontrer.OwnerServer.OrderService.Application\Kontrer.OwnerServer.OrderService.Application.csproj" />
+    <ProjectReference Include="..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
+    <ProjectReference Include="..\Shared\Repositories\Kontrer.Shared.Repositories.EF\Kontrer.Shared.Repositories.EF.csproj" />
   </ItemGroup>
 
 </Project>

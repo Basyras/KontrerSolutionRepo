@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.Data.EF.Tests.Repositories
 {
-    public class CarEFCrudRepository : EFCrudRepositoryBase<CarEntity, CarModel, int, int>
+    public class CarEFCrudRepository : EFInstantCrudRepositoryBase<CarEntity, CarModel, int, int>
     {
         public CarEFCrudRepository(TestDbContext dbContext) : base(dbContext,x=>x.Id)
         {

@@ -14,7 +14,7 @@ using Kontrer.OwnerServer.Shared.Data.EF.Repositories;
 
 namespace Kontrer.OwnerServer.CustomerService.Data.Accommodation.EntityFramework
 {
-    public class EfAccommodationRepository : EFCrudRepositoryBase<FinishedAccommodationEntity, FinishedAccommodationModel,int,int>//, IAccommodationRepository
+    public class EfAccommodationRepository : EFInstantCrudRepositoryBase<FinishedAccommodationEntity, FinishedAccommodationModel,int,int>//, IAccommodationRepository
     {       
 
         public EfAccommodationRepository(DbContext dbContext) 
