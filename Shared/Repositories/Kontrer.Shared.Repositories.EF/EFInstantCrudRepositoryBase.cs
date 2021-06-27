@@ -22,9 +22,9 @@ namespace Kontrer.Shared.Repositories.EF
 
         protected abstract TModelKey GetModelId(TModel model);
 
-        protected abstract void SetModelId(TEntityKey id, TModel entity);
+        protected abstract void SetModelId(TEntityKey id, ref TModel model);
 
-        protected abstract void SetEntityId(TModelKey id, TEntity entity);
+        protected abstract void SetEntityId(TModelKey id, ref TEntity entity);
 
         protected TEntityKey GetEntityId(TEntity entity)
         {
@@ -48,7 +48,7 @@ namespace Kontrer.Shared.Repositories.EF
             var entity = ToEntity(model);
             dbContext.Add(entity);
             await dbContext.SaveChangesAsync();
-            SetModelId(GetEntityId(entity), model);
+            SetModelId(GetEntityId(entity), ref model);
             return model;
         }
 
@@ -61,7 +61,7 @@ namespace Kontrer.Shared.Repositories.EF
         public void Remove(TModelKey id)
         {
             TEntity entity = new TEntity();
-            SetEntityId(id, entity);
+            SetEntityId(id, ref entity);
             dbContext.Remove(entity);
             dbContext.SaveChanges();
         }
@@ -107,9 +107,12 @@ namespace Kontrer.Shared.Repositories.EF
             throw new NotImplementedException();
         }
 
-        public Task RemoveAsync(TModelKey id)
+        public async Task RemoveAsync(TModelKey id)
         {
-            throw new NotImplementedException();
+            var entityToUpdate = new TEntity();
+            SetEntityId(id, ref entityToUpdate);
+            dbContext.Set<TEntity>().Remove(entityToUpdate);
+            await dbContext.SaveChangesAsync();
         }
     }
 
@@ -123,6 +126,21 @@ namespace Kontrer.Shared.Repositories.EF
     {
         protected EFInstantCrudRepositoryBase(DbContext dbContext, Expression<Func<TModel, TModelKey>> entityIdPropertyNameSelector) : base(dbContext, entityIdPropertyNameSelector)
         {
+        }
+
+        protected override void SetEntityId(TModelKey modelId, ref TModel entity)
+        {
+            SetModelId(modelId, ref entity);
+        }
+
+        protected override TModel ToEntity(TModel model)
+        {
+            return model;
+        }
+
+        protected override TModel ToModel(TModel entity)
+        {
+            return entity;
         }
     }
 }

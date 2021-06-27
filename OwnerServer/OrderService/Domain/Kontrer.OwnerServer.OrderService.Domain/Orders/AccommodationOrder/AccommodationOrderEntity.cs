@@ -9,6 +9,10 @@ namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders
 {
     public class AccommodationOrderEntity : OrderEntityBase<AccommodationRequirement>
     {
+        public AccommodationOrderEntity()
+        {
+        }
+
         public AccommodationOrderEntity(int id, int customerId, AccommodationRequirement requirment, DateTime issueDate, string customerNotes, string ownerPrivateNotes)
             : base(id, customerId, requirment, issueDate, customerNotes, ownerPrivateNotes)
         {

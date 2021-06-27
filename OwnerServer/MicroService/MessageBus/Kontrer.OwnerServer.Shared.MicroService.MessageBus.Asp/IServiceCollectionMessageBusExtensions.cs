@@ -11,7 +11,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
         //    services.AddTransient<IStartupFilter, AspMessageBusStartupFilter>();
         //    return services;
         //}
-
+        [Obsolete("Not needed, is handled by masstransit")]
         public static IWebHostBuilder RegisterCommnandQueriesEndpoints<TCommand>(this IWebHostBuilder webBuilder)
         {
             webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>

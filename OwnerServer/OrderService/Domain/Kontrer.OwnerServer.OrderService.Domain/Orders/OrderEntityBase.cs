@@ -9,7 +9,11 @@ namespace Kontrer.OwnerServer.OrderService.Domain.Orders
 {
     public abstract class OrderEntityBase<TRequirment> : IEntity
     {
-        public OrderEntityBase(int id, int customerId, TRequirment requirment, DateTime issueDate, string customerNotes, string ownerPrivateNotes)
+        public OrderEntityBase()
+        {
+        }
+
+        public OrderEntityBase(int id, int customerId, TRequirment requirment, DateTime issueDate, string customerNotes, string ownerPrivateNotes, OrderStates state = default)
         {
             Id = id;
             CustomerId = customerId;
@@ -17,13 +21,15 @@ namespace Kontrer.OwnerServer.OrderService.Domain.Orders
             IssueDate = issueDate;
             CustomerNotes = customerNotes;
             OwnerPrivateNotes = ownerPrivateNotes;
+            State = state;
         }
 
-        public int Id { get; }
+        public int Id { get; set; }
         public int CustomerId { get; }
         public TRequirment Requirment { get; }
         public DateTime IssueDate { get; }
         public string CustomerNotes { get; }
         public string OwnerPrivateNotes { get; }
+        public OrderStates State { get; }
     }
 }

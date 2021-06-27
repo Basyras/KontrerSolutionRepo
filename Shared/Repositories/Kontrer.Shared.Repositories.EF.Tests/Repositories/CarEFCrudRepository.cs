@@ -18,9 +18,14 @@ namespace Kontrer.Shared.Repositories.EF.Tests.Repositories
             return model.Id;
         }
 
-        protected override void SetEntityId(int id, CarEntity entity)
+        protected override void SetEntityId(int id, ref CarEntity entity)
         {
             entity.Id = id;
+        }
+
+        protected override void SetModelId(int id, ref CarModel model)
+        {
+            model.Id = id;
         }
 
         protected override CarEntity ToEntity(CarModel model)

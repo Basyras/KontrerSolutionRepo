@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Internal;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -37,25 +38,30 @@ namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
         {
             app.UseEndpoints(endpointBuilder =>
             {
-                var commandAssemblyTypes = commandsAssembly.GetTypes();
-
-                var commandTypes = commandAssemblyTypes.Where(type => commandIntefaceTypes.Any(interfaceType => type.IsAssignableFrom(interfaceType)));
-
-                var commandHandlers = commandAssemblyTypes.Where(type => commandHandlerInterfacesTypes.Any(handlerType => type.IsAssignableFrom(handlerType))).Select(x => new { HandlerType = x, CommandType = x.GenericTypeArguments[0] });
-
-                foreach (var handler in commandHandlers)
-                {
-                    var commandType = commandTypes.First(x => handler.CommandType == x);
-                    var handlerInstance = app.ApplicationServices.GetService(handler.HandlerType);
-
-                    endpointBuilder.MapPost($"/{commandType.Name}", async context =>
-                    {
-                        await context.Response.WriteAsync($"Command endpoit started. Command: '{commandType.Name}'");
-                        var task = (Task)handler.HandlerType.GetMethod(nameof(ICommandHandler<ICommand>.Handle)).Invoke(handlerInstance, null);
-                        await task;
-                    });
-                }
+                RegisterCommandsAndHandlers(endpointBuilder, app.ApplicationServices, commandsAssembly);
             });
+        }
+
+        private static void RegisterCommandsAndHandlers(IEndpointRouteBuilder endpointRouteBuilder, IServiceProvider services, Assembly commandsAssembly)
+        {
+            var commandAssemblyTypes = commandsAssembly.GetTypes();
+
+            var commandTypes = commandAssemblyTypes.Where(type => commandIntefaceTypes.Any(interfaceType => type.IsAssignableFrom(interfaceType)));
+
+            var commandHandlers = commandAssemblyTypes.Where(type => commandHandlerInterfacesTypes.Any(handlerType => type.IsAssignableFrom(handlerType))).Select(x => new { HandlerType = x, CommandType = x.GenericTypeArguments[0] });
+
+            foreach (var handler in commandHandlers)
+            {
+                var commandType = commandTypes.First(x => handler.CommandType == x);
+                var handlerInstance = services.GetService(handler.HandlerType);
+
+                endpointRouteBuilder.MapPost($"/{commandType.Name}", async context =>
+                {
+                    await context.Response.WriteAsync($"Command endpoit started. Command: '{commandType.Name}'");
+                    var task = (Task)handler.HandlerType.GetMethod(nameof(ICommandHandler<ICommand>.Handle)).Invoke(handlerInstance, null);
+                    await task;
+                });
+            }
         }
     }
 }

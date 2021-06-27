@@ -1,4 +1,5 @@
 using Kontrer.OwnerServer.OrderService.Application.Interfaces;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
 using Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework;
 using Kontrer.OwnerServer.Shared.Asp;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +23,8 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
 {
     public class Startup : IStartupClass
     {
+        private const string debugConnectionString = "Server=(localdb)\\mssqllocaldb;Database=OrderServiceDB;Trusted_Connection=True;MultipleActiveResultSets=true";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,13 +35,34 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //var connstring = "Server=(localdb)\\mssqllocaldb;Database=OrderServiceDB;Trusted_Connection=True;MultipleActiveResultSets=true";
             //services.AddSingleton<DbContext, EFAccommodationOrderRepository>();
-            services.AddSingleton<IAccommodationOrderRepository, DummyRepo>();
+
+            //services.AddScoped<IAccommodationOrderRepository, DummyRepo>();
+
+            services.AddDbContext<DbContext, OrderServiceDbContext>(options =>
+                     options.UseSqlServer(debugConnectionString));
+
+            services.AddScoped<IAccommodationOrderRepository, EFAccommodationOrderRepository>();
+
+            //services.AddDbContext<OrderServiceDbContext, OrderServiceDbContext>(options =>
+            //    options.UseSqlServer(debugConnectionString), ServiceLifetime.Singleton);
+
+            //services.AddScoped<OrderServiceDbContext, OrderServiceDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //var dbcontext = app.ApplicationServices.GetService<OrderServiceDbContext>();
+            //dbcontext.Database.Migrate();
+
+            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DbContext>();
+                db.Database.Migrate();
+            }
+
             //app.Map(new Microsoft.AspNetCore.Http.PathString("ManualEndpoint"), x =>
             //{
             //    Trace.WriteLine("Manual endpoint called");
