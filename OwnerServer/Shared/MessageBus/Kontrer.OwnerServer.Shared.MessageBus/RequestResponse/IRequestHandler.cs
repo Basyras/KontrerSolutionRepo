@@ -5,18 +5,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse
+namespace Kontrer.OwnerServer.Shared.MessageBus.RequestResponse
 {
     public interface IRequestHandler<TRequest> where TRequest : IRequest
     {
-        Task Handle(CancellationToken cancellationToken = default);
+        Task Handle(TRequest request, CancellationToken cancellationToken = default);
     }
 
-    public interface IRequestHandler<TResponse, TRequest>
+    public interface IRequestHandler<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
         where TResponse : class
-
     {
-        Task<TResponse> Handle(CancellationToken cancellationToken = default);
+        Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken = default);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Kontrer.Shared.DomainDrivenDesign.Application;
+﻿using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
+using Kontrer.Shared.DomainDrivenDesign.Application;
 using Kontrer.Shared.DomainDrivenDesign.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,8 +21,8 @@ namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
 
         static AspMessageBusStartupFilter()
         {
-            commandIntefaceTypes = new Type[] { typeof(ICommand), typeof(ICommand<>) };
-            commandHandlerInterfacesTypes = new Type[] { typeof(ICommandHandler<>), typeof(ICommandHandler<,>) };
+            commandIntefaceTypes = new Type[] { typeof(ICommand), typeof(IRequest<>) };
+            commandHandlerInterfacesTypes = new Type[] { typeof(IRequestHandler<>), typeof(IRequestHandler<,>) };
             commandsAssembly = typeof(TCommand).Assembly;
         }
 
@@ -58,7 +59,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
                 endpointRouteBuilder.MapPost($"/{commandType.Name}", async context =>
                 {
                     await context.Response.WriteAsync($"Command endpoit started. Command: '{commandType.Name}'");
-                    var task = (Task)handler.HandlerType.GetMethod(nameof(ICommandHandler<ICommand>.Handle)).Invoke(handlerInstance, null);
+                    var task = (Task)handler.HandlerType.GetMethod(nameof(IRequestHandler<ICommand>.Handle)).Invoke(handlerInstance, null);
                     await task;
                 });
             }

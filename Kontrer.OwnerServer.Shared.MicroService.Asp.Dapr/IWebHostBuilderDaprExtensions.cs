@@ -1,6 +1,6 @@
 ﻿using Kontrer.OwnerServer.Shared.Asp;
+using Kontrer.OwnerServer.Shared.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,7 +22,6 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
     {
         public static IWebHostBuilder ConfigureDaprServices(this IWebHostBuilder webBuilder, Action<MicroserviceBuilder> configure)
         {
-
             webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
             {
                 services.AddTransient<IStartupFilter, DaprStartupFilter>();
@@ -39,15 +38,12 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                 {
                     options.PubSubName = MessageBusConstants.MessageBusName;
                 });
-
             });
 
             var serviceBuilder = new MicroserviceBuilder(webBuilder).AddDaprProvider();
             configure(serviceBuilder);
 
-
             return webBuilder;
         }
-
     }
 }

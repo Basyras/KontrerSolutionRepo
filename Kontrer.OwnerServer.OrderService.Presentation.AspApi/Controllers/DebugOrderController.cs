@@ -2,7 +2,7 @@
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
 using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
+using Kontrer.OwnerServer.Shared.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -30,6 +30,12 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
         {
             //var result = await messageBusManager.RequestAsync<CreateAccommodationOrderCommand, CreateAccommodationOrderResponse>(new(orderId, null));
             await repo.AddAsync(new AccommodationOrderEntity(0, 0, null, default, "", ""));
+        }
+
+        [HttpDelete]
+        public async Task CancelOrder()
+        {
+            //var resilt = new CancelAccommodationOrderCommand(0, "", false);
         }
     }
 }

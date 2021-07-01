@@ -1,4 +1,5 @@
-﻿using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
+﻿using Kontrer.OwnerServer.Shared.MessageBus;
+using Kontrer.OwnerServer.Shared.MessageBus.MasstTransit;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +16,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
 {
     public static class IWebHostBuilderMassTransitExtensions
     {
-        public static IWebHostBuilder ConfigureMassTransitServices(this IWebHostBuilder webBuilder, params Assembly[] consumerAssemblies)
+        public static IWebHostBuilder ConfigureMassTransitServices(this IWebHostBuilder webBuilder, Assembly handlersAssembly)
         {
             webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
             {
@@ -23,23 +24,14 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
                 services.AddSingleton<IMessageBusManager, DefaultMessageBusManager>();
 
                 services.AddHealthChecks();
-                //services.Configure<HealthCheckPublisherOptions>(options =>
-                //{
-                //    options.Delay = TimeSpan.FromSeconds(2);
-                //    options.Predicate = (check) => check.Tags.Contains("ready");
-                //});
 
                 services.AddMassTransit(x =>
                 {
-                    x.AddConsumers(consumerAssemblies);
+                    //x.AddConsumers(consumerAssemblies);
+                    x.AddConsumersFromMessageBus(handlersAssembly);
                     x.UsingRabbitMq((transitContext, rabbitConfig) =>
                     {
-#warning finish automatic consumer registration
-                        //var settings = new EndpointSettings<ConsumerEndpointDefinition<IConsumer>>();
-                        //new ConsumerEndpointDefinition<IConsumer>(settings)
-                        //var definition = new NamedEndpointDefinition(context.HostingEnvironment.ApplicationName);
                         rabbitConfig.ConfigureEndpoints(transitContext);
-                        //rabbitConfig.UseHealthCheck(transitContext);
                         //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
                         //{
                         //});

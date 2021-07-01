@@ -24,12 +24,12 @@ namespace Kontrer.OwnerServer.OrderService.Domain.Orders
             State = state;
         }
 
-        public int Id { get; set; }
-        public int CustomerId { get; }
-        public TRequirment Requirment { get; }
-        public DateTime IssueDate { get; }
-        public string CustomerNotes { get; }
-        public string OwnerPrivateNotes { get; }
-        public OrderStates State { get; }
+        public int Id { get; set; } //Public setter for repository library
+        public int CustomerId { get; set; }
+        public TRequirment Requirment { get; set; }
+        public DateTime IssueDate { get; set; }
+        public string CustomerNotes { get; set; }
+        public string OwnerPrivateNotes { get; set; }
+        public OrderStates State { get; set; }
     }
 }

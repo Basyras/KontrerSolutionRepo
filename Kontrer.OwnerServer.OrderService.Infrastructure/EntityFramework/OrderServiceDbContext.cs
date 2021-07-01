@@ -30,5 +30,16 @@ namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
 
             return new OrderServiceDbContext(optionsBuilder.Options);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Write Fluent API configurations here
+
+            // Property Configurations
+            modelBuilder.Entity<AccommodationOrderEntity>().OwnsOne(x => x.Requirment).OwnsMany(x => x.Rooms);
+            modelBuilder.Entity<AccommodationOrderEntity>().HasKey(x => x.Id);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

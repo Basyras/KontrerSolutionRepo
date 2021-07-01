@@ -1,6 +1,7 @@
 ﻿using Kontrer.OwnerServer.OrderService.Application.Interfaces;
+using Kontrer.OwnerServer.OrderService.Domain.Orders;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
+using Kontrer.OwnerServer.Shared.MessageBus;
 using Kontrer.Shared.DomainDrivenDesign.Application;
 using MassTransit;
 using System;
@@ -23,9 +24,17 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
             this.messageBus = messageBus;
         }
 
-        public override Task Handle(CancelAccommodationOrderCommand command, CancellationToken cancellationToken = default)
+        public override async Task Handle(CancelAccommodationOrderCommand command, CancellationToken cancellationToken = default)
         {
-            return orderRepository.RemoveAsync(command.OrderId);
+            var order = await orderRepository.GetAsync(command.OrderId);
+            order.State = command.IsCanceledByCustomer ? OrderStates.CanceledByCustomer : OrderStates.CanceledByOwner;
+            await orderRepository.UpdateAsync(order);
+
+            if (command.IsCanceledByCustomer == false)
+            {
+                order.State = OrderStates.CanceledByOwner;
+                //should notify customer
+            }
         }
     }
 }

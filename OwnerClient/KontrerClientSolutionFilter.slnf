@@ -1,0 +1,19 @@
+{
+  "solution": {
+    "path": "..\\KontrerSolution.sln",
+    "projects": [
+      "Kontrer.OwnerClient.Bootstrapper.Windows.Tests\\Kontrer.OwnerClient.Bootstrapper.Windows.Tests.csproj",
+      "Kontrer.OwnerClient.Bootstrapper.Windows\\Kontrer.OwnerClient.Bootstrapper.Windows.csproj",
+      "Kontrer.OwnerClient.Business.Abstraction\\Kontrer.OwnerClient.Business.Abstraction.csproj",
+      "Kontrer.OwnerClient.Business\\Kontrer.OwnerClient.Business.csproj",
+      "Kontrer.OwnerClient.Data.Abstraction\\Kontrer.OwnerClient.Data.Abstraction.csproj",
+      "Kontrer.OwnerClient.Data\\Kontrer.OwnerClient.Data.csproj",
+      "Kontrer.OwnerClient.Shared\\Kontrer.OwnerClient.Shared.csproj",
+      "Kontrer.OwnerClient.UI.Abstraction\\Kontrer.OwnerClient.UI.Abstraction.csproj",
+      "Kontrer.OwnerClient.UI.WPF.Tests\\Kontrer.OwnerClient.UI.WPF.Tests.csproj",
+      "Kontrer.OwnerClient.UI.WPF\\Kontrer.OwnerClient.UI.WPF.csproj",
+      "Kontrer.OwnerClient.Web.Presentation.BlazorWasm\\Kontrer.OwnerClient.Web.Presentation.BlazorWasm.csproj",
+      "OwnerClient\\Application\\Kontrer.OwnerClient.Application\\Kontrer.OwnerClient.Application.csproj"
+    ]
+  }
+}

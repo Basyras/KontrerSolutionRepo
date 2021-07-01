@@ -2,7 +2,6 @@
 using Dapr.Actors.Runtime;
 using Dapr.Client;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,14 +22,14 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
     public class DaprMicroserviceProvider : IMicroserviceProvider
     {
         private readonly IWebHostBuilder webBuilder;
+
         public DaprMicroserviceProvider(IWebHostBuilder webBuilder)
-        {          
-            this.webBuilder = webBuilder;   
+        {
+            this.webBuilder = webBuilder;
         }
 
         public void RegisterActor<TActor>()
         {
-
             RegisterActor(typeof(TActor));
         }
 
@@ -41,7 +40,6 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                 ActorTypeInformation actorTypeInfo = ActorTypeInformation.Get(actorType);
                 var registration = new ActorRegistration(actorTypeInfo);
                 x.Actors.Add(registration);
-
             });
         }
     }

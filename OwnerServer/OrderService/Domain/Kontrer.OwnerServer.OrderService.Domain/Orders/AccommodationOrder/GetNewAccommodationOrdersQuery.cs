@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
 {
-    public record CancelAccommodationOrderCommand(int OrderId, string ReasonMessage, bool IsCanceledByCustomer) : ICommand;
+    public record GetNewAccommodationOrdersQuery : IQuery<GetNewAccommodationOrdersResponse>;
 }

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj" />
+    <ProjectReference Include="..\..\..\OwnerServer\Shared\MessageBus\Kontrer.OwnerServer.Shared.MessageBus\Kontrer.OwnerServer.Shared.MessageBus.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,22 +1,23 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
+using Kontrer.Shared.Helpers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Reflection;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
 {
     public static class IServiceCollectionMessageBusExtensions
     {
-        //public static IServiceCollection RegisterCommnandQueriesEndpoints(this IServiceCollection services)
-        //{
-        //    services.AddTransient<IStartupFilter, AspMessageBusStartupFilter>();
-        //    return services;
-        //}
-        [Obsolete("Not needed, is handled by masstransit")]
-        public static IWebHostBuilder RegisterCommnandQueriesEndpoints<TCommand>(this IWebHostBuilder webBuilder)
+        public static IWebHostBuilder RegisterHandlersToDI(this IWebHostBuilder webBuilder, Assembly handlersAssembly)
         {
             webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
             {
-                services.AddTransient<IStartupFilter, AspMessageBusStartupFilter<TCommand>>();
+                services.Scan(scan =>
+                scan.FromAssemblies(handlersAssembly)
+                .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>))).As(handler => new Type[1] { typeof(IRequestHandler<>).MakeGenericType(GenericHelper.GetGenericTypeRecursive(handler, typeof(IRequestHandler<>))) }).WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>))).As(handler => new Type[1] { typeof(IRequestHandler<,>).MakeGenericType(GenericHelper.GetGenericTypeRecursive(handler, typeof(IRequestHandler<,>))) }).WithScopedLifetime()
+                );
             });
 
             return webBuilder;

@@ -1,7 +1,11 @@
 using Kontrer.OwnerServer.OrderService.Application.Interfaces;
+using Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
 using Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework;
 using Kontrer.OwnerServer.Shared.Asp;
+using Kontrer.OwnerServer.Shared.MessageBus.MasstTransit;
+using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,35 +42,20 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
             //var connstring = "Server=(localdb)\\mssqllocaldb;Database=OrderServiceDB;Trusted_Connection=True;MultipleActiveResultSets=true";
             //services.AddSingleton<DbContext, EFAccommodationOrderRepository>();
 
-            //services.AddScoped<IAccommodationOrderRepository, DummyRepo>();
-
             services.AddDbContext<DbContext, OrderServiceDbContext>(options =>
                      options.UseSqlServer(debugConnectionString));
 
             services.AddScoped<IAccommodationOrderRepository, EFAccommodationOrderRepository>();
-
-            //services.AddDbContext<OrderServiceDbContext, OrderServiceDbContext>(options =>
-            //    options.UseSqlServer(debugConnectionString), ServiceLifetime.Singleton);
-
-            //services.AddScoped<OrderServiceDbContext, OrderServiceDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //var dbcontext = app.ApplicationServices.GetService<OrderServiceDbContext>();
-            //dbcontext.Database.Migrate();
-
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<DbContext>();
                 db.Database.Migrate();
             }
-
-            //app.Map(new Microsoft.AspNetCore.Http.PathString("ManualEndpoint"), x =>
-            //{
-            //    Trace.WriteLine("Manual endpoint called");
-            //});
         }
     }
 

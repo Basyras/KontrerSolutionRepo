@@ -2,7 +2,7 @@
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
 using Kontrer.OwnerServer.OrderService.Dtos.Models;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
+using Kontrer.OwnerServer.Shared.MessageBus;
 using Kontrer.Shared.DomainDrivenDesign.Application;
 using System;
 using System.Collections.Generic;

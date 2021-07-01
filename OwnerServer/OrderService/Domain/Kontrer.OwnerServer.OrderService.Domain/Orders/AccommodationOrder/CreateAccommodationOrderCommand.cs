@@ -1,4 +1,5 @@
 ﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder.ValueObjects.Requirements;
+using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
 using Kontrer.Shared.DomainDrivenDesign.Domain;
 using System;
 using System.Collections.Generic;

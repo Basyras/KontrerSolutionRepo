@@ -1,6 +1,6 @@
 ﻿using Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction;
 using Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
+using Kontrer.OwnerServer.Shared.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

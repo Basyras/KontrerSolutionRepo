@@ -15,16 +15,6 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
         {
             return (IApplicationBuilder app) =>
             {
-                //app.UseEndpoints(endpoints =>
-                //{
-                //    endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
-                //    {
-                //        Predicate = (check) => check.Tags.Contains("ready"),
-                //    });
-
-                //    endpoints.MapHealthChecks("/health/live", new HealthCheckOptions());
-                //});
-
                 var massTransitBus = app.ApplicationServices.GetRequiredService<IBusControl>();
                 //var health = massTransitBus.CheckHealth();
                 //if(health.Status == BusHealthStatus.Unhealthy) throw new Exception("");

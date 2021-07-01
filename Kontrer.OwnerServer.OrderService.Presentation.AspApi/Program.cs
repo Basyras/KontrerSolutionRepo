@@ -1,5 +1,6 @@
 using Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
+using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

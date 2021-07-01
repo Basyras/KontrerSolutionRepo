@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using MassTransit;
 using MassTransit.Definition;
 using MassTransit.Monitoring.Health;
@@ -26,21 +25,22 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
     {
         private static readonly Assembly entryAssembly = Assembly.GetEntryAssembly();
 
-        public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder hostBuilder, Assembly consumerAssembly) where TStartup : class, IStartupClass
+        public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder hostBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
         {
             hostBuilder.ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.ConfigureAspServices();
                 webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
-                webBuilder.ConfigureMicroServiceServices<TStartup>(consumerAssembly);
+                webBuilder.ConfigureMicroServiceServices<TStartup>(handlersAssembly);
             });
 
             return hostBuilder;
         }
 
-        public static IWebHostBuilder ConfigureMicroServiceServices<TStartup>(this IWebHostBuilder webBuilder, Assembly consumersAssembly) where TStartup : class, IStartupClass
+        public static IWebHostBuilder ConfigureMicroServiceServices<TStartup>(this IWebHostBuilder webBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
         {
-            webBuilder.ConfigureMassTransitServices(consumersAssembly);
+            webBuilder.RegisterHandlersToDI(handlersAssembly);
+            webBuilder.ConfigureMassTransitServices(handlersAssembly);
             webBuilder.ConfigureDaprServices((MicroserviceBuilder serviceBuilder) =>
             {
                 var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);

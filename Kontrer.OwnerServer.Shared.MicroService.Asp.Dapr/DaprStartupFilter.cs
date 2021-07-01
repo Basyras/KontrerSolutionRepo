@@ -1,6 +1,6 @@
 ﻿using Dapr;
 using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
+using Kontrer.OwnerServer.Shared.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -43,17 +43,16 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                 endpoints.MapSubscribeHandler();
                 endpoints.MapControllers();
 
-                //endpoints.MapControllers().Add(builder=> 
+                //endpoints.MapControllers().Add(builder=>
                 //{
-                //    var controllerDesc = builder.Metadata.First(x => x.GetType() == typeof(ControllerActionDescriptor)) as ControllerActionDescriptor;                                      
+                //    var controllerDesc = builder.Metadata.First(x => x.GetType() == typeof(ControllerActionDescriptor)) as ControllerActionDescriptor;
                 //    builder.Metadata.Add(new TopicAttribute(messageBusManager.BusName, controllerDesc.ActionName));
-                //});                
+                //});
 
                 //foreach (var subs in messageBusManager.BusSubscriptions)
                 //{
                 //    endpoints.MapPost(subs.Topic, (Microsoft.AspNetCore.Http.RequestDelegate)subs.Handler).WithTopic(messageBusManager.BusName, subs.Topic);
                 //}
-
             });
             app.UseCloudEvents();
         }

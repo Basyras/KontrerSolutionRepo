@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.PublishSubscribe
+namespace Kontrer.OwnerServer.Shared.MessageBus.PublishSubscribe
 {
     /// <summary>
     /// Should be simple DTO

@@ -1,5 +1,5 @@
-﻿using Kontrer.Shared.DomainDrivenDesign.Domain;
-using MassTransit;
+﻿using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
+using Kontrer.Shared.DomainDrivenDesign.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +9,14 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.DomainDrivenDesign.Application
 {
-    public abstract class CommandHandlerBase<TCommand> : ICommandHandler<TCommand>
+    public abstract class CommandHandlerBase<TCommand> : RequestHandlerBase<TCommand>
         where TCommand : class, ICommand
     {
-        public Task Consume(ConsumeContext<TCommand> context)
-        {
-            return Handle(context.Message);
-        }
-
-        public abstract Task Handle(TCommand command, CancellationToken cancellationToken = default);
     }
 
-    public abstract class CommandHandlerBase<TCommand, TReponse> : ICommandHandler<TCommand, TReponse>
-        where TReponse : class
+    public abstract class CommandHandlerBase<TCommand, TReponse> : RequestHandlerBase<TCommand, TReponse>
         where TCommand : class, ICommand<TReponse>
+        where TReponse : class
     {
-        public Task Consume(ConsumeContext<TCommand> context)
-        {
-            return Handle(context.Message);
-        }
-
-        public abstract Task<TReponse> Handle(TCommand command, CancellationToken cancellationToken = default);
     }
 }

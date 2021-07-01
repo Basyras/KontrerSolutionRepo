@@ -1,6 +1,5 @@
 ﻿using Dapr.Client;
 using FluentAssertions;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
@@ -12,8 +11,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.PublishSubscribe;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse;
+using Kontrer.OwnerServer.Shared.MessageBus.PublishSubscribe;
+using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
+using Kontrer.OwnerServer.Shared.MessageBus;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
 {
