@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.Client
+namespace Kontrer.Shared.MessageBus.Proxy.Client
 {
     public class ProxyMessageBusManager : IMessageBusManager
     {
@@ -25,12 +25,12 @@ namespace Kontrer.Shared.MessageBus.Client
 
         Task IMessageBusManager.PublishAsync<TEvent>(CancellationToken cancellationToken)
         {
-            return SendToProxy<TEvent>(new TEvent());
+            return SendToProxy(new TEvent());
         }
 
         Task IMessageBusManager.PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken)
         {
-            return SendToProxy<TEvent>(data);
+            return SendToProxy(data);
         }
 
         Task<TResponse> IMessageBusManager.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
@@ -45,12 +45,12 @@ namespace Kontrer.Shared.MessageBus.Client
 
         Task IMessageBusManager.SendAsync<TRequest>(CancellationToken cancellationToken)
         {
-            return SendToProxy<TRequest>(new TRequest());
+            return SendToProxy(new TRequest());
         }
 
         Task IMessageBusManager.SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
         {
-            return SendToProxy<TRequest>(request);
+            return SendToProxy(request);
         }
 
         private async Task<TResponse> SendToProxy<TRequest, TResponse>(TRequest request)
