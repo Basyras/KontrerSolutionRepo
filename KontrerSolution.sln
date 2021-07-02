@@ -178,7 +178,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.DomainDriven
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EmailService", "EmailService", "{7EFADF35-137C-4BD2-A8AF-198A03CC3507}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.MessageBus.MasstTransit", "OwnerServer\Shared\MessageBus\Kontrer.OwnerServer.Shared.MessageBus.MasstTransit\Kontrer.OwnerServer.Shared.MessageBus.MasstTransit.csproj", "{72C9077A-CED3-4642-86B4-AD408AC18BCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.MasstTransit", "OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus.MasstTransit\Kontrer.Shared.MessageBus.MasstTransit.csproj", "{72C9077A-CED3-4642-86B4-AD408AC18BCE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus", "OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Kontrer.Shared.MessageBus.csproj", "{2CA09DD3-7281-4474-AF1F-6B3842B555E0}"
 EndProject
