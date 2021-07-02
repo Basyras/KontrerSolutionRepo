@@ -17,6 +17,12 @@ namespace Kontrer.OwnerServer.Shared.MessageBus
         Task PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken = default)
                where TEvent : class, IBusEvent;
 
+        Task SendAsync<TRequest>(CancellationToken cancellationToken = default)
+             where TRequest : class, IRequest, new();
+
+        Task SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+             where TRequest : class, IRequest;
+
         Task<TResponse> RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken = default)
              where TRequest : class, IRequest<TResponse>, new()
              where TResponse : class;

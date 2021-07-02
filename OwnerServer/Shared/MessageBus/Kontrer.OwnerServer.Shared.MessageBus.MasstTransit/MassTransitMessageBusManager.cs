@@ -1,7 +1,4 @@
-﻿using Dapr.Client;
-using FluentAssertions;
-using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
@@ -15,36 +12,16 @@ using Kontrer.OwnerServer.Shared.MessageBus.PublishSubscribe;
 using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
 using Kontrer.OwnerServer.Shared.MessageBus;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
+namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
 {
-    public class DefaultMessageBusManager : IMessageBusManager
+    public class MassTransitMessageBusManager : IMessageBusManager
     {
         private readonly IBusControl _massTransitBus;
-        private readonly IOptions<DaprMessageBusManagerOptions> options;
-        private readonly JsonSerializerOptions serializerOptions;
 
-#warning this manager may need options with pull handlers and register them while creating new instance of massTransitBus inside this ctor, or use options if massTransit has one
-
-        public DefaultMessageBusManager(IBusControl massTransitBus, IOptions<DaprMessageBusManagerOptions> options, JsonSerializerOptions serializerOptions)
+        public MassTransitMessageBusManager(IBusControl massTransitBus)
         {
             _massTransitBus = massTransitBus;
-            this.options = options;
-            this.serializerOptions = serializerOptions;
         }
-
-        //public void RegisterSubscribe<TResponse>(Func<TResponse, Task> asyncHandler, string topicName = null)
-        //{
-        //    //Dapr implementation
-        //    //IsSubscriptionLocked.Should().BeFalse("Can not add new subcription after StartSubscribtions has been called");
-        //    //Microsoft.AspNetCore.Http.RequestDelegate handler = async (HttpContext context) =>
-        //    //{
-        //    //    TResponse requestData = await JsonSerializer.DeserializeAsync<TResponse>(context.Request.Body, serializerOptions);
-        //    //    await asyncHandler.Invoke(requestData);
-        //    //};
-        //    //tempSubscriptions.Add(new BusSubscription(topicName, typeof(TResponse), handler));
-
-        //    //massTransitBus.ConnectConsumer<>()
-        //}
 
         public Task PublishAsync<TEvent>(CancellationToken cancellationToken = default)
         where TEvent : class, IBusEvent, new()
@@ -55,7 +32,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
         public Task PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken = default)
                 where TEvent : class, IBusEvent
         {
-            return _massTransitBus.Publish<TEvent>(data, cancellationToken);
+            return _massTransitBus.Publish(data, cancellationToken);
         }
 
         public async Task<TResponse> RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken = default)
@@ -72,6 +49,16 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus
         {
             var response = await _massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
             return response.Message;
+        }
+
+        async Task IMessageBusManager.SendAsync<TRequest>(CancellationToken cancellationToken)
+        {
+            await _massTransitBus.Publish<TRequest>(cancellationToken);
+        }
+
+        async Task IMessageBusManager.SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+        {
+            await _massTransitBus.Publish<TRequest>(request, cancellationToken);
         }
     }
 }

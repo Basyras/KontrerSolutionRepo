@@ -1,19 +1,18 @@
 ﻿using MassTransit;
 using MassTransit.Monitoring.Health;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
+namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
 {
     public class MasstransitStartupFilter : IStartupFilter
     {
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-            return (IApplicationBuilder app) =>
+            return (app) =>
             {
                 var massTransitBus = app.ApplicationServices.GetRequiredService<IBusControl>();
                 //var health = massTransitBus.CheckHealth();
@@ -25,8 +24,8 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
                 //RabbitMQ must be running here! or it will hold for ever - not true
                 try
                 {
-                    massTransitBus.Start(new TimeSpan(0, 0, 5));
-                    massTransitBus.CheckHealth();
+                    massTransitBus.Start(new TimeSpan(0, 0, 10));
+                    //massTransitBus.CheckHealth();
                 }
                 catch (Exception ex)
                 {

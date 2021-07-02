@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
 {
+    [Obsolete("command are register via masstransit instead of endpoints")]
     public class AspMessageBusStartupFilter<TCommand> : IStartupFilter
     {
         private static readonly Type[] commandIntefaceTypes;

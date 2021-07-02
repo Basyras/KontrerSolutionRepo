@@ -23,21 +23,16 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
             //builder.Services.AddScoped(x => new PricingSwaggerClient("https://localhost:44347/", x.GetRequiredService<HttpClient>()));
 
             //This code could be shared with namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
-            //            builder.Services.AddMassTransit(x =>
-            //            {
-            //                //x.AddConsumers(Assembly.GetEntryAssembly());
-            //                x.UsingRabbitMq((transitContext, rabbitConfig) =>
-            //                {
-            //#warning finish automatic consumer registration
-            //                    //var settings = new EndpointSettings<ConsumerEndpointDefinition<IConsumer>>();
-            //                    //new ConsumerEndpointDefinition<IConsumer>(settings)
-            //                    //var definition = new NamedEndpointDefinition(context.HostingEnvironment.ApplicationName);
-            //                    rabbitConfig.ConfigureEndpoints(transitContext);
-            //                    //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
-            //                    //{
-            //                    //});
-            //                });
-            //            });
+            //builder.Services.AddMassTransit(x =>
+            //{
+            //    x.UsingRabbitMq((transitContext, rabbitConfig) =>
+            //    {
+            //        rabbitConfig.ConfigureEndpoints(transitContext);
+            //        //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
+            //        //{
+            //        //});
+            //    });
+            //});
             await builder.Build().RunAsync();
         }
     }

@@ -11,13 +11,13 @@ using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.Actors;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus;
 using MassTransit;
 using MassTransit.Definition;
 using MassTransit.Monitoring.Health;
 using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit;
 using Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp;
+using Kontrer.OwnerServer.Shared.MessageBus;
+using Kontrer.OwnerServer.Shared.MessageBus.MasstTransit;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
@@ -31,13 +31,13 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
             {
                 webBuilder.ConfigureAspServices();
                 webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
-                webBuilder.ConfigureMicroServiceServices<TStartup>(handlersAssembly);
+                webBuilder.ConfigureMessageBusServices<TStartup>(handlersAssembly);
             });
 
             return hostBuilder;
         }
 
-        public static IWebHostBuilder ConfigureMicroServiceServices<TStartup>(this IWebHostBuilder webBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
+        public static IWebHostBuilder ConfigureMessageBusServices<TStartup>(this IWebHostBuilder webBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
         {
             webBuilder.RegisterHandlersToDI(handlersAssembly);
             webBuilder.ConfigureMassTransitServices(handlersAssembly);

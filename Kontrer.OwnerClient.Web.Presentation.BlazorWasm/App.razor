@@ -12,13 +12,15 @@
 </Router>
 @code
 {
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        //var healthStatus = busControl.WaitForHealthStatus(BusHealthStatus.Healthy, TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+        ///var healthStatus = busControl.WaitForHealthStatus(BusHealthStatus.Healthy, TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
         //if (healthStatus == BusHealthStatus.Unhealthy) throw new Exception("Message bus is unhealthy! (probablly not running)");
-
-        ////RabbitMQ must be running here! or it will hold for ever
+        //RabbitMQ must be running here! or it will hold for ever
         //busControl.Start();
-        return base.OnInitializedAsync();
+        //var num = Test().Result;
+
+        await base.OnInitializedAsync();
     }
+
 }

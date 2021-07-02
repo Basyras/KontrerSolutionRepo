@@ -1,6 +1,7 @@
 ﻿@page "/offers"
 
 <h3>Offers</h3>
+<button @onclick="Click">click</button>
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -9,5 +10,12 @@
         {
 
         }
+    }
+
+    public async Task Click()
+    {
+        var client = new HttpClient();
+        client.BaseAddress = new Uri("https://localhost:44371/api/");
+        var result = await client.GetAsync("Debug");
     }
 }

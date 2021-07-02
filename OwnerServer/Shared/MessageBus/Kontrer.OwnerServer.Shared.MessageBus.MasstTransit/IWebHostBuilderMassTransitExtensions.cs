@@ -1,6 +1,4 @@
 ﻿using Kontrer.OwnerServer.Shared.MessageBus;
-using Kontrer.OwnerServer.Shared.MessageBus.MasstTransit;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MessageBus;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
+namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
 {
     public static class IWebHostBuilderMassTransitExtensions
     {
@@ -20,11 +18,9 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
         {
             webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
             {
+                services.AddSingleton<IMessageBusManager, MassTransitMessageBusManager>();
                 services.AddTransient<IStartupFilter, MasstransitStartupFilter>();
-                services.AddSingleton<IMessageBusManager, DefaultMessageBusManager>();
-
                 services.AddHealthChecks();
-
                 services.AddMassTransit(x =>
                 {
                     //x.AddConsumers(consumerAssemblies);
@@ -33,6 +29,9 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.MassTransit
                     {
                         rabbitConfig.ConfigureEndpoints(transitContext);
                         //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
+                        //{
+                        //});
+                        //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, ep =>
                         //{
                         //});
                     });
