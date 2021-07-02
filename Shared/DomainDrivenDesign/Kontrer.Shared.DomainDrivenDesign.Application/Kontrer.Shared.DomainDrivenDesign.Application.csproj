@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\OwnerServer\Shared\MessageBus\Kontrer.OwnerServer.Shared.MessageBus\Kontrer.OwnerServer.Shared.MessageBus.csproj" />
+    <ProjectReference Include="..\..\..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Kontrer.Shared.MessageBus.csproj" />
     <ProjectReference Include="..\Kontrer.Shared.DomainDrivenDesign.Domain\Kontrer.Shared.DomainDrivenDesign.Domain.csproj" />
   </ItemGroup>
 

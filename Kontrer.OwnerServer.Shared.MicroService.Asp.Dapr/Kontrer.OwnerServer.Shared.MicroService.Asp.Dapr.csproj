@@ -18,7 +18,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Dapr\Kontrer.OwnerServer.Shared.MicroService.Dapr.csproj" />
-		<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.OwnerServer.Shared.MessageBus\Kontrer.OwnerServer.Shared.MessageBus.csproj" />
+		<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Kontrer.Shared.MessageBus.csproj" />
 	</ItemGroup>
 
 </Project>
