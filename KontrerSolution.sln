@@ -184,7 +184,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandBox", "SandBox", "{4F31B45E-F786-4BC6-9F17-B2ED65239D24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandBox.AspApiApp", "SandBox.AspApiApp\SandBox.AspApiApp.csproj", "{82303C2A-3125-467D-8D3C-05601B1BEDA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox.AspApiApp", "SandBox.AspApiApp\SandBox.AspApiApp.csproj", "{82303C2A-3125-467D-8D3C-05601B1BEDA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.Shared.MessageBus.Client", "Shared\MessageBus\Kontrer.Shared.MessageBus.Client\Kontrer.Shared.MessageBus.Client.csproj", "{4BA810C6-302F-4B3E-8C92-696E800C2E41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -408,6 +410,10 @@ Global
 		{82303C2A-3125-467D-8D3C-05601B1BEDA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82303C2A-3125-467D-8D3C-05601B1BEDA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82303C2A-3125-467D-8D3C-05601B1BEDA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BA810C6-302F-4B3E-8C92-696E800C2E41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BA810C6-302F-4B3E-8C92-696E800C2E41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BA810C6-302F-4B3E-8C92-696E800C2E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BA810C6-302F-4B3E-8C92-696E800C2E41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -498,6 +504,7 @@ Global
 		{72C9077A-CED3-4642-86B4-AD408AC18BCE} = {042C92C8-B6C6-4602-8762-0B7A4D75CF8A}
 		{2CA09DD3-7281-4474-AF1F-6B3842B555E0} = {042C92C8-B6C6-4602-8762-0B7A4D75CF8A}
 		{82303C2A-3125-467D-8D3C-05601B1BEDA6} = {4F31B45E-F786-4BC6-9F17-B2ED65239D24}
+		{4BA810C6-302F-4B3E-8C92-696E800C2E41} = {042C92C8-B6C6-4602-8762-0B7A4D75CF8A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}
