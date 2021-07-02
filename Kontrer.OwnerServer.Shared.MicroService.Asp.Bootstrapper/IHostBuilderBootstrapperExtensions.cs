@@ -15,9 +15,9 @@ using MassTransit;
 using MassTransit.Definition;
 using MassTransit.Monitoring.Health;
 using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp;
-using Kontrer.OwnerServer.Shared.MessageBus;
-using Kontrer.OwnerServer.Shared.MessageBus.MasstTransit;
+using Kontrer.Shared.MessageBus;
+using Kontrer.Shared.MessageBus.Asp;
+using Kontrer.Shared.MessageBus.MasstTransit;
 
 namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {

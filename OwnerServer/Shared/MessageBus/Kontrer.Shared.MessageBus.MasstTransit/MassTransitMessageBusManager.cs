@@ -8,11 +8,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Kontrer.OwnerServer.Shared.MessageBus.PublishSubscribe;
-using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
-using Kontrer.OwnerServer.Shared.MessageBus;
+using Kontrer.Shared.MessageBus.PublishSubscribe;
+using Kontrer.Shared.MessageBus.RequestResponse;
+using Kontrer.Shared.MessageBus;
 
-namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
+namespace Kontrer.Shared.MessageBus.MasstTransit
 {
     public class MassTransitMessageBusManager : IMessageBusManager
     {
@@ -58,7 +58,7 @@ namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
 
         async Task IMessageBusManager.SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
         {
-            await _massTransitBus.Publish<TRequest>(request, cancellationToken);
+            await _massTransitBus.Publish(request, cancellationToken);
         }
     }
 }

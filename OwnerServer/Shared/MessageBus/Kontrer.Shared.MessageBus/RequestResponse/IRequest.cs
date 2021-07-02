@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MessageBus.RequestResponse
+namespace Kontrer.Shared.MessageBus.RequestResponse
 {
     public interface IRequest<TResponse>
         where TResponse : class

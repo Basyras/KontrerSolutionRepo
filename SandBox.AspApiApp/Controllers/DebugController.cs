@@ -1,5 +1,5 @@
 ﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.OwnerServer.Shared.MessageBus;
+using Kontrer.Shared.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

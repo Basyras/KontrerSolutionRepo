@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
-using Kontrer.Shared.DomainDrivenDesign.Domain;
+﻿using Kontrer.Shared.DomainDrivenDesign.Domain;
+using Kontrer.Shared.MessageBus.RequestResponse;
 using System;
 using System.Collections.Generic;
 using System.Linq;

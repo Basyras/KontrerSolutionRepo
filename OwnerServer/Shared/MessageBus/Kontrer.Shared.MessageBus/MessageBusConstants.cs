@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MessageBus
+namespace Kontrer.Shared.MessageBus
 {
     public static class MessageBusConstants
     {

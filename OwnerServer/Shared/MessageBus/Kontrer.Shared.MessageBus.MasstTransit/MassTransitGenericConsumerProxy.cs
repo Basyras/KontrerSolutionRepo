@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
+﻿using Kontrer.Shared.MessageBus.RequestResponse;
 using MassTransit;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
+namespace Kontrer.Shared.MessageBus.MasstTransit
 {
     public class MassTransitGenericConsumerProxy<TRequest> : IConsumer<TRequest>
         where TRequest : class, IRequest
@@ -38,7 +38,7 @@ namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
         public async Task Consume(ConsumeContext<TRequest> context)
         {
             var response = await requestHandler.Handle(context.Message);
-            await context.RespondAsync<TResponse>(response);
+            await context.RespondAsync(response);
         }
     }
 }

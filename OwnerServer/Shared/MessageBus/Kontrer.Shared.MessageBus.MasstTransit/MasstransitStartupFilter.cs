@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
+namespace Kontrer.Shared.MessageBus.MasstTransit
 {
     public class MasstransitStartupFilter : IStartupFilter
     {

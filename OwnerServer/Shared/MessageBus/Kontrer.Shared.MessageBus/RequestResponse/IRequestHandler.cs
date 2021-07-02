@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MessageBus.RequestResponse
+namespace Kontrer.Shared.MessageBus.RequestResponse
 {
     public interface IRequestHandler<TRequest> where TRequest : IRequest
     {

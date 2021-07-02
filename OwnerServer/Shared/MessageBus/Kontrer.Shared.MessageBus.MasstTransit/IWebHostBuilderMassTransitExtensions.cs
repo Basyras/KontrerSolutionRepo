@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.Shared.MessageBus;
+﻿using Kontrer.Shared.MessageBus;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,13 +10,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MessageBus.MasstTransit
+namespace Kontrer.Shared.MessageBus.MasstTransit
 {
     public static class IWebHostBuilderMassTransitExtensions
     {
         public static IWebHostBuilder ConfigureMassTransitServices(this IWebHostBuilder webBuilder, Assembly handlersAssembly)
         {
-            webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
+            webBuilder.ConfigureServices((context, services) =>
             {
                 services.AddSingleton<IMessageBusManager, MassTransitMessageBusManager>();
                 services.AddTransient<IStartupFilter, MasstransitStartupFilter>();

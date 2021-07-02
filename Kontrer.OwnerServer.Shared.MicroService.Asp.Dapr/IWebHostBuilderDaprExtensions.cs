@@ -1,7 +1,7 @@
 ﻿using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.OwnerServer.Shared.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
 using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
+using Kontrer.Shared.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

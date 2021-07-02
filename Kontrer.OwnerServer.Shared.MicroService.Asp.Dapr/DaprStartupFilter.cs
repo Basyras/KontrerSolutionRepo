@@ -1,6 +1,6 @@
 ﻿using Dapr;
 using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.OwnerServer.Shared.MessageBus;
+using Kontrer.Shared.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Controllers;

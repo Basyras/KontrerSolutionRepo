@@ -1,17 +1,17 @@
-﻿using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
-using Kontrer.Shared.Helpers;
+﻿using Kontrer.Shared.Helpers;
+using Kontrer.Shared.MessageBus.RequestResponse;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
+namespace Kontrer.Shared.MessageBus.Asp
 {
     public static class IServiceCollectionMessageBusExtensions
     {
         public static IWebHostBuilder RegisterHandlersToDI(this IWebHostBuilder webBuilder, Assembly handlersAssembly)
         {
-            webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
+            webBuilder.ConfigureServices((context, services) =>
             {
                 services.Scan(scan =>
                 scan.FromAssemblies(handlersAssembly)

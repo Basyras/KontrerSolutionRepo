@@ -1,6 +1,6 @@
-﻿using Kontrer.OwnerServer.Shared.MessageBus.RequestResponse;
-using Kontrer.Shared.DomainDrivenDesign.Application;
+﻿using Kontrer.Shared.DomainDrivenDesign.Application;
 using Kontrer.Shared.DomainDrivenDesign.Domain;
+using Kontrer.Shared.MessageBus.RequestResponse;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
+namespace Kontrer.Shared.MessageBus.Asp
 {
     [Obsolete("command are register via masstransit instead of endpoints")]
     public class AspMessageBusStartupFilter<TCommand> : IStartupFilter
@@ -29,7 +29,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp
 
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-            return (IApplicationBuilder app) =>
+            return (app) =>
             {
                 Configure(app);
                 next(app);
