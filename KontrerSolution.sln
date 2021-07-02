@@ -168,7 +168,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.Repositories
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.Shared.MessageBus", "Kontrer.Shared.MessageBus", "{042C92C8-B6C6-4602-8762-0B7A4D75CF8A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp", "OwnerServer\MicroService\MessageBus\Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp\Kontrer.OwnerServer.Shared.MicroService.MessageBus.Asp.csproj", "{B8EA127F-6F93-4F6B-9B77-A57979D485D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.Asp", "OwnerServer\MicroService\MessageBus\Kontrer.Shared.MessageBus.Asp\Kontrer.Shared.MessageBus.Asp.csproj", "{B8EA127F-6F93-4F6B-9B77-A57979D485D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.Shared.DomainDrivenDesign", "Kontrer.Shared.DomainDrivenDesign", "{5147C6C2-2A83-4A2D-895C-88E694494500}"
 EndProject
