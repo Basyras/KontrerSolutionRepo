@@ -1,4 +1,5 @@
 ﻿using Kontrer.Shared.MessageBus.RequestResponse;
+using Kontrer.Shared.MessageBux.Proxy.Shared;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -8,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.MessageBus.Proxy.Client
 {
-    public class ProxyMessageBusManager : IMessageBusManager
+    public class ProxyClientMessageBusManager : IMessageBusManager
     {
         private readonly HttpClient httpClient;
+        private readonly IRequestSerializer serializer;
 
-        public ProxyMessageBusManager(HttpClient httpClient)
+        public ProxyClientMessageBusManager(Uri busProxy, IRequestSerializer serializer) : this(new HttpClient() { BaseAddress = busProxy }, serializer)
         {
-            this.httpClient = httpClient;
         }
 
-        public ProxyMessageBusManager(Uri busProxy)
+        public ProxyClientMessageBusManager(HttpClient httpClient, IRequestSerializer serializer)
         {
-            httpClient = new HttpClient();
-            httpClient.BaseAddress = busProxy;
+            this.httpClient = httpClient;
+            this.serializer = serializer;
         }
 
         Task IMessageBusManager.PublishAsync<TEvent>(CancellationToken cancellationToken)
@@ -55,7 +56,7 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
 
         private async Task<TResponse> SendToProxy<TRequest, TResponse>(TRequest request)
         {
-            var json = JsonSerializer.Serialize(request);
+            var json = serializer.Serialize(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var result = await httpClient.PostAsync("", content);
             string resultContent = await result.Content.ReadAsStringAsync();
@@ -64,7 +65,7 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
 
         private async Task SendToProxy<TRequest>(TRequest request)
         {
-            var json = JsonSerializer.Serialize(request);
+            var json = serializer.Serialize(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var result = await httpClient.PostAsync("", content);
             string resultContent = await result.Content.ReadAsStringAsync();
