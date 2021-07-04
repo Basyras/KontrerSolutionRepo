@@ -5,10 +5,25 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBux.Proxy.Shared
+namespace Kontrer.Shared.MessageBus.Proxy.Shared
 {
     public class JsonRequestSerializer : IRequestSerializer
     {
+        public TRequest Deserialize<TRequest>(byte[] request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Serialize(object request, Type requestType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Serialize(byte[] request, Type requestType)
+        {
+            throw new NotImplementedException();
+        }
+
         TRequest IRequestSerializer.Deserialize<TRequest>(string json)
         {
             return JsonSerializer.Deserialize<TRequest>(json);
@@ -16,7 +31,7 @@ namespace Kontrer.Shared.MessageBux.Proxy.Shared
 
         string IRequestSerializer.Serialize<TRequest>(TRequest request)
         {
-            return JsonSerializer.Serialize<TRequest>(request);
+            return JsonSerializer.Serialize(request);
         }
     }
 }

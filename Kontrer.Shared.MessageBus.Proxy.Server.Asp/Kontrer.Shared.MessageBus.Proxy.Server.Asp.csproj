@@ -1,10 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OwnerServer\MicroService\MessageBus\Kontrer.Shared.MessageBus.Asp\Kontrer.Shared.MessageBus.Asp.csproj" />
     <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Kontrer.Shared.MessageBus.csproj" />
     <ProjectReference Include="..\Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Shared\Kontrer.Shared.MessageBus.Proxy.Shared.csproj" />
   </ItemGroup>

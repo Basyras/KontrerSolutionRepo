@@ -26,6 +26,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OwnerClient\Application\Kontrer.OwnerClient.Application\Kontrer.OwnerClient.Application.csproj" />
+		<ProjectReference Include="..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
+		<ProjectReference Include="..\Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Kontrer.Shared.MessageBus.Proxy.Client.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

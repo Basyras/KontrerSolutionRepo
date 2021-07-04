@@ -1,7 +1,10 @@
-﻿using Kontrer.Shared.MessageBus.RequestResponse;
-using Kontrer.Shared.MessageBux.Proxy.Shared;
+﻿using Kontrer.Shared.MessageBus.Proxy.Shared;
+using Kontrer.Shared.MessageBus.RequestResponse;
+using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -12,15 +15,13 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
     public class ProxyClientMessageBusManager : IMessageBusManager
     {
         private readonly HttpClient httpClient;
+        private readonly IOptions<MessageBusProxyClientOptions> options;
         private readonly IRequestSerializer serializer;
 
-        public ProxyClientMessageBusManager(Uri busProxy, IRequestSerializer serializer) : this(new HttpClient() { BaseAddress = busProxy }, serializer)
+        public ProxyClientMessageBusManager(IOptions<MessageBusProxyClientOptions> options, IRequestSerializer serializer)
         {
-        }
-
-        public ProxyClientMessageBusManager(HttpClient httpClient, IRequestSerializer serializer)
-        {
-            this.httpClient = httpClient;
+            this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
+            this.options = options;
             this.serializer = serializer;
         }
 
@@ -54,6 +55,11 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
             return SendToProxy(request);
         }
 
+        Task IMessageBusManager.SendAsync(Type requestType, object request = null, CancellationToken cancellationToken = default)
+        {
+            return SendToProxy(requestType, request);
+        }
+
         private async Task<TResponse> SendToProxy<TRequest, TResponse>(TRequest request)
         {
             var json = serializer.Serialize(request);
@@ -63,12 +69,33 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
             return JsonSerializer.Deserialize<TResponse>(resultContent);
         }
 
-        private async Task SendToProxy<TRequest>(TRequest request)
+        private Task SendToProxy<TRequest>(TRequest request)
         {
-            var json = serializer.Serialize(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var result = await httpClient.PostAsync("", content);
-            string resultContent = await result.Content.ReadAsStringAsync();
+            return SendToProxy(request.GetType(), request);
         }
+
+        private async Task SendToProxy(Type requestType, object request)
+        {
+            var proxyRequestJson = serializer.Serialize(new ProxyRequest(requestType.Name, serializer.Serialize(request, requestType)));
+            var httpContent = new StringContent(proxyRequestJson, Encoding.UTF8, "application/json");
+            var httpResult = await httpClient.PostAsync("", httpContent);
+            string resultContent = await httpResult.Content.ReadAsStringAsync();
+        }
+
+        //private static Dictionary<string, object> DictionaryFromType(object atype)
+        //{
+        //    if (atype == null)
+        //        return new Dictionary<string, object>();
+
+        //    Type t = atype.GetType();
+        //    PropertyInfo[] props = t.GetProperties();
+        //    Dictionary<string, object> dict = new Dictionary<string, object>();
+        //    foreach (PropertyInfo prp in props)
+        //    {
+        //        object value = prp.GetValue(atype, new object[] { });
+        //        dict.Add(prp.Name, value);
+        //    }
+        //    return dict;
+        //}
     }
 }

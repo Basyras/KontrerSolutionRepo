@@ -1,3 +1,6 @@
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
+using Kontrer.Shared.MessageBus;
+using Kontrer.Shared.MessageBus.Proxy.Client;
 using MassTransit;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +36,10 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
             //        //});
             //    });
             //});
+
+            builder.Services.AddMessageBus()
+                .UseProxy()
+                .SetHostUri(new Uri(""));
             await builder.Build().RunAsync();
         }
     }

@@ -192,7 +192,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proxy", "Proxy", "{6594F570
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.Shared.MessageBus.Proxy.Shared", "Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Shared\Kontrer.Shared.MessageBus.Proxy.Shared.csproj", "{AAB4B617-0454-437A-A871-5902E701DA60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.Shared.MessageBus.Proxy.Server", "Kontrer.Shared.MessageBus.Proxy.Server\Kontrer.Shared.MessageBus.Proxy.Server.csproj", "{F92EC862-D81B-4759-953F-81AA39DA2B3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.Shared.MessageBus.Proxy.Server.Asp", "Kontrer.Shared.MessageBus.Proxy.Server.Asp\Kontrer.Shared.MessageBus.Proxy.Server.Asp.csproj", "{F92EC862-D81B-4759-953F-81AA39DA2B3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

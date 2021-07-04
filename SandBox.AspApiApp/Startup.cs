@@ -58,6 +58,7 @@ namespace SandBox.AspApiApp
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapMessageBusProxyServer();
                 //endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
