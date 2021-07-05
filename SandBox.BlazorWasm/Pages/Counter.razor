@@ -1,0 +1,24 @@
+﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
+@page "/counter"
+@inject Kontrer.Shared.MessageBus.IMessageBusManager bus;
+
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="SendCommandAction">SendCommand</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    private async void SendCommandAction()
+    {
+        //await bus.RequestAsync<CancelAccommodationOrderCommand>(new(5, null, true), default);
+        var results = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
+    }
+}

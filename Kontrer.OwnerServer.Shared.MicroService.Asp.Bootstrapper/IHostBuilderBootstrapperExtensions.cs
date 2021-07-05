@@ -31,6 +31,10 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
             {
                 webBuilder.ConfigureAspServices();
                 webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
+                webBuilder.ConfigureServices(services =>
+                {
+                    services.AddMessageBus().RegisterHandlers(handlersAssembly);
+                });
                 webBuilder.ConfigureMessageBusServices<TStartup>(handlersAssembly);
             });
 
@@ -39,7 +43,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 
         public static IWebHostBuilder ConfigureMessageBusServices<TStartup>(this IWebHostBuilder webBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
         {
-            webBuilder.RegisterHandlersToDI(handlersAssembly);
+            //webBuilder.RegisterHandlersToDI(handlersAssembly);
             webBuilder.ConfigureMassTransitServices(handlersAssembly);
             webBuilder.ConfigureDaprServices((MicroserviceBuilder serviceBuilder) =>
             {

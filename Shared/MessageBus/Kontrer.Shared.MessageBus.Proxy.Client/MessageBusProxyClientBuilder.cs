@@ -24,7 +24,7 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
             return this;
         }
 
-        public MessageBusProxyClientBuilder SetHostUri(Uri hostUri)
+        public MessageBusProxyClientBuilder SetProxyServerUri(Uri hostUri)
         {
             services.Configure<MessageBusProxyClientOptions>(x => x.ProxyHostUri = hostUri);
             return this;

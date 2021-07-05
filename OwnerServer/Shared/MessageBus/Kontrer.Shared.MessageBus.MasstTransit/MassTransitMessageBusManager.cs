@@ -51,6 +51,17 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             return response.Message;
         }
 
+        async Task IMessageBusManager.SendAsync(Type requestType, object request, CancellationToken cancellationToken)
+        {
+            await _massTransitBus.Publish(request, requestType, cancellationToken);
+        }
+
+        async Task IMessageBusManager.SendAsync(Type requestType, CancellationToken cancellationToken)
+        {
+            var request = Activator.CreateInstance(requestType);
+            await _massTransitBus.Publish(request, requestType, cancellationToken);
+        }
+
         async Task IMessageBusManager.SendAsync<TRequest>(CancellationToken cancellationToken)
         {
             await _massTransitBus.Publish<TRequest>(cancellationToken);

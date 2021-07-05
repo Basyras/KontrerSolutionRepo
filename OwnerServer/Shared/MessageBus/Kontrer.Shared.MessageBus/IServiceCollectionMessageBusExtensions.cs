@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Kontrer.Shared.MessageBus;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionMessageBusExtensions
     {

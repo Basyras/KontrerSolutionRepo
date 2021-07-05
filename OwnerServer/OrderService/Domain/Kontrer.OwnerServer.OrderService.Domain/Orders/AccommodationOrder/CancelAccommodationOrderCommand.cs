@@ -9,8 +9,19 @@ namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
 {
     public record CancelAccommodationOrderCommand(int OrderId, string ReasonMessage, bool IsCanceledByCustomer) : ICommand
     {
-        //public CancelAccommodationOrderCommand() : this(99, "99", false)
-        //{
-        //}
     }
+
+    //public class CancelAccommodationOrderCommand : ICommand
+    //{
+    //    public CancelAccommodationOrderCommand(int orderId, string reasonMessage, bool isCanceledByCustomer)
+    //    {
+    //        OrderId = orderId;
+    //        ReasonMessage = reasonMessage;
+    //        IsCanceledByCustomer = isCanceledByCustomer;
+    //    }
+
+    //    public int OrderId { get; set; }
+    //    public string ReasonMessage { get; set; }
+    //    public bool IsCanceledByCustomer { get; set; }
+    //}
 }

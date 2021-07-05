@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,5 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
 {
-    public class GetNewAccommodationOrdersResponse
-    {
-    }
+    public record GetNewAccommodationOrdersResponse(Dictionary<int, AccommodationOrderEntity> newOrders);
 }

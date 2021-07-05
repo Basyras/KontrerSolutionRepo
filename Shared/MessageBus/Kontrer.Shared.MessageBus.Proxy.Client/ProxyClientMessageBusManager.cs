@@ -55,9 +55,14 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
             return SendToProxy(request);
         }
 
-        Task IMessageBusManager.SendAsync(Type requestType, object request = null, CancellationToken cancellationToken = default)
+        Task IMessageBusManager.SendAsync(Type requestType, object request, CancellationToken cancellationToken)
         {
             return SendToProxy(requestType, request);
+        }
+
+        Task IMessageBusManager.SendAsync(Type requestType, CancellationToken cancellationToken)
+        {
+            return SendToProxy(requestType);
         }
 
         private async Task<TResponse> SendToProxy<TRequest, TResponse>(TRequest request)
@@ -71,12 +76,14 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
 
         private Task SendToProxy<TRequest>(TRequest request)
         {
-            return SendToProxy(request.GetType(), request);
+            return SendToProxy(typeof(TRequest), request);
         }
 
         private async Task SendToProxy(Type requestType, object request)
         {
-            var proxyRequestJson = serializer.Serialize(new ProxyRequest(requestType.Name, serializer.Serialize(request, requestType)));
+            var requestJson = serializer.Serialize(request, requestType);
+            var proxyRequest = new ProxyRequest(requestType.AssemblyQualifiedName, null, requestJson);
+            var proxyRequestJson = serializer.Serialize(proxyRequest);
             var httpContent = new StringContent(proxyRequestJson, Encoding.UTF8, "application/json");
             var httpResult = await httpClient.PostAsync("", httpContent);
             string resultContent = await httpResult.Content.ReadAsStringAsync();

@@ -5,7 +5,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj" />
 	  <ProjectReference Include="..\..\..\..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Domain\Kontrer.Shared.DomainDrivenDesign.Domain.csproj" />
 	  <ProjectReference Include="..\..\..\..\Shared\Repositories\Kontrer.Shared.Repositories\Kontrer.Shared.Repositories.csproj" />
 	</ItemGroup>

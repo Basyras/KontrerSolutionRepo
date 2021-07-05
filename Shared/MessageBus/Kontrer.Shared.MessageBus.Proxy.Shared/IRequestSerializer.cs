@@ -8,6 +8,8 @@ namespace Kontrer.Shared.MessageBus.Proxy.Shared
 
         TRequest Deserialize<TRequest>(byte[] request);
 
+        object Deserialize(string json, Type requestType);
+
         string Serialize<TRequest>(TRequest request);
 
         string Serialize(object request, Type requestType);

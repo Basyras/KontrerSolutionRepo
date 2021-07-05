@@ -20,10 +20,12 @@ namespace Kontrer.Shared.MessageBus
         Task SendAsync<TRequest>(CancellationToken cancellationToken = default)
              where TRequest : class, IRequest, new();
 
-        Task SendAsync(Type requestType, object request = null, CancellationToken cancellationToken = default);
-
         Task SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken = default)
              where TRequest : class, IRequest;
+
+        Task SendAsync(Type requestType, object request, CancellationToken cancellationToken = default);
+
+        Task SendAsync(Type requestType, CancellationToken cancellationToken = default);
 
         Task<TResponse> RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken = default)
              where TRequest : class, IRequest<TResponse>, new()

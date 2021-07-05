@@ -14,6 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\Kontrer.Shared\Kontrer.Shared.csproj" />
 	  <ProjectReference Include="..\..\..\..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Application\Kontrer.Shared.DomainDrivenDesign.Application.csproj" />
 	  <ProjectReference Include="..\..\..\..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Domain\Kontrer.Shared.DomainDrivenDesign.Domain.csproj" />
 	</ItemGroup>

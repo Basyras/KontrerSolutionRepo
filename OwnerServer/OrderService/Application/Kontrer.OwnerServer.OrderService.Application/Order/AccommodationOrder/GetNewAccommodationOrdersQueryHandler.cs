@@ -1,4 +1,5 @@
-﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
+﻿using Kontrer.OwnerServer.OrderService.Application.Interfaces;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.Shared.DomainDrivenDesign.Application;
 using Kontrer.Shared.DomainDrivenDesign.Domain;
 using System;
@@ -12,9 +13,18 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
 {
     public class GetNewAccommodationOrdersQueryHandler : QueryHandlerBase<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>
     {
-        public override Task<GetNewAccommodationOrdersResponse> Handle(GetNewAccommodationOrdersQuery command, CancellationToken cancellationToken = default)
+        private readonly IAccommodationOrderRepository repository;
+
+        public GetNewAccommodationOrdersQueryHandler(IAccommodationOrderRepository repository)
         {
-            throw new NotImplementedException();
+            this.repository = repository;
+        }
+
+        public override async Task<GetNewAccommodationOrdersResponse> Handle(GetNewAccommodationOrdersQuery command, CancellationToken cancellationToken = default)
+        {
+            var orders = await repository.GetNewOrdersAsync();
+            var response = new GetNewAccommodationOrdersResponse(orders);
+            return response;
         }
     }
 }

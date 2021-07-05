@@ -11,17 +11,22 @@ namespace Kontrer.Shared.MessageBus.Proxy.Shared
     {
         public TRequest Deserialize<TRequest>(byte[] request)
         {
-            throw new NotImplementedException();
+            return JsonSerializer.Deserialize<TRequest>(request);
+        }
+
+        public object Deserialize(string json, Type requestType)
+        {
+            return JsonSerializer.Deserialize(json, requestType);
         }
 
         public string Serialize(object request, Type requestType)
         {
-            throw new NotImplementedException();
+            return JsonSerializer.Serialize(request, requestType);
         }
 
         public string Serialize(byte[] request, Type requestType)
         {
-            throw new NotImplementedException();
+            return JsonSerializer.Serialize(request, requestType);
         }
 
         TRequest IRequestSerializer.Deserialize<TRequest>(string json)

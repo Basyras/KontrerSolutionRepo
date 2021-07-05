@@ -1,6 +1,4 @@
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.Shared.MessageBus;
-using Kontrer.Shared.MessageBus.Proxy.Client;
 using MassTransit;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +19,6 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
             //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             //builder.Services.AddScoped(x => new PricingSwaggerClient("https://localhost:44347/", x.GetRequiredService<HttpClient>()));
 
@@ -37,9 +34,9 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
             //    });
             //});
 
-            builder.Services.AddMessageBus()
-                .UseProxy()
-                .SetHostUri(new Uri(""));
+            //builder.Services.AddMessageBus()
+            //    .UseProxy()
+            //    .SetHostUri(new Uri(""));
             await builder.Build().RunAsync();
         }
     }

@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Kontrer.Shared.Helpers;
+using Kontrer.Shared.MessageBus.RequestResponse;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +17,17 @@ namespace Kontrer.Shared.MessageBus
         public MessageBusBuilder(IServiceCollection services)
         {
             this.services = services;
+        }
+
+        public MessageBusBuilder RegisterHandlers(Assembly handlersAssembly)
+        {
+            this.services.Scan(scan =>
+            scan.FromAssemblies(handlersAssembly)
+            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>))).As(handler => new Type[1] { typeof(IRequestHandler<>).MakeGenericType(GenericHelper.GetGenericTypeRecursive(handler, typeof(IRequestHandler<>))) }).WithScopedLifetime()
+            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>))).As(handler => new Type[1] { typeof(IRequestHandler<,>).MakeGenericType(GenericHelper.GetGenericTypeRecursive(handler, typeof(IRequestHandler<,>))) }).WithScopedLifetime()
+            );
+
+            return this;
         }
     }
 }

@@ -28,7 +28,8 @@ namespace Microsoft.Extensions.DependencyInjection
             var bytes = mem.ToArray();
             var proxyRequest = serializer.Deserialize<ProxyRequest>(bytes);
             var requestType = Type.GetType(proxyRequest.RequestType);
-            await messageBus.SendAsync(requestType);
+            var request = serializer.Deserialize(proxyRequest.Request, requestType);
+            await messageBus.SendAsync(requestType, request);
             //await context.Response.WriteAsync(serializer.Serialize(busResponse));
         }
     }

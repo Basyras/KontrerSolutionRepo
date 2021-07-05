@@ -1,4 +1,5 @@
 using Kontrer.OwnerServer.Shared.Asp;
+using Kontrer.Shared.MessageBus.MasstTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace SandBox.AspApiApp
@@ -31,6 +33,9 @@ namespace SandBox.AspApiApp
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SandBoxApp", Version = "v1" });
             //});
+
+            services.AddMessageBusProxyServer();
+            //.UseMassTransit(Assembly.GetExecutingAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,9 +63,9 @@ namespace SandBox.AspApiApp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapMessageBusProxyServer();
                 //endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapMessageBusProxyServer();
             });
         }
     }

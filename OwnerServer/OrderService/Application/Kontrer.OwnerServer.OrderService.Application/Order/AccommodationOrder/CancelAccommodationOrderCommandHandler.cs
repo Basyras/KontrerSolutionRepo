@@ -26,7 +26,11 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
 
         public override async Task Handle(CancelAccommodationOrderCommand command, CancellationToken cancellationToken = default)
         {
-            var order = await orderRepository.GetAsync(command.OrderId);
+            var order = await orderRepository.TryGetAsync(command.OrderId);
+            if (order == null)
+            {
+                throw new InvalidOperationException($"Could not remove order with id: {command.OrderId}. Order does not exist");
+            }
             order.State = command.IsCanceledByCustomer ? OrderStates.CanceledByCustomer : OrderStates.CanceledByOwner;
             await orderRepository.UpdateAsync(order);
 
