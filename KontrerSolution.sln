@@ -194,7 +194,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.Proxy.Server.Asp", "Kontrer.Shared.MessageBus.Proxy.Server.Asp\Kontrer.Shared.MessageBus.Proxy.Server.Asp.csproj", "{F92EC862-D81B-4759-953F-81AA39DA2B3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandBox.BlazorWasm", "SandBox.BlazorWasm\SandBox.BlazorWasm.csproj", "{17659D5F-8A54-46E7-94A8-530319433D7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox.BlazorWasm", "SandBox.BlazorWasm\SandBox.BlazorWasm.csproj", "{17659D5F-8A54-46E7-94A8-530319433D7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

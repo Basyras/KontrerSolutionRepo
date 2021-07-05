@@ -31,6 +31,10 @@ namespace Kontrer.Shared.MessageBus
              where TRequest : class, IRequest<TResponse>, new()
              where TResponse : class;
 
+        Task<object> RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken = default);
+
+        Task<object> RequestAsync(Type requestType, object request, Type responseType, CancellationToken cancellationToken = default);
+
         Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : class, IRequest<TResponse>
             where TResponse : class;

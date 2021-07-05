@@ -1,0 +1,11 @@
+﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
+<border>
+    <statusRibbon />
+    @Order.Id
+    <h2>FirstName</h2> <h2>SecondName</h2>
+    @Order.IssueDate
+</border>
+
+@code {
+    [Parameter] public AccommodationOrderEntity Order { get; set; }
+}

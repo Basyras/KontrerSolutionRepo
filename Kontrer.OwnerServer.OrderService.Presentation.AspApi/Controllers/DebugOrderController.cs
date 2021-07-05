@@ -1,6 +1,5 @@
 ﻿using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
 using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
 using Kontrer.Shared.MessageBus;
 using Microsoft.AspNetCore.Http;

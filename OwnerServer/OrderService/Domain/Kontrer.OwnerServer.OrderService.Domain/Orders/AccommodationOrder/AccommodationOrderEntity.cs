@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders
+namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
 {
     public class AccommodationOrderEntity : OrderEntityBase<AccommodationRequirement>
     {

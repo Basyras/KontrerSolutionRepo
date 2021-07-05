@@ -1,24 +1,39 @@
 ﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 @page "/offers"
-@inject Kontrer.Shared.MessageBus.IMessageBusManager bus
-<h3>Offers</h3>
-<button @onclick="Click">click</button>
+@inject Kontrer.Shared.MessageBus.IMessageBusManager bus;
+<h3>Offers 33</h3>
+
+<offersGrid>
+    @foreach (var newAcco in NewAccommodations)
+    {
+        <AccommodationItem Order="@newAcco" />
+    }
+    <div>
+        1
+    </div>
+    <div>
+        1
+    </div>
+</offersGrid>
+
+<button @onclick="Refresh">Refresh</button>
 
 @code {
+    public List<AccommodationOrderEntity> NewAccommodations { get; set; } = new List<AccommodationOrderEntity>();
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-
+            var busResponse = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
+            NewAccommodations = busResponse.newOrders.Values.ToList();
         }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
-    public async Task Click()
+    public async Task Refresh()
     {
-
-        //await bus.SendAsync<CancelAccommodationOrderCommand>();
-        //var client = new HttpClient();
-        //client.BaseAddress = new Uri("https://localhost:44371/api/");
-        //var result = await client.GetAsync("");
+        var busResponse = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
+        NewAccommodations = busResponse.newOrders.Values.ToList();
     }
 }

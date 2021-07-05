@@ -23,8 +23,8 @@ namespace Kontrer.Shared.MessageBus
         {
             this.services.Scan(scan =>
             scan.FromAssemblies(handlersAssembly)
-            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>))).As(handler => new Type[1] { typeof(IRequestHandler<>).MakeGenericType(GenericHelper.GetGenericTypeRecursive(handler, typeof(IRequestHandler<>))) }).WithScopedLifetime()
-            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>))).As(handler => new Type[1] { typeof(IRequestHandler<,>).MakeGenericType(GenericHelper.GetGenericTypeRecursive(handler, typeof(IRequestHandler<,>))) }).WithScopedLifetime()
+            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>))).As(handler => new Type[1] { typeof(IRequestHandler<>).MakeGenericType(GenericsHelper.GetGenericArgumentsFromParent(handler, typeof(IRequestHandler<>))) }).WithScopedLifetime()
+            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>))).As(handler => new Type[1] { typeof(IRequestHandler<,>).MakeGenericType(GenericsHelper.GetGenericArgumentsFromParent(handler, typeof(IRequestHandler<,>))) }).WithScopedLifetime()
             );
 
             return this;

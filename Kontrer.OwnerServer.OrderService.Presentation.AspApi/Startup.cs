@@ -1,7 +1,6 @@
 using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
 using Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework;
 using Kontrer.OwnerServer.Shared.Asp;
 using Kontrer.Shared.MessageBus.MasstTransit;
@@ -55,38 +54,41 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
             {
                 var db = scope.ServiceProvider.GetRequiredService<DbContext>();
                 db.Database.Migrate();
+
+                var repo = scope.ServiceProvider.GetService<IAccommodationOrderRepository>();
+                repo.AddAsync(new AccommodationOrderEntity(0, 1, new(), DateTime.Now, "asd", "xxx") { State = Domain.Orders.OrderStates.New }).GetAwaiter().GetResult();
             }
         }
     }
 
     public class DummyRepo : IAccommodationOrderRepository
     {
-        public Task<Domain.Orders.AccommodationOrders.AccommodationOrderEntity> AddAsync(Domain.Orders.AccommodationOrders.AccommodationOrderEntity model)
+        public Task<AccommodationOrderEntity> AddAsync(AccommodationOrderEntity model)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Dictionary<int, Domain.Orders.AccommodationOrders.AccommodationOrderEntity>> GetAllAsync()
+        public Task<Dictionary<int, AccommodationOrderEntity>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Domain.Orders.AccommodationOrders.AccommodationOrderEntity> GetAsync(int id)
+        public Task<AccommodationOrderEntity> GetAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Dictionary<int, Domain.Orders.AccommodationOrders.AccommodationOrderEntity>> GetCompletedAsync()
+        public Task<Dictionary<int, AccommodationOrderEntity>> GetCompletedAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Dictionary<int, Domain.Orders.AccommodationOrders.AccommodationOrderEntity>> GetNewOrdersAsync()
+        public Task<Dictionary<int, AccommodationOrderEntity>> GetNewOrdersAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Dictionary<int, Domain.Orders.AccommodationOrders.AccommodationOrderEntity>> GetProcessedAsync()
+        public Task<Dictionary<int, AccommodationOrderEntity>> GetProcessedAsync()
         {
             throw new NotImplementedException();
         }
@@ -96,12 +98,12 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
             throw new NotImplementedException();
         }
 
-        public Task<Domain.Orders.AccommodationOrders.AccommodationOrderEntity> TryGetAsync(int id)
+        public Task<AccommodationOrderEntity> TryGetAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Domain.Orders.AccommodationOrders.AccommodationOrderEntity> UpdateAsync(Domain.Orders.AccommodationOrders.AccommodationOrderEntity model)
+        public Task<AccommodationOrderEntity> UpdateAsync(AccommodationOrderEntity model)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,5 @@
 ﻿using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
 using Kontrer.OwnerServer.OrderService.Dtos.Models;
 using Kontrer.Shared.DomainDrivenDesign.Application;
 using Kontrer.Shared.MessageBus;

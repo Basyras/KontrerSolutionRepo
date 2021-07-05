@@ -8,6 +8,7 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 <button class="btn btn-primary" @onclick="SendCommandAction">SendCommand</button>
+<p>@NewOrders</p>
 
 @code {
     private int currentCount = 0;
@@ -20,5 +21,9 @@
     {
         //await bus.RequestAsync<CancelAccommodationOrderCommand>(new(5, null, true), default);
         var results = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
+        NewOrders = System.Text.Json.JsonSerializer.Serialize(results);
+        this.StateHasChanged();
     }
+
+    public string NewOrders { get; set; }
 }

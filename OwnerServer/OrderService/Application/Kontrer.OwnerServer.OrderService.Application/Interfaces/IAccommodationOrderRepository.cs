@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
+﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.Shared.Repositories;
 using System;
 using System.Collections.Generic;

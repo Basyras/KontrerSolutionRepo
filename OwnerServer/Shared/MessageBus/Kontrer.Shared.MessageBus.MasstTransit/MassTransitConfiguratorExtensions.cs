@@ -26,11 +26,11 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
         {
             var assemblyTypes = handlersAssembly.GetTypes();
 
-            var sendHandlers = assemblyTypes.Where(sendHandlerType => GenericHelper.IsAssignableToGenericType(sendHandlerType, requestHandlerInterfacesTypes[0]))
+            var sendHandlers = assemblyTypes.Where(sendHandlerType => GenericsHelper.IsAssignableToGenericType(sendHandlerType, requestHandlerInterfacesTypes[0]))
                 .Select(handlerType => new
                 {
                     HandlerType = handlerType,
-                    RequestType = GenericHelper.GetGenericTypeRecursive(handlerType, requestHandlerInterfacesTypes[0])[0]
+                    RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[0])[0]
                 });
 
             foreach (var senderHandler in sendHandlers)
@@ -40,12 +40,12 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
                 configurator.AddConsumer(proxyConsumer);
             }
 
-            var requestHandlers = assemblyTypes.Where(requestHandlerType => GenericHelper.IsAssignableToGenericType(requestHandlerType, requestHandlerInterfacesTypes[1]))
+            var requestHandlers = assemblyTypes.Where(requestHandlerType => GenericsHelper.IsAssignableToGenericType(requestHandlerType, requestHandlerInterfacesTypes[1]))
                     .Select(handlerType => new
                     {
                         HandlerType = handlerType,
-                        RequestType = GenericHelper.GetGenericTypeRecursive(handlerType, requestHandlerInterfacesTypes[1])[0],
-                        ResponseType = GenericHelper.GetGenericTypeRecursive(handlerType, requestHandlerInterfacesTypes[1])[1]
+                        RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[0],
+                        ResponseType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[1]
                     });
 
             foreach (var requestHandler in requestHandlers)

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kontrer.Shared.Repositories.EF;
 using Kontrer.OwnerServer.OrderService.Application.Interfaces;
-using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 
 namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
 {
@@ -22,9 +22,12 @@ namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
             return dic;
         }
 
-        public Task<Dictionary<int, AccommodationOrderEntity>> GetNewOrdersAsync()
+        public async Task<Dictionary<int, AccommodationOrderEntity>> GetNewOrdersAsync()
         {
-            throw new NotImplementedException();
+            var dic = await dbContext.Set<AccommodationOrderEntity>()
+                .Where(x => x.State == Domain.Orders.OrderStates.New)
+                .ToDictionaryAsync(x => x.Id);
+            return dic;
         }
 
         public Task<Dictionary<int, AccommodationOrderEntity>> GetProcessedAsync()

@@ -4,16 +4,18 @@ namespace Kontrer.Shared.MessageBus.Proxy.Shared
 {
     public interface IRequestSerializer
     {
-        TRequest Deserialize<TRequest>(string json);
+        TRequest Deserialize<TRequest>(string jsonInput);
 
-        TRequest Deserialize<TRequest>(byte[] request);
+        TInput Deserialize<TInput>(byte[] input);
 
-        object Deserialize(string json, Type requestType);
+        object Deserialize(byte[] input, Type inputType);
 
-        string Serialize<TRequest>(TRequest request);
+        object Deserialize(string jsonInput, Type inputType);
 
-        string Serialize(object request, Type requestType);
+        string Serialize<TInput>(TInput input);
 
-        string Serialize(byte[] request, Type requestType);
+        string Serialize(object input, Type inputType);
+
+        string Serialize(byte[] input, Type inputType);
     }
 }

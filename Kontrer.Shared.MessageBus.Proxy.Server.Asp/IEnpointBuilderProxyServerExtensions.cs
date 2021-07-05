@@ -1,5 +1,7 @@
-﻿using Kontrer.Shared.MessageBus;
+﻿using Kontrer.Shared.Helpers;
+using Kontrer.Shared.MessageBus;
 using Kontrer.Shared.MessageBus.Proxy.Shared;
+using Kontrer.Shared.MessageBus.RequestResponse;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -29,8 +31,26 @@ namespace Microsoft.Extensions.DependencyInjection
             var proxyRequest = serializer.Deserialize<ProxyRequest>(bytes);
             var requestType = Type.GetType(proxyRequest.RequestType);
             var request = serializer.Deserialize(proxyRequest.Request, requestType);
-            await messageBus.SendAsync(requestType, request);
-            //await context.Response.WriteAsync(serializer.Serialize(busResponse));
+            if (request == null)
+            {
+                request = Activator.CreateInstance(requestType);
+            }
+
+            if (requestType.IsAssignableTo(typeof(IRequest)))
+            {
+                await messageBus.SendAsync(requestType, request);
+                return;
+            }
+
+            //if (requestType.IsAssignableTo(typeof(IRequest<>)))
+            if (GenericsHelper.IsAssignableToGenericType(requestType, typeof(IRequest<>)))
+            {
+                var responseType = GenericsHelper.GetGenericArgumentsFromParent(requestType, typeof(IRequest<>))[0];
+                var busResponse = await messageBus.RequestAsync(requestType, request, responseType);
+                await context.Response.WriteAsync(serializer.Serialize(busResponse, responseType));
+                return;
+            }
+            throw new InvalidOperationException("Invalid request");
         }
     }
 }

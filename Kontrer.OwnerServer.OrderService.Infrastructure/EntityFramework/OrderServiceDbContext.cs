@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrders;
+﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;

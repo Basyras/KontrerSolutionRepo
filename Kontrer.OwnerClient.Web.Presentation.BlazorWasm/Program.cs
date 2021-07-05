@@ -1,5 +1,4 @@
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using MassTransit;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,24 +18,12 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            //builder.Services.AddScoped(x => new PricingSwaggerClient("https://localhost:44347/", x.GetRequiredService<HttpClient>()));
 
-            //This code could be shared with namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
-            //builder.Services.AddMassTransit(x =>
-            //{
-            //    x.UsingRabbitMq((transitContext, rabbitConfig) =>
-            //    {
-            //        rabbitConfig.ConfigureEndpoints(transitContext);
-            //        //rabbitConfig.ReceiveEndpoint(context.HostingEnvironment.ApplicationName, c =>
-            //        //{
-            //        //});
-            //    });
-            //});
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddMessageBus()
+                .UseProxy()
+                .SetProxyServerUri(new Uri("https://localhost:44371/"));
 
-            //builder.Services.AddMessageBus()
-            //    .UseProxy()
-            //    .SetHostUri(new Uri(""));
             await builder.Build().RunAsync();
         }
     }

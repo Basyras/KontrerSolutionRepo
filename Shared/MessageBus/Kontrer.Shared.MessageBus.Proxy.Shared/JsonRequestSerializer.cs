@@ -9,34 +9,39 @@ namespace Kontrer.Shared.MessageBus.Proxy.Shared
 {
     public class JsonRequestSerializer : IRequestSerializer
     {
-        public TRequest Deserialize<TRequest>(byte[] request)
+        TInput IRequestSerializer.Deserialize<TInput>(byte[] input)
         {
-            return JsonSerializer.Deserialize<TRequest>(request);
+            return JsonSerializer.Deserialize<TInput>(input);
         }
 
-        public object Deserialize(string json, Type requestType)
+        object IRequestSerializer.Deserialize(string jsonInput, Type inputType)
         {
-            return JsonSerializer.Deserialize(json, requestType);
+            return JsonSerializer.Deserialize(jsonInput, inputType);
         }
 
-        public string Serialize(object request, Type requestType)
+        TInput IRequestSerializer.Deserialize<TInput>(string jsonInput)
         {
-            return JsonSerializer.Serialize(request, requestType);
+            return JsonSerializer.Deserialize<TInput>(jsonInput);
         }
 
-        public string Serialize(byte[] request, Type requestType)
+        object IRequestSerializer.Deserialize(byte[] input, Type inputType)
         {
-            return JsonSerializer.Serialize(request, requestType);
+            return JsonSerializer.Deserialize(input, inputType);
         }
 
-        TRequest IRequestSerializer.Deserialize<TRequest>(string json)
+        string IRequestSerializer.Serialize(object input, Type inputType)
         {
-            return JsonSerializer.Deserialize<TRequest>(json);
+            return JsonSerializer.Serialize(input, inputType);
         }
 
-        string IRequestSerializer.Serialize<TRequest>(TRequest request)
+        string IRequestSerializer.Serialize(byte[] input, Type inputType)
         {
-            return JsonSerializer.Serialize(request);
+            return JsonSerializer.Serialize(input, inputType);
+        }
+
+        string IRequestSerializer.Serialize<TInput>(TInput input)
+        {
+            return JsonSerializer.Serialize(input);
         }
     }
 }

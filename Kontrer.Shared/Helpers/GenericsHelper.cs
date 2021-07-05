@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.Helpers
 {
-    public static class GenericHelper
+    public static class GenericsHelper
     {
         public static bool IsAssignableToGenericType(Type givenType, Type genericType)
         {
@@ -35,7 +35,7 @@ namespace Kontrer.Shared.Helpers
         /// <param name="baseType">parent type that should contain generic parameters</param>
         /// <returns></returns>
 
-        public static Type[] GetGenericTypeRecursive(Type type, Type baseType)
+        public static Type[] GetGenericArgumentsFromParent(Type type, Type baseType)
         {
             if (baseType.IsInterface)
             {
