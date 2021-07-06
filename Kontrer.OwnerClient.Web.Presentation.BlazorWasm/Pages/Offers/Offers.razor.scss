@@ -1,4 +1,9 @@
 ﻿offersGrid {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;  
+}
+
+itemSpacer{
+    height:5px;
+    display:block;
 }

@@ -1,11 +1,16 @@
 ﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
-<border>
-    <statusRibbon />
-    @Order.Id
-    <h2>FirstName</h2> <h2>SecondName</h2>
-    @Order.IssueDate
-</border>
+<itemContainer>
+    <statusRibbon style="background-color:@ribbonColor" />
+    <contentContainer>
+        <customerName>FirstName SecondName</customerName>
+        <startDate><TimeLabel Time="Order.Requirment.From" /> </startDate>
+        <endDate> <TimeLabel Time="Order.Requirment.To" /> </endDate>
+        <peopleCount><PeopleCount Count="Order.Requirment.Rooms.Sum(x=>x.People.Count)"/></peopleCount>
+        <roomCount><RoomCount Count="Order.Requirment.Rooms.Count"/></roomCount>
+    </contentContainer>
+</itemContainer>
 
 @code {
     [Parameter] public AccommodationOrderEntity Order { get; set; }
+    private string ribbonColor { get => Order.State == OwnerServer.OrderService.Domain.Orders.OrderStates.New ? "yellow" : "orange"; }
 }

@@ -1,0 +1,24 @@
+{
+  "solution": {
+    "path": "..\\..\\KontrerSolution.sln",
+    "projects": [
+      "Kontrer.OwnerServer.Shared.MicroService.Abstraction\\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj",
+      "Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj",
+      "Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr\\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr.csproj",
+      "Kontrer.OwnerServer.Shared.MicroService.Dapr\\Kontrer.OwnerServer.Shared.MicroService.Dapr.csproj",
+      "Kontrer.Shared\\Kontrer.Shared.csproj",
+      "OwnerServer\\CustomerService\\Kontrer.OwnerServer.CustomerService.Application\\Kontrer.OwnerServer.CustomerService.Application.csproj",
+      "OwnerServer\\CustomerService\\Kontrer.OwnerServer.CustomerService.Domain\\Kontrer.OwnerServer.CustomerService.Domain.csproj",
+      "OwnerServer\\CustomerService\\Kontrer.OwnerServer.CustomerService.Infrastructure\\Kontrer.OwnerServer.CustomerService.Infrastructure.csproj",
+      "OwnerServer\\CustomerService\\Kontrer.OwnerServer.CustomerService.Presentation.AspApi\\Kontrer.OwnerServer.CustomerService.Presentation.AspApi.csproj",
+      "OwnerServer\\MicroService\\MessageBus\\Kontrer.Shared.MessageBus.Asp\\Kontrer.Shared.MessageBus.Asp.csproj",
+      "OwnerServer\\Shared\\Kontrer.OwnerServer.Shared.Asp\\Kontrer.OwnerServer.Shared.Asp.csproj",
+      "OwnerServer\\Shared\\MessageBus\\Kontrer.Shared.MessageBus.MasstTransit\\Kontrer.Shared.MessageBus.MasstTransit.csproj",
+      "OwnerServer\\Shared\\MessageBus\\Kontrer.Shared.MessageBus\\Kontrer.Shared.MessageBus.csproj",
+      "Shared\\DomainDrivenDesign\\Kontrer.Shared.DomainDrivenDesign.Application\\Kontrer.Shared.DomainDrivenDesign.Application.csproj",
+      "Shared\\DomainDrivenDesign\\Kontrer.Shared.DomainDrivenDesign.Domain\\Kontrer.Shared.DomainDrivenDesign.Domain.csproj",
+      "Shared\\Repositories\\Kontrer.Shared.Repositories.EF\\Kontrer.Shared.Repositories.EF.csproj",
+      "Shared\\Repositories\\Kontrer.Shared.Repositories\\Kontrer.Shared.Repositories.csproj"
+    ]
+  }
+}

@@ -60,5 +60,10 @@ namespace Kontrer.Shared.Repositories.EF.Tests.Repositories
 
             return model;
         }
+
+        protected override int ToModelId(int id)
+        {
+            return id;
+        }
     }
 }

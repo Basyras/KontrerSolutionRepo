@@ -1,15 +1,18 @@
 ﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
+@using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 @page "/offers"
 @inject Kontrer.Shared.MessageBus.IMessageBusManager bus;
-<h3>Offers 33</h3>
+@inject Microsoft.Extensions.Logging.ILogger<Offers> logger;
+<h3>Offers</h3>
 
 <offersGrid>
     @foreach (var newAcco in NewAccommodations)
     {
         <AccommodationItem Order="@newAcco" />
+        <itemSpacer />
     }
     <div>
-        1
+        11
     </div>
     <div>
         1
@@ -27,13 +30,15 @@
         {
             var busResponse = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
             NewAccommodations = busResponse.newOrders.Values.ToList();
+            this.StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
     }
 
     public async Task Refresh()
     {
-        var busResponse = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
-        NewAccommodations = busResponse.newOrders.Values.ToList();
+        var busResponse = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new GetCustomersQuery());
+        //logger.Log( Microsoft.Extensions.Logging.LogLevel.Debug);
+
     }
 }

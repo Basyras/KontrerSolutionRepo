@@ -1,0 +1,7 @@
+﻿<date>@date</date> <time>@time</time>
+
+@code {
+    [Parameter] public DateTime Time { get; set; }
+    private string date { get => Time.ToString("dd.MM."); }
+    private string time { get => Time.ToShortTimeString(); }
+}

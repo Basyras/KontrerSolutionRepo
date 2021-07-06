@@ -57,5 +57,10 @@ namespace Kontrer.Shared.Repositories.EF.Tests.Repositories
             model.CustomerId = entity.CustomerId;
             return model;
         }
+
+        protected override int ToModelId(int id)
+        {
+            return id;
+        }
     }
 }

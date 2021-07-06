@@ -6,11 +6,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <SassFile Remove="Pages\Offers\AccommodationItem.razor.scss" />
+	  <Content Remove="compilerconfig.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="Pages\Offers\AccommodationItem.razor.scss" />
+	  <None Include="compilerconfig.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -23,6 +23,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OwnerClient\Application\Kontrer.OwnerClient.Application\Kontrer.OwnerClient.Application.csproj" />
+		<ProjectReference Include="..\OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Domain\Kontrer.OwnerServer.CustomerService.Domain.csproj" />
 		<ProjectReference Include="..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
 		<ProjectReference Include="..\Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Kontrer.Shared.MessageBus.Proxy.Client.csproj" />
 	</ItemGroup>

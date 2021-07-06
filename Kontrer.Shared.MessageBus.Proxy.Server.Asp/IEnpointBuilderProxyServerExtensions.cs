@@ -24,12 +24,14 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             IMessageBusManager messageBus = context.RequestServices.GetRequiredService<IMessageBusManager>();
             var serializer = context.RequestServices.GetRequiredService<IRequestSerializer>();
-            //var proxyRequest = await context.Request.ReadFromJsonAsync<ProxyRequest>();
             MemoryStream mem = new MemoryStream();
             await context.Request.Body.CopyToAsync(mem);
             var bytes = mem.ToArray();
             var proxyRequest = serializer.Deserialize<ProxyRequest>(bytes);
+
             var requestType = Type.GetType(proxyRequest.RequestType);
+            if (requestType == null)
+                throw new Exception();
             var request = serializer.Deserialize(proxyRequest.Request, requestType);
             if (request == null)
             {
@@ -41,8 +43,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 await messageBus.SendAsync(requestType, request);
                 return;
             }
-
-            //if (requestType.IsAssignableTo(typeof(IRequest<>)))
             if (GenericsHelper.IsAssignableToGenericType(requestType, typeof(IRequest<>)))
             {
                 var responseType = GenericsHelper.GetGenericArgumentsFromParent(requestType, typeof(IRequest<>))[0];

@@ -26,6 +26,8 @@ namespace Kontrer.Shared.Repositories.EF
 
         protected abstract void SetEntityId(TModelKey id, ref TEntity entity);
 
+        protected abstract TModelKey ToModelId(TEntityKey id);
+
         protected TEntityKey GetEntityId(TEntity entity)
         {
             return entityIdSelector(entity);
@@ -54,7 +56,7 @@ namespace Kontrer.Shared.Repositories.EF
 
         public async Task<Dictionary<TModelKey, TModel>> GetAllAsync()
         {
-            var models = await dbContext.Set<TEntity>().AsQueryable().Select(x => ToModel(x)).ToDictionaryAsync(x => GetModelId(x));
+            var models = await dbContext.Set<TEntity>().AsQueryable().ToDictionaryAsync(x => ToModelId(GetEntityId(x)), x => ToModel(x));
             return models;
         }
 
@@ -109,9 +111,19 @@ namespace Kontrer.Shared.Repositories.EF
 
         public async Task RemoveAsync(TModelKey id)
         {
-            var entityToUpdate = new TEntity();
-            SetEntityId(id, ref entityToUpdate);
-            dbContext.Set<TEntity>().Remove(entityToUpdate);
+            //dbContext.Set<TEntity>().Remove(entityToUpdate);
+            var oldEntry = dbContext.ChangeTracker.Entries<TEntity>().FirstOrDefault(x => ToModelId(GetEntityId(x.Entity)).Equals(id));
+            if (oldEntry != null)
+            {
+                dbContext.Set<TEntity>().Remove(oldEntry.Entity);
+            }
+            else
+            {
+                var entityToUpdate = new TEntity();
+                SetEntityId(id, ref entityToUpdate);
+                dbContext.Set<TEntity>().Remove(entityToUpdate);
+            }
+
             await dbContext.SaveChangesAsync();
         }
     }
@@ -141,6 +153,11 @@ namespace Kontrer.Shared.Repositories.EF
         protected override TModel ToModel(TModel entity)
         {
             return entity;
+        }
+
+        protected override TModelKey ToModelId(TModelKey key)
+        {
+            return key;
         }
     }
 }

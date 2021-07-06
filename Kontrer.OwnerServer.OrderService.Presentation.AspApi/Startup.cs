@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder.ValueObjects.Requirements;
 
 namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
 {
@@ -56,56 +57,21 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
                 db.Database.Migrate();
 
                 var repo = scope.ServiceProvider.GetService<IAccommodationOrderRepository>();
-                repo.AddAsync(new AccommodationOrderEntity(0, 1, new(), DateTime.Now, "asd", "xxx") { State = Domain.Orders.OrderStates.New }).GetAwaiter().GetResult();
+                var ids = repo.GetAllAsync().GetAwaiter().GetResult().Select(x => x.Value.Id).ToList();
+                foreach (var id in ids)
+                {
+                    repo.RemoveAsync(id).GetAwaiter().GetResult();
+                }
+                var req = new AccommodationRequirement();
+                var room = new RoomRequirement();
+                room.People.Add(new PersonBlueprint());
+                room.People.Add(new PersonBlueprint());
+                room.People.Add(new PersonBlueprint());
+                req.Rooms.Add(room);
+                req.Rooms.Add(new RoomRequirement());
+                req.Rooms.Add(new RoomRequirement());
+                repo.AddAsync(new AccommodationOrderEntity(0, 1, req, DateTime.Now, "asd", "xxx") { State = Domain.Orders.OrderStates.New }).GetAwaiter().GetResult();
             }
-        }
-    }
-
-    public class DummyRepo : IAccommodationOrderRepository
-    {
-        public Task<AccommodationOrderEntity> AddAsync(AccommodationOrderEntity model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Dictionary<int, AccommodationOrderEntity>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AccommodationOrderEntity> GetAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Dictionary<int, AccommodationOrderEntity>> GetCompletedAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Dictionary<int, AccommodationOrderEntity>> GetNewOrdersAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Dictionary<int, AccommodationOrderEntity>> GetProcessedAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AccommodationOrderEntity> TryGetAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AccommodationOrderEntity> UpdateAsync(AccommodationOrderEntity model)
-        {
-            throw new NotImplementedException();
         }
     }
 };

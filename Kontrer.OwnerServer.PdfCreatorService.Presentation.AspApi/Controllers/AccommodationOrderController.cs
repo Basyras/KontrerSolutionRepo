@@ -3,7 +3,6 @@ using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder;
 using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Abstraction;
 using Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract.Actors.PdfCreator;
 using Kontrer.OwnerServer.Shared;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +31,7 @@ namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Controllers
         [HttpGet]
         public async Task<byte[]> CreatePdfForAccommodationOrder(AccommodationOfferViewModel offer)
         {
-            logger.LogDebug($"{nameof(CreatePdfForAccommodationOrder)} called, customer id: {offer.Blueprint.CustomerId}");
+            // logger.LogDebug($"{nameof(CreatePdfForAccommodationOrder)} called, customer id: {offer.Blueprint.CustomerId}");
             var pdf = await creator.CreatePdfAsync(offer);
             return pdf.ToArray();
         }

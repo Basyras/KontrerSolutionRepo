@@ -3,7 +3,6 @@ using Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract.Actors.PdfCrea
 using Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.PdfBuilder.Razor.RazorViews;
 using Kontrer.Shared.Localizator;
 using Kontrer.Shared.Models;
-using Kontrer.Shared.Models.Pricing.Blueprints;
 using Microsoft.Extensions.Options;
 using RazorLight;
 using System;
