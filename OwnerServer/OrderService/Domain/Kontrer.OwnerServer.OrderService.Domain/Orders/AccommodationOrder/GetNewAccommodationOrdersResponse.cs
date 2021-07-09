@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
 {
-    public record GetNewAccommodationOrdersResponse(Dictionary<int, AccommodationOrderEntity> newOrders);
+    public record GetNewAccommodationOrdersResponse(Dictionary<int, AccommodationOrderEntity> NewOrders);
 }

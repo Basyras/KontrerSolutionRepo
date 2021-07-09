@@ -1,16 +1,18 @@
 ﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
-<itemContainer>
+@using Kontrer.OwnerClient.Application.Orders;
+@using Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Labels
+<accommodationItem>
     <statusRibbon style="background-color:@ribbonColor" />
     <contentContainer>
-        <customerName>FirstName SecondName</customerName>
-        <startDate><TimeLabel Time="Order.Requirment.From" /> </startDate>
-        <endDate> <TimeLabel Time="Order.Requirment.To" /> </endDate>
-        <peopleCount><PeopleCount Count="Order.Requirment.Rooms.Sum(x=>x.People.Count)"/></peopleCount>
-        <roomCount><RoomCount Count="Order.Requirment.Rooms.Count"/></roomCount>
+        <customerName>@Order.Customer.FirstName @Order.Customer.SecondName</customerName>
+        <startDate><TimeLabel Time="Order.Order.Requirment.From" /> </startDate>
+        <endDate> <TimeLabel Time="Order.Order.Requirment.To" /> </endDate>
+        <peopleCount><PeopleCount Count="Order.Order.Requirment.Rooms.Sum(x=>x.People.Count)" /></peopleCount>
+        <roomCount><RoomCount Count="Order.Order.Requirment.Rooms.Count" /></roomCount>
     </contentContainer>
-</itemContainer>
+</accommodationItem>
 
 @code {
-    [Parameter] public AccommodationOrderEntity Order { get; set; }
-    private string ribbonColor { get => Order.State == OwnerServer.OrderService.Domain.Orders.OrderStates.New ? "yellow" : "orange"; }
+    [Parameter] public OrderViewModel Order { get; set; }
+    private string ribbonColor { get => Order.Order.State == OwnerServer.OrderService.Domain.Orders.OrderStates.New ? "yellow" : "orange"; }
 }

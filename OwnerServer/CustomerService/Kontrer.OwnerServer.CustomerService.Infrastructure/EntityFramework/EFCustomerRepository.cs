@@ -26,7 +26,7 @@ namespace Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework
             model.Id = id;
         }
 
-        public async Task<List<CustomerEntity>> GetByIdsAsync(List<int> ids)
+        public async Task<List<CustomerEntity>> GetByIdsAsync(IEnumerable<int> ids)
         {
             var customers = await dbContext.Set<CustomerEntity>().AsQueryable().Where(customer => ids.Any(x => x == customer.Id)).ToListAsync();
             return customers;

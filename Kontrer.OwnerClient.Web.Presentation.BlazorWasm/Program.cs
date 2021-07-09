@@ -1,8 +1,10 @@
+using Kontrer.OwnerClient.Application.Orders;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -18,11 +20,13 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
+            builder.Services.AddMudServices();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddMessageBus()
                 .UseProxy()
                 .SetProxyServerUri(new Uri("https://localhost:44371/"));
+
+            builder.Services.AddSingleton<IOrderManager, OrderManager>();
 
             await builder.Build().RunAsync();
         }

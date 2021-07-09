@@ -5,15 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Customers\" />
     <Folder Include="Pricing\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <!--<PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Domain\Kontrer.OwnerServer.CustomerService.Domain.csproj" />
+    <ProjectReference Include="..\..\..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
   </ItemGroup>
 
 </Project>

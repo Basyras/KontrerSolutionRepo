@@ -10,6 +10,6 @@ namespace Kontrer.OwnerServer.CustomerService.Application.Interfaces
 {
     public interface ICustomerRepository : IInstantCrudRepository<CustomerEntity, int>
     {
-        Task<List<CustomerEntity>> GetByIdsAsync(List<int> ids);
+        Task<List<CustomerEntity>> GetByIdsAsync(IEnumerable<int> ids);
     }
 }

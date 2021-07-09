@@ -11,37 +11,44 @@ namespace Kontrer.Shared.MessageBus.Proxy.Shared
     {
         TInput IRequestSerializer.Deserialize<TInput>(byte[] input)
         {
-            return JsonSerializer.Deserialize<TInput>(input);
+            var result = JsonSerializer.Deserialize<TInput>(input);
+            return result;
         }
 
         object IRequestSerializer.Deserialize(string jsonInput, Type inputType)
         {
-            return JsonSerializer.Deserialize(jsonInput, inputType);
+            var result = JsonSerializer.Deserialize(jsonInput, inputType);
+            return result;
         }
 
         TInput IRequestSerializer.Deserialize<TInput>(string jsonInput)
         {
-            return JsonSerializer.Deserialize<TInput>(jsonInput);
+            var result = JsonSerializer.Deserialize<TInput>(jsonInput);
+            return result;
         }
 
         object IRequestSerializer.Deserialize(byte[] input, Type inputType)
         {
-            return JsonSerializer.Deserialize(input, inputType);
+            var result = JsonSerializer.Deserialize(input, inputType);
+            return result;
         }
 
         string IRequestSerializer.Serialize(object input, Type inputType)
         {
-            return JsonSerializer.Serialize(input, inputType);
+            var result = JsonSerializer.Serialize(input, inputType);
+            return result;
         }
 
         string IRequestSerializer.Serialize(byte[] input, Type inputType)
         {
-            return JsonSerializer.Serialize(input, inputType);
+            var result = JsonSerializer.Serialize(input, inputType);
+            return result;
         }
 
         string IRequestSerializer.Serialize<TInput>(TInput input)
         {
-            return JsonSerializer.Serialize(input);
+            var result = JsonSerializer.Serialize(input);
+            return result;
         }
     }
 }

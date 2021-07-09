@@ -1,0 +1,10 @@
+﻿@import "../Colors.scss";
+
+sotftLabelContainer {
+    border-width: 1px;
+    border-style: solid;
+    border-color: $SoftForeground;
+    color: $SoftForeground;
+    padding: 1rem 2rem;
+    display: inline-block;
+}

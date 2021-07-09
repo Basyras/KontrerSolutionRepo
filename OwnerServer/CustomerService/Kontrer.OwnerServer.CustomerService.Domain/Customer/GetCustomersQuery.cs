@@ -9,15 +9,15 @@ namespace Kontrer.OwnerServer.CustomerService.Domain.Customer
 {
     public class GetCustomersQuery : IQuery<GetCustomersQueryResponse>
     {
-        public GetCustomersQuery()
-        {
-        }
+        //public GetCustomersQuery()
+        //{
+        //}
 
-        public GetCustomersQuery(List<int> customerIds)
+        public GetCustomersQuery(int[] customerIds)
         {
             CustomerIds = customerIds;
         }
 
-        public List<int> CustomerIds { get; } = new List<int>();
+        public int[] CustomerIds { get; }
     }
 }

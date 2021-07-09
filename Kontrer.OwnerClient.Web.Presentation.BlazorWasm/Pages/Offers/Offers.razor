@@ -1,44 +1,62 @@
 ﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 @using Kontrer.OwnerServer.CustomerService.Domain.Customer;
+@using Kontrer.OwnerClient.Application.Orders;
+@using Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Labels;
 @page "/offers"
-@inject Kontrer.Shared.MessageBus.IMessageBusManager bus;
-@inject Microsoft.Extensions.Logging.ILogger<Offers> logger;
-<h3>Offers</h3>
-
-<offersGrid>
-    @foreach (var newAcco in NewAccommodations)
-    {
-        <AccommodationItem Order="@newAcco" />
-        <itemSpacer />
-    }
-    <div>
-        11
-    </div>
-    <div>
-        1
-    </div>
-</offersGrid>
+@inject Kontrer.Shared.MessageBus.IMessageBusManager bus
+@inject Microsoft.Extensions.Logging.ILogger<Offers> logger
+@inject IOrderManager orderManager
+<ordersContainer>
+    <offersGrid>
+        <offersColumn>
+            <gridLabel>To process<CollectionCount Collection="@NewOrders" IsLoading="@isLoading" /></gridLabel>
+            @foreach (var newOrder in NewOrders)
+            {
+                <AccommodationItem Order="@newOrder" />
+                <itemSpacer />
+            }
+            @if (NewOrders.Count == 0)
+            {
+                <SoftLabel>all processed</SoftLabel>
+            }
+        </offersColumn>
+        <offersColumn>
+            <gridLabel>Waiting for response<CollectionCount Collection="@NewOrders" IsLoading="@isLoading" /></gridLabel>
+            <MudBlazor.MudContainer MaxWidth="MudBlazor.MaxWidth.Small">
+                <SoftLabel>nothing to wait</SoftLabel>
+            </MudBlazor.MudContainer>
+        </offersColumn>
+        <offersColumn>
+            <gridLabel>Finished</gridLabel>
+            <SoftLabel>history empty</SoftLabel>
+        </offersColumn>
+    </offersGrid>
+</ordersContainer>
 
 <button @onclick="Refresh">Refresh</button>
 
 @code {
-    public List<AccommodationOrderEntity> NewAccommodations { get; set; } = new List<AccommodationOrderEntity>();
+    public List<OrderViewModel> NewOrders { get; set; } = new List<OrderViewModel>();
+    private bool isLoading;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var busResponse = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
-            NewAccommodations = busResponse.newOrders.Values.ToList();
-            this.StateHasChanged();
+            await Refresh();
         }
         await base.OnAfterRenderAsync(firstRender);
     }
 
     public async Task Refresh()
     {
-        var busResponse = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new GetCustomersQuery());
+        //var busResponse = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new GetCustomersQuery());
         //logger.Log( Microsoft.Extensions.Logging.LogLevel.Debug);
+        isLoading = true;
+        this.StateHasChanged();
+        NewOrders = await orderManager.GetNewOrders();
+        isLoading = false;
+        this.StateHasChanged();
 
     }
 }

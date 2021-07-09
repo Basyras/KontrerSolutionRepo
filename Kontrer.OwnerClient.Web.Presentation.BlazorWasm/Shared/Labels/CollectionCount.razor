@@ -1,0 +1,15 @@
+﻿<collectionCountContainer>
+    @if (IsLoading)
+    {
+        @:-
+    }
+    else
+    {
+        @Collection?.Count();
+    }
+</collectionCountContainer>
+
+@code {
+    [Parameter] public IEnumerable<object> Collection { get; set; }
+    [Parameter] public bool IsLoading { get; set; } = false;
+}

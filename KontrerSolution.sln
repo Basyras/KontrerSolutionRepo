@@ -48,7 +48,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PricingService", "PricingSe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomerService", "CustomerService", "{0A0ADA3B-BEF2-4A91-9375-E9217F089FC2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerServer.Shared", "Kontrer.OwnerServer.Shared", "{43515AD6-D565-4FD8-9328-C7E53E12692A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{43515AD6-D565-4FD8-9328-C7E53E12692A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerServer.PdfCreatorService.Data", "1 - Kontrer.OwnerServer.PdfCreatorService.Data", "{B33DFE79-85D3-4824-83BA-C67F24C8DD42}"
 EndProject
@@ -126,10 +126,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.OwnerClient.Present
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Web.Presentation.BlazorWasm", "Kontrer.OwnerClient.Web.Presentation.BlazorWasm\Kontrer.OwnerClient.Web.Presentation.BlazorWasm.csproj", "{E76F3582-17B1-4684-9C4C-B6D64E7419A4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Kontrer.OwnerClient.Application", "2 - Kontrer.OwnerClient.Application", "{680E2AA9-26EE-42DB-B7DC-7CE7EBD3A076}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Kontrer.OwnerClient.Infrastructure", "1 - Kontrer.OwnerClient.Infrastructure", "{5BD2881B-BE00-42D5-8EEF-FA8CE14E77F4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Kontrer.OwnerClient.Presentation", "3 - Kontrer.OwnerClient.Presentation", "{FF054EF1-DCC0-4632-8488-B3CF9634CBFA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerClient.Application", "OwnerClient\Application\Kontrer.OwnerClient.Application\Kontrer.OwnerClient.Application.csproj", "{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578}"
@@ -184,7 +180,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Custome
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.CustomerService.Infrastructure", "OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Infrastructure\Kontrer.OwnerServer.CustomerService.Infrastructure.csproj", "{7AF18E04-B011-4CBB-BE6F-E84A7F8F6CA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.CustomerService.Presentation.AspApi", "OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Presentation.AspApi\Kontrer.OwnerServer.CustomerService.Presentation.AspApi.csproj", "{71FDEDC1-FC0F-4B7A-8697-46B15F959071}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.CustomerService.Presentation.AspApi", "OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Presentation.AspApi\Kontrer.OwnerServer.CustomerService.Presentation.AspApi.csproj", "{71FDEDC1-FC0F-4B7A-8697-46B15F959071}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -477,10 +473,8 @@ Global
 		{DC6A53FE-9DA1-42FA-AD0B-329AA7F5C096} = {43515AD6-D565-4FD8-9328-C7E53E12692A}
 		{6E22EF35-749B-46EF-AC3C-90E38184C24A} = {FF054EF1-DCC0-4632-8488-B3CF9634CBFA}
 		{E76F3582-17B1-4684-9C4C-B6D64E7419A4} = {FF054EF1-DCC0-4632-8488-B3CF9634CBFA}
-		{680E2AA9-26EE-42DB-B7DC-7CE7EBD3A076} = {57BBB39E-7EE9-4C90-8CBB-3820E13E5E01}
-		{5BD2881B-BE00-42D5-8EEF-FA8CE14E77F4} = {57BBB39E-7EE9-4C90-8CBB-3820E13E5E01}
 		{FF054EF1-DCC0-4632-8488-B3CF9634CBFA} = {57BBB39E-7EE9-4C90-8CBB-3820E13E5E01}
-		{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578} = {680E2AA9-26EE-42DB-B7DC-7CE7EBD3A076}
+		{7166C0A5-04A8-4A1A-80C8-1AFA52BAF578} = {57BBB39E-7EE9-4C90-8CBB-3820E13E5E01}
 		{342498A8-4D77-4F35-841E-E69F02CDD52B} = {AF685BC0-4C70-4017-B228-3D2ED3B504A0}
 		{77F29290-04D5-42F9-A81E-C00262D667F4} = {AF685BC0-4C70-4017-B228-3D2ED3B504A0}
 		{0015F906-19FF-47B2-8494-87A0DA10B26B} = {63568DA1-5067-4909-8FE5-F402D8407720}

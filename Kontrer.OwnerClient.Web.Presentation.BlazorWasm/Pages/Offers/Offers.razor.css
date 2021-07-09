@@ -1,1 +1,1 @@
-offersGrid{display:flex;flex-direction:column}itemSpacer{height:5px;display:block}
+offersGrid{display:flex;flex-direction:row}offersColumn{flex:1;padding:0 2vw;border-color:black;border-style:solid;border-width:0px;border-left-width:1px;border-right-width:1px}itemSpacer{height:5px;display:block}ordersContainer{padding:1rem;display:block}gridLabel{width:100%;text-align:center;display:block;margin:1rem;font-size:1.5rem;color:#1A2B5B}.softLabel{background-color:red}
