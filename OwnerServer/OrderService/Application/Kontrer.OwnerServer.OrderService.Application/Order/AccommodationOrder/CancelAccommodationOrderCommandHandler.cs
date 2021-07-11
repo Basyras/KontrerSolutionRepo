@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
 {
-    public class CancelAccommodationOrderCommandHandler : CommandHandlerBase<CancelAccommodationOrderCommand>
+    public class CancelAccommodationOrderCommandHandler : ICommandHandler<CancelAccommodationOrderCommand>
     {
         private readonly IAccommodationOrderRepository orderRepository;
         private readonly IMessageBusManager messageBus;
@@ -24,7 +24,7 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
             this.messageBus = messageBus;
         }
 
-        public override async Task Handle(CancelAccommodationOrderCommand command, CancellationToken cancellationToken = default)
+        public async Task Handle(CancelAccommodationOrderCommand command, CancellationToken cancellationToken = default)
         {
             var order = await orderRepository.TryGetAsync(command.OrderId);
             if (order == null)

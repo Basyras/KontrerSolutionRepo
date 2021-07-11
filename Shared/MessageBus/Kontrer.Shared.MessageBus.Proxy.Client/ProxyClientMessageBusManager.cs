@@ -107,7 +107,8 @@ namespace Kontrer.Shared.MessageBus.Proxy.Client
         private async Task<object> HttpCallToProxyServer(Type requestType, object request, Type responseType = null)
         {
             var requestJson = serializer.Serialize(request, requestType);
-            var proxyRequest = new ProxyRequest(requestType.AssemblyQualifiedName, responseType.AssemblyQualifiedName, requestJson);
+            var responseTypeName = responseType == null ? null : responseType.AssemblyQualifiedName;
+            var proxyRequest = new ProxyRequest(requestType.AssemblyQualifiedName, responseTypeName, requestJson);
             var proxyRequestJson = serializer.Serialize(proxyRequest);
             var httpContent = new StringContent(proxyRequestJson, Encoding.UTF8, "application/json");
             var httpResult = await httpClient.PostAsync("", httpContent);

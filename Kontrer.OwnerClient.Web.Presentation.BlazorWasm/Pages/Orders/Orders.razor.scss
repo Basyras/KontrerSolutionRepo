@@ -1,18 +1,17 @@
 ﻿@import "../../Shared/Colors.scss";
 
-offersGrid {
+ordersGrid {
     display: flex;
     flex-direction: row;
 }
 
-offersColumn {
+ordersColumn {
     flex: 1;
     padding: 0 2vw;
-    border-color: black;
-    border-style: solid;
-    border-width: 0px;
-    border-left-width: 1px;
-    border-right-width: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
 }
 
 itemSpacer {
@@ -25,15 +24,17 @@ ordersContainer {
     display: block;
 }
 
-gridLabel {
+columnHeading {
     width: 100%;
     text-align: center;
     display: block;
     margin: 1rem;
-    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+    font-size: 2rem;
     color: $ForegroundRegularStrong;
 }
 
-.softLabel {
-    background-color: red;
+horizontalLine {
+    background: $SoftForeground;
+    width: 1px;
 }

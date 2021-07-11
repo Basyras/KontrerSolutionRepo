@@ -15,13 +15,29 @@ namespace Kontrer.OwnerClient.Application.Orders
         private readonly IMessageBusManager bus;
         private List<OrderViewModel> ordersCache = new List<OrderViewModel>();
         private DateTime lastRefresh;
+        private bool shouldRefresh = false;
 
         public OrderManager(IMessageBusManager bus)
         {
             this.bus = bus;
         }
 
-        public async ValueTask<List<OrderViewModel>> GetNewOrders()
+        public async ValueTask<OrderViewModel> CreateOrder(int customerId)
+        {
+            var response = await bus.RequestAsync<CreateAccommodationOrderCommand, CreateAccommodationOrderResponse>(new(customerId, new()));
+            var customerResponse = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new(new int[] { customerId }));
+            var vm = new OrderViewModel(customerResponse.Customers[0], response.NewOrder);
+            shouldRefresh = true;
+            return vm;
+        }
+
+        public async Task DeleteOrder(int orderId)
+        {
+            await bus.SendAsync(new DeleteAccommodationOrderCommand(orderId));
+            shouldRefresh = true;
+        }
+
+        public async ValueTask<List<OrderViewModel>> GetOrders()
         {
             if (NeedsRefresh())
             {
@@ -37,13 +53,13 @@ namespace Kontrer.OwnerClient.Application.Orders
                 }
                 lastRefresh = DateTime.Now;
             }
-
+            shouldRefresh = false;
             return ordersCache;
         }
 
         private bool NeedsRefresh()
         {
-            return lastRefresh.AddSeconds(5) < DateTime.Now;
+            return lastRefresh.AddSeconds(5) < DateTime.Now || shouldRefresh;
         }
     }
 }

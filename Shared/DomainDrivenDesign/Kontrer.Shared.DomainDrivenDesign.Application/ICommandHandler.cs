@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.DomainDrivenDesign.Application
 {
-    public abstract class CommandHandlerBase<TCommand> : RequestHandlerBase<TCommand>
+    public interface ICommandHandler<TCommand> : IRequestHandler<TCommand>
         where TCommand : class, ICommand
     {
     }
 
-    public abstract class CommandHandlerBase<TCommand, TReponse> : RequestHandlerBase<TCommand, TReponse>
+    public interface ICommandHandler<TCommand, TReponse> : IRequestHandler<TCommand, TReponse>
         where TCommand : class, ICommand<TReponse>
         where TReponse : class
     {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.CustomerService.Application.Customer
 {
-    public class GetCustomersQueryHandler : QueryHandlerBase<GetCustomersQuery, GetCustomersQueryResponse>
+    public class GetCustomersQueryHandler : IQueryHandler<GetCustomersQuery, GetCustomersQueryResponse>
     {
         private readonly ICustomerRepository repository;
 
@@ -19,9 +19,17 @@ namespace Kontrer.OwnerServer.CustomerService.Application.Customer
             this.repository = repository;
         }
 
-        public async override Task<GetCustomersQueryResponse> Handle(GetCustomersQuery command, CancellationToken cancellationToken = default)
+        public async Task<GetCustomersQueryResponse> Handle(GetCustomersQuery command, CancellationToken cancellationToken = default)
         {
-            var customers = await repository.GetByIdsAsync(command.CustomerIds);
+            List<CustomerEntity> customers;
+            if (command.CustomerIds == null || command.CustomerIds.Count() == 0)
+            {
+                customers = (await repository.GetAllAsync()).Values.ToList();
+            }
+            else
+            {
+                customers = await repository.GetByIdsAsync(command.CustomerIds);
+            }
             var response = new GetCustomersQueryResponse(customers);
             return response;
         }

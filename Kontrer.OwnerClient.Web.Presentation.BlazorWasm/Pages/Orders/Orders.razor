@@ -1,0 +1,113 @@
+﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
+@using Kontrer.OwnerServer.CustomerService.Domain.Customer;
+@using Kontrer.OwnerClient.Application.Orders;
+@using Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Labels;
+@page "/offers"
+@inject Kontrer.Shared.MessageBus.IMessageBusManager bus
+@inject Microsoft.Extensions.Logging.ILogger<Orders> logger
+@inject IOrderManager orderManager
+<ordersContainer>
+    <ordersGrid>
+        <ordersColumn>
+            <columnHeading>
+                To process
+                <CollectionCount Collection="@NewOrders" IsLoading="@isLoading" />
+            </columnHeading>
+            @if (isLoading)
+            {
+                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+            }
+            else
+            {
+                foreach (var newOrder in NewOrders)
+                {
+                    <AccommodationItem Order="@newOrder" />
+                    <itemSpacer />
+                }
+
+                @if (NewOrders.Count == 0)
+                {
+                    <SoftLabel>all processed</SoftLabel>
+                }
+            }
+        </ordersColumn>
+        <horizontalLine />
+        <ordersColumn>
+            <columnHeading>
+                Waiting for response
+                <CollectionCount Collection="@WaitingOrders" IsLoading="@isLoading" />
+            </columnHeading>
+            @if (isLoading)
+            {
+                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+            }
+            else
+            {
+                foreach (var newOrder in WaitingOrders)
+                {
+                    <AccommodationItem Order="@newOrder" />
+                    <itemSpacer />
+                }
+
+                @if (WaitingOrders.Count == 0)
+                {
+                    <SoftLabel>nothing to wait</SoftLabel>
+                }
+            }
+        </ordersColumn>
+        <horizontalLine />
+        <ordersColumn>
+            <columnHeading>
+                History
+                <CollectionCount Collection="@HistoryOrders" IsLoading="@isLoading" />
+            </columnHeading>
+            @if (isLoading)
+            {
+                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+            }
+            else
+            {
+                foreach (var newOrder in HistoryOrders)
+                {
+                    <AccommodationItem Order="@newOrder" />
+                    <itemSpacer />
+                }
+
+                @if (HistoryOrders.Count == 0)
+                {
+                    <SoftLabel>nothing in history</SoftLabel>
+                }
+            }
+        </ordersColumn>
+    </ordersGrid>
+</ordersContainer>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Refresh">Refresh</MudButton>
+
+@code {
+    public List<OrderViewModel> NewOrders { get; set; } = new List<OrderViewModel>();
+    public List<OrderViewModel> WaitingOrders { get; set; } = new List<OrderViewModel>();
+    public List<OrderViewModel> HistoryOrders { get; set; } = new List<OrderViewModel>();
+    private bool isLoading;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Refresh();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async Task Refresh()
+    {
+        //var busResponse = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new GetCustomersQuery());
+        //logger.Log( Microsoft.Extensions.Logging.LogLevel.Debug);
+        isLoading = true;
+        this.StateHasChanged();
+        NewOrders = await orderManager.GetOrders();
+        isLoading = false;
+        this.StateHasChanged();
+
+    }
+}

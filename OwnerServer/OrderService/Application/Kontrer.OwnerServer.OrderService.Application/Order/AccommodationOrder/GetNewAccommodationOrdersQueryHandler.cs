@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
 {
-    public class GetNewAccommodationOrdersQueryHandler : QueryHandlerBase<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>
+    public class GetNewAccommodationOrdersQueryHandler : IQueryHandler<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>
     {
         private readonly IAccommodationOrderRepository repository;
 
@@ -20,7 +20,7 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
             this.repository = repository;
         }
 
-        public override async Task<GetNewAccommodationOrdersResponse> Handle(GetNewAccommodationOrdersQuery command, CancellationToken cancellationToken = default)
+        public async Task<GetNewAccommodationOrdersResponse> Handle(GetNewAccommodationOrdersQuery command, CancellationToken cancellationToken = default)
         {
             var orders = await repository.GetNewOrdersAsync();
             var response = new GetNewAccommodationOrdersResponse(orders);

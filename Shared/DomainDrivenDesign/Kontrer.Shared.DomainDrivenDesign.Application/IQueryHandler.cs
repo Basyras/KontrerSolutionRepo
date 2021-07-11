@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.DomainDrivenDesign.Application
 {
-    public abstract class QueryHandlerBase<TQuery, TReponse> : RequestHandlerBase<TQuery, TReponse>
+    public interface IQueryHandler<TQuery, TReponse> : IRequestHandler<TQuery, TReponse>
       where TQuery : class, IQuery<TReponse>
       where TReponse : class
     {

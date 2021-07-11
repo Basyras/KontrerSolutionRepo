@@ -46,14 +46,14 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
                 var db = scope.ServiceProvider.GetRequiredService<DbContext>();
                 db.Database.Migrate();
 
-                var repo = scope.ServiceProvider.GetService<ICustomerRepository>();
-                var ids = repo.GetAllAsync().GetAwaiter().GetResult().Select(x => x.Value.Id).ToList();
-                foreach (var id in ids)
-                {
-                    repo.RemoveAsync(id).GetAwaiter().GetResult();
-                }
-                repo.AddAsync(new CustomerEntity() { FirstName = "Jan", SecondName = "Skrrrr" }).GetAwaiter().GetResult();
-                repo.AddAsync(new CustomerEntity() { FirstName = "Johan", SecondName = "Andreiovic" }).GetAwaiter().GetResult();
+                //var repo = scope.ServiceProvider.GetService<ICustomerRepository>();
+                //var ids = repo.GetAllAsync().GetAwaiter().GetResult().Select(x => x.Value.Id).ToList();
+                //foreach (var id in ids)
+                //{
+                //    repo.RemoveAsync(id).GetAwaiter().GetResult();
+                //}
+                //repo.AddAsync(new CustomerEntity() { FirstName = "Jan", SecondName = "Skrrrr" }).GetAwaiter().GetResult();
+                //repo.AddAsync(new CustomerEntity() { FirstName = "Johan", SecondName = "Andreiovic" }).GetAwaiter().GetResult();
             }
         }
     }
