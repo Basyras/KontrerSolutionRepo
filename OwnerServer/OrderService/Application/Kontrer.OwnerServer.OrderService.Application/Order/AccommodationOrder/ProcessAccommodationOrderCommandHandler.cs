@@ -22,7 +22,7 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
         public async Task Handle(ProcessAccommodationOrderCommand request, CancellationToken cancellationToken = default)
         {
             request.Order.State = Domain.Orders.OrderStates.Processed;
-            await repository.UpdateAsync(request.Order);
+            await repository.InstaUpdateAsync(request.Order);
         }
     }
 }

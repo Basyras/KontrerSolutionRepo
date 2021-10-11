@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.Repositories
 {
-    public abstract class TrackingInstantCrudRepositoryBase<TModel, TKey> : IInstantCrudRepository<TModel, TKey>, ITrackingChangesRepository<TModel, TKey>
+    public abstract class TrackingAsyncInstantCrudRepositoryBase<TModel, TKey> : IAsyncInstantCrudRepository<TModel, TKey>, ITrackingChangesRepository<TModel, TKey>
            where TModel : class
     {
         public List<RepositoryAction<TModel, TKey>> Actions { get; private set; } = new List<RepositoryAction<TModel, TKey>>();
 
-        public TrackingInstantCrudRepositoryBase()
+        public TrackingAsyncInstantCrudRepositoryBase()
         {
         }
 
@@ -24,7 +24,7 @@ namespace Kontrer.Shared.Repositories
 
         protected abstract TKey GetModelId(TModel model);
 
-        public Task RemoveAsync(TKey id)
+        public Task InstaRemoveAsync(TKey id)
         {
             var oldUpdate = Actions.FirstOrDefault(x => x.Id.Equals(id));
             if (oldUpdate == null)
@@ -51,7 +51,7 @@ namespace Kontrer.Shared.Repositories
             return Task.CompletedTask;
         }
 
-        public Task<TModel> AddAsync(TModel model)
+        public Task<TModel> InstaAddAsync(TModel model)
         {
             var id = GetModelId(model);
             var newUpdate = new RepositoryAction<TModel, TKey>(id, model, CrudActions.Added);
@@ -59,7 +59,7 @@ namespace Kontrer.Shared.Repositories
             return Task.FromResult(model);
         }
 
-        public Task<TModel> UpdateAsync(TModel model)
+        public Task<TModel> InstaUpdateAsync(TModel model)
         {
             var id = GetModelId(model);
             var newUpdate = new RepositoryAction<TModel, TKey>(id, model, CrudActions.Modified);

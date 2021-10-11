@@ -28,7 +28,7 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
         public async Task CreateOrder()
         {
             //var result = await messageBusManager.RequestAsync<CreateAccommodationOrderCommand, CreateAccommodationOrderResponse>(new(orderId, null));
-            await repo.AddAsync(new AccommodationOrderEntity(0, 0, null, default, "", ""));
+            await repo.InstaAddAsync(new AccommodationOrderEntity(0, 0, null, default, "", ""));
         }
 
         [HttpDelete]

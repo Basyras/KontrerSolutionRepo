@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.Repositories
 {
-    public abstract class IQueryableTrackingInstantCrudRepositoryBase<TModel, TKey> : TrackingInstantCrudRepositoryBase<TModel, TKey>
+    public abstract class QueryableTrackingAsyncInstantCrudRepositoryBase<TModel, TKey> : TrackingAsyncInstantCrudRepositoryBase<TModel, TKey>
        where TModel : class
     {
         protected IQueryable<TModel> allRecords;
         protected readonly Func<TModel, TKey> keySelector;
 
-        public IQueryableTrackingInstantCrudRepositoryBase(IEnumerable<TModel> allRecords,
+        public QueryableTrackingAsyncInstantCrudRepositoryBase(IEnumerable<TModel> allRecords,
             Func<TModel, TKey> keySelector) : this(allRecords.AsQueryable(), keySelector)
         {
         }
 
-        public IQueryableTrackingInstantCrudRepositoryBase(IDictionary<TKey, TModel> allRecords,
+        public QueryableTrackingAsyncInstantCrudRepositoryBase(IDictionary<TKey, TModel> allRecords,
             Func<TModel, TKey> keySelector) : this(allRecords.Values.AsQueryable(), keySelector)
         {
         }
 
-        public IQueryableTrackingInstantCrudRepositoryBase(IQueryable<TModel> allRecords, Func<TModel, TKey> keySelector)
+        public QueryableTrackingAsyncInstantCrudRepositoryBase(IQueryable<TModel> allRecords, Func<TModel, TKey> keySelector)
         {
             this.allRecords = allRecords;
             this.keySelector = keySelector;

@@ -27,7 +27,7 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
         {            
             var newOrder = new AccommodationOrderEntity(default, command.CustomerId, command.Requirement, DateTime.Now, "sheesh", "sheesh2");
             newOrder.State = Domain.Orders.OrderStates.New;
-            newOrder = await orderRepository.AddAsync(newOrder);
+            newOrder = await orderRepository.InstaAddAsync(newOrder);
             return new CreateAccommodationOrderResponse(newOrder);
         }
     }

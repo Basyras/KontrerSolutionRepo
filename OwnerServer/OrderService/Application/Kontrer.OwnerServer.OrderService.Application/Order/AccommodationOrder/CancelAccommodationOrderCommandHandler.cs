@@ -32,7 +32,7 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
                 throw new InvalidOperationException($"Could not remove order with id: {command.OrderId}. Order does not exist");
             }
             order.State = command.IsCanceledByCustomer ? OrderStates.CanceledByCustomer : OrderStates.CanceledByOwner;
-            await orderRepository.UpdateAsync(order);
+            await orderRepository.InstaUpdateAsync(order);
 
             if (command.IsCanceledByCustomer == false)
             {

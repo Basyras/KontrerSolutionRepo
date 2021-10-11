@@ -21,7 +21,7 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
 
         public async Task Handle(DeleteAccommodationOrderCommand request, CancellationToken cancellationToken = default)
         {
-            await repo.RemoveAsync(request.OrderId);
+            await repo.InstaRemoveAsync(request.OrderId);
         }
     }
 }

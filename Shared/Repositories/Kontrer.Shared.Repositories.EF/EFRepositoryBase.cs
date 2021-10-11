@@ -10,14 +10,23 @@ namespace Kontrer.Shared.Repositories.EF
 {
     public abstract class EFRepositoryBase<TEntity, TModel> where TEntity : class
     {
+        private static bool isInitialized = false;
         protected readonly DbContext dbContext;
 
         public EFRepositoryBase(DbContext dbContext)
         {
             this.dbContext = dbContext;
-            ValidateDbContext(dbContext);
+            if (isInitialized is false)
+            {
+                ValidateDbContext(dbContext);
+            }
+            isInitialized = true;
         }
 
+        /// <summary>
+        /// Checks if generic DbContext contains a requiered Set<<see cref="TEntity"/>>
+        /// </summary>
+        /// <param name="dbContext"></param>
         private static void ValidateDbContext(DbContext dbContext)
         {
             dbContext.Set<TEntity>();

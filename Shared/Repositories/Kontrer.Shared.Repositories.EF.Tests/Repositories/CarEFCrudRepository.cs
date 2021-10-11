@@ -7,25 +7,10 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.Repositories.EF.Tests.Repositories
 {
-    public class CarEFCrudRepository : EFInstantCrudRepositoryBase<CarEntity, int, CarModel, int>
+    public class CarEFCrudRepository : EFInstantCrudRepositoryBase<CarEntity, int, CarModel>
     {
-        public CarEFCrudRepository(TestDbContext dbContext) : base(dbContext, x => x.Id)
+        public CarEFCrudRepository(TestDbContext dbContext) : base(dbContext, car => car.Id, car => car.Id)
         {
-        }
-
-        protected override int GetModelId(CarModel model)
-        {
-            return model.Id;
-        }
-
-        protected override void SetEntityId(int id, ref CarEntity entity)
-        {
-            entity.Id = id;
-        }
-
-        protected override void SetModelId(int id, ref CarModel model)
-        {
-            model.Id = id;
         }
 
         protected override CarEntity ToEntity(CarModel model)
@@ -56,11 +41,6 @@ namespace Kontrer.Shared.Repositories.EF.Tests.Repositories
             model.Name = entity.Name;
             model.CustomerId = entity.CustomerId;
             return model;
-        }
-
-        protected override int ToModelId(int id)
-        {
-            return id;
         }
     }
 }

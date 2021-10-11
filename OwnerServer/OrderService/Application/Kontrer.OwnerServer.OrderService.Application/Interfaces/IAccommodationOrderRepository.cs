@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Application.Interfaces
 {
-    public interface IAccommodationOrderRepository : IInstantCrudRepository<AccommodationOrderEntity, int>
+    public interface IAccommodationOrderRepository : IAsyncInstantCrudRepository<AccommodationOrderEntity, int>
     {
     }
 }

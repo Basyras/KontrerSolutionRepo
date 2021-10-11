@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.CustomerService.Application.Interfaces
 {
-    public interface ICustomerRepository : IInstantCrudRepository<CustomerEntity, int>
+    public interface ICustomerRepository : IAsyncInstantCrudRepository<CustomerEntity, int>
     {
         Task<List<CustomerEntity>> GetByIdsAsync(IEnumerable<int> ids);
     }

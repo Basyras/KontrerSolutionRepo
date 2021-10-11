@@ -21,7 +21,7 @@ namespace Kontrer.OwnerServer.CustomerService.Application.Customer
 
         public async Task Handle(DeleteCustomerCommand command, CancellationToken cancellationToken = default)
         {
-            await repository.RemoveAsync(command.CustomerId);
+            await repository.InstaRemoveAsync(command.CustomerId);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Kontrer.OwnerServer.OfferService.Application
 {
-    public interface IOfferRepository : IInstantCrudRepository<Offer, int>
+    public interface IOfferRepository : IAsyncInstantCrudRepository<Offer, int>
     {
     }
 }
