@@ -1,0 +1,32 @@
+﻿@import "../Colors.scss";
+
+.statusLabelContainer {
+    border-width: 1px;
+    border-style: solid;
+    padding: 1rem 2rem;
+    display: inline-block;
+    border-color: gray;
+    color: gray;
+    background-color: lightgray;
+}
+
+.statusLabelContainer--Ok {
+    @extend .statusLabelContainer;
+    border-color: $Basic_Ok_Foreground;
+    color: $Basic_Ok_Foreground;
+    background-color: $Basic_Ok_Background;
+}
+
+.statusLabelContainer--Error {
+    @extend .statusLabelContainer;
+    border-color: #E89898;
+    color: #E89898;
+    background-color: #FEEBEB;
+}
+
+.statusLabelContainer--Info {
+    @extend .statusLabelContainer;
+    border-color: $SoftForeground;
+    color: $SoftForeground;
+    background-color: lightblue;
+}

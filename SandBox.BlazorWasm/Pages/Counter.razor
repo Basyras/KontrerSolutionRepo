@@ -20,7 +20,7 @@
     private async void SendCommandAction()
     {
         //await bus.RequestAsync<CancelAccommodationOrderCommand>(new(5, null, true), default);
-        var results = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
+        var results = await bus.RequestAsync<GetAccommodationOrdersQuery, GetAccommodationOrdersResponse>();
         NewOrders = System.Text.Json.JsonSerializer.Serialize(results);
         this.StateHasChanged();
     }

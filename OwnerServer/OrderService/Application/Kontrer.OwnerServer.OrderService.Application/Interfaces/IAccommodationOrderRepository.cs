@@ -10,10 +10,5 @@ namespace Kontrer.OwnerServer.OrderService.Application.Interfaces
 {
     public interface IAccommodationOrderRepository : IInstantCrudRepository<AccommodationOrderEntity, int>
     {
-        Task<Dictionary<int, AccommodationOrderEntity>> GetNewOrdersAsync();
-
-        Task<Dictionary<int, AccommodationOrderEntity>> GetProcessedAsync();
-
-        Task<Dictionary<int, AccommodationOrderEntity>> GetCompletedAsync();
     }
 }

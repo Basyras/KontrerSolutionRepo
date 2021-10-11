@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.MessageBus.Proxy.Shared;
+﻿using Kontrer.Shared.MessageBus.HttpProxy.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

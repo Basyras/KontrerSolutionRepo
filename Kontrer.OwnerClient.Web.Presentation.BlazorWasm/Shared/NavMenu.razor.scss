@@ -12,7 +12,8 @@
 }
 
 .navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
+    /*background-color: rgba(255, 255, 255, 0.1);*/
+    background-color: $Extra_Highlight;
 }
 
 .top-row {
@@ -24,7 +25,7 @@
     font-size: 1.1rem;
     margin-right: 0px;
     margin-left: 0px;
-    color: $ForegroundStrong;
+    color: $Extra_Foreground;
 }
 
 .oi {
@@ -38,7 +39,6 @@
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
     width: 80px;
-    color: #d7d7d7;
     height: 80px;
 }
 

@@ -164,13 +164,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandBox", "SandBox", "{4F31
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox.AspApiApp", "SandBox.AspApiApp\SandBox.AspApiApp.csproj", "{82303C2A-3125-467D-8D3C-05601B1BEDA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.Proxy.Client", "Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Kontrer.Shared.MessageBus.Proxy.Client.csproj", "{4BA810C6-302F-4B3E-8C92-696E800C2E41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.HttpProxy.Client", "Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Kontrer.Shared.MessageBus.HttpProxy.Client.csproj", "{4BA810C6-302F-4B3E-8C92-696E800C2E41}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proxy", "Proxy", "{6594F570-14ED-4420-9942-00D4669ADD25}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HttpProxy", "HttpProxy", "{6594F570-14ED-4420-9942-00D4669ADD25}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.Proxy.Shared", "Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Shared\Kontrer.Shared.MessageBus.Proxy.Shared.csproj", "{AAB4B617-0454-437A-A871-5902E701DA60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.HttpProxy.Shared", "Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Shared\Kontrer.Shared.MessageBus.HttpProxy.Shared.csproj", "{AAB4B617-0454-437A-A871-5902E701DA60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.Proxy.Server.Asp", "Kontrer.Shared.MessageBus.Proxy.Server.Asp\Kontrer.Shared.MessageBus.Proxy.Server.Asp.csproj", "{F92EC862-D81B-4759-953F-81AA39DA2B3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.Shared.MessageBus.HttpProxy.Server.Asp", "Kontrer.Shared.MessageBus.Proxy.Server.Asp\Kontrer.Shared.MessageBus.HttpProxy.Server.Asp.csproj", "{F92EC862-D81B-4759-953F-81AA39DA2B3F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox.BlazorWasm", "SandBox.BlazorWasm\SandBox.BlazorWasm.csproj", "{17659D5F-8A54-46E7-94A8-530319433D7A}"
 EndProject

@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
-    <ProjectReference Include="..\Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Kontrer.Shared.MessageBus.Proxy.Client.csproj" />
+    <ProjectReference Include="..\Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Kontrer.Shared.MessageBus.HttpProxy.Client.csproj" />
   </ItemGroup>
 
 </Project>

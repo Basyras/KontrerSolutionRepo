@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerClient.Application.Customers
 {
-    public class CustomerManager : ICustomerManager
+    public class BusCustomerManager : ICustomerManager
     {
         private readonly IMessageBusManager bus;
 
-        public CustomerManager(IMessageBusManager bus)
+        public BusCustomerManager(IMessageBusManager bus)
         {
             this.bus = bus;
         }

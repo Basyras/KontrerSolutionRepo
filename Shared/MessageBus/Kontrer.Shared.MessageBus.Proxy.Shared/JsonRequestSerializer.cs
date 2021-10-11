@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.Proxy.Shared
+namespace Kontrer.Shared.MessageBus.HttpProxy.Shared
 {
     public class JsonRequestSerializer : IRequestSerializer
     {

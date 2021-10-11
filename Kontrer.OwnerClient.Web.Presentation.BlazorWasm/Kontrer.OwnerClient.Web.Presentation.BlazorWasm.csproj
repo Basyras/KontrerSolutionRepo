@@ -14,6 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Bogus" Version="33.0.2" />
 		<PackageReference Include="LibSassBuilder" Version="1.6.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.3" PrivateAssets="all" />
@@ -26,7 +27,7 @@
 		<ProjectReference Include="..\OwnerClient\Application\Kontrer.OwnerClient.Application\Kontrer.OwnerClient.Application.csproj" />
 		<ProjectReference Include="..\OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Domain\Kontrer.OwnerServer.CustomerService.Domain.csproj" />
 		<ProjectReference Include="..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
-		<ProjectReference Include="..\Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Kontrer.Shared.MessageBus.Proxy.Client.csproj" />
+		<ProjectReference Include="..\Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Kontrer.Shared.MessageBus.HttpProxy.Client.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

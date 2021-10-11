@@ -24,10 +24,11 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
         }
 
         public async Task<CreateAccommodationOrderResponse> Handle(CreateAccommodationOrderCommand command, CancellationToken cancellationToken = default)
-        {
-            var response = await messageBus.RequestAsync<CreateAccommodationOrderCommand, CreateAccommodationOrderResponse>(command);
-            await orderRepository.AddAsync(response.NewOrder);
-            return new CreateAccommodationOrderResponse(response.NewOrder);
+        {            
+            var newOrder = new AccommodationOrderEntity(default, command.CustomerId, command.Requirement, DateTime.Now, "sheesh", "sheesh2");
+            newOrder.State = Domain.Orders.OrderStates.New;
+            newOrder = await orderRepository.AddAsync(newOrder);
+            return new CreateAccommodationOrderResponse(newOrder);
         }
     }
 }

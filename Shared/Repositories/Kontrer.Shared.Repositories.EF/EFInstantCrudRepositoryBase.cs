@@ -60,14 +60,6 @@ namespace Kontrer.Shared.Repositories.EF
             return models;
         }
 
-        public void Remove(TModelKey id)
-        {
-            TEntity entity = new TEntity();
-            SetEntityId(id, ref entity);
-            dbContext.Remove(entity);
-            dbContext.SaveChanges();
-        }
-
         public async Task<TModel> GetAsync(TModelKey id)
         {
             var entity = await dbContext.Set<TEntity>().FindAsync(id);
@@ -104,14 +96,30 @@ namespace Kontrer.Shared.Repositories.EF
             return updatedModel;
         }
 
-        public Task<TModel> UpdateAsync(TModel model)
+        public async Task<TModel> UpdateAsync(TModel model)
         {
-            throw new NotImplementedException();
+            var entityToUpdate = ToEntity(model);
+            var modelId = GetModelId(model);
+            TEntity updatetedEntity;
+
+            var oldEntityEntry = dbContext.ChangeTracker.Entries<TEntity>().FirstOrDefault(x => GetEntityId(x.Entity).Equals(modelId));
+            if (oldEntityEntry is not null)
+            {
+                oldEntityEntry.CurrentValues.SetValues(entityToUpdate);
+                updatetedEntity = oldEntityEntry.Entity;
+            }
+            else
+            {
+                updatetedEntity = dbContext.Update(entityToUpdate).Entity;
+            }
+
+            await dbContext.SaveChangesAsync();
+            var updatedModel = ToModel(updatetedEntity);
+            return updatedModel;
         }
 
         public async Task RemoveAsync(TModelKey id)
         {
-            //dbContext.Set<TEntity>().Remove(entityToUpdate);
             var oldEntry = dbContext.ChangeTracker.Entries<TEntity>().FirstOrDefault(x => ToModelId(GetEntityId(x.Entity)).Equals(id));
             if (oldEntry != null)
             {

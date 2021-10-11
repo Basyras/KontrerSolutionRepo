@@ -14,5 +14,7 @@ namespace Kontrer.OwnerClient.Application.Orders
         Task DeleteOrder(int orderId);
 
         ValueTask<OrderViewModel> CreateOrder(int customerId);
+
+        Task Process(AccommodationOrderEntity order);
     }
 }

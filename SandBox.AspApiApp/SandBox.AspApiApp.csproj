@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj" />
-    <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Server.Asp\Kontrer.Shared.MessageBus.Proxy.Server.Asp.csproj" />
+    <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Server.Asp\Kontrer.Shared.MessageBus.HttpProxy.Server.Asp.csproj" />
     <ProjectReference Include="..\OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Domain\Kontrer.OwnerServer.CustomerService.Domain.csproj" />
     <ProjectReference Include="..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
   </ItemGroup>

@@ -21,7 +21,7 @@ namespace Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework
         {
         }
 
-        public DbSet<CustomerEntity> Orders { get; set; }
+        public DbSet<CustomerEntity> Customers { get; set; }
 
         public CustomerServiceDbContext CreateDbContext(string[] args)
         {

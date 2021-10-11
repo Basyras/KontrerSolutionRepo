@@ -1,6 +1,6 @@
 ﻿using Kontrer.Shared.Helpers;
 using Kontrer.Shared.MessageBus;
-using Kontrer.Shared.MessageBus.Proxy.Shared;
+using Kontrer.Shared.MessageBus.HttpProxy.Shared;
 using Kontrer.Shared.MessageBus.RequestResponse;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class IEnpointBuilderProxyServerExtensions
+    public static class IEnpointBuilderHttpProxyServerExtensions
     {
         public static void MapMessageBusProxyServer(this IEndpointRouteBuilder endpoints)
         {

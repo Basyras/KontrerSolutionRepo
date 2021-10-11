@@ -1,0 +1,31 @@
+﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder.ValueObjects.Requirements
+<editorContainer>
+    <MudGrid>
+        <MudItem>
+            @*<MudTimePicker Label="check in" Variant="Variant.Outlined" @bind-Time="Accommodation.From" />
+                <MudTimePicker Label="check out" Variant="Variant.Outlined" @bind-Time="Accommodation.To" />*@
+
+            <MudTextField Label="customer" Variant="Variant.Outlined" @bind-Value="Text" />
+            <MudNumericField Label="deposit" Variant="Variant.Outlined" @bind-Value="Number" />
+            <MudTextField Label="check in" Variant="Variant.Outlined" @bind-Value="Text" />
+            <MudTextField Label="deposit date" Variant="Variant.Outlined" @bind-Value="Text" />
+        </MudItem>
+        <MudItem>
+            <MudTreeView Items="@TreeItems" CanHover="true" ExpandOnClick="true">
+                <ItemTemplate>
+                    <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.TreeItems">
+                        <Content>
+                            <MudTreeViewItemToggleButton @bind-Expanded="@context.IsExpanded" Visible="@context.HasChild" />
+                            <MudIcon Icon="@context.Icon" Class="ml-0 mr-2" Color="@Color.Default" />
+                            <MudText>@context.Text</MudText>
+                        </Content>
+                    </MudTreeViewItem>
+                </ItemTemplate>
+            </MudTreeView>
+        </MudItem>
+    </MudGrid>
+</editorContainer>
+
+@code {
+
+}

@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Kontrer.Shared.MessageBus.csproj" />
-    <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Shared\Kontrer.Shared.MessageBus.Proxy.Shared.csproj" />
+    <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Shared\Kontrer.Shared.MessageBus.HttpProxy.Shared.csproj" />
   </ItemGroup>
 
 </Project>

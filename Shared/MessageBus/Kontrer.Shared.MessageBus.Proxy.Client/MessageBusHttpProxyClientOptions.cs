@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.Proxy.Client
+namespace Kontrer.Shared.MessageBus.HttpProxy.Client
 {
-    public class MessageBusProxyClientOptions
+    public class MessageBusHttpProxyClientOptions
     {
-        public MessageBusProxyClientOptions()
+        public MessageBusHttpProxyClientOptions()
         {
         }
 

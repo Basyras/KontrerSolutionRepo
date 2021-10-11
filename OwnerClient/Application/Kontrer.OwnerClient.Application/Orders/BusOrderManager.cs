@@ -10,16 +10,17 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerClient.Application.Orders
 {
-    public class OrderManager : IOrderManager
+    public class BusOrderManager : IOrderManager
     {
         private readonly IMessageBusManager bus;
         private List<OrderViewModel> ordersCache = new List<OrderViewModel>();
         private DateTime lastRefresh;
-        private bool shouldRefresh = false;
+        private bool shouldRefresh;
 
-        public OrderManager(IMessageBusManager bus)
+        public BusOrderManager(IMessageBusManager bus)
         {
             this.bus = bus;
+            shouldRefresh = true;
         }
 
         public async ValueTask<OrderViewModel> CreateOrder(int customerId)
@@ -37,11 +38,17 @@ namespace Kontrer.OwnerClient.Application.Orders
             shouldRefresh = true;
         }
 
+        public async Task Process(AccommodationOrderEntity order)
+        {
+            await bus.SendAsync<ProcessAccommodationOrderCommand>(new(order));
+            shouldRefresh = true;
+        }
+
         public async ValueTask<List<OrderViewModel>> GetOrders()
         {
             if (NeedsRefresh())
             {
-                var response = await bus.RequestAsync<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>();
+                var response = await bus.RequestAsync<GetAccommodationOrdersQuery, GetAccommodationOrdersResponse>();
                 var customerIds = response.NewOrders.Values.Select(x => x.CustomerId).ToArray();
                 var customers = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new GetCustomersQuery(customerIds));
                 ordersCache.Clear();
@@ -59,7 +66,7 @@ namespace Kontrer.OwnerClient.Application.Orders
 
         private bool NeedsRefresh()
         {
-            return lastRefresh.AddSeconds(5) < DateTime.Now || shouldRefresh;
+            return lastRefresh.AddSeconds(2) < DateTime.Now || shouldRefresh;
         }
     }
 }

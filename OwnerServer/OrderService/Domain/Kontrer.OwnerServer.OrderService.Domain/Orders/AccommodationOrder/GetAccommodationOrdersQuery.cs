@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
 {
-    public record GetNewAccommodationOrdersQuery : IQuery<GetNewAccommodationOrdersResponse>;
+    public record GetAccommodationOrdersQuery : IQuery<GetAccommodationOrdersResponse>;
 }

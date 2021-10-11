@@ -36,7 +36,6 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
 
             if (command.IsCanceledByCustomer == false)
             {
-                order.State = OrderStates.CanceledByOwner;
                 //should notify customer
             }
         }

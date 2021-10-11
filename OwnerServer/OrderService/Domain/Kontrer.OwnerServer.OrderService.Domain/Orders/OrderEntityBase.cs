@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Domain.Orders
 {
-    public abstract class OrderEntityBase<TRequirment> : IEntity
+    public abstract class OrderEntityBase<TRequirment> : IEntity where TRequirment : new()
     {
         public OrderEntityBase()
         {
+            Requirment = new();
         }
 
         public OrderEntityBase(int id, int customerId, TRequirment requirment, DateTime issueDate, string customerNotes, string ownerPrivateNotes, OrderStates state = default)

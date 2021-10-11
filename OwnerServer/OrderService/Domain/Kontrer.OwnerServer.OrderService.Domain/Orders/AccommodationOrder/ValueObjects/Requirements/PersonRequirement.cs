@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder.ValueObjects.Requirements
 {
-    public class PersonBlueprint
+    public class PersonRequirement
     {
-        public PersonBlueprint(List<ItemRequirement> personItems, List<DiscountBlueprint> discounts, PersonTypes personType)
+        public PersonRequirement(List<ItemRequirement> personItems, List<DiscountBlueprint> discounts, PersonTypes personType)
         {
             PersonItems = personItems ?? new List<ItemRequirement>();
             Discounts = discounts ?? new List<DiscountBlueprint>();
             PersonType = personType;
         }
 
-        public PersonBlueprint(PersonTypes personType) : this(null, null, personType)
+        public PersonRequirement(PersonTypes personType) : this(null, null, personType)
         {
         }
 
-        public PersonBlueprint()
+        public PersonRequirement()
         {
         }
 

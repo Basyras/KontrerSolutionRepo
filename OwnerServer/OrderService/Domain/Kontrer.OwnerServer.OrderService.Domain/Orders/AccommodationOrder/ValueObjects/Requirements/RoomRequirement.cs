@@ -11,7 +11,7 @@ namespace Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder.Valu
         public DateTime RoomStartDate { get; set; }
         public DateTime RoomEndDate { get; set; }
         public List<ItemRequirement> RoomItems { get; set; } = new List<ItemRequirement>();
-        public List<PersonBlueprint> People { get; set; } = new List<PersonBlueprint>();
+        public List<PersonRequirement> People { get; set; } = new List<PersonRequirement>();
         public List<DiscountBlueprint> Discounts { get; set; } = new List<DiscountBlueprint>();
         public string RoomType { get; set; }
 

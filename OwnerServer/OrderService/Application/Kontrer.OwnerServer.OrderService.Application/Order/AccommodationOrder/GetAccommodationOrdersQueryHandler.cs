@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
 {
-    public class GetNewAccommodationOrdersQueryHandler : IQueryHandler<GetNewAccommodationOrdersQuery, GetNewAccommodationOrdersResponse>
+    public class GetAccommodationOrdersQueryHandler : IQueryHandler<GetAccommodationOrdersQuery, GetAccommodationOrdersResponse>
     {
         private readonly IAccommodationOrderRepository repository;
 
-        public GetNewAccommodationOrdersQueryHandler(IAccommodationOrderRepository repository)
+        public GetAccommodationOrdersQueryHandler(IAccommodationOrderRepository repository)
         {
             this.repository = repository;
         }
 
-        public async Task<GetNewAccommodationOrdersResponse> Handle(GetNewAccommodationOrdersQuery command, CancellationToken cancellationToken = default)
+        public async Task<GetAccommodationOrdersResponse> Handle(GetAccommodationOrdersQuery command, CancellationToken cancellationToken = default)
         {
-            var orders = await repository.GetNewOrdersAsync();
-            var response = new GetNewAccommodationOrdersResponse(orders);
+            var orders = await repository.GetAllAsync();
+            var response = new GetAccommodationOrdersResponse(orders);
             return response;
         }
     }
