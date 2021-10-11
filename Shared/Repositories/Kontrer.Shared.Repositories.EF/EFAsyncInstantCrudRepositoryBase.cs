@@ -105,9 +105,9 @@ namespace Kontrer.Shared.Repositories.EF
             }
             else
             {
-                var entityToUpdate = new TEntity();
-                EntityIdSetter(entityToUpdate, ToEntityId(modelId));
-                dbContext.Set<TEntity>().Remove(entityToUpdate);
+                var entityToRemove = new TEntity();
+                EntityIdSetter(entityToRemove, ToEntityId(modelId));
+                dbContext.Set<TEntity>().Remove(entityToRemove);
             }
 
             await dbContext.SaveChangesAsync();

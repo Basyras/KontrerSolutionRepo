@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj" />
-    <ProjectReference Include="..\Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction\Kontrer.OwnerServer.IdGeneratorService.Presentation.Abstraction.csproj" />
   </ItemGroup>
 
   <ItemGroup>

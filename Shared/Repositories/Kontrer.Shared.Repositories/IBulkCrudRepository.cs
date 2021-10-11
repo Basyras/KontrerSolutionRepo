@@ -30,19 +30,19 @@ namespace Kontrer.Shared.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
-        Task<TModel> AddAsync(TModel model);
+        TModel Add(TModel model);
 
         /// <summary>
-        /// Updates record
+        /// Updates a record
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
-        void UpdateAsync(TModel model);
+        void Update(TModel model);
 
         /// <summary>
-        /// Deletes items with same id.
+        /// Deletes item with same id.
         /// </summary>
         /// <param name="id"></param>
-        void RemoveAsync(TKey id);
+        void Remove(TKey id);
     }
 }

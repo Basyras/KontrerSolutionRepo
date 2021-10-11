@@ -30,19 +30,12 @@ namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
             return dic;
         }
 
-        public Task<Dictionary<int, AccommodationOrderEntity>> GetProcessedAsync()
+        public async Task<Dictionary<int, AccommodationOrderEntity>> GetProcessedAsync()
         {
-            throw new NotImplementedException();
-        }
-
-        protected override int GetModelId(AccommodationOrderEntity model)
-        {
-            return model.Id;
-        }
-
-        protected override void SetModelId(int entityId, ref AccommodationOrderEntity model)
-        {
-            model.Id = entityId;
+            var dic = await dbContext.Set<AccommodationOrderEntity>()
+                 .Where(x => x.State == Domain.Orders.OrderStates.Processed)
+                 .ToDictionaryAsync(x => x.Id);
+            return dic;
         }
     }
 }
