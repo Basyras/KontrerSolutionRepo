@@ -1,17 +1,19 @@
-﻿using Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator.Abstraction.Data;
+﻿using Kontrer.OwnerServer.IdGeneratorService.Application.Interfaces;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator.Data.EF
+namespace Kontrer.OwnerServer.IdGeneratorService.Infrastructure.EntityFramework
 {
-    public class EFIdGeneratorStorage : IIdGeneratorStorage
+    public class EFIdGeneratorRepository : IIdGeneratorRepository
     {
         private readonly DbContext dbContext;
 
-        public EFIdGeneratorStorage(DbContext dbContext)
+        public EFIdGeneratorRepository(DbContext dbContext)
         {
             this.dbContext = dbContext;
         }
@@ -33,8 +35,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator
         }
 
         public Task SetLastUsedId(string groupName, int lastUsedId)
-        {         
-
+        {
             var oldEntity = dbContext.Set<LastUsedIdEntity>().Find(groupName);
 
             if (oldEntity is null)
@@ -53,7 +54,6 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator
             }
 
             return dbContext.SaveChangesAsync();
-
         }
     }
 }

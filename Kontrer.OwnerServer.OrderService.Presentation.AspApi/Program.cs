@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework;
+using Kontrer.Shared.Repositories.EF;
 
 namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
 {
@@ -17,7 +19,10 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup, CreateAccommodationOrderCommandHandler>(args).Build().Run();
+            MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup, CreateAccommodationOrderCommandHandler>(args)
+                .Build()
+                .MigrateDatabase<OrderServiceDbContext>()
+                .Run();
         }
     }
 }

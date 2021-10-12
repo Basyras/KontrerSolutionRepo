@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator.Abstraction.Data;
+﻿using Kontrer.OwnerServer.IdGeneratorService.Application.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

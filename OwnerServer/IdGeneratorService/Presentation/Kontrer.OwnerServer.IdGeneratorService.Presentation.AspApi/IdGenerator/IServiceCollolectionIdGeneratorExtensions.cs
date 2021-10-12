@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator.Abstraction.Data;
-using Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator.Data.EF;
+﻿using Kontrer.OwnerServer.IdGeneratorService.Application.Interfaces;
+using Kontrer.OwnerServer.IdGeneratorService.Infrastructure.EntityFramework;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi.IdGenerator
     {
         public static IServiceCollection AddIdGenerator(this IServiceCollection services)
         {
-            services.AddSingleton<IIdGeneratorManager, IdGeneratorManager>();
-            services.AddSingleton<IIdGeneratorStorage, EFIdGeneratorStorage>();            
+            services.AddSingleton<IIdGeneratorRepository, EFIdGeneratorRepository>();
 
             return services;
         }

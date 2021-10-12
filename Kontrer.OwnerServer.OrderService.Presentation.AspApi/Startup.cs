@@ -51,27 +51,27 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<DbContext>();
-                db.Database.Migrate();
+            //using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var db = scope.ServiceProvider.GetRequiredService<DbContext>();
+            //    db.Database.Migrate();
 
-                //var repo = scope.ServiceProvider.GetService<IAccommodationOrderRepository>();
-                //var ids = repo.GetAllAsync().GetAwaiter().GetResult().Select(x => x.Value.Id).ToList();
-                //foreach (var id in ids)
-                //{
-                //    repo.RemoveAsync(id).GetAwaiter().GetResult();
-                //}
-                //var req = new AccommodationRequirement();
-                //var room = new RoomRequirement();
-                //room.People.Add(new PersonBlueprint());
-                //room.People.Add(new PersonBlueprint());
-                //room.People.Add(new PersonBlueprint());
-                //req.Rooms.Add(room);
-                //req.Rooms.Add(new RoomRequirement());
-                //req.Rooms.Add(new RoomRequirement());
-                //repo.AddAsync(new AccommodationOrderEntity(0, 1, req, DateTime.Now, "asd", "xxx") { State = Domain.Orders.OrderStates.New }).GetAwaiter().GetResult();
-            }
+            //    //var repo = scope.ServiceProvider.GetService<IAccommodationOrderRepository>();
+            //    //var ids = repo.GetAllAsync().GetAwaiter().GetResult().Select(x => x.Value.Id).ToList();
+            //    //foreach (var id in ids)
+            //    //{
+            //    //    repo.RemoveAsync(id).GetAwaiter().GetResult();
+            //    //}
+            //    //var req = new AccommodationRequirement();
+            //    //var room = new RoomRequirement();
+            //    //room.People.Add(new PersonBlueprint());
+            //    //room.People.Add(new PersonBlueprint());
+            //    //room.People.Add(new PersonBlueprint());
+            //    //req.Rooms.Add(room);
+            //    //req.Rooms.Add(new RoomRequirement());
+            //    //req.Rooms.Add(new RoomRequirement());
+            //    //repo.AddAsync(new AccommodationOrderEntity(0, 1, req, DateTime.Now, "asd", "xxx") { State = Domain.Orders.OrderStates.New }).GetAwaiter().GetResult();
+            //}
         }
     }
 };
