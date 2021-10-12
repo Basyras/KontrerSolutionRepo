@@ -1,10 +1,24 @@
-﻿@page
+﻿@page "Index2"
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome11</h1>
+    @foreach (var message in Model.Messages)
+    {
+        <div>
+            @message.FullName
+            <form method="POST">
+                <input type="hidden" name="assemblyName" value="@message.AssemblyQualifiedName">
+                @foreach (var param in message.GetConstructors().First().GetParameters())
+                {
+                    <input type="text" name="@param.Name">
+                }
+
+                <button type="submit" asp-page-handler="Send">send</button>
+            </form>
+        </div>
+    }
 </div>

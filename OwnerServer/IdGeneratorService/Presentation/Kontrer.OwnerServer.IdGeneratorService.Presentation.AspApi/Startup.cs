@@ -42,6 +42,11 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var dbContext = app.ApplicationServices.GetRequiredService<DbContext>();
+            dbContext.Database.Migrate();
+
+            //var busManager = app.ApplicationServices.GetRequiredService<IMessageBusManager>();
+            //busManager.RegisterConsumer<AccommodationIdCreatedConsumer>();
         }
     }
 }

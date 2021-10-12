@@ -11,18 +11,26 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests.IdGene
     {
         private Dictionary<string, int> storage = new Dictionary<string, int>();
 
-        public Task<int> GetLastUsedId(string groupName)
+        public InMemoryIdGeneratorStorage(int miliSecondsDelay = 0)
+        {
+            this.MiliSecondsDelay = miliSecondsDelay;
+        }
+
+        public int MiliSecondsDelay { get; set; }
+
+        public async Task<int> GetLastUsedId(string groupName)
         {
             TryCreate(groupName);
             var id = storage[groupName];
-            return Task.FromResult(id);
+            await Task.Delay(MiliSecondsDelay);
+            return id;
         }
 
-        public Task SetLastUsedId(string groupName, int lastUsedId)
+        public async Task SetLastUsedId(string groupName, int lastUsedId)
         {
             TryCreate(groupName);
             storage[groupName] = lastUsedId;
-            return Task.CompletedTask;
+            await Task.Delay(MiliSecondsDelay);
         }
 
         private void TryCreate(string groupName)

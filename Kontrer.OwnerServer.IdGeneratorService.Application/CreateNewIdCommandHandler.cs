@@ -12,7 +12,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Application
     public class CreateNewIdCommandHandler : ICommandHandler<CreateNewIdCommand, GetNewIdResponse>
     {
         private readonly IIdGeneratorRepository repository;
-        private readonly Dictionary<string, Queue<int>> cachedIds;
+        private readonly Dictionary<string, Queue<int>> cachedIds = new Dictionary<string, Queue<int>>();
         private SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
         public int CacheSize { get; set; } = 50;
 
@@ -30,11 +30,11 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Application
         private async Task<int> GetNewId(string groupName)
         {
             await semaphore.WaitAsync();
-
             var groupExits = cachedIds.TryGetValue(groupName, out Queue<int> queue);
             if (groupExits is false)
             {
-                cachedIds.Add(groupName, new Queue<int>(CacheSize));
+                queue = new Queue<int>(CacheSize);
+                cachedIds.Add(groupName, queue);
             }
 
             if (queue.Count == 0)

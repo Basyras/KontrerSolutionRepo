@@ -27,7 +27,7 @@ namespace SandBox.AspApiApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddRazorPages();
+            services.AddRazorPages();
             services.AddControllers();
             //services.AddSwaggerGen(c =>
             //{
@@ -63,7 +63,7 @@ namespace SandBox.AspApiApp
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapRazorPages();
+                endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapMessageBusProxyServer();
             });
