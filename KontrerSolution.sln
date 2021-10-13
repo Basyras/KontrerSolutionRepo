@@ -180,11 +180,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.Custome
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.IdGeneratorService.Application", "Kontrer.OwnerServer.IdGeneratorService.Application\Kontrer.OwnerServer.IdGeneratorService.Application.csproj", "{84A5D213-F856-4390-BE5F-09C0527DB735}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.IdGeneratorService.Infrastructure", "Kontrer.OwnerServer.IdGeneratorService.Infrastructure\Kontrer.OwnerServer.IdGeneratorService.Infrastructure.csproj", "{345DEDB3-99B6-4ABD-9189-834C18D7FB29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.IdGeneratorService.Infrastructure", "Kontrer.OwnerServer.IdGeneratorService.Infrastructure\Kontrer.OwnerServer.IdGeneratorService.Infrastructure.csproj", "{345DEDB3-99B6-4ABD-9189-834C18D7FB29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.IdGeneratorService.Domain", "Kontrer.OwnerServer.IdGeneratorService.Domain\Kontrer.OwnerServer.IdGeneratorService.Domain.csproj", "{AAFA7809-2D03-49B3-941B-C42042509316}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.IdGeneratorService.Domain", "Kontrer.OwnerServer.IdGeneratorService.Domain\Kontrer.OwnerServer.IdGeneratorService.Domain.csproj", "{AAFA7809-2D03-49B3-941B-C42042509316}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.IdGeneratorService.Infrastructure.Tests", "Kontrer.OwnerServer.IdGeneratorService.Infrastructure.Tests\Kontrer.OwnerServer.IdGeneratorService.Infrastructure.Tests.csproj", "{214ED1E3-1111-4228-929F-3310F3D469E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.IdGeneratorService.Infrastructure.Tests", "Kontrer.OwnerServer.IdGeneratorService.Infrastructure.Tests\Kontrer.OwnerServer.IdGeneratorService.Infrastructure.Tests.csproj", "{214ED1E3-1111-4228-929F-3310F3D469E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer.DevClient", "Kontrer.DevClient", "{104780ED-D68B-481F-9223-75016596467D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.DevClient.Presentation.Blazor", "Kontrer.DevClient.Presentation.Blazor\Kontrer.DevClient.Presentation.Blazor.csproj", "{F6A90157-30FC-4D1C-8D6F-A10C4602C867}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -428,6 +432,10 @@ Global
 		{214ED1E3-1111-4228-929F-3310F3D469E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{214ED1E3-1111-4228-929F-3310F3D469E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{214ED1E3-1111-4228-929F-3310F3D469E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6A90157-30FC-4D1C-8D6F-A10C4602C867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A90157-30FC-4D1C-8D6F-A10C4602C867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A90157-30FC-4D1C-8D6F-A10C4602C867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A90157-30FC-4D1C-8D6F-A10C4602C867}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -518,6 +526,7 @@ Global
 		{345DEDB3-99B6-4ABD-9189-834C18D7FB29} = {871B6CBE-70DF-47D3-AD00-E23DF3FEA266}
 		{AAFA7809-2D03-49B3-941B-C42042509316} = {871B6CBE-70DF-47D3-AD00-E23DF3FEA266}
 		{214ED1E3-1111-4228-929F-3310F3D469E7} = {871B6CBE-70DF-47D3-AD00-E23DF3FEA266}
+		{F6A90157-30FC-4D1C-8D6F-A10C4602C867} = {104780ED-D68B-481F-9223-75016596467D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

@@ -57,10 +57,10 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApiTests.IdGene
         [Fact]
         public async Task Concurrency_Should_Be_Queued()
         {
-            int taskCount = 10;
+            int taskCount = 3;
             var command = new CreateNewIdCommand(groupNameOrders);
             handler.CacheSize = 1;
-            repoMock.MiliSecondsDelay = 600;
+            repoMock.MiliSecondsDelay = 50;
             var tasks = Enumerable.Range(0, taskCount)
                .Select<int, Task<GetNewIdResponse>>((x) =>
                {

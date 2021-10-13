@@ -1,0 +1,19 @@
+﻿@page "/MessageBusPage"
+
+<h3>MessageBus</h3>
+<button @onclick="()=> SendMessage(null)">Send!</button>
+@foreach (var domain in Domains)
+{
+    <div>@domain.DomainName</div>
+    @foreach (var message in domain.Messages)
+    {
+        <div>
+            <h3>@message.type.Name </h3>
+            @foreach (var param in message.parameters)
+            {
+                @param.Name <InputText></InputText>
+            }
+            <button @onclick="()=> SendMessage(message)">Send!</button>
+        </div>
+    }
+}
