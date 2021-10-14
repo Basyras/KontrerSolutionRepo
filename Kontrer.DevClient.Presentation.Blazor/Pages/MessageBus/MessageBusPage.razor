@@ -8,12 +8,16 @@
     @foreach (var message in domain.Messages)
     {
         <div>
-            <h3>@message.type.Name </h3>
-            @foreach (var param in message.parameters)
+            <h3>@message.Type.Name </h3>
+            @for (int i = 0; i < message.Parameters.Count; i++)
             {
-                @param.Name <InputText></InputText>
+                var param = message.Parameters[i];
+                var paramValue = message.ParametersValues[i];
+                var index = i;
+                @param.Name <MudBlazor.MudTextField TextChanged="(text)=>SetParamValue(message.ParametersValues,index,text)" Value="@paramValue" />
+
             }
-            <button @onclick="()=> SendMessage(message)">Send!</button>
+            <MudButton @onclick="async ()=> await SendMessage(message)">Send!</MudButton>
         </div>
     }
 }

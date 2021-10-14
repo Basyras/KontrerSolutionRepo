@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.IdGeneratorService.Application
 {
+    //Need to move logic to different class since handler is created for every request
     public class CreateNewIdCommandHandler : ICommandHandler<CreateNewIdCommand, GetNewIdResponse>
     {
         private readonly IIdGeneratorRepository repository;

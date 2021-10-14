@@ -10,7 +10,6 @@ namespace Kontrer.OwnerServer.Shared.Asp
     {
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-
             return (IApplicationBuilder app) =>
             {
                 var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
@@ -24,8 +23,7 @@ namespace Kontrer.OwnerServer.Shared.Asp
 
                 app.UseHttpsRedirection();
                 app.UseRouting();
-                app.UseAuthorization();    
-
+                app.UseAuthorization();
 
                 next(app);
             };
