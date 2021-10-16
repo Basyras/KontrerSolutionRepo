@@ -1,0 +1,27 @@
+﻿@import "../../Shared/Colors.scss";
+
+domainHeading {
+    display: block;
+}
+
+domainHeadingText {
+    font-size: 1.60rem;
+}
+
+requestCounter {
+}
+
+queriesCount {
+    @extend requestCounter;
+    color: $Request-Tag-Query-Color;
+}
+
+commandCount {
+    @extend requestCounter;
+    color: $Request-Tag-Command-Color;
+}
+
+domainBorder {
+    display: block;
+    padding: 4rem;
+}

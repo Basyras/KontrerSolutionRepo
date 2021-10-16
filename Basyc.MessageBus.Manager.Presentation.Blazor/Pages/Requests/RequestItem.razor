@@ -1,0 +1,30 @@
+﻿<requestItemBorder>
+    <requestHeading>
+        <RequestTag RequestType="@tagType" />
+        <requestName>
+            @Request.Type.Name
+        </requestName>
+    </requestHeading>
+    <requestBody>
+        @for (int i = 0; i < Request.Parameters.Count; i++)
+        {
+            var index = i;
+            var paramInfo = Request.Parameters[index];
+            var paramValue = ParameterValues[index];
+            <paramLabel>@paramInfo.DisplayName </paramLabel>
+            <paramInput>
+                <paramType>@paramInfo.Type.Name</paramType>
+                <MudBlazor.MudTextField Class="paramInput" TextChanged="(text)=>SetParamValue(index,text)" Value="@paramValue" />
+                <MudButton @onclick="()=> SendMessage(Request)">set default</MudButton>
+            </paramInput>
+
+        }
+    </requestBody>
+    <MudButton @onclick="()=> SendMessage(Request)">Send!</MudButton>
+</requestItemBorder>
+@code
+{
+    public RequestTagType tagType { get => Request.IsCommand ? RequestTagType.Command : RequestTagType.Query; }
+}
+<div>
+</div>

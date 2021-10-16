@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -11,15 +12,24 @@ namespace Kontrer.Shared.Repositories.EF
 {
     public static class IHostEFMigratorExtensions
     {
-        public static IHost MigrateDatabase<TDbContext>(this IHost host) where TDbContext : DbContext
+        public static IHostBuilder MigrateDatabaseOnStart<TDbContext>(this IHostBuilder host)
+            where TDbContext : DbContext
         {
-            using (var scope = host.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
-                db.Database.Migrate();
-            }
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
+            //    db.Database.Migrate();
+            //}
+
+            host.ConfigureServices(ConfigureMigartionServices<TDbContext>);
 
             return host;
+        }
+
+        private static void ConfigureMigartionServices<TDBContext>(HostBuilderContext context, IServiceCollection services)
+            where TDBContext : DbContext
+        {
+            services.AddTransient<IStartupFilter, EFMigrationStartupFilter<TDBContext>>();
         }
     }
 }
