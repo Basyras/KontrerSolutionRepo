@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,17 +16,40 @@ namespace Basyc.MessageBus.Manager.Application
         {
             this.services = services;
             services.AddSingleton<IMessagesExplorerManager, MessagesExplorerManager>();
+            services.AddSingleton<IParameterTypeNameFormatter, DefaultParameterTypeNameFormatter>();
+            services.AddSingleton<IDomainNameFormatter, DefaultDomainNameFormatter>();
+            services.AddSingleton<IRequestNameFormatter, DefaultRequestNameFormatter>();
         }
 
         public MessageManagerBuilder AddDefaultExplorer<TIQuery, TICommand, TICommandWithResponse>()
         {
-            services.AddSingleton<IMessageExplorer>(new DefaultMessageDomainExplorer(typeof(TIQuery), typeof(TICommand), typeof(TICommandWithResponse)));
+            services.Configure<DefaultMessageDomainExplorerOptions>(x =>
+            {
+                x.IQueryType = typeof(TIQuery);
+                x.ICommandType = typeof(TICommand);
+                x.ICommandWithResponseType = typeof(TICommandWithResponse);
+            });
+            services.AddSingleton<IMessageExplorer, DefaultMessageDomainExplorer>();
             return this;
         }
 
-        public MessageManagerBuilder AddDefaultExplorer(Type iQueryType, Type iCommandType, Type iCommandWithResponseType)
+        public MessageManagerBuilder UseDefaultExplorer(Type iQueryType, Type iCommandType, Type iCommandWithResponseType)
         {
-            services.AddSingleton<IMessageExplorer>(new DefaultMessageDomainExplorer(iQueryType, iCommandType, iCommandWithResponseType));
+            services.Configure<DefaultMessageDomainExplorerOptions>(x =>
+            {
+                x.IQueryType = iQueryType;
+                x.ICommandType = iCommandType;
+                x.ICommandWithResponseType = iCommandWithResponseType;
+            });
+            services.AddSingleton<IMessageExplorer, DefaultMessageDomainExplorer>();
+            return this;
+        }
+
+        public MessageManagerBuilder UseDomainNameFormatter<TDomainNameFormatter>()
+            where TDomainNameFormatter : class, IDomainNameFormatter
+        {
+            services.RemoveAll<IDomainNameFormatter>();
+            services.AddSingleton<IDomainNameFormatter, TDomainNameFormatter>();
             return this;
         }
     }

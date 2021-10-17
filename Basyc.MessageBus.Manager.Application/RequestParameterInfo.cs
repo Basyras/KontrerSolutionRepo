@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Application
 {
-    public record RequestParameterInfo(Type Type, string DisplayName);
+    public record RequestParameterInfo(Type Type, string ParameterDisplayName, string TypeDisplayName);
 }

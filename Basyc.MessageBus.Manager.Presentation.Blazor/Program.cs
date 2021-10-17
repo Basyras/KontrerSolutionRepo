@@ -24,7 +24,9 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddMudServices();
 
-            builder.Services.AddMessageExplorer().AddDefaultExplorer(typeof(IRequest<>), typeof(IRequest), typeof(IRequest<>));
+            builder.Services.AddMessageExplorer()
+                .UseDefaultExplorer(typeof(IRequest<>), typeof(IRequest), typeof(IRequest<>))
+                .UseDomainNameFormatter<DDDDomainNameFormatter>();
 
             builder.Services.AddMessageBus()
                 .UseProxy()

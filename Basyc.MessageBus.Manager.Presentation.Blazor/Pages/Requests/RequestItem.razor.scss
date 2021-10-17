@@ -1,19 +1,19 @@
 ﻿requestItemBorder {
     background-color: white;
-    padding: 2rem;
+    padding: 1.5rem;
     display: block;
-    border: 0.5px solid #575757;
+    border: 0.5px solid #d4d4d4;
 }
 
 requestName {
-    font-weight: normal;
     font-style: italic;
     font-size: 19px;
-    text-align: left;
+    margin-left: 0.8rem;
 }
 
 requestBody {
-    display: block;
+    display: flex;    
+/*    margin: 0rem 2rem 2rem 2rem;*/
 }
 
 paramLabel {
@@ -22,8 +22,72 @@ paramLabel {
     color: #979797;
 }
 
-.paramInput {
+paramInput {
     border-radius: 3px;
     background: #f9f9f9;
-    border: 0.5px solid #818181;
+    border: 0.5px solid #c2c2c2;
+    display: flex;
+    margin-left: 2rem;
+}
+
+paramType {
+    font-size: 13px;
+    text-align: left;
+    color: #a5b5d6;
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    padding: 0.6rem
+}
+
+.paramType-isPrimitive-False {
+    color: #A7D6A5;
+}
+
+input {
+    border-width: 0px;
+    background-color: transparent;
+    flex: 1;
+}
+
+input:focus {
+    border-width: 0px;
+    outline: none;
+}
+
+requestHeading {
+    /* margin-bottom: 1.5rem;*/
+    /*display: block;*/
+    display: flex;
+    align-items: center;
+    margin: -16px -24px;
+}
+
+.secondaryButton {
+    text-decoration: underline;
+    font-size: 12px;
+    text-align: left;
+    color: #1f3f97;
+    padding: 0.6rem
+}
+
+.paramRow {
+}
+
+.paramTable {
+    border-collapse: separate;
+    border-spacing: 0 0.7em;
+}
+bodySection {
+    width: 50%;
+    padding: 0rem 2rem 2rem 2rem;
+}
+
+leftPart {
+    margin: 16px 24px;
+    width:50%;
+}
+
+.paramTextBox{
+ 
 }

@@ -1,30 +1,55 @@
-﻿<requestItemBorder>
-    <requestHeading>
-        <RequestTag RequestType="@tagType" />
-        <requestName>
-            @Request.Type.Name
-        </requestName>
-    </requestHeading>
-    <requestBody>
-        @for (int i = 0; i < Request.Parameters.Count; i++)
-        {
-            var index = i;
-            var paramInfo = Request.Parameters[index];
-            var paramValue = ParameterValues[index];
-            <paramLabel>@paramInfo.DisplayName </paramLabel>
-            <paramInput>
-                <paramType>@paramInfo.Type.Name</paramType>
-                <MudBlazor.MudTextField Class="paramInput" TextChanged="(text)=>SetParamValue(index,text)" Value="@paramValue" />
-                <MudButton @onclick="()=> SendMessage(Request)">set default</MudButton>
-            </paramInput>
+﻿<MudExpansionPanel Class="mb-2" Style="border: 0.5px solid #d4d4d4;" Dense="true" DisableGutters="true" HideIcon="true">
 
-        }
-    </requestBody>
-    <MudButton @onclick="()=> SendMessage(Request)">Send!</MudButton>
-</requestItemBorder>
-@code
-{
-    public RequestTagType tagType { get => Request.IsCommand ? RequestTagType.Command : RequestTagType.Query; }
-}
-<div>
-</div>
+    @*<requestItemBorder>*@
+    <TitleContent>
+        <requestHeading>
+            <leftPart>
+                <RequestTag RequestType="@tagType" />
+                <requestName>@Request.RequestDisplayName </requestName>
+            </leftPart>
+            <MudDivider Vertical="true" FlexItem="true" />
+            <leftPart>
+                <RequestTag RequestType="@tagType" />
+                <requestName>@Request.RequestDisplayName </requestName>
+            </leftPart>
+        </requestHeading>
+    </TitleContent>
+    <ChildContent>
+        <requestBody>
+            <bodySection>
+                <table class="paramTable">
+                    @for (int i = 0; i < Request.Parameters.Count; i++)
+                    {
+                        var index = i;
+                        var paramInfo = Request.Parameters[index];
+                        var paramValue = ParameterValues[index];
+                        var isPrimitive = paramInfo.Type.IsPrimitive || paramInfo.Type.IsArray || paramInfo.Type == typeof(string);
+                        <tr class="paramRow">
+                            <td> <paramLabel>@paramInfo.ParameterDisplayName </paramLabel> </td>
+                            <td>
+                                <paramInput>
+                                    <paramType class="paramType-isPrimitive-@isPrimitive">@paramInfo.TypeDisplayName</paramType>
+                                    <input class="paramTextBox" value="@paramValue" @onchange="(a)=>SetParamValue(index,a.Value.ToString())" />
+                                    <button class="secondaryButton" @onclick="()=> SetParamDefaultValue(index)">set default</button>
+                                </paramInput>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <br />
+                <button @onclick="()=> SendMessage(Request)">send</button>
+            </bodySection>
+            <MudDivider Vertical="true" FlexItem="true" />@*Class="ml-16 mr-14"*@
+            <bodySection>
+                <textarea></textarea>
+            </bodySection>
+
+
+        </requestBody>
+    </ChildContent>
+    @*</requestItemBorder>*@
+    @code
+    {
+        public RequestTagType tagType { get => Request.IsCommand ? RequestTagType.Command : RequestTagType.Query; }
+    }
+</MudExpansionPanel>
