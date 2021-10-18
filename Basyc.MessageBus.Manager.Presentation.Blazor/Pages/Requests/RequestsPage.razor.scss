@@ -1,43 +1,25 @@
 ﻿@import "../../Shared/Colors.scss";
 
-domainHeading {
-/*    margin-bottom: 2rem;*/
-    display: flex;
-    padding: 2rem 3rem 1rem 4rem;
-    align-items: center;
-}
 
-domainHeadingText {
-    font-size: 1.60rem;
-    font-style: italic;
-    color: #6D6D6D;
-    margin-right:1.3rem;
-}
 
-requestCounter {
-    font-size: 17px;
-    margin-right: 0.8rem;
-    margin-left: 0.8rem;
-}
 
-queriesCount {
-    @extend requestCounter;
-    color: $Request-Tag-Query-Color;
-}
-
-commandCount {
-    @extend requestCounter;
-    color: $Request-Tag-Command-Color;
-}
 
 /*.domainBorder {
     display: block;
     padding: 4rem 4rem 4rem 8rem;
 }*/
-.requestPanel{
 
+/*.requestPanel, ::deep .requestPanel {
+    background-color: black;
+}*/
+
+::deep .requestPanel {
+    /*background-color: black;*/
+    width: 60vw;
 }
 
-.requestPanel > .mud-expand-panel.mud-panel-expanded {
+
+
+/*.requestPanel > .mud-expand-panel.mud-panel-expanded {
     margin: 0px;
-}
+}*/

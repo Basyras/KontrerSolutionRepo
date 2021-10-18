@@ -1,29 +1,10 @@
 ﻿@page "/"
-<MudExpansionPanels Class="m-0 requestPanel" Style="width:70%;" DisableBorders="true" Elevation="0" MultiExpansion="true">
-    @foreach (var domain in DomainVMs)
-    {
-
-        string borderStyle = $"background-color:{GetColor(domain.MessageDomainInfo.DomainName, 245, 0)};";
-
-        <MudExpansionPanel Class="m-0" Style="@borderStyle" IsInitiallyExpanded="true" Dense="true" DisableGutters="true">
-            <TitleContent>
-                <domainHeading>
-                    <domainHeadingText>
-                        @domain.MessageDomainInfo.DomainName
-                    </domainHeadingText>
-                    <queriesCount> @domain.Messages.Where(x => x.RequestInfo.IsCommand == false).Count() queries</queriesCount> |
-                    <commandCount>@domain.Messages.Where(x => x.RequestInfo.IsCommand == true).Count() commands</commandCount>
-                </domainHeading>
-            </TitleContent>
-            <ChildContent>
-                <MudExpansionPanels DisableBorders="true" Elevation="0" MultiExpansion="true" Class="pl-8 pb-8 pr-8">
-                    @foreach (var message in domain.Messages)
-                    {
-                        <RequestItem OnMessageSending="async (s,a)=>await SendMessage((s as RequestItem))" Request="message.RequestInfo" />
-                    }
-                </MudExpansionPanels>
-            </ChildContent>
-        </MudExpansionPanel>
-    }
-</MudExpansionPanels>
-
+@*Style="width:70%;"*@
+<div>
+    <MudExpansionPanels Class="requestPanel" DisableBorders="true" Elevation="0" MultiExpansion="true">
+        @foreach (var domain in DomainVMs)
+        {
+            <RequestDomainItem Domain="domain" OnMessageSending="OnMessageSending" />
+        }
+    </MudExpansionPanels>
+</div>

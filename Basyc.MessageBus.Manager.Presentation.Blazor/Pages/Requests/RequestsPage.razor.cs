@@ -29,12 +29,17 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
 
         protected override void OnInitialized()
         {
-            DomainVMs = Explorer.Domains.Select(x => new DomainInfoViewModel(x, x.Messages.Select(x => new RequestInfoViewModel(x)).OrderBy(x=>x.RequestInfo.IsCommand).ToList())).ToList();
+            DomainVMs = Explorer.Domains.Select(x => new DomainInfoViewModel(x, x.Messages.Select(x => new RequestInfoViewModel(x)).OrderBy(x => x.RequestInfo.IsCommand).ToList())).ToList();
 
             base.OnInitialized();
         }
 
-        public async Task SendMessage(RequestItem requestItem)
+        public void OnMessageSending(object sender, RequestItem a)
+        {
+            SendMessage(a).GetAwaiter().GetResult();
+        }
+
+        private async Task SendMessage(RequestItem requestItem)
         {
             var message = requestItem.Request;
             object[] castedParameters = new object[message.Parameters.Count];
@@ -81,7 +86,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
                 return null;
             }
 
-            if(paramStringValue == String.Empty)
+            if (paramStringValue == String.Empty)
             {
                 return parameterInfo.Type.GetDefaultValue();
             }
@@ -97,9 +102,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
                 castedParam = JsonSerializer.Deserialize(paramStringValue, parameterInfo.Type);
             }
             return castedParam;
-
         }
-
 
         public static string GetColor(string textInput, int saturation, int saturationRandomness = 0)
         {

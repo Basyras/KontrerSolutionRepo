@@ -1,1 +1,1 @@
-domainHeading{display:flex;padding:2rem 3rem 1rem 4rem;align-items:center}domainHeadingText{font-size:1.60rem;font-style:italic;color:#6D6D6D;margin-right:1.3rem}requestCounter,commandCount,queriesCount{font-size:17px;margin-right:0.8rem;margin-left:0.8rem}queriesCount{color:#4FAB77}commandCount{color:#D84292}.requestPanel>.mud-expand-panel.mud-panel-expanded{margin:0px}
+::deep .requestPanel{width:60vw}

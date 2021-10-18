@@ -1,8 +1,32 @@
-﻿requestItemBorder {
-    background-color: white;
-    padding: 1.5rem;
+﻿@import "../../Shared/Colors.scss";
+
+requestItemComponent {
+    margin-bottom: 0.6rem;
     display: block;
-    border: 0.5px solid #d4d4d4;
+}
+
+.requestItem__border {
+    border-width: 0.5px;
+    border-style: solid;
+    border-radius: 3px;
+}
+
+.requestItem__border--command {
+    @extend .requestItem__border;
+    border-color: $Request-Tag-Command-Foreground;
+}
+
+.requestItem__border--query {
+    @extend .requestItem__border;
+    border-color: $Request-Tag-Query-Foreground;
+}
+
+::deep .background--query {
+    background-color: $Request-Tag-Query-Background;
+}
+
+::deep .background--command {
+    background-color: $Request-Tag-Command-Background;
 }
 
 requestName {
@@ -12,22 +36,23 @@ requestName {
 }
 
 requestBody {
-    display: flex;    
-/*    margin: 0rem 2rem 2rem 2rem;*/
+    display: flex;
+    /*    margin: 0rem 2rem 2rem 2rem;*/
 }
 
 paramLabel {
     font-weight: normal;
-    font-size: 16px;
+    font-size: 14px;
     color: #979797;
+    float: right;
 }
 
 paramInput {
     border-radius: 3px;
-    background: #f9f9f9;
+    background: white;
     border: 0.5px solid #c2c2c2;
     display: flex;
-    margin-left: 2rem;
+    margin-left: 1rem;
 }
 
 paramType {
@@ -48,6 +73,8 @@ input {
     border-width: 0px;
     background-color: transparent;
     flex: 1;
+    min-width: 0;
+    width: 100%;
 }
 
 input:focus {
@@ -71,23 +98,27 @@ requestHeading {
     padding: 0.6rem
 }
 
-.paramRow {
+::deep .paramRow > td {
+    /*margin-bottom: 0.3rem;*/
+    padding-bottom: 0.4rem;
 }
 
 .paramTable {
     border-collapse: separate;
-    border-spacing: 0 0.7em;
+    /*border-spacing: 0 0.7em;*/
 }
+
 bodySection {
     width: 50%;
     padding: 0rem 2rem 2rem 2rem;
 }
 
-leftPart {
+headingSection {
     margin: 16px 24px;
-    width:50%;
+    width: 50%;
 }
 
-.paramTextBox{
- 
+::deep .paramTextBox {
+    min-width: 0;
+    width: 100%;
 }

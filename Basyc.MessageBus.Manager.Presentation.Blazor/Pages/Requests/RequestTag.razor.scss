@@ -4,9 +4,9 @@ requestTag {
 }
 
 .requestTag-query {
-    color: $Request-Tag-Query-Color;
+    color: $Request-Tag-Query-Foreground;
 }
 
 .requestTag-command {
-    color: $Request-Tag-Command-Color;
+    color: $Request-Tag-Command-Foreground;
 }

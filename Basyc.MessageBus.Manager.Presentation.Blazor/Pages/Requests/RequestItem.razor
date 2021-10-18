@@ -1,55 +1,60 @@
-﻿<MudExpansionPanel Class="mb-2" Style="border: 0.5px solid #d4d4d4;" Dense="true" DisableGutters="true" HideIcon="true">
+﻿<div>
+    <requestItemComponent class="@borderClass">
+        <MudExpansionPanel  Class="@backgroundClass" Dense="true" DisableGutters="true" HideIcon="true">
+            <TitleContent>
+                <requestHeading>
+                    <headingSection>
+                        <RequestTag RequestType="@tagType" />
+                        <requestName>@Request.RequestDisplayName </requestName>
+                    </headingSection>
+                    <MudDivider Vertical="true" FlexItem="true" />
+                    <headingSection>
+                        <RequestTag RequestType="@tagType" />
+                        <requestName>@Request.RequestDisplayName </requestName>
+                    </headingSection>
+                </requestHeading>
+            </TitleContent>
+            <ChildContent>
+                <requestBody>
+                    <bodySection>
+                        <table class="paramTable">
+                            @for (int i = 0; i < Request.Parameters.Count; i++)
+                            {
+                                var index = i;
+                                var paramInfo = Request.Parameters[index];
+                                var paramValue = ParameterValues[index];
+                                var isPrimitive = paramInfo.Type.IsPrimitive || paramInfo.Type.IsArray || paramInfo.Type == typeof(string);
+                                <tr class="paramRow">
+                                    <td> <paramLabel>@paramInfo.ParameterDisplayName </paramLabel> </td>
+                                    <td>
+                                        <paramInput>
+                                            <paramType class="paramType-isPrimitive-@isPrimitive">@paramInfo.TypeDisplayName</paramType>
+                                            <input class="paramTextBox" value="@paramValue" @onchange="(a)=>SetParamValue(index,a.Value.ToString())" />
+                                            <button class="secondaryButton" @onclick="()=> SetParamDefaultValue(index)">default</button>
+                                        </paramInput>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        <br />
+                        <button @onclick="()=> SendMessage(Request)">send</button>
+                    </bodySection>
+                    <MudDivider Vertical="true" FlexItem="true" />
+                    <bodySection>
+                        <textarea></textarea>
+                    </bodySection>
 
-    @*<requestItemBorder>*@
-    <TitleContent>
-        <requestHeading>
-            <leftPart>
-                <RequestTag RequestType="@tagType" />
-                <requestName>@Request.RequestDisplayName </requestName>
-            </leftPart>
-            <MudDivider Vertical="true" FlexItem="true" />
-            <leftPart>
-                <RequestTag RequestType="@tagType" />
-                <requestName>@Request.RequestDisplayName </requestName>
-            </leftPart>
-        </requestHeading>
-    </TitleContent>
-    <ChildContent>
-        <requestBody>
-            <bodySection>
-                <table class="paramTable">
-                    @for (int i = 0; i < Request.Parameters.Count; i++)
-                    {
-                        var index = i;
-                        var paramInfo = Request.Parameters[index];
-                        var paramValue = ParameterValues[index];
-                        var isPrimitive = paramInfo.Type.IsPrimitive || paramInfo.Type.IsArray || paramInfo.Type == typeof(string);
-                        <tr class="paramRow">
-                            <td> <paramLabel>@paramInfo.ParameterDisplayName </paramLabel> </td>
-                            <td>
-                                <paramInput>
-                                    <paramType class="paramType-isPrimitive-@isPrimitive">@paramInfo.TypeDisplayName</paramType>
-                                    <input class="paramTextBox" value="@paramValue" @onchange="(a)=>SetParamValue(index,a.Value.ToString())" />
-                                    <button class="secondaryButton" @onclick="()=> SetParamDefaultValue(index)">set default</button>
-                                </paramInput>
-                            </td>
-                        </tr>
-                    }
-                </table>
-                <br />
-                <button @onclick="()=> SendMessage(Request)">send</button>
-            </bodySection>
-            <MudDivider Vertical="true" FlexItem="true" />@*Class="ml-16 mr-14"*@
-            <bodySection>
-                <textarea></textarea>
-            </bodySection>
 
+                </requestBody>
+            </ChildContent>
 
-        </requestBody>
-    </ChildContent>
-    @*</requestItemBorder>*@
-    @code
-    {
-        public RequestTagType tagType { get => Request.IsCommand ? RequestTagType.Command : RequestTagType.Query; }
-    }
-</MudExpansionPanel>
+        </MudExpansionPanel>
+    </requestItemComponent>
+</div>
+@code
+{
+    public RequestTagType tagType { get => Request.IsCommand ? RequestTagType.Command : RequestTagType.Query; }
+    private string borderClass => "requestItem__border--" + (Request.IsCommand ? "command" : "query");
+    private string backgroundClass => "background--" + (Request.IsCommand ? "command" : "query");
+
+}

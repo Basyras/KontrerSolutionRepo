@@ -1,0 +1,28 @@
+﻿<MudExpansionPanel @bind-IsExpanded="isExpanded" Class="m-0" IsInitiallyExpanded="true" Dense="true" DisableGutters="true" HideIcon="true">
+    <TitleContent>
+        <domainHeading>
+            <domainHeadingText>
+                @Domain.MessageDomainInfo.DomainName
+            </domainHeadingText>
+            <queriesCount> @Domain.Messages.Where(x => x.RequestInfo.IsCommand == false).Count() queries</queriesCount> |
+            <commandCount>@Domain.Messages.Where(x => x.RequestInfo.IsCommand == true).Count() commands</commandCount>
+        </domainHeading>
+
+        @if (isExpanded is false)
+        {
+            <headingDivider />
+        }
+    </TitleContent>
+    <ChildContent>
+        <MudExpansionPanels DisableBorders="true" Elevation="0" MultiExpansion="true" Class="pl-8 pb-8 pr-8">
+            @foreach (var message in Domain.Messages)
+            {
+                @*<RequestItem OnMessageSending="async (s,a)=>await SendMessage((s as RequestItem))" Request="message.RequestInfo" />*@
+                <RequestItem OnMessageSending="(s,a)=>OnMessageSending(this,s as RequestItem)" Request="message.RequestInfo" />
+            }
+        </MudExpansionPanels>
+    </ChildContent>
+</MudExpansionPanel>
+@code{
+    private bool isExpanded;
+}
