@@ -1,6 +1,6 @@
 ﻿<div>
     <requestItemComponent class="@borderClass">
-        <MudExpansionPanel  Class="@backgroundClass" Dense="true" DisableGutters="true" HideIcon="true">
+        <MudExpansionPanel Class="@backgroundClass" Dense="true" DisableGutters="true" HideIcon="true">
             <TitleContent>
                 <requestHeading>
                     <headingSection>
@@ -29,7 +29,7 @@
                                     <td>
                                         <paramInput>
                                             <paramType class="paramType-isPrimitive-@isPrimitive">@paramInfo.TypeDisplayName</paramType>
-                                            <input class="paramTextBox" value="@paramValue" @onchange="(a)=>SetParamValue(index,a.Value.ToString())" />
+                                            <input class="paramTextBox" value="@paramValue" @onchange="(a)=>SetParamValue(index,a.Value)" />
                                             <button class="secondaryButton" @onclick="()=> SetParamDefaultValue(index)">default</button>
                                         </paramInput>
                                     </td>
@@ -37,17 +37,18 @@
                             }
                         </table>
                         <br />
-                        <button @onclick="()=> SendMessage(Request)">send</button>
+                        <button class="sendRequestButton" @onclick="()=> SendMessage(Request)">send</button>
+                        @if (Response.Failed)
+                        {
+                            <failedLabel>failed</failedLabel>
+                        }
                     </bodySection>
                     <MudDivider Vertical="true" FlexItem="true" />
                     <bodySection>
-                        <textarea></textarea>
+                        <textarea class="responseText">@Response.Value</textarea>
                     </bodySection>
-
-
                 </requestBody>
             </ChildContent>
-
         </MudExpansionPanel>
     </requestItemComponent>
 </div>

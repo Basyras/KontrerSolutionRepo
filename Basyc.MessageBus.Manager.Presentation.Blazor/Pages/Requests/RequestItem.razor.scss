@@ -62,7 +62,11 @@ paramType {
     display: flex;
     align-items: center;
     margin-right: 0.5rem;
-    padding: 0.6rem
+    padding: 0.6rem;
+    /*    flex: 0.5 1 10px;*/
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .paramType-isPrimitive-False {
@@ -121,4 +125,23 @@ headingSection {
 ::deep .paramTextBox {
     min-width: 0;
     width: 100%;
+}
+
+.sendRequestButton {
+    font-size: 18px;
+    text-align: center;
+    color: #737373;
+    border-radius: 3px;
+    background: #f6faff;
+    border: 1px solid #afbfc9;
+    padding: 0 2rem;
+}
+
+failedLabel {
+    color: red;
+}
+
+.responseText {
+    width: 100%;
+    height: 100%
 }

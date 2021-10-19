@@ -22,35 +22,15 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
             set
             {
                 request = value;
-                //ParameterValues = new List<string>(Request.Parameters.Count);
                 ParameterValues = Enumerable.Range(0, Request.Parameters.Count).Select(x => string.Empty).ToList();
                 Enumerable.Range(0, Request.Parameters.Count).ToList().ForEach(x => SetParamDefaultValue(x));
-                //foreach (var paramInfo in Request.Parameters)
-                //{
-                //    var defaultValue = paramInfo.Type.GetDefaultValue();
-                //    string stringValue = null;
-                //    if(defaultValue == null)
-                //    {
-                //        stringValue = "@null";
-                //    }
-                //    else if(paramInfo.Type.IsPrimitive)
-                //    {
-                //        stringValue = defaultValue.ToString();                        
-                //    }
-                //    else
-                //    {
-                //        stringValue = JsonSerializer.Serialize(defaultValue);
-                //    }
-
-                //    ParameterValues.Add(stringValue);
-                //}
-
-
             }
         }
 
         [Parameter]
         public EventHandler OnMessageSending { get; set; }
+
+        public ResponseViewModel Response { get; set; } = new ResponseViewModel(string.Empty, ResponseType.NoResponse, false, string.Empty);
 
         public List<string> ParameterValues { get; private set; }
 
@@ -59,9 +39,19 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
             OnMessageSending?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SetParamValue(int index, string value)
+        private void SetParamValue(int index, object value)
         {
-            ParameterValues[index] = value;
+            string stringValue = value.ToString();
+            var paramInfo = Request.Parameters[index];
+            if (paramInfo.Type.IsValueType)
+            {
+                if (stringValue == string.Empty)
+                {
+                    stringValue = paramInfo.Type.GetDefaultValue().ToString();
+                }
+            }
+            ParameterValues[index] = stringValue;
+            //OnParametersSet();
         }
 
         private void SetParamDefaultValue(int index)
@@ -71,7 +61,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
             {
                 ParameterValues[index] = paramType.GetDefaultValue().ToString();
             }
-            else if(paramType == typeof(string))
+            else if (paramType == typeof(string))
             {
                 ParameterValues[index] = string.Empty;
             }

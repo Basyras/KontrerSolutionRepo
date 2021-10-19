@@ -41,41 +41,59 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
 
         private async Task SendMessage(RequestItem requestItem)
         {
-            var message = requestItem.Request;
-            object[] castedParameters = new object[message.Parameters.Count];
-            for (int i = 0; i < message.Parameters.Count; i++)
+            try
             {
-                var paramInfo = message.Parameters[i];
-                var paramStringValue = requestItem.ParameterValues[i];
-                if (paramStringValue == "@null")
+                var message = requestItem.Request;
+                object[] castedParameters = new object[message.Parameters.Count];
+                for (int i = 0; i < message.Parameters.Count; i++)
                 {
-                    castedParameters[i] = null;
-                }
-                else
-                {
-                    TypeConverter converter = TypeDescriptor.GetConverter(paramInfo);
-                    object castedParam;
-                    if (converter.CanConvertFrom(typeof(string)))
+                    var paramInfo = message.Parameters[i];
+                    var paramStringValue = requestItem.ParameterValues[i];
+                    if (paramStringValue == "@null")
                     {
-                        castedParam = converter.ConvertFromInvariantString(paramStringValue);
+                        castedParameters[i] = null;
                     }
                     else
                     {
-                        castedParam = JsonSerializer.Deserialize(paramStringValue, paramInfo.Type);
+                        TypeConverter converter = TypeDescriptor.GetConverter(paramInfo);
+                        object castedParam;
+                        if (converter.CanConvertFrom(typeof(string)))
+                        {
+                            castedParam = converter.ConvertFromInvariantString(paramStringValue);
+                        }
+                        else
+                        {
+                            castedParam = JsonSerializer.Deserialize(paramStringValue, paramInfo.Type);
+                        }
+                        castedParameters[i] = castedParam;
                     }
-                    castedParameters[i] = castedParam;
+                }
+
+                var messageInstance = Activator.CreateInstance(message.Type, castedParameters);
+
+                if (message.HasResponse)
+                {
+
+
+                    var response = await MessageBusManager.RequestAsync(message.Type, messageInstance, message.ResponseType);
+                    requestItem.Response = new ResponseViewModel(JsonSerializer.Serialize(response), ResponseType.Json, false, string.Empty);
+
+
+
+                    //await DialogService.ShowMessageBox(null, JsonSerializer.Serialize(response, message.ResponseType), "ok", null, null, new DialogOptions() { CloseButton = false, NoHeader = true });
+                }
+                else
+                {
+                    await MessageBusManager.SendAsync(message.Type, messageInstance)
+                    .ContinueWith(x =>
+                    {
+                        requestItem.Response = new ResponseViewModel(null, ResponseType.NoResponse, x.IsFaulted, x.Exception.Message);
+                    });
                 }
             }
-
-            var messageInstance = Activator.CreateInstance(message.Type, castedParameters);
-            if (message.HasResponse)
+            catch (Exception ex)
             {
-                var response = await MessageBusManager.RequestAsync(message.Type, messageInstance, message.ResponseType);
-                await DialogService.ShowMessageBox(null, JsonSerializer.Serialize(response, message.ResponseType), "ok", null, null, new DialogOptions() { CloseButton = false, NoHeader = true });
-            }
-            else
-            {
-                await MessageBusManager.SendAsync(message.Type, messageInstance);
+                requestItem.Response = new ResponseViewModel(ex.Message, ResponseType.NoResponse, true, ex.Message);
             }
         }
 
