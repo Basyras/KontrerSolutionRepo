@@ -1,0 +1,55 @@
+﻿using Basyc.MessageBus.Manager.Application;
+using Basyc.MessageBus.Manager.Infrastructure.Basyc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Basyc.MessageBus.Manager.Infrastructure
+{
+    public class TypedExplorerBuilder
+    {
+        public readonly IServiceCollection services;
+
+        public TypedExplorerBuilder(IServiceCollection services)
+        {
+            this.services = services;
+            UseDomainNameFormatter<TypedDomainNameFormatter>();
+            UseRequestNameFormatter<TypedRequestNameFormatter>();
+            UseParamaterNameFormatter<TypedParameterTypeNameFormatter>();
+            UseResponseNameFormatter<TypedResponseNameFormatter>();
+            services.AddSingleton<IRequestInfoTypeStorage, InMemoryRequestInfoTypeStorage>();
+        }
+
+        public TypedExplorerBuilder UseDomainNameFormatter<TDomainNameFormatter>() where TDomainNameFormatter : class, ITypedDomainNameFormatter
+        {
+            services.RemoveAll<ITypedDomainNameFormatter>();
+            services.AddSingleton<ITypedDomainNameFormatter, TDomainNameFormatter>();
+            return this;
+        }
+
+        public TypedExplorerBuilder UseRequestNameFormatter<TRequestNameFormatter>() where TRequestNameFormatter : class, ITypedRequestNameFormatter
+        {
+            services.RemoveAll<ITypedRequestNameFormatter>();
+            services.AddSingleton<ITypedRequestNameFormatter, TRequestNameFormatter>();
+            return this;
+        }
+
+        public TypedExplorerBuilder UseParamaterNameFormatter<TParameterTypeNameFormatter>() where TParameterTypeNameFormatter : class, ITypedParameterNameFormatter
+        {
+            services.RemoveAll<ITypedParameterNameFormatter>();
+            services.AddSingleton<ITypedParameterNameFormatter, TParameterTypeNameFormatter>();
+            return this;
+        }
+
+        public TypedExplorerBuilder UseResponseNameFormatter<TResponseNameFormatter>() where TResponseNameFormatter : class, ITypedResponseNameFormatter
+        {
+            services.RemoveAll<ITypedResponseNameFormatter>();
+            services.AddSingleton<ITypedResponseNameFormatter, TResponseNameFormatter>();
+            return this;
+        }
+    }
+}

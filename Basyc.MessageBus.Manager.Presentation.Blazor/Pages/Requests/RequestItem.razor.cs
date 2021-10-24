@@ -8,66 +8,92 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Kontrer.Shared.Helpers;
+using Basyc.MessageBus.Manager.Application.Initialization;
 
 namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
 {
     public partial class RequestItem
     {
-        private RequestInfo request;
+        private RequestItemViewModel requestItemViewModel;
 
         [Parameter]
-        public RequestInfo Request
-        {
-            get => request;
-            set
-            {
-                request = value;
-                ParameterValues = Enumerable.Range(0, Request.Parameters.Count).Select(x => string.Empty).ToList();
-                Enumerable.Range(0, Request.Parameters.Count).ToList().ForEach(x => SetParamDefaultValue(x));
-            }
-        }
+        public EventCallback OnMessageSending { get; set; }
 
         [Parameter]
-        public EventHandler OnMessageSending { get; set; }
+        public EventCallback<string> OnValueChanged { get; set; }
 
-        public ResponseViewModel Response { get; set; } = new ResponseViewModel(string.Empty, ResponseType.NoResponse, false, string.Empty);
+        [Parameter]
+        public RequestItemViewModel RequestItemViewModel { get => requestItemViewModel; set => requestItemViewModel = value; }
 
-        public List<string> ParameterValues { get; private set; }
-
-        public void SendMessage(RequestInfo message)
+        public async Task SendMessage(RequestInfo request)
         {
-            OnMessageSending?.Invoke(this, EventArgs.Empty);
+            RequestItemViewModel.IsLoading = true;
+            await OnMessageSending.InvokeAsync(this);
+            RequestItemViewModel.IsLoading = false;
         }
 
-        private void SetParamValue(int index, object value)
-        {
-            string stringValue = value.ToString();
-            var paramInfo = Request.Parameters[index];
-            if (paramInfo.Type.IsValueType)
-            {
-                if (stringValue == string.Empty)
-                {
-                    stringValue = paramInfo.Type.GetDefaultValue().ToString();
-                }
-            }
-            ParameterValues[index] = stringValue;
-            //OnParametersSet();
-        }
+        //private async void SetParamValue(int index, object value)
+        //{
+        //    string stringValue = value.ToString();
+        //    var paramInfo = RequestItemViewModel.RequestInfo.Parameters[index];
+        //    if (paramInfo.Type.IsValueType)
+        //    {
+        //    }
 
-        private void SetParamDefaultValue(int index)
+        //    if (stringValue == string.Empty)
+        //    {
+        //        await Task.Delay(1);
+        //        SetParamDefaultValue(index);
+        //    }
+        //    else
+        //    {
+        //        RequestItemViewModel.ParameterValues[index] = stringValue;
+        //    }
+        //}
+
+        //private void SetParamDefaultValue(int index)
+        //{
+        //    var paramType = RequestItemViewModel.RequestInfo.Parameters[index].Type;
+        //    var defaultString = GetDefaultValueString(paramType);
+        //    RequestItemViewModel.ParameterValues[index] = defaultString;
+        //}
+
+        private string GetDefaultValueString(Type type)
         {
-            var paramType = request.Parameters[index].Type;
-            if (paramType.IsValueType)
+            if (type.IsValueType)
             {
-                ParameterValues[index] = paramType.GetDefaultValue().ToString();
+                return type.GetDefaultValue().ToString();
             }
-            else if (paramType == typeof(string))
+            else if (type == typeof(string))
             {
-                ParameterValues[index] = string.Empty;
+                return string.Empty;
             }
             else
             {
-                ParameterValues[index] = "@null";
+                return "@null";
+            }
+        }
+
+        protected override void OnInitialized()
+        {
+            RequestItemViewModel.ParameterValues.CollectionChanged += ParameterValues_CollectionChanged;
+            //Enumerable.Range(0, RequestItemViewModel.RequestInfo.Parameters.Count).ToList().ForEach(x => SetParamDefaultValue(x));
+            for (int paramIndex = 0; paramIndex < RequestItemViewModel.RequestInfo.Parameters.Count; paramIndex++)
+            {
+                var defaultValue = GetDefaultValueString(RequestItemViewModel.RequestInfo.Parameters[paramIndex].Type);
+                RequestItemViewModel.ParameterValues[paramIndex] = defaultValue;
+            }
+            base.OnInitialized();
+        }
+
+        private void ParameterValues_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            var newValue = (string)e.NewItems[0];
+            var defaultValue = GetDefaultValueString(RequestItemViewModel.RequestInfo.Parameters[e.NewStartingIndex].Type);
+            if (newValue == string.Empty && newValue != defaultValue)
+            {
+                //SetParamDefaultValue(e.NewStartingIndex);
+                RequestItemViewModel.ParameterValues[e.NewStartingIndex] = defaultValue;
             }
         }
     }

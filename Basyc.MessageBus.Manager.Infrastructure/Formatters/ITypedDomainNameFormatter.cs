@@ -2,7 +2,7 @@
 
 namespace Basyc.MessageBus.Manager.Application
 {
-    public interface IDomainNameFormatter
+    public interface ITypedDomainNameFormatter
     {
         string GetFormattedName(Assembly assembly);
     }

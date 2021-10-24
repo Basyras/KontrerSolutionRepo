@@ -2,7 +2,7 @@
 
 namespace Basyc.MessageBus.Manager.Application
 {
-    public interface IParameterTypeNameFormatter
+    public interface ITypedParameterNameFormatter
     {
         string GetCustomTypeName(Type type);
     }

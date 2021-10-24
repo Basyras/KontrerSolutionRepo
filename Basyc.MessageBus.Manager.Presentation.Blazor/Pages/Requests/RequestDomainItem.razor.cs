@@ -9,9 +9,9 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
     public partial class RequestDomainItem
     {
         [Parameter]
-        public DomainInfoViewModel Domain { get; set; }
+        public DomainItemViewModel DomainItemViewModel { get; set; }
 
         [Parameter]
-        public EventHandler<RequestItem> OnMessageSending { get; set; }
+        public EventCallback<RequestItem> OnMessageSending { get; set; }
     }
 }

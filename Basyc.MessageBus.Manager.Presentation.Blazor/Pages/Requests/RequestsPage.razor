@@ -1,9 +1,10 @@
 ﻿@page "/"
 <div>
     <MudExpansionPanels Class="requestPanel" DisableBorders="true" Elevation="0" MultiExpansion="true">
-        @foreach (var domain in DomainVMs)
+        @foreach (var domainViewModel in DomainInfoViewModel)
         {
-            <RequestDomainItem Domain="domain" OnMessageSending="OnMessageSending" />
+            @*<RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (s,a)=> await OnMessageSending(s,a))" />*@
+            <RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (requestItem)=>await SendMessage(requestItem))" />
         }
     </MudExpansionPanels>
 </div>

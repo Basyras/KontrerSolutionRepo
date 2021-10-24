@@ -35,3 +35,8 @@ commandCount {
     @extend requestCounter;
     color: $Request-Tag-Command-Foreground;
 }
+
+genericCount {
+    @extend requestCounter;
+    color: $Request-Tag-Generic-Foreground;
+}

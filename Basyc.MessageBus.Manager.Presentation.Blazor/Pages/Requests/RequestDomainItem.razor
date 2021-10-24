@@ -1,11 +1,61 @@
-﻿<MudExpansionPanel @bind-IsExpanded="isExpanded" Class="m-0" IsInitiallyExpanded="true" Dense="true" DisableGutters="true" HideIcon="true">
+﻿@{
+    int commandCount = @DomainItemViewModel.RequestItemViewModels.Where(x => x.RequestInfo.RequestType == Application.RequestType.Command).Count();
+    int queryCount = @DomainItemViewModel.RequestItemViewModels.Where(x => x.RequestInfo.RequestType == Application.RequestType.Query).Count();
+    int genericCount = @DomainItemViewModel.RequestItemViewModels.Where(x => x.RequestInfo.RequestType == Application.RequestType.Generic).Count();
+}
+<MudExpansionPanel @bind-IsExpanded="isExpanded" Class="m-0" IsInitiallyExpanded="true" Dense="true" DisableGutters="true" HideIcon="true">
     <TitleContent>
         <domainHeading>
             <domainHeadingText>
-                @Domain.MessageDomainInfo.DomainName
+                @DomainItemViewModel.RequestDomainInfo.DomainName
             </domainHeadingText>
-            <queriesCount> @Domain.Messages.Where(x => x.RequestInfo.IsCommand == false).Count() queries</queriesCount> |
-            <commandCount>@Domain.Messages.Where(x => x.RequestInfo.IsCommand == true).Count() commands</commandCount>
+            @if (queryCount > 0)
+            {
+                <queriesCount>
+                    @queryCount
+                    @if (queryCount < 2)
+                    {
+                        @: query
+                    }
+                    else
+                    {
+                        @: queries
+                    }
+                </queriesCount>
+            }
+            @if (commandCount > 0)
+            {
+                @if (queryCount > 0)
+                {<MudDivider Vertical="true" FlexItem="true" />}
+                <commandCount>
+                    @commandCount
+                    @if (commandCount < 2)
+                    {
+                        @: command
+                    }
+                    else
+                    {
+                        @: commands
+                    }
+                </commandCount>
+            }
+
+            @if (genericCount > 0)
+            {
+                @if (commandCount > 0)
+                {<MudDivider Vertical="true" FlexItem="true" />}
+                <genericCount>
+                    @genericCount
+                    @if (genericCount < 2)
+                    {
+                        @: message
+                    }
+                    else
+                    {
+                        @: messages
+                    }
+                </genericCount>
+            }
         </domainHeading>
 
         @if (isExpanded is false)
@@ -15,10 +65,10 @@
     </TitleContent>
     <ChildContent>
         <MudExpansionPanels DisableBorders="true" Elevation="0" MultiExpansion="true" Class="pl-8 pb-8 pr-8">
-            @foreach (var message in Domain.Messages)
+            @foreach (var message in DomainItemViewModel.RequestItemViewModels)
             {
-                @*<RequestItem OnMessageSending="async (s,a)=>await SendMessage((s as RequestItem))" Request="message.RequestInfo" />*@
-                <RequestItem OnMessageSending="(s,a)=>OnMessageSending(this,s as RequestItem)" Request="message.RequestInfo" />
+                @*<RequestItem OnMessageSending="@(async (s,a)=>await OnMessageSending.InvokeAsync(s as RequestItem))" RequestItemViewModel="message" />*@
+                <RequestItem OnMessageSending="@(async (sender)=>await OnMessageSending.InvokeAsync((RequestItem)sender))" RequestItemViewModel="message" />
             }
         </MudExpansionPanels>
     </ChildContent>

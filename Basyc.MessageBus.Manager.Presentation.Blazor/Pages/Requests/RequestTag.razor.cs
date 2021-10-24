@@ -19,7 +19,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
             set
             {
                 requestType = value;
-                Content = requestType.ToString().ToLower();
+                Content = requestType == RequestTagType.Generic ? "message" : requestType.ToString().ToLower();
             }
         }
     }

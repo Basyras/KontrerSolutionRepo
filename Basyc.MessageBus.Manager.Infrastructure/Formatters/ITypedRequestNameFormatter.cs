@@ -2,7 +2,7 @@
 
 namespace Basyc.MessageBus.Manager.Application
 {
-    public interface IRequestNameFormatter
+    public interface ITypedRequestNameFormatter
     {
         string GetFormattedName(Type request);
     }

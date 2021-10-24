@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.Manager.Application;
+using Basyc.MessageBus.Manager.Application.Initialization;
 using Kontrer.Shared.Helpers;
 using Kontrer.Shared.MessageBus;
 using Microsoft.AspNetCore.Components;
@@ -17,7 +18,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
     public partial class RequestsPage
     {
         [Inject]
-        public IMessagesExplorerManager Explorer { get; private set; }
+        public IMessageManager Explorer { get; private set; }
 
         [Inject]
         public IMessageBusManager MessageBusManager { get; set; }
@@ -25,79 +26,46 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
         [Inject]
         public IDialogService DialogService { get; set; }
 
-        public List<DomainInfoViewModel> DomainVMs { get; set; } = new List<DomainInfoViewModel>();
+        [Inject]
+        public IRequestClient RequestClient { get; set; }
+
+        public List<DomainItemViewModel> DomainInfoViewModel { get; set; } = new List<DomainItemViewModel>();
 
         protected override void OnInitialized()
         {
-            DomainVMs = Explorer.Domains.Select(x => new DomainInfoViewModel(x, x.Messages.Select(x => new RequestInfoViewModel(x)).OrderBy(x => x.RequestInfo.IsCommand).ToList())).ToList();
+            DomainInfoViewModel = Explorer.DomainInfos
+                .Select(domainInfo => new DomainItemViewModel(domainInfo, domainInfo.Requests
+                    .Select(requestInfo => new RequestItemViewModel(requestInfo))
+                    .OrderBy(x => x.RequestInfo.RequestType)))
+                .ToList();
 
             base.OnInitialized();
         }
 
-        public void OnMessageSending(object sender, RequestItem a)
-        {
-            SendMessage(a).GetAwaiter().GetResult();
-        }
-
-        private async Task SendMessage(RequestItem requestItem)
+        public async Task SendMessage(RequestItem requestItem)
         {
             try
             {
-                var message = requestItem.Request;
-                object[] castedParameters = new object[message.Parameters.Count];
-                for (int i = 0; i < message.Parameters.Count; i++)
+                var requestInfo = requestItem.RequestItemViewModel.RequestInfo;
+                List<Parameter> parameters = new List<Parameter>(requestInfo.Parameters.Count);
+                for (int i = 0; i < requestInfo.Parameters.Count; i++)
                 {
-                    var paramInfo = message.Parameters[i];
-                    var paramStringValue = requestItem.ParameterValues[i];
-                    if (paramStringValue == "@null")
-                    {
-                        castedParameters[i] = null;
-                    }
-                    else
-                    {
-                        TypeConverter converter = TypeDescriptor.GetConverter(paramInfo);
-                        object castedParam;
-                        if (converter.CanConvertFrom(typeof(string)))
-                        {
-                            castedParam = converter.ConvertFromInvariantString(paramStringValue);
-                        }
-                        else
-                        {
-                            castedParam = JsonSerializer.Deserialize(paramStringValue, paramInfo.Type);
-                        }
-                        castedParameters[i] = castedParam;
-                    }
+                    var paramInfo = requestInfo.Parameters[i];
+                    var paramStringValue = requestItem.RequestItemViewModel.ParameterValues[i];
+                    var castedParamValue = ParseParamInputValue(paramStringValue, paramInfo);
+                    parameters.Add(new Parameter(paramInfo, castedParamValue));
                 }
 
-                var messageInstance = Activator.CreateInstance(message.Type, castedParameters);
-
-                if (message.HasResponse)
-                {
-
-
-                    var response = await MessageBusManager.RequestAsync(message.Type, messageInstance, message.ResponseType);
-                    requestItem.Response = new ResponseViewModel(JsonSerializer.Serialize(response), ResponseType.Json, false, string.Empty);
-
-
-
-                    //await DialogService.ShowMessageBox(null, JsonSerializer.Serialize(response, message.ResponseType), "ok", null, null, new DialogOptions() { CloseButton = false, NoHeader = true });
-                }
-                else
-                {
-                    await MessageBusManager.SendAsync(message.Type, messageInstance)
-                    .ContinueWith(x =>
-                    {
-                        requestItem.Response = new ResponseViewModel(null, ResponseType.NoResponse, x.IsFaulted, x.Exception.Message);
-                    });
-                }
+                var response = await RequestClient.TrySendRequest(new Request(requestInfo, parameters));
+                requestItem.RequestItemViewModel.Response = response;
             }
             catch (Exception ex)
             {
-                requestItem.Response = new ResponseViewModel(ex.Message, ResponseType.NoResponse, true, ex.Message);
+                requestItem.RequestItemViewModel.Response = new RequestResult(true, ex.Message, default);
             }
         }
 
-        private static object ParseParamInputValue(string paramStringValue, RequestParameterInfo parameterInfo)
+        private static object ParseParamInputValue(string paramStringValue, ParameterInfo parameterInfo)
         {
             if (paramStringValue == "@null")
             {
@@ -109,16 +77,36 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
                 return parameterInfo.Type.GetDefaultValue();
             }
 
-            TypeConverter converter = TypeDescriptor.GetConverter(parameterInfo);
+            if (parameterInfo.Type == typeof(string))
+            {
+                return paramStringValue;
+            }
+
+            TypeConverter converter = TypeDescriptor.GetConverter(parameterInfo.Type);
             object castedParam;
             if (converter.CanConvertFrom(typeof(string)))
             {
                 castedParam = converter.ConvertFromInvariantString(paramStringValue);
+                return castedParam;
             }
-            else
+
+            TypeConverter converter2 = TypeDescriptor.GetConverter(typeof(string));
+            if (converter2.CanConvertFrom(parameterInfo.Type))
             {
-                castedParam = JsonSerializer.Deserialize(paramStringValue, parameterInfo.Type);
+                castedParam = converter2.ConvertFromInvariantString(paramStringValue);
+                return castedParam;
             }
+
+            try
+            {
+                castedParam = Convert.ChangeType(paramStringValue, parameterInfo.Type);
+                return castedParam;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            castedParam = JsonSerializer.Deserialize(paramStringValue, parameterInfo.Type);
             return castedParam;
         }
 

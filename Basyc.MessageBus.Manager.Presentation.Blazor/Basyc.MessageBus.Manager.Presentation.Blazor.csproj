@@ -14,6 +14,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Basyc.MessageBus.Manager.Application\Basyc.MessageBus.Manager.Application.csproj" />
+		<ProjectReference Include="..\Basyc.MessageBus.Manager.Infrastructure\Basyc.MessageBus.Manager.Infrastructure.csproj" />
 		<ProjectReference Include="..\Kontrer.OwnerServer.IdGeneratorService.Domain\Kontrer.OwnerServer.IdGeneratorService.Domain.csproj" />
 		<ProjectReference Include="..\OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Domain\Kontrer.OwnerServer.CustomerService.Domain.csproj" />
 		<ProjectReference Include="..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />

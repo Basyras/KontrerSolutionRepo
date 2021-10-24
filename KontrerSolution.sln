@@ -198,6 +198,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Manager.Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Manager.Application", "Basyc.MessageBus.Manager.Application\Basyc.MessageBus.Manager.Application.csproj", "{7ADCADA5-F572-4F47-A877-F3A1D9C59B93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.Manager.Infrastructure", "Basyc.MessageBus.Manager.Infrastructure\Basyc.MessageBus.Manager.Infrastructure.csproj", "{05917CBE-A46C-4DC7-AF3E-79ACFD16D4E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -452,6 +454,10 @@ Global
 		{7ADCADA5-F572-4F47-A877-F3A1D9C59B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ADCADA5-F572-4F47-A877-F3A1D9C59B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ADCADA5-F572-4F47-A877-F3A1D9C59B93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05917CBE-A46C-4DC7-AF3E-79ACFD16D4E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05917CBE-A46C-4DC7-AF3E-79ACFD16D4E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05917CBE-A46C-4DC7-AF3E-79ACFD16D4E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05917CBE-A46C-4DC7-AF3E-79ACFD16D4E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -549,6 +555,7 @@ Global
 		{AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4} = {042C92C8-B6C6-4602-8762-0B7A4D75CF8A}
 		{819A1FA5-52B4-4F29-9034-2F6C8BDC1826} = {AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4}
 		{7ADCADA5-F572-4F47-A877-F3A1D9C59B93} = {AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4}
+		{05917CBE-A46C-4DC7-AF3E-79ACFD16D4E3} = {AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

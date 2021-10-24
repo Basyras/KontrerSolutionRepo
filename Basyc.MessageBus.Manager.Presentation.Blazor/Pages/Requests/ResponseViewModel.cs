@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
 {
-    public record ResponseViewModel(string Value, ResponseType ResponseType, bool Failed, string ErrorMessage);
+    //public record ResponseViewModel(string Value, ResponseType ResponseType, bool Failed, string ErrorMessage);
 }

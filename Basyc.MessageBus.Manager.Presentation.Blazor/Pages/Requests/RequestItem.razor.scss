@@ -21,12 +21,21 @@ requestItemComponent {
     border-color: $Request-Tag-Query-Foreground;
 }
 
+.requestItem__border--generic {
+    @extend .requestItem__border;
+    border-color: $Request-Tag-Generic-Foreground;
+}
+
 ::deep .background--query {
     background-color: $Request-Tag-Query-Background;
 }
 
 ::deep .background--command {
     background-color: $Request-Tag-Command-Background;
+}
+
+::deep .background--generic {
+    background-color: $Request-Tag-Generic-Background;
 }
 
 requestName {
@@ -37,7 +46,6 @@ requestName {
 
 requestBody {
     display: flex;
-    /*    margin: 0rem 2rem 2rem 2rem;*/
 }
 
 paramLabel {
@@ -47,11 +55,19 @@ paramLabel {
     float: right;
 }
 
-paramInput {
+.inputBorder {
     border-radius: 3px;
     background: white;
     border: 0.5px solid #c2c2c2;
     display: flex;
+}
+
+.inputBorder--error {
+    @extend .inputBorder;
+    border-color: #D66A6A;
+}
+
+paramInput {
     margin-left: 1rem;
 }
 
@@ -61,9 +77,7 @@ paramType {
     color: #a5b5d6;
     display: flex;
     align-items: center;
-    margin-right: 0.5rem;
-    padding: 0.6rem;
-    /*    flex: 0.5 1 10px;*/
+    padding: 0.6rem 0 0.6rem 0.6rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -86,9 +100,11 @@ input:focus {
     outline: none;
 }
 
+textarea:focus {
+    outline: none;
+}
+
 requestHeading {
-    /* margin-bottom: 1.5rem;*/
-    /*display: block;*/
     display: flex;
     align-items: center;
     margin: -16px -24px;
@@ -120,11 +136,13 @@ bodySection {
 headingSection {
     margin: 16px 24px;
     width: 50%;
+    display: flex;
 }
 
 ::deep .paramTextBox {
     min-width: 0;
     width: 100%;
+    padding-left: 0.5rem;
 }
 
 .sendRequestButton {
@@ -143,5 +161,53 @@ failedLabel {
 
 .responseText {
     width: 100%;
-    height: 100%
+    height: 100%;
+    resize: none;
+}
+
+errorMessage {
+    position: absolute;
+    font-size: 14px;
+    text-align: center;
+    color: #d57979;
+    width: 100%;
+    left: 0;
+    top: 40%;
+}
+
+inputContainer {
+    position: relative;
+    display: block;
+    height: 100%;
+}
+
+latency {
+    margin-left: auto;
+    margin-right: 0;
+    width: 50%;
+    display: inline-block;
+    text-align: right;
+}
+
+latency {
+    margin-left: auto;
+    margin-right: 0;
+    width: 50%;
+    display: inline-block;
+    text-align: right;
+}
+
+.latency--failed--true {
+    color: $Error-Foreground;
+}
+
+.latency--failed--false {
+    color: $Success-Foreground;
+}
+
+loadingContainer {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

@@ -6,5 +6,8 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Application
 {
-    public record RequestParameterInfo(Type Type, string ParameterDisplayName, string TypeDisplayName);
+    public interface ITypedResponseNameFormatter
+    {
+        public string GetFormattedName(Type responseType);
+    }
 }

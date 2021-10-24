@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Basyc.MessageBus.Manager.Application\Basyc.MessageBus.Manager.Application.csproj" />
+		<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Kontrer.Shared.MessageBus.csproj" />
+	</ItemGroup>
+</Project>

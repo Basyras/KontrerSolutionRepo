@@ -4,13 +4,21 @@
             <TitleContent>
                 <requestHeading>
                     <headingSection>
-                        <RequestTag RequestType="@tagType" />
-                        <requestName>@Request.RequestDisplayName </requestName>
+                        <RequestTag RequestType="@RequestTagTypeHelper.FromRequestType(RequestItemViewModel.RequestInfo.RequestType)" />
+                        <requestName>@RequestItemViewModel.RequestInfo.RequestDisplayName </requestName>
                     </headingSection>
                     <MudDivider Vertical="true" FlexItem="true" />
                     <headingSection>
-                        <RequestTag RequestType="@tagType" />
-                        <requestName>@Request.RequestDisplayName </requestName>
+                        @if (RequestItemViewModel.RequestInfo.HasResponse)
+                        {
+                            <RequestTag RequestType="RequestTagType.Response" />
+                            <requestName>@RequestItemViewModel.RequestInfo.ResponseDisplayName </requestName>
+                            if (RequestItemViewModel.Response != null)
+                            {
+                                string latencyClass = $"latency--failed--{RequestItemViewModel.Response.Failed.ToString().ToLower()}";
+                                <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.Response.Latency.TotalMilliseconds) ms</latency>
+                            }
+                        }
                     </headingSection>
                 </requestHeading>
             </TitleContent>
@@ -18,34 +26,47 @@
                 <requestBody>
                     <bodySection>
                         <table class="paramTable">
-                            @for (int i = 0; i < Request.Parameters.Count; i++)
+                            @for (int i = 0; i < RequestItemViewModel.RequestInfo.Parameters.Count; i++)
                             {
                                 var index = i;
-                                var paramInfo = Request.Parameters[index];
-                                var paramValue = ParameterValues[index];
+                                var paramInfo = RequestItemViewModel.RequestInfo.Parameters[index];
+                                var paramValue = RequestItemViewModel.ParameterValues[index];
                                 var isPrimitive = paramInfo.Type.IsPrimitive || paramInfo.Type.IsArray || paramInfo.Type == typeof(string);
                                 <tr class="paramRow">
                                     <td> <paramLabel>@paramInfo.ParameterDisplayName </paramLabel> </td>
                                     <td>
-                                        <paramInput>
+                                        <paramInput class="inputBorder">
                                             <paramType class="paramType-isPrimitive-@isPrimitive">@paramInfo.TypeDisplayName</paramType>
-                                            <input class="paramTextBox" value="@paramValue" @onchange="(a)=>SetParamValue(index,a.Value)" />
-                                            <button class="secondaryButton" @onclick="()=> SetParamDefaultValue(index)">default</button>
+                                            @*<input class="paramTextBox" value="@paramValue" @onchange="(a)=>SetParamValue(index,a.Value)" />*@
+                                            <input class="paramTextBox" @bind-value="@RequestItemViewModel.ParameterValues[index]" />
+                                            @*<button class="secondaryButton" @onclick="()=> SetParamDefaultValue(index)">default</button>*@
                                         </paramInput>
                                     </td>
                                 </tr>
                             }
                         </table>
                         <br />
-                        <button class="sendRequestButton" @onclick="()=> SendMessage(Request)">send</button>
-                        @if (Response.Failed)
-                        {
-                            <failedLabel>failed</failedLabel>
-                        }
+                        <button class="sendRequestButton" @onclick="()=> SendMessage(RequestItemViewModel.RequestInfo)">send</button>
                     </bodySection>
                     <MudDivider Vertical="true" FlexItem="true" />
                     <bodySection>
-                        <textarea class="responseText">@Response.Value</textarea>
+                        @if (RequestItemViewModel.IsLoading)
+                        {
+                            <loadingContainer>
+                                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                            </loadingContainer>
+                        }
+                        else if (RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.Response != null)
+                        {
+                            string hasErrorClass = RequestItemViewModel.Response.Failed ? "inputBorder--error" : "";
+                            <inputContainer>
+                                <textarea readonly disabled="@RequestItemViewModel.Response.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.Response.Response</textarea>
+                                @if (RequestItemViewModel.Response.Failed)
+                                {
+                                    <errorMessage>@RequestItemViewModel.Response.ErrorMessage</errorMessage>
+                                }
+                            </inputContainer>
+                        }
                     </bodySection>
                 </requestBody>
             </ChildContent>
@@ -54,8 +75,7 @@
 </div>
 @code
 {
-    public RequestTagType tagType { get => Request.IsCommand ? RequestTagType.Command : RequestTagType.Query; }
-    private string borderClass => "requestItem__border--" + (Request.IsCommand ? "command" : "query");
-    private string backgroundClass => "background--" + (Request.IsCommand ? "command" : "query");
+    private string borderClass => "requestItem__border--" + RequestItemViewModel.RequestInfo.RequestType.ToString().ToLower();
+    private string backgroundClass => "background--" + RequestItemViewModel.RequestInfo.RequestType.ToString().ToLower();
 
 }
