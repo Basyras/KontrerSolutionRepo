@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Manager.Application.Initialization
+namespace Basyc.MessageBus.Manager
 {
     public static class MessageManagerIServiceCollectionExtensions
     {
-        public static MessageManagerBuilder AddMessageExplorer(this IServiceCollection services)
+        public static MessageManagerBuilder AddMessageManager(this IServiceCollection services)
         {
             var builder = new MessageManagerBuilder(services);
             return builder;

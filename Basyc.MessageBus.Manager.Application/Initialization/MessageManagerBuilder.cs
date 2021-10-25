@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Basyc.MessageBus.Manager.Application;
+using Basyc.MessageBus.Manager.Application.Initialization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
@@ -7,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Manager.Application.Initialization
+namespace Basyc.MessageBus.Manager
 {
     public class MessageManagerBuilder
     {
@@ -19,9 +21,9 @@ namespace Basyc.MessageBus.Manager.Application.Initialization
             services.AddSingleton<IMessageManager, MessageManager>();
         }
 
-        public MessageManagerBuilder UseProvider<TMessageExplorer>() where TMessageExplorer : class, IDomainProvider
+        public MessageManagerBuilder UseProvider<TDomainProvider>() where TDomainProvider : class, IDomainInfoProvider
         {
-            services.AddSingleton<IDomainProvider, TMessageExplorer>();
+            services.AddSingleton<IDomainInfoProvider, TDomainProvider>();
             return this;
         }
 

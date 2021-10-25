@@ -4,6 +4,6 @@ namespace Basyc.MessageBus.Manager.Application
 {
     public interface ITypedRequestNameFormatter
     {
-        string GetFormattedName(Type request);
+        string GetFormattedName(Type requestType);
     }
 }

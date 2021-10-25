@@ -13,11 +13,18 @@
                         {
                             <RequestTag RequestType="RequestTagType.Response" />
                             <requestName>@RequestItemViewModel.RequestInfo.ResponseDisplayName </requestName>
-                            if (RequestItemViewModel.Response != null)
-                            {
-                                string latencyClass = $"latency--failed--{RequestItemViewModel.Response.Failed.ToString().ToLower()}";
-                                <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.Response.Latency.TotalMilliseconds) ms</latency>
-                            }
+                        }
+
+                        @if (RequestItemViewModel.Response != null && RequestItemViewModel.IsLoading is false)
+                        {
+                            string latencyClass = $"latency--failed--{RequestItemViewModel.Response.Failed.ToString().ToLower()}";
+                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.Response.Latency.TotalMilliseconds) ms</latency>
+                        }
+                        @if (RequestItemViewModel.IsLoading)
+                        {
+                            <latency>
+                                <MudProgressCircular Style="height: 18px; width: 18px; padding: -5px; margin: -5px;"  Color="Color.Default" Indeterminate="true" />
+                            </latency>
                         }
                     </headingSection>
                 </requestHeading>
@@ -46,7 +53,7 @@
                             }
                         </table>
                         <br />
-                        <button class="sendRequestButton" @onclick="()=> SendMessage(RequestItemViewModel.RequestInfo)">send</button>
+                        <button class="sendRequestButton" disabled="@RequestItemViewModel.IsLoading" @onclick="()=> SendMessage(RequestItemViewModel.RequestInfo)">send</button>
                     </bodySection>
                     <MudDivider Vertical="true" FlexItem="true" />
                     <bodySection>
@@ -56,17 +63,18 @@
                                 <MudProgressCircular Color="Color.Default" Indeterminate="true" />
                             </loadingContainer>
                         }
-                        else if (RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.Response != null)
-                        {
-                            string hasErrorClass = RequestItemViewModel.Response.Failed ? "inputBorder--error" : "";
-                            <inputContainer>
+
+                        <inputContainer>
+                            @if (RequestItemViewModel.Response != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.Response.Failed is false)
+                            {
+                                string hasErrorClass = RequestItemViewModel.Response.Failed ? "inputBorder--error" : "";
                                 <textarea readonly disabled="@RequestItemViewModel.Response.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.Response.Response</textarea>
-                                @if (RequestItemViewModel.Response.Failed)
-                                {
-                                    <errorMessage>@RequestItemViewModel.Response.ErrorMessage</errorMessage>
-                                }
-                            </inputContainer>
-                        }
+                            }
+                            @if (RequestItemViewModel.Response != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.Response.Failed)
+                            {
+                                <errorMessage>@RequestItemViewModel.Response.ErrorMessage</errorMessage>
+                            }
+                        </inputContainer>
                     </bodySection>
                 </requestBody>
             </ChildContent>

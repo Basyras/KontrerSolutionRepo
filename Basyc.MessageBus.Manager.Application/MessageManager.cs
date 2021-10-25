@@ -11,17 +11,17 @@ namespace Basyc.MessageBus.Manager.Application
 {
     public class MessageManager : IMessageManager
     {
-        private readonly IDomainProvider messageDomainLoader;
+        private readonly IDomainInfoProvider messageDomainLoader;
         public IReadOnlyList<DomainInfo> DomainInfos { get; private set; }
 
-        public MessageManager(IDomainProvider messageDomainLoader)
+        public MessageManager(IDomainInfoProvider messageDomainLoader)
         {
             this.messageDomainLoader = messageDomainLoader;
         }
 
         public void Initialize()
         {
-            DomainInfos = messageDomainLoader.GetDomains();
+            DomainInfos = messageDomainLoader.GetDomainInfos();
         }
     }
 }

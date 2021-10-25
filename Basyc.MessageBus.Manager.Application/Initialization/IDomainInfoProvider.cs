@@ -4,8 +4,8 @@ using System.Reflection;
 
 namespace Basyc.MessageBus.Manager.Application.Initialization
 {
-    public interface IDomainProvider
+    public interface IDomainInfoProvider
     {
-        List<DomainInfo> GetDomains();
+        List<DomainInfo> GetDomainInfos();
     }
 }

@@ -2,10 +2,13 @@ using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.Basyc;
+using Basyc.MessageBus.Manager.Infrastructure.MassTransit;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.IdGeneratorService.Domain;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
+using Kontrer.Shared.DomainDrivenDesign.Domain;
 using Kontrer.Shared.MessageBus.RequestResponse;
+using MassTransit;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,10 +33,18 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
 
             var assemblies = new Assembly[] { typeof(CreateNewIdCommand).Assembly, typeof(DeleteAccommodationOrderCommand).Assembly, typeof(CreateCustomerCommand).Assembly };
 
-            builder.Services.AddMessageExplorer()
+            builder.Services.AddMessageManager()
                 .UseReqeustClient<BasycMessageBusTypedRequestClient>()
-                .UseTypedCQRSProvider(typeof(IRequest<>), typeof(IRequest), typeof(IRequest<>), assemblies)
-                //.UseTypedGenericProvider(typeof(IRequest), typeof(IRequest<>), assemblies)
+                .UseInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assemblies)
+                //.UseInterfaceTypedGenericProvider(typeof(IRequest), typeof(IRequest<>), assemblies)
+                //.UseReqeustClient<MassTransitRequestClient>()
+                //.UseTypedProvider()
+                //.RegisterDomain(x =>
+                //{
+                //    x.DomainName = "CustomerService";
+                //    x.QueryTypes.Add(new Type[] { typeof(DeleteCustomerCommand), typeof(object) });
+                //})
+                //.ChangeFormatting()
                 .UseDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
             builder.Services.AddMessageBus()
