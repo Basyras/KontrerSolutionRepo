@@ -26,7 +26,7 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi
         
         public static void Main(string[] args)
         {
-            MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup>(args).Build().Run();
+            MicroserviceBootstrapper.CreateBuilder<Startup>(args).Build().Run();
         }
     }
 }

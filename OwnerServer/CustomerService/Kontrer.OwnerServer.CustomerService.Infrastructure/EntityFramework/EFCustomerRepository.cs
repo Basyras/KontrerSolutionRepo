@@ -16,16 +16,6 @@ namespace Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework
         {
         }
 
-        protected override int GetModelId(CustomerEntity model)
-        {
-            return model.Id;
-        }
-
-        protected override void SetModelId(int id, ref CustomerEntity model)
-        {
-            model.Id = id;
-        }
-
         public async Task<List<CustomerEntity>> GetByIdsAsync(IEnumerable<int> ids)
         {
             var customers = await dbContext.Set<CustomerEntity>().AsQueryable().Where(customer => ids.Any(x => x == customer.Id)).ToListAsync();

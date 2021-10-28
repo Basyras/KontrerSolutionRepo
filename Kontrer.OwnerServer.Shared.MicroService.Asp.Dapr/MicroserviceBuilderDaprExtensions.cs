@@ -16,10 +16,11 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
 {
     public static class MicroserviceBuilderDaprExtensions
     {
-        public static MicroserviceBuilder AddDaprProvider(this MicroserviceBuilder builder)
+        public static MicroserviceBuilder<TParentBuilder> AddDaprProvider<TParentBuilder>(this MicroserviceBuilder<TParentBuilder> builder)
         {
-            var provider = new DaprMicroserviceProvider(builder.WebBuilder);
-            builder.AddProvider(provider);            
+            //var provider = new DaprMicroserviceProvider(builder.webBuilder);
+            //builder.AddProvider(provider);
+            //TODO
             return builder;
         }
     }

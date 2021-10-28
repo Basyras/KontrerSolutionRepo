@@ -1,4 +1,6 @@
 ﻿using Kontrer.OwnerServer.Shared.Asp;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -11,15 +13,20 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 {
     public static class MicroserviceBootstrapper
     {
-        public static IHostBuilder CreateMicroserviceHostBuilder<TStartup, TRequestHandler>(string[] args)
+        public static MicroserviceBuilder<IHostBuilder> CreateBuilder<TStartup, TRequestHandler>(string[] args)
             where TStartup : class, IStartupClass
         {
-            return Host.CreateDefaultBuilder().ConfigureMicroservice<TStartup>(typeof(TRequestHandler).Assembly);
+            var microserviceBuilder = Host.CreateDefaultBuilder()
+                .CreateMicroserviceBuilder<TStartup>();
+
+            return microserviceBuilder;
         }
 
-        public static IHostBuilder CreateMicroserviceHostBuilder<TStartup>(string[] args) where TStartup : class, IStartupClass
+        public static MicroserviceBuilder<IHostBuilder> CreateBuilder<TStartup>(string[] args) where TStartup : class, IStartupClass
         {
-            return Host.CreateDefaultBuilder().ConfigureMicroservice<TStartup>(typeof(TStartup).Assembly);
+            var microserviceBuilder = Host.CreateDefaultBuilder()
+                .CreateMicroserviceBuilder<TStartup>();
+            return microserviceBuilder;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.Manager.Application;
+using Basyc.MessageBus.Manager.Infrastructure;
 using Kontrer.Shared.MessageBus;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Manager.Infrastructure.Basyc
+namespace Basyc.MessageBus.Manager
 {
     public class BasycMessageBusTypedRequestClient : IRequestClient
     {
@@ -33,7 +34,6 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc
                 stopWatch.Start();
                 if (request.RequestInfo.HasResponse)
                 {
-
                     var response = await MessageBusManager.RequestAsync(requestType, requestInstance, request.RequestInfo.ResponseType);
                     stopWatch.Stop();
                     return new RequestResult(false, response, string.Empty, stopWatch.Elapsed);
@@ -53,7 +53,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc
             }
             catch (Exception ex)
             {
-                stopWatch.Stop();                
+                stopWatch.Stop();
                 return new RequestResult(true, ex.Message, stopWatch.Elapsed);
             }
         }

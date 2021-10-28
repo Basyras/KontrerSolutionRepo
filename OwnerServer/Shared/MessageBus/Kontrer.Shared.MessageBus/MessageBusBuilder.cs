@@ -19,13 +19,23 @@ namespace Kontrer.Shared.MessageBus
             this.services = services;
         }
 
-        public MessageBusBuilder RegisterHandlers(Assembly handlersAssembly)
+        public MessageBusBuilder RegisterRequestHandlers(Assembly assembliesToScan)
         {
             this.services.Scan(scan =>
-            scan.FromAssemblies(handlersAssembly)
-            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>))).As(handler => new Type[1] { typeof(IRequestHandler<>).MakeGenericType(GenericsHelper.GetGenericArgumentsFromParent(handler, typeof(IRequestHandler<>))) }).WithScopedLifetime()
-            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>))).As(handler => new Type[1] { typeof(IRequestHandler<,>).MakeGenericType(GenericsHelper.GetGenericArgumentsFromParent(handler, typeof(IRequestHandler<,>))) }).WithScopedLifetime()
-            );
+            scan.FromAssemblies(assembliesToScan)
+            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>)))
+            .As(handler => new Type[1]
+            {
+                typeof(IRequestHandler<>).MakeGenericType(GenericsHelper.GetGenericArgumentsFromParent(handler, typeof(IRequestHandler<>)))
+            })
+            .WithScopedLifetime()
+
+            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
+            .As(handler => new Type[1]
+            {
+                typeof(IRequestHandler<,>).MakeGenericType(GenericsHelper.GetGenericArgumentsFromParent(handler, typeof(IRequestHandler<,>)))
+            })
+            .WithScopedLifetime());
 
             return this;
         }

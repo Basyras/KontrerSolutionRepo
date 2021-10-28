@@ -1,6 +1,5 @@
 ﻿using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Infrastructure;
-using Basyc.MessageBus.Manager.Infrastructure.Basyc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;

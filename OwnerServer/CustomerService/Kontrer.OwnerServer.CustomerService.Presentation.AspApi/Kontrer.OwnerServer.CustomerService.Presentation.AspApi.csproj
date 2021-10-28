@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>c49164d9-8d61-4986-a963-006b7fb85e99</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..</DockerfileContext>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>c49164d9-8d61-4986-a963-006b7fb85e99</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..\..</DockerfileContext>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj" />
-    <ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Application\Kontrer.OwnerServer.CustomerService.Application.csproj" />
-    <ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Infrastructure\Kontrer.OwnerServer.CustomerService.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Basyc.MessageBus.Manager.Presentation.Blazor\Basyc.MessageBus.Manager.Presentation.Blazor.csproj" />
+		<ProjectReference Include="..\..\..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj" />
+		<ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Application\Kontrer.OwnerServer.CustomerService.Application.csproj" />
+		<ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Infrastructure\Kontrer.OwnerServer.CustomerService.Infrastructure.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<Folder Include="Controllers\" />
+	</ItemGroup>
 </Project>

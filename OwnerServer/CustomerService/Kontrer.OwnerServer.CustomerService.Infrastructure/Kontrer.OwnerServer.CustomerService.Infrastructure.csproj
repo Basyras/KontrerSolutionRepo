@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Basyc.DomainDrivenDesign.DependencyInjection\Basyc.DomainDrivenDesign.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\..\Basyc.DomainDrivenDesign.Infrastructure\Basyc.DomainDrivenDesign.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\Shared\Repositories\Kontrer.Shared.Repositories.EF\Kontrer.Shared.Repositories.EF.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Application\Kontrer.OwnerServer.CustomerService.Application.csproj" />
   </ItemGroup>

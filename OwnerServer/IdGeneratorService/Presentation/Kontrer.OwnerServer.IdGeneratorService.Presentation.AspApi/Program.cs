@@ -17,9 +17,8 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup, CreateNewIdCommandHandler>(args)
+            MicroserviceBootstrapper.CreateBuilder<Startup, CreateNewIdCommandHandler>(args)
                 .Build()
-                //.MigrateDatabase<IdGeneratorDbContext>()
                 .Run();
         }
     }

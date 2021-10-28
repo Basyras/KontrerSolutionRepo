@@ -25,31 +25,56 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
     {
         private static readonly Assembly entryAssembly = Assembly.GetEntryAssembly();
 
-        public static IHostBuilder ConfigureMicroservice<TStartup>(this IHostBuilder hostBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
+        public static MicroserviceBuilder<IHostBuilder> CreateMicroserviceBuilder<TStartup>(this IHostBuilder hostBuilder) where TStartup : class, IStartupClass
         {
+            ServiceCollection services = new ServiceCollection();
+            //hostBuilder.ConfigureServices((s, a) =>
+            //{
+            //    foreach (var service in services)
+            //    {
+            //        a.Add(service);
+            //    }
+            //});
+
             hostBuilder.ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.ConfigureAspServices();
-                webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
-                webBuilder.ConfigureServices(services =>
-                {
-                    services.AddMessageBus().RegisterHandlers(handlersAssembly);
-                });
-                webBuilder.ConfigureMessageBusServices<TStartup>(handlersAssembly);
+                //webBuilder.ConfigureServices((s, a) =>
+                //{
+                //    foreach (var service in services)
+                //    {
+                //        a.Add(service);
+                //    }
+                //});
+                webBuilder.ConfigureAsp<TStartup>(entryAssembly.GetName().Name);
+                //webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
+
+                //webBuilder.ConfigureMicroservice();
+                //webBuilder.ConfigureMicroservice()
+                //.AddMessageBus(handlersAssembly);
+                //webBuilder.ConfigureServices(services =>
+                //{
+                //    services.AddMessageBus()
+                //    .RegisterRequestHandlers(handlersAssembly);
+                //});
+                //webBuilder.ConfigureMessageBusServices<TStartup>(handlersAssembly);
             });
 
-            return hostBuilder;
+            return new MicroserviceBuilder<IHostBuilder>(services, hostBuilder);
         }
 
-        public static IWebHostBuilder ConfigureMessageBusServices<TStartup>(this IWebHostBuilder webBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
+        private static IWebHostBuilder ConfigureMessageBusServices<TStartup>(this IWebHostBuilder webBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
         {
+            //?
             //webBuilder.RegisterHandlersToDI(handlersAssembly);
-            webBuilder.ConfigureMassTransitServices(handlersAssembly);
-            webBuilder.ConfigureDaprServices((MicroserviceBuilder serviceBuilder) =>
-            {
-                var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
-                actorRegistrator.RegisterActors<TStartup>();
-            });
+
+            //webBuilder.ConfigureMassTransitServices(handlersAssembly);
+            //webBuilder.ConfigureDaprServices((MicroserviceBuilder<IHostBuilder> serviceBuilder) =>
+            //{
+            //    var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
+            //    actorRegistrator.RegisterActors<TStartup>();
+            //});
+
+            //?
             //webBuilder.RegisterCommnandQueriesEndpoints<TCommand>();
             return webBuilder;
         }

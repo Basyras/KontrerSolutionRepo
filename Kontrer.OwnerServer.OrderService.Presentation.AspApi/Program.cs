@@ -20,7 +20,8 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup, CreateAccommodationOrderCommandHandler>(args)
+            MicroserviceBootstrapper.CreateBuilder<Startup, CreateAccommodationOrderCommandHandler>(args)
+                .Back()
                 //.MigrateDatabaseOnStart<OrderServiceDbContext>()
                 .MigrateDatabaseOnStart<DbContext>()
                 .Build()

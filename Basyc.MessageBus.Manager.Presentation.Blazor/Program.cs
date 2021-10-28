@@ -1,7 +1,6 @@
 using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Infrastructure;
-using Basyc.MessageBus.Manager.Infrastructure.Basyc;
 using Basyc.MessageBus.Manager.Infrastructure.MassTransit;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.IdGeneratorService.Domain;
@@ -25,7 +24,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static async Task Main2(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
@@ -57,6 +56,32 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
             var explorer = host.Services.GetRequiredService<IMessageManager>();
             explorer.Initialize();
             await host.RunAsync();
+        }
+
+        public static async Task Main(string[] args)
+        {
+            var assemblies = new Assembly[] { typeof(CreateNewIdCommand).Assembly, typeof(DeleteAccommodationOrderCommand).Assembly, typeof(CreateCustomerCommand).Assembly };
+            var managerBuilder = MessageBusManagerBlazorAppBuilder.Create(args);
+            managerBuilder.services.AddMessageBus()
+                .UseProxy()
+                .SetProxyServerUri(new Uri("https://localhost:44371/"));
+
+            managerBuilder
+                .UseReqeustClient<BasycMessageBusTypedRequestClient>()
+                .UseInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assemblies)
+                //.UseInterfaceTypedGenericProvider(typeof(IRequest), typeof(IRequest<>), assemblies)
+                //.UseReqeustClient<MassTransitRequestClient>()
+                //.UseTypedProvider()
+                //.RegisterDomain(x =>
+                //{
+                //    x.DomainName = "CustomerService";
+                //    x.QueryTypes.Add(new Type[] { typeof(DeleteCustomerCommand), typeof(object) });
+                //})
+                //.ChangeFormatting()
+                .UseDomainNameFormatter<TypedDDDDomainNameFormatter>();
+
+            var managerApp = MessageBusManagerBlazorAppBuilder.Build();
+            await managerApp.RunAsync();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
 {
     public static class IWebHostBuilderDaprExtensions
     {
-        public static IWebHostBuilder ConfigureDaprServices(this IWebHostBuilder webBuilder, Action<MicroserviceBuilder> configure)
+        public static IWebHostBuilder ConfigureDaprServices(this IWebHostBuilder webBuilder)
         {
             webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
             {
@@ -40,8 +40,9 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
                 });
             });
 
-            var serviceBuilder = new MicroserviceBuilder(webBuilder).AddDaprProvider();
-            configure(serviceBuilder);
+            //var serviceBuilder = new MicroserviceBuilder(webBuilder,IHostBuilder).AddDaprProvider();
+            //throw new Exception();
+            //configure(serviceBuilder);
 
             return webBuilder;
         }

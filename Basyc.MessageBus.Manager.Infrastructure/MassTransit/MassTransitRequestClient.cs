@@ -1,5 +1,4 @@
 ﻿using Basyc.MessageBus.Manager.Application;
-using Basyc.MessageBus.Manager.Infrastructure.Basyc;
 using Kontrer.Shared.MessageBus;
 using MassTransit;
 using System;

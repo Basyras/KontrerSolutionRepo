@@ -15,14 +15,7 @@ namespace Kontrer.Shared.Repositories.EF
         public static IHostBuilder MigrateDatabaseOnStart<TDbContext>(this IHostBuilder host)
             where TDbContext : DbContext
         {
-            //using (var scope = host.Services.CreateScope())
-            //{
-            //    var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            //    db.Database.Migrate();
-            //}
-
             host.ConfigureServices(ConfigureMigartionServices<TDbContext>);
-
             return host;
         }
 
