@@ -22,7 +22,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
         public async Task RunAsync()
         {
             var explorer = blazorHost.Services.GetRequiredService<IMessageManager>();
-            explorer.Initialize();
+            explorer.Load();
             await blazorHost.RunAsync();
         }
     }

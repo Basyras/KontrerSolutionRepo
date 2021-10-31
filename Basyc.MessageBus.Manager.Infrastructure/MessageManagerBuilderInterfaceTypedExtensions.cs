@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.Manager.Application.Initialization;
+using Basyc.MessageBus.Manager.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Manager.Infrastructure
+namespace Basyc.MessageBus.Manager
 {
     public static class MessageManagerBuilderInterfaceTypedExtensions
     {
-        public static TypedFormatterBuilder UseInterfaceTypedCQRSProvider<TIQuery, TICommand, TICommandWithResponse>(this MessageManagerBuilder managerBuilder, Assembly[] assemblies)
+        public static TypedFormatterBuilder AddInterfaceTypedCQRSProvider<TIQuery, TICommand, TICommandWithResponse>(this BusManagerBuilder managerBuilder, Assembly[] assemblies)
         {
             managerBuilder.services.Configure<InterfaceTypedDomainProviderOptions>(options =>
             {
@@ -24,7 +25,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
             return new TypedFormatterBuilder(managerBuilder.services);
         }
 
-        public static TypedFormatterBuilder UseInterfaceTypedCQRSProvider(this MessageManagerBuilder managerBuilder, Type iQueryType, Type iCommandType, Type iCommandWithResponseType, Assembly[] assemblies)
+        public static TypedFormatterBuilder AddInterfaceTypedCQRSProvider(this BusManagerBuilder managerBuilder, Type iQueryType, Type iCommandType, Type iCommandWithResponseType, Assembly[] assemblies)
         {
             managerBuilder.services.Configure<InterfaceTypedDomainProviderOptions>(options =>
             {
@@ -33,11 +34,11 @@ namespace Basyc.MessageBus.Manager.Infrastructure
                 options.ICommandWithResponseType = iCommandWithResponseType;
                 options.AssembliesToScan = assemblies.ToList();
             });
-            managerBuilder.UseProvider<InterfaceTypedDomainProvider>();
+            managerBuilder.AddProvider<InterfaceTypedDomainProvider>();
             return new TypedFormatterBuilder(managerBuilder.services);
         }
 
-        public static TypedFormatterBuilder UseInterfaceTypedGenericProvider(this MessageManagerBuilder managerBuilder, Type iMessageType, Type iMessageWithResponseType, Assembly[] assemblies)
+        public static TypedFormatterBuilder AddInterfaceTypedGenericProvider(this BusManagerBuilder managerBuilder, Type iMessageType, Type iMessageWithResponseType, Assembly[] assemblies)
         {
             managerBuilder.services.Configure<InterfaceTypedDomainProviderOptions>(options =>
             {
@@ -45,7 +46,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
                 options.IMessageWithResponseType = iMessageWithResponseType;
                 options.AssembliesToScan = assemblies.ToList();
             });
-            managerBuilder.UseProvider<InterfaceTypedDomainProvider>();
+            managerBuilder.AddProvider<InterfaceTypedDomainProvider>();
             return new TypedFormatterBuilder(managerBuilder.services);
         }
     }

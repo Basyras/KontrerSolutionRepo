@@ -21,18 +21,23 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
         public IMessageManager Explorer { get; private set; }
 
         [Inject]
-        public IMessageBusManager MessageBusManager { get; set; }
+        public IMessageBusManager MessageBusManager { get; private set; }
 
         [Inject]
-        public IDialogService DialogService { get; set; }
+        public IDialogService DialogService { get; private set; }
 
         [Inject]
-        public IRequestClient RequestClient { get; set; }
+        public IRequestClient RequestClient { get; private set; }
 
-        public List<DomainItemViewModel> DomainInfoViewModel { get; set; } = new List<DomainItemViewModel>();
+        public List<DomainItemViewModel> DomainInfoViewModel { get; private set; } = new List<DomainItemViewModel>();
 
         protected override void OnInitialized()
         {
+            if (Explorer.Loaded is false)
+            {
+                Explorer.Load();
+            }
+
             DomainInfoViewModel = Explorer.DomainInfos
                 .Select(domainInfo => new DomainItemViewModel(domainInfo, domainInfo.Requests
                     .Select(requestInfo => new RequestItemViewModel(requestInfo))

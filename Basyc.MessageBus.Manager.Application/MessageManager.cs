@@ -14,14 +14,17 @@ namespace Basyc.MessageBus.Manager.Application
         private readonly IDomainInfoProvider messageDomainLoader;
         public IReadOnlyList<DomainInfo> DomainInfos { get; private set; }
 
+        public bool Loaded { get; private set; }
+
         public MessageManager(IDomainInfoProvider messageDomainLoader)
         {
             this.messageDomainLoader = messageDomainLoader;
         }
 
-        public void Initialize()
+        public void Load()
         {
             DomainInfos = messageDomainLoader.GetDomainInfos();
+            Loaded = true;
         }
     }
 }

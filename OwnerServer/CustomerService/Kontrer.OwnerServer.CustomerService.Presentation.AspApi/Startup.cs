@@ -1,7 +1,11 @@
+using Basyc.MessageBus.Manager;
+using Basyc.MessageBus.Manager.Infrastructure;
+using Basyc.MessageBus.Manager.Presentation.Blazor;
 using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework;
 using Kontrer.OwnerServer.Shared.Asp;
+using Kontrer.Shared.DomainDrivenDesign.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +19,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
@@ -46,6 +51,67 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
             //    var db = scope.ServiceProvider.GetRequiredService<DbContext>();
             //    db.Database.Migrate();
             //}
+
+            //try
+            //{
+            //    var assembliesToScan = new Assembly[] { typeof(CreateCustomerCommand).Assembly };
+            //    var managerBuilder = MessageBusManagerBlazorAppBuilder.Create(new string[0]);
+            //    managerBuilder.services.AddMessageBus()
+            //        .UseProxy()
+            //        .SetProxyServerUri(new Uri("https://localhost:44371/"));
+
+            //    managerBuilder
+            //        .AddReqeustClient<BasycMessageBusTypedRequestClient>()
+            //        .AddInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assembliesToScan)
+            //        .AddDomainNameFormatter<TypedDDDDomainNameFormatter>();
+            //    var managerApp = MessageBusManagerBlazorAppBuilder.Build();
+            //    managerApp.RunAsync().GetAwaiter().GetResult();
+            //}
+            //catch (Exception ex)
+            //{
+            //}
+
+            //app.MapWhen(ctx => ctx.Request.Path, second =>
+            //{
+            //    second.Use((ctx, nxt) =>
+            //    {
+            //        ctx.Request.Path = "/SecondApp" + ctx.Request.Path;
+            //        return nxt();
+            //    });
+
+            //    second.UseBlazorFrameworkFiles("/SecondApp");
+            //    second.UseStaticFiles();
+            //    second.UseStaticFiles("/SecondApp");
+            //    second.UseRouting();
+
+            //    second.UseEndpoints(endpoints =>
+            //    {
+            //        endpoints.MapControllers();
+            //        endpoints.MapFallbackToFile("/SecondApp/{*path:nonfile}",
+            //            "SecondApp/index.html");
+            //    });
+            //});
+
+            app.Map(new Microsoft.AspNetCore.Http.PathString("/SecondApp"), second =>
+            {
+                second.Use((ctx, nxt) =>
+                {
+                    ctx.Request.Path = "/SecondApp" + ctx.Request.Path;
+                    return nxt();
+                });
+
+                second.UseBlazorFrameworkFiles("/SecondApp");
+                second.UseStaticFiles();
+                second.UseStaticFiles("/SecondApp");
+                second.UseRouting();
+
+                second.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapFallbackToFile("/SecondApp/{*path:nonfile}",
+                        "SecondApp/index.html");
+                });
+            });
         }
     }
 }

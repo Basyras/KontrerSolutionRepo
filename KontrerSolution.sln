@@ -198,9 +198,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.DependencyInjection",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.DomainDrivenDesign.Infrastructure", "Basyc.DomainDrivenDesign.Infrastructure\Basyc.DomainDrivenDesign.Infrastructure.csproj", "{3F4C6B9E-299C-4BEA-BA76-328E0B7972A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.DomainDrivenDesign.DependencyInjection", "Basyc.DomainDrivenDesign.DependencyInjection\Basyc.DomainDrivenDesign.DependencyInjection.csproj", "{7823B559-5B29-4690-9882-5510B45D9640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.DomainDrivenDesign.DependencyInjection", "Basyc.DomainDrivenDesign.DependencyInjection\Basyc.DomainDrivenDesign.DependencyInjection.csproj", "{7823B559-5B29-4690-9882-5510B45D9640}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Microservice.DomainDrivenDesign", "Basyc.Microservice.DomainDrivenDesign\Basyc.Microservice.DomainDrivenDesign.csproj", "{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Microservice.DomainDrivenDesign", "Basyc.Microservice.DomainDrivenDesign\Basyc.Microservice.DomainDrivenDesign.csproj", "{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.BusManager", "Kontrer.OwnerServer.BusManager\Kontrer.OwnerServer.BusManager.csproj", "{3C251409-F854-474C-82A3-B282E0A45687}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -472,6 +474,10 @@ Global
 		{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C251409-F854-474C-82A3-B282E0A45687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C251409-F854-474C-82A3-B282E0A45687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C251409-F854-474C-82A3-B282E0A45687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C251409-F854-474C-82A3-B282E0A45687}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -571,6 +577,7 @@ Global
 		{3F4C6B9E-299C-4BEA-BA76-328E0B7972A8} = {5147C6C2-2A83-4A2D-895C-88E694494500}
 		{7823B559-5B29-4690-9882-5510B45D9640} = {5147C6C2-2A83-4A2D-895C-88E694494500}
 		{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E} = {7CFAA5A8-991C-42C1-A44F-1CAA8AF0E660}
+		{3C251409-F854-474C-82A3-B282E0A45687} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

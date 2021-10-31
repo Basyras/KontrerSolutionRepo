@@ -13,7 +13,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
     {
         private static WebAssemblyHostBuilder blazorBuilder;
 
-        public static MessageManagerBuilder Create(string[] args)
+        public static BusManagerBuilder Create(string[] args)
         {
             blazorBuilder = WebAssemblyHostBuilder.CreateDefault(args);
             blazorBuilder.RootComponents.Add<App>("#app");

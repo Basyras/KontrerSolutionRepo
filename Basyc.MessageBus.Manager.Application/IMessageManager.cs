@@ -7,7 +7,8 @@ namespace Basyc.MessageBus.Manager.Application
     public interface IMessageManager
     {
         IReadOnlyList<DomainInfo> DomainInfos { get; }
+        bool Loaded { get; }
 
-        void Initialize();
+        void Load();
     }
 }

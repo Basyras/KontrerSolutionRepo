@@ -17,35 +17,35 @@ namespace Basyc.MessageBus.Manager
         public TypedFormatterBuilder(IServiceCollection services)
         {
             this.services = services;
-            UseDomainNameFormatter<TypedDomainNameFormatter>();
-            UseRequestNameFormatter<TypedRequestNameFormatter>();
-            UseParamaterNameFormatter<TypedParameterTypeNameFormatter>();
-            UseResponseNameFormatter<TypedResponseNameFormatter>();
+            AddDomainNameFormatter<TypedDomainNameFormatter>();
+            AddRequestNameFormatter<TypedRequestNameFormatter>();
+            AddParamaterNameFormatter<TypedParameterTypeNameFormatter>();
+            AddResponseNameFormatter<TypedResponseNameFormatter>();
             services.AddSingleton<IRequestInfoTypeStorage, InMemoryRequestInfoTypeStorage>();
         }
 
-        public TypedFormatterBuilder UseDomainNameFormatter<TDomainNameFormatter>() where TDomainNameFormatter : class, ITypedDomainNameFormatter
+        public TypedFormatterBuilder AddDomainNameFormatter<TDomainNameFormatter>() where TDomainNameFormatter : class, ITypedDomainNameFormatter
         {
             services.RemoveAll<ITypedDomainNameFormatter>();
             services.AddSingleton<ITypedDomainNameFormatter, TDomainNameFormatter>();
             return this;
         }
 
-        public TypedFormatterBuilder UseRequestNameFormatter<TRequestNameFormatter>() where TRequestNameFormatter : class, ITypedRequestNameFormatter
+        public TypedFormatterBuilder AddRequestNameFormatter<TRequestNameFormatter>() where TRequestNameFormatter : class, ITypedRequestNameFormatter
         {
             services.RemoveAll<ITypedRequestNameFormatter>();
             services.AddSingleton<ITypedRequestNameFormatter, TRequestNameFormatter>();
             return this;
         }
 
-        public TypedFormatterBuilder UseParamaterNameFormatter<TParameterTypeNameFormatter>() where TParameterTypeNameFormatter : class, ITypedParameterNameFormatter
+        public TypedFormatterBuilder AddParamaterNameFormatter<TParameterTypeNameFormatter>() where TParameterTypeNameFormatter : class, ITypedParameterNameFormatter
         {
             services.RemoveAll<ITypedParameterNameFormatter>();
             services.AddSingleton<ITypedParameterNameFormatter, TParameterTypeNameFormatter>();
             return this;
         }
 
-        public TypedFormatterBuilder UseResponseNameFormatter<TResponseNameFormatter>() where TResponseNameFormatter : class, ITypedResponseNameFormatter
+        public TypedFormatterBuilder AddResponseNameFormatter<TResponseNameFormatter>() where TResponseNameFormatter : class, ITypedResponseNameFormatter
         {
             services.RemoveAll<ITypedResponseNameFormatter>();
             services.AddSingleton<ITypedResponseNameFormatter, TResponseNameFormatter>();

@@ -1,6 +1,3 @@
-using Basyc.MessageBus.Manager;
-using Basyc.MessageBus.Manager.Infrastructure;
-using Basyc.MessageBus.Manager.Presentation.Blazor;
 using Basyc.Microservice.DomainDrivenDesign;
 using Kontrer.OwnerServer.CustomerService.Application;
 using Kontrer.OwnerServer.CustomerService.Application.Customer;
@@ -32,8 +29,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
             //    .Run();
             var tasks = new List<Task>();
 
-            var builder = MicroserviceBootstrapper
-                 .CreateBuilder<Startup, GetCustomersQueryHandler>(args);
+            var builder = MicroserviceBootstrapper.CreateBuilder<Startup, GetCustomersQueryHandler>(args);
 
             builder.AddMessageBus(typeof(CustomerServiceApplicationAssemblyMarker).Assembly);
 
@@ -41,25 +37,28 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
                 .UseEFRespository()
                 .UseSqlServer(debugConnectionString);
 
+            await builder.Back()
+                 .Build()
+                 .RunAsync();
+
             //tasks.Add(builder.Back()
             //     .Build()
             //     .RunAsync());
 
-            var assemblies = new Assembly[] { typeof(CreateCustomerCommand).Assembly };
-            var managerBuilder = MessageBusManagerBlazorAppBuilder.Create(args);
-            managerBuilder.services.AddMessageBus()
-                .UseProxy()
-                .SetProxyServerUri(new Uri("https://localhost:44371/"));
+            //var assembliesToScan = new Assembly[] { typeof(CreateCustomerCommand).Assembly };
+            //var managerBuilder = MessageBusManagerBlazorAppBuilder.Create(args);
+            //managerBuilder.services.AddMessageBus()
+            //    .UseProxy()
+            //    .SetProxyServerUri(new Uri("https://localhost:44371/"));
 
-            managerBuilder
-                .UseReqeustClient<BasycMessageBusTypedRequestClient>()
-                .UseInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assemblies)
-                .UseDomainNameFormatter<TypedDDDDomainNameFormatter>();
+            //managerBuilder
+            //    .AddReqeustClient<BasycMessageBusTypedRequestClient>()
+            //    .AddInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assembliesToScan)
+            //    .AddDomainNameFormatter<TypedDDDDomainNameFormatter>();
+            //var managerApp = MessageBusManagerBlazorAppBuilder.Build();
+            //tasks.Add(managerApp.RunAsync());
 
-            var managerApp = MessageBusManagerBlazorAppBuilder.Build();
-            tasks.Add(managerApp.RunAsync());
-
-            Task.WaitAll(tasks.ToArray());
+            //Task.WaitAll(tasks.ToArray());
         }
     }
 }

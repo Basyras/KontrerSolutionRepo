@@ -26,6 +26,10 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
     {
         public static async Task Main2(string[] args)
         {
+        }
+
+        public static async Task Main(string[] args)
+        {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddMudServices();
@@ -33,8 +37,8 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
             var assemblies = new Assembly[] { typeof(CreateNewIdCommand).Assembly, typeof(DeleteAccommodationOrderCommand).Assembly, typeof(CreateCustomerCommand).Assembly };
 
             builder.Services.AddMessageManager()
-                .UseReqeustClient<BasycMessageBusTypedRequestClient>()
-                .UseInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assemblies)
+                .AddReqeustClient<BasycMessageBusTypedRequestClient>()
+                .AddInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assemblies)
                 //.UseInterfaceTypedGenericProvider(typeof(IRequest), typeof(IRequest<>), assemblies)
                 //.UseReqeustClient<MassTransitRequestClient>()
                 //.UseTypedProvider()
@@ -44,7 +48,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
                 //    x.QueryTypes.Add(new Type[] { typeof(DeleteCustomerCommand), typeof(object) });
                 //})
                 //.ChangeFormatting()
-                .UseDomainNameFormatter<TypedDDDDomainNameFormatter>();
+                .AddDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
             builder.Services.AddMessageBus()
                 .UseProxy()
@@ -54,11 +58,11 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
 
             var host = builder.Build();
             var explorer = host.Services.GetRequiredService<IMessageManager>();
-            explorer.Initialize();
+            explorer.Load();
             await host.RunAsync();
         }
 
-        public static async Task Main(string[] args)
+        public static async Task Main3(string[] args)
         {
             var assemblies = new Assembly[] { typeof(CreateNewIdCommand).Assembly, typeof(DeleteAccommodationOrderCommand).Assembly, typeof(CreateCustomerCommand).Assembly };
             var managerBuilder = MessageBusManagerBlazorAppBuilder.Create(args);
@@ -67,8 +71,8 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
                 .SetProxyServerUri(new Uri("https://localhost:44371/"));
 
             managerBuilder
-                .UseReqeustClient<BasycMessageBusTypedRequestClient>()
-                .UseInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assemblies)
+                .AddReqeustClient<BasycMessageBusTypedRequestClient>()
+                .AddInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assemblies)
                 //.UseInterfaceTypedGenericProvider(typeof(IRequest), typeof(IRequest<>), assemblies)
                 //.UseReqeustClient<MassTransitRequestClient>()
                 //.UseTypedProvider()
@@ -78,7 +82,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor
                 //    x.QueryTypes.Add(new Type[] { typeof(DeleteCustomerCommand), typeof(object) });
                 //})
                 //.ChangeFormatting()
-                .UseDomainNameFormatter<TypedDDDDomainNameFormatter>();
+                .AddDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
             var managerApp = MessageBusManagerBlazorAppBuilder.Build();
             await managerApp.RunAsync();

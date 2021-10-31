@@ -9,12 +9,12 @@ namespace Basyc.MessageBus.Manager.Infrastructure
 {
     public static class MessageManagerBuilderTypedExtensions
     {
-        public static TypedProviderBuilder UseTypedProvider(this MessageManagerBuilder managerBuilder)
+        public static TypedProviderBuilder UseTypedProvider(this BusManagerBuilder managerBuilder)
         {
             //managerBuilder.services.Configure<TypedDomainProviderOptions>(options =>
             //{
             //});
-            managerBuilder.UseProvider<TypedDomainProvider>();
+            managerBuilder.AddProvider<TypedDomainProvider>();
             return new TypedProviderBuilder(managerBuilder.services);
         }
     }

@@ -11,23 +11,23 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager
 {
-    public class MessageManagerBuilder
+    public class BusManagerBuilder
     {
         public readonly IServiceCollection services;
 
-        public MessageManagerBuilder(IServiceCollection services)
+        public BusManagerBuilder(IServiceCollection services)
         {
             this.services = services;
             services.AddSingleton<IMessageManager, MessageManager>();
         }
 
-        public MessageManagerBuilder UseProvider<TDomainProvider>() where TDomainProvider : class, IDomainInfoProvider
+        public BusManagerBuilder AddProvider<TDomainProvider>() where TDomainProvider : class, IDomainInfoProvider
         {
             services.AddSingleton<IDomainInfoProvider, TDomainProvider>();
             return this;
         }
 
-        public MessageManagerBuilder UseReqeustClient<TRequestClient>() where TRequestClient : class, IRequestClient
+        public BusManagerBuilder AddReqeustClient<TRequestClient>() where TRequestClient : class, IRequestClient
         {
             services.AddSingleton<IRequestClient, TRequestClient>();
             return this;

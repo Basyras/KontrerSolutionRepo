@@ -1,11 +1,3 @@
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
-@*<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-    @{
-        string blazorJS = "<script src=\"_content/MudBlazor/MudBlazor.min.js\"></script>";
-    }
-    @blazorJS*@
 <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />

@@ -9,9 +9,9 @@ namespace Basyc.MessageBus.Manager
 {
     public static class MessageManagerIServiceCollectionExtensions
     {
-        public static MessageManagerBuilder AddMessageManager(this IServiceCollection services)
+        public static BusManagerBuilder AddMessageManager(this IServiceCollection services)
         {
-            var builder = new MessageManagerBuilder(services);
+            var builder = new BusManagerBuilder(services);
             return builder;
         }
     }
