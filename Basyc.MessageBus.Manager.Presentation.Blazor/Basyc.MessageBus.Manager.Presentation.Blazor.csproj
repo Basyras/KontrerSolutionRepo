@@ -5,7 +5,8 @@
 		<ApplicationIcon />
 		<OutputType>Exe</OutputType>
 		<StartupObject />
-		<!--<StaticWebAssetBasePath>SecondApp</StaticWebAssetBasePath>-->
+		<AssemblyName>Basyc.MessageBus.Manager.Presentation.Blazor</AssemblyName>
+		<!--<StaticWebAssetBasePath>BusManager</StaticWebAssetBasePath>-->
 	</PropertyGroup>
 
 	<ItemGroup>

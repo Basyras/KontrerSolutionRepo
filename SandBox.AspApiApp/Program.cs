@@ -16,7 +16,7 @@ namespace SandBox.AspApiApp
         public static void Main(string[] args)
         {
             //CreateHostBuilder(args).Build().Run();
-            MicroserviceBootstrapper.CreateBuilder<Startup>(args).Build().Run();
+            MicroserviceBootstrapper.CreateBuilder<Startup>(args).Back().Build().Run();
         }
 
         //public static IHostBuilder CreateHostBuilder(string[] args) =>

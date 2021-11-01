@@ -92,26 +92,26 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
             //    });
             //});
 
-            app.Map(new Microsoft.AspNetCore.Http.PathString("/SecondApp"), second =>
-            {
-                second.Use((ctx, nxt) =>
-                {
-                    ctx.Request.Path = "/SecondApp" + ctx.Request.Path;
-                    return nxt();
-                });
+            //app.Map(new Microsoft.AspNetCore.Http.PathString("/SecondApp"), second =>
+            //{
+            //    second.Use((ctx, nxt) =>
+            //    {
+            //        ctx.Request.Path = "/SecondApp" + ctx.Request.Path;
+            //        return nxt();
+            //    });
 
-                second.UseBlazorFrameworkFiles("/SecondApp");
-                second.UseStaticFiles();
-                second.UseStaticFiles("/SecondApp");
-                second.UseRouting();
+            //    second.UseBlazorFrameworkFiles("/SecondApp");
+            //    second.UseStaticFiles();
+            //    second.UseStaticFiles("/SecondApp");
+            //    second.UseRouting();
 
-                second.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                    endpoints.MapFallbackToFile("/SecondApp/{*path:nonfile}",
-                        "SecondApp/index.html");
-                });
-            });
+            //    second.UseEndpoints(endpoints =>
+            //    {
+            //        endpoints.MapControllers();
+            //        endpoints.MapFallbackToFile("/SecondApp/{*path:nonfile}",
+            //            "SecondApp/index.html");
+            //    });
+            //});
         }
     }
 }

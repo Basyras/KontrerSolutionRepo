@@ -202,7 +202,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.DomainDrivenDesign.De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Microservice.DomainDrivenDesign", "Basyc.Microservice.DomainDrivenDesign\Basyc.Microservice.DomainDrivenDesign.csproj", "{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontrer.OwnerServer.BusManager", "Kontrer.OwnerServer.BusManager\Kontrer.OwnerServer.BusManager.csproj", "{3C251409-F854-474C-82A3-B282E0A45687}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontrer.OwnerServer.BusManager", "Kontrer.OwnerServer.BusManager\Kontrer.OwnerServer.BusManager.csproj", "{3C251409-F854-474C-82A3-B282E0A45687}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
