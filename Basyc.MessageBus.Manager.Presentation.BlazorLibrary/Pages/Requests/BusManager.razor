@@ -1,0 +1,14 @@
+﻿<div>
+    <MudThemeProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
+    <MudExpansionPanels Class="requestPanel" DisableBorders="true" Elevation="0" MultiExpansion="true">
+        @foreach (var domainViewModel in DomainInfoViewModel)
+        {
+            @*<RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (s,a)=> await OnMessageSending(s,a))" />*@
+            <RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (requestItem)=>await SendMessage(requestItem))" />
+        }
+    </MudExpansionPanels>
+    <button @onclick="()=> { busManager.Load(); }">Reload</button>
+</div>

@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class MessageBusBuilderHttpProxyClientExtensions
     {
-        public static MessageBusHttpProxyClientBuilder UseProxy(this MessageBusBuilder builder)
+        public static MessageBusHttpProxyClientBuilder AddProxyProvider(this MessageBusBuilder builder)
         {
             builder.services.AddSingleton<IRequestSerializer, JsonRequestSerializer>();
             return new MessageBusHttpProxyClientBuilder(builder.services);

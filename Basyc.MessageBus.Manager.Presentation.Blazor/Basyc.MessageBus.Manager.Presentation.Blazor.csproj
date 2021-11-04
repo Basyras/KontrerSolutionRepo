@@ -2,19 +2,24 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
-		<ApplicationIcon />
+		<!--<ApplicationIcon />-->
+		<!--<OutputType>Library</OutputType>-->
+		<!--<StartupObject />-->
+		<!--<ApplicationIcon />
 		<OutputType>Exe</OutputType>
-		<StartupObject />
+		<StartupObject />-->
+		<OutputType>Exe</OutputType>
 		<AssemblyName>Basyc.MessageBus.Manager.Presentation.Blazor</AssemblyName>
-		<!--<StaticWebAssetBasePath>BusManager</StaticWebAssetBasePath>-->
+		<StaticWebAssetBasePath>BusManager</StaticWebAssetBasePath>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="LibSassBuilder" Version="1.6.4" />
+		<PackageReference Include="MudBlazor" Version="5.1.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.11" PrivateAssets="all" />
-		<PackageReference Include="MudBlazor" Version="5.1.5" />
 		<PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.11" />
 	</ItemGroup>
 
 	<ItemGroup>

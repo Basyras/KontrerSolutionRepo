@@ -21,7 +21,7 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             return webBuilder;
         }
 
-        public static MessageBusBuilder UseMassTransit(this MessageBusBuilder builder, Assembly handlersAssembly)
+        public static MessageBusBuilder AddMassTransitProvider(this MessageBusBuilder builder, Assembly handlersAssembly)
         {
             ConfigureMassTransit(builder.services, handlersAssembly);
             return builder;
@@ -35,7 +35,7 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             services.AddMassTransit(x =>
             {
                 //x.AddConsumers(consumerAssemblies);
-                x.AddConsumersFromMessageBus(handlersAssembly);
+                x.RegisterReqeustHandlersAsConsumers(handlersAssembly);
                 x.UsingRabbitMq((transitContext, rabbitConfig) =>
                 {
                     rabbitConfig.ConfigureEndpoints(transitContext);

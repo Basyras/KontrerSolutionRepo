@@ -18,7 +18,7 @@ namespace Basyc.MessageBus.Manager
         public BusManagerBuilder(IServiceCollection services)
         {
             this.services = services;
-            services.AddSingleton<IMessageManager, MessageManager>();
+            services.AddSingleton<IBusManager, BusManager>();
         }
 
         public BusManagerBuilder AddProvider<TDomainProvider>() where TDomainProvider : class, IDomainInfoProvider

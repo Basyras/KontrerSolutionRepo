@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:39414",
-      "sslPort": 44358
+      "applicationUrl": "http://localhost:14174",
+      "sslPort": 44320
     }
   },
   "profiles": {
@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Kontrer.OwnerServer.BusManager": {
+    "Konter.OwnerServer.BusManager": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

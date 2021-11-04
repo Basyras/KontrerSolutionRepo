@@ -25,6 +25,14 @@ namespace Kontrer.OwnerServer.Shared.Asp
                 app.UseRouting();
                 app.UseAuthorization();
 
+                app.UseCors(x =>
+                {
+                    x.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed(o => true)
+                    .AllowCredentials();
+                });
+
                 next(app);
             };
         }

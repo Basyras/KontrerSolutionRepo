@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Application
 {
-    public class MessageManager : IMessageManager
+    public class BusManager : IBusManager
     {
         private readonly IDomainInfoProvider messageDomainLoader;
         public IReadOnlyList<DomainInfo> DomainInfos { get; private set; }
 
         public bool Loaded { get; private set; }
 
-        public MessageManager(IDomainInfoProvider messageDomainLoader)
+        public BusManager(IDomainInfoProvider messageDomainLoader)
         {
             this.messageDomainLoader = messageDomainLoader;
         }

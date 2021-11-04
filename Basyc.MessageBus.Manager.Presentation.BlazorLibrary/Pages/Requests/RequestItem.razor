@@ -1,0 +1,89 @@
+﻿<div>
+    <requestItemComponent class="@borderClass">
+        <MudExpansionPanel Class="@backgroundClass" Dense="true" DisableGutters="true" HideIcon="true">
+            <TitleContent>
+                <requestHeading>
+                    <headingSection>
+                        <RequestTag RequestType="@RequestTagTypeHelper.FromRequestType(RequestItemViewModel.RequestInfo.RequestType)" />
+                        <requestName>@RequestItemViewModel.RequestInfo.RequestDisplayName </requestName>
+                    </headingSection>
+                    <MudDivider Vertical="true" FlexItem="true" />
+                    <headingSection>
+                        @if (RequestItemViewModel.RequestInfo.HasResponse)
+                        {
+                            <RequestTag RequestType="RequestTagType.Response" />
+                            <requestName>@RequestItemViewModel.RequestInfo.ResponseDisplayName </requestName>
+                        }
+
+                        @if (RequestItemViewModel.Response != null && RequestItemViewModel.IsLoading is false)
+                        {
+                            string latencyClass = $"latency--failed--{RequestItemViewModel.Response.Failed.ToString().ToLower()}";
+                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.Response.Latency.TotalMilliseconds) ms</latency>
+                        }
+                        @if (RequestItemViewModel.IsLoading)
+                        {
+                            <latency>
+                                <MudProgressCircular Style="height: 18px; width: 18px; padding: -5px; margin: -5px;"  Color="Color.Default" Indeterminate="true" />
+                            </latency>
+                        }
+                    </headingSection>
+                </requestHeading>
+            </TitleContent>
+            <ChildContent>
+                <requestBody>
+                    <bodySection>
+                        <table class="paramTable">
+                            @for (int i = 0; i < RequestItemViewModel.RequestInfo.Parameters.Count; i++)
+                            {
+                                var index = i;
+                                var paramInfo = RequestItemViewModel.RequestInfo.Parameters[index];
+                                var paramValue = RequestItemViewModel.ParameterValues[index];
+                                var isPrimitive = paramInfo.Type.IsPrimitive || paramInfo.Type.IsArray || paramInfo.Type == typeof(string);
+                                <tr class="paramRow">
+                                    <td> <paramLabel>@paramInfo.ParameterDisplayName </paramLabel> </td>
+                                    <td>
+                                        <paramInput class="inputBorder">
+                                            <paramType class="paramType-isPrimitive-@isPrimitive">@paramInfo.TypeDisplayName</paramType>
+                                            @*<input class="paramTextBox" value="@paramValue" @onchange="(a)=>SetParamValue(index,a.Value)" />*@
+                                            <input class="paramTextBox" @bind-value="@RequestItemViewModel.ParameterValues[index]" />
+                                            @*<button class="secondaryButton" @onclick="()=> SetParamDefaultValue(index)">default</button>*@
+                                        </paramInput>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        <br />
+                        <button class="sendRequestButton" disabled="@RequestItemViewModel.IsLoading" @onclick="()=> SendMessage(RequestItemViewModel.RequestInfo)">send</button>
+                    </bodySection>
+                    <MudDivider Vertical="true" FlexItem="true" />
+                    <bodySection>
+                        @if (RequestItemViewModel.IsLoading)
+                        {
+                            <loadingContainer>
+                                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                            </loadingContainer>
+                        }
+
+                        <inputContainer>
+                            @if (RequestItemViewModel.Response != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.Response.Failed is false)
+                            {
+                                string hasErrorClass = RequestItemViewModel.Response.Failed ? "inputBorder--error" : "";
+                                <textarea readonly disabled="@RequestItemViewModel.Response.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.Response.Response</textarea>
+                            }
+                            @if (RequestItemViewModel.Response != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.Response.Failed)
+                            {
+                                <errorMessage>@RequestItemViewModel.Response.ErrorMessage</errorMessage>
+                            }
+                        </inputContainer>
+                    </bodySection>
+                </requestBody>
+            </ChildContent>
+        </MudExpansionPanel>
+    </requestItemComponent>
+</div>
+@code
+{
+    private string borderClass => "requestItem__border--" + RequestItemViewModel.RequestInfo.RequestType.ToString().ToLower();
+    private string backgroundClass => "background--" + RequestItemViewModel.RequestInfo.RequestType.ToString().ToLower();
+
+}

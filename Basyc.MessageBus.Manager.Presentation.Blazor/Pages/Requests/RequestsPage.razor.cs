@@ -18,7 +18,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
     public partial class RequestsPage
     {
         [Inject]
-        public IMessageManager Explorer { get; private set; }
+        public IBusManager Explorer { get; private set; }
 
         [Inject]
         public IMessageBusManager MessageBusManager { get; private set; }

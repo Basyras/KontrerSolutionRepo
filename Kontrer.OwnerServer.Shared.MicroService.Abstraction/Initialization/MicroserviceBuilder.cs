@@ -1,4 +1,5 @@
 ﻿using Basyc.DependencyInjection;
+using Kontrer.Shared.MessageBus;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,7 +35,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization
             return this;
         }
 
-        public MicroserviceBuilder<TParentBuilder> AddMessageBus(Assembly assembliesToScan)
+        public MessageBusBuilder AddMessageBus(Assembly assembliesToScan)
         {
             //webBuilder.ConfigureServices(services =>
             //{
@@ -42,10 +43,8 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization
             //        .RegisterRequestHandlers(assembliesToScan);
             //});
 
-            services.AddMessageBus()
-                .RegisterRequestHandlers(assembliesToScan);
-
-            return this;
+            return services.AddMessageBus()
+                 .RegisterRequestHandlers(assembliesToScan);
         }
     }
 }

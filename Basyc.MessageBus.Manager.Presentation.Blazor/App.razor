@@ -1,5 +1,5 @@
-@*@inject IJSRuntime JS
-    @implements IAsyncDisposable*@
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -32,21 +32,21 @@
         }
     }
 
-    //private async Task TriggerPrompt()
-    //{
-    //    result = await Prompt("Provide some text");
-    //}
+    private async Task TriggerPrompt()
+    {
+        result = await Prompt("Provide some text");
+    }
 
-    //public async ValueTask<string> Prompt(string message)
-    //{
-    //    return await module.InvokeAsync<string>("showPrompt", message);
-    //}
+    public async ValueTask<string> Prompt(string message)
+    {
+        return await module.InvokeAsync<string>("showPrompt", message);
+    }
 
-    //async ValueTask IAsyncDisposable.DisposeAsync()
-    //{
-    //    if (module is not null)
-    //    {
-    //        await module.DisposeAsync();
-    //    }
-    //}
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (module is not null)
+        {
+            await module.DisposeAsync();
+        }
+    }
 }

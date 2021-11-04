@@ -1,4 +1,5 @@
-﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
+﻿using Kontrer.OwnerServer.CustomerService.Domain.Customer;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.Shared.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,8 @@ namespace SandBox.AspApiApp.Controllers
         [HttpGet]
         public async Task Get()
         {
-            await messageBusManager.SendAsync<CancelAccommodationOrderCommand>(new CancelAccommodationOrderCommand(0, "0", true));
+            //await messageBusManager.SendAsync<CancelAccommodationOrderCommand>(new CancelAccommodationOrderCommand(0, "0", true));
+            await messageBusManager.SendAsync<DeleteCustomerCommand>(new DeleteCustomerCommand(1));
         }
     }
 }

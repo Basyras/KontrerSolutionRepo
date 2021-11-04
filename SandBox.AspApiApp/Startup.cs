@@ -27,14 +27,16 @@ namespace SandBox.AspApiApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            services.AddControllers();
+            //services.AddRazorPages();
+            //services.AddControllers();
+
             //services.AddSwaggerGen(c =>
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SandBoxApp", Version = "v1" });
             //});
 
             services.AddMessageBusProxyServer();
+
             //.UseMassTransit(Assembly.GetExecutingAssembly());
         }
 
@@ -63,8 +65,8 @@ namespace SandBox.AspApiApp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
-                endpoints.MapControllers();
+                //endpoints.MapRazorPages();
+                //endpoints.MapControllers();
                 endpoints.MapMessageBusProxyServer();
             });
         }

@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Basyc.MessageBus.Manager.Application
 {
-    public interface IMessageManager
+    public interface IBusManager
     {
         IReadOnlyList<DomainInfo> DomainInfos { get; }
         bool Loaded { get; }

@@ -27,19 +27,20 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
             //MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup, GetCustomersQueryHandler>(args)
             //    .Build()
             //    .Run();
-            var tasks = new List<Task>();
 
-            var builder = MicroserviceBootstrapper.CreateBuilder<Startup, GetCustomersQueryHandler>(args);
+            //var tasks = new List<Task>();
 
-            builder.AddMessageBus(typeof(CustomerServiceApplicationAssemblyMarker).Assembly);
+            //var builder = MicroserviceBootstrapper.CreateBuilder<Startup, GetCustomersQueryHandler>(args);
 
-            new CustomerInfrastructureBuilder(builder.services)
-                .UseEFRespository()
-                .UseSqlServer(debugConnectionString);
+            //builder.AddMessageBus(typeof(CustomerServiceApplicationAssemblyMarker).Assembly);
 
-            await builder.Back()
-                 .Build()
-                 .RunAsync();
+            //new CustomerInfrastructureBuilder(builder.services)
+            //    .UseEFRespository()
+            //    .UseSqlServer(debugConnectionString);
+
+            //await builder.Back()
+            //     .Build()
+            //     .RunAsync();
 
             //tasks.Add(builder.Back()
             //     .Build()
@@ -59,6 +60,17 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
             //tasks.Add(managerApp.RunAsync());
 
             //Task.WaitAll(tasks.ToArray());
+
+            var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
+
+            builder.AddMessageBus(typeof(CustomerServiceApplicationAssemblyMarker).Assembly);
+            new CustomerInfrastructureBuilder(builder.services)
+                .UseEFRespository()
+                .UseSqlServer(debugConnectionString);
+
+            await builder.Back()
+                 .Build()
+                 .RunAsync();
         }
     }
 }

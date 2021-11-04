@@ -38,13 +38,13 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 
             hostBuilder.ConfigureWebHostDefaults(webBuilder =>
             {
-                //webBuilder.ConfigureServices((s, a) =>
-                //{
-                //    foreach (var service in services)
-                //    {
-                //        a.Add(service);
-                //    }
-                //});
+                webBuilder.ConfigureServices((s, a) =>
+                {
+                    foreach (var service in services)
+                    {
+                        a.Add(service);
+                    }
+                });
                 webBuilder.ConfigureAsp<TStartup>(entryAssembly.GetName().Name);
                 //webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
 

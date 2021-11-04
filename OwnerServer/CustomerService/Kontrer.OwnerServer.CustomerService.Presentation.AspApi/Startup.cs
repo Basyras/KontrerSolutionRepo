@@ -1,6 +1,3 @@
-using Basyc.MessageBus.Manager;
-using Basyc.MessageBus.Manager.Infrastructure;
-using Basyc.MessageBus.Manager.Presentation.Blazor;
 using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework;

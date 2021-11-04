@@ -15,11 +15,20 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            MicroserviceBootstrapper.CreateBuilder<Startup, CreateNewIdCommandHandler>(args)
-                .Build()
-                .Run();
+            //MicroserviceBootstrapper.CreateBuilder<Startup, CreateNewIdCommandHandler>(args)
+            //    .Back()
+            //    .Build()
+            //    .Run();
+
+            var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
+
+            builder.AddMessageBus(typeof(CreateNewIdCommandHandler).Assembly);
+
+            await builder.Back()
+                 .Build()
+                 .RunAsync();
         }
     }
 }

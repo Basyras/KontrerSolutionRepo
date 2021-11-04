@@ -33,6 +33,10 @@ namespace Kontrer.OwnerServer.Shared.Asp
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = context.HostingEnvironment.ApplicationName, Version = "v1" });
                 });
                 services.AddHealthChecks();
+                //services.AddCors(options =>
+                //{
+                //    options.
+                //});
             });
 
             return webBuilder;

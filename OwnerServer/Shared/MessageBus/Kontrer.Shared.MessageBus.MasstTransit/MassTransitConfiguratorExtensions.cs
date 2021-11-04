@@ -22,7 +22,7 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             requestHandlerInterfacesTypes = new Type[] { typeof(IRequestHandler<>), typeof(IRequestHandler<,>) };
         }
 
-        public static void AddConsumersFromMessageBus(this IServiceCollectionBusConfigurator configurator, Assembly handlersAssembly)
+        public static void RegisterReqeustHandlersAsConsumers(this IServiceCollectionBusConfigurator configurator, Assembly handlersAssembly)
         {
             var assemblyTypes = handlersAssembly.GetTypes();
 

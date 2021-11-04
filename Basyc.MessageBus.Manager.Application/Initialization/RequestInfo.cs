@@ -11,6 +11,7 @@ namespace Basyc.MessageBus.Manager.Application.Initialization
         {
             RequestType = requestType;
             ResponseDisplayName = responseDisplayName;
+            ResponseType = responseType;
         }
 
         public RequestInfo(RequestType requestType, IEnumerable<ParameterInfo> parameters, string requestDisplayName)
