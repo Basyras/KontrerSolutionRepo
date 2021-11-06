@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework;
 using Kontrer.Shared.Repositories.EF;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
 {
@@ -20,10 +21,16 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
     {
         public static void Main(string[] args)
         {
-            MicroserviceBootstrapper.CreateBuilder<Startup, CreateAccommodationOrderCommandHandler>(args)
+            var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
+
+            builder.AddMessageBus()
+                .RegisterBasycRequestHandlers<CreateAccommodationOrderCommandHandler>()
+                .AddMassTransitProvider();
+
+            builder
                 .Back()
-                //.MigrateDatabaseOnStart<OrderServiceDbContext>()
                 .MigrateDatabaseOnStart<DbContext>()
+            //.MigrateDatabaseOnStart<OrderServiceDbContext>()
                 .Build()
                 .Run();
         }

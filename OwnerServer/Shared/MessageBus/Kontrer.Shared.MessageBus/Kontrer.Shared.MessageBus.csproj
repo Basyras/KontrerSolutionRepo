@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Basyc.DependencyInjection\Basyc.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\..\..\Kontrer.Shared\Kontrer.Shared.csproj" />
   </ItemGroup>
 

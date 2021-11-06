@@ -18,16 +18,11 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
     {
         public static async Task Main(string[] args)
         {
-            //MicroserviceBootstrapper.CreateBuilder<Startup, CreateNewIdCommandHandler>(args)
-            //    .Back()
-            //    .Build()
-            //    .Run();
-
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                .RegisterRequestHandlers(typeof(CreateNewIdCommandHandler).Assembly)
-                .AddMassTransitProvider(typeof(CreateNewIdCommandHandler).Assembly);
+                .RegisterBasycRequestHandlers(typeof(CreateNewIdCommandHandler).Assembly)
+                .AddMassTransitProvider();
 
             await builder.Back()
                  .Build()

@@ -42,6 +42,7 @@ requestName {
     font-style: italic;
     font-size: 19px;
     margin-left: 0.8rem;
+    user-select: text;
 }
 
 requestBody {
@@ -166,13 +167,10 @@ failedLabel {
 }
 
 errorMessage {
-    position: absolute;
     font-size: 14px;
     text-align: center;
     color: #d57979;
     width: 100%;
-    left: 0;
-    top: 40%;
 }
 
 inputContainer {

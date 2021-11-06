@@ -45,7 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
             if (GenericsHelper.IsAssignableToGenericType(requestType, typeof(IRequest<>)))
             {
-                var responseType = GenericsHelper.GetGenericArgumentsFromParent(requestType, typeof(IRequest<>))[0];
+                var responseType = GenericsHelper.GetTypeArgumentsFromParent(requestType, typeof(IRequest<>))[0];
                 var busResponse = await messageBus.RequestAsync(requestType, request, responseType);
                 await context.Response.WriteAsync(serializer.Serialize(busResponse, responseType));
                 return;

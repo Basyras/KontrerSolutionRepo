@@ -1,7 +1,10 @@
 using Basyc.MessageBus.Manager;
 using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Presentation.Blazor;
+using Kontrer.OwnerServer.CustomerService.Domain;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
+using Kontrer.OwnerServer.IdGeneratorService.Domain;
+using Kontrer.OwnerServer.OrderService.Domain;
 using Kontrer.Shared.DomainDrivenDesign.Domain;
 using Kontrer.Shared.MessageBus.RequestResponse;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -24,11 +27,16 @@ namespace Konter.OwnerServer.BusManager
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
+            var domains = new Assembly[]
+            {
+                typeof(CustomerServiceDomainAssemblyMarker).Assembly,
+                typeof(OrderServiceDomainAssemblyMarker).Assembly,
+                typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
+            };
             builder.Services.AddBlazorMessageBus()
                 .AddBusClient<BasycInterfaceTypedBusClient>()
-                .AddInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), typeof(CreateCustomerCommand).Assembly)
-                .AddDomainNameFormatter<TypedDDDDomainNameFormatter>();
+                .AddInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
+                .SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
             //builder.Services.AddBlazorMessageBus()
             //    .AddBusClient<BasycInterfaceTypedBusClient>()

@@ -83,7 +83,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
             {
                 requesType = RequestType.Query;
                 hasResponse = true;
-                responseType = GenericsHelper.GetGenericArgumentsFromParent(type, options.Value.IQueryType)[0];
+                responseType = GenericsHelper.GetTypeArgumentsFromParent(type, options.Value.IQueryType)[0];
                 return true;
             }
 
@@ -97,7 +97,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
             {
                 requesType = RequestType.Command;
                 hasResponse = true;
-                responseType = GenericsHelper.GetGenericArgumentsFromParent(type, options.Value.ICommandWithResponseType)[0];
+                responseType = GenericsHelper.GetTypeArgumentsFromParent(type, options.Value.ICommandWithResponseType)[0];
                 return true;
             }
 
@@ -111,7 +111,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
             {
                 requesType = RequestType.Generic;
                 hasResponse = true;
-                responseType = GenericsHelper.GetGenericArgumentsFromParent(type, options.Value.IMessageWithResponseType)[0];
+                responseType = GenericsHelper.GetTypeArgumentsFromParent(type, options.Value.IMessageWithResponseType)[0];
                 return true;
             }
 

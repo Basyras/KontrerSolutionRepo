@@ -35,7 +35,7 @@ namespace Kontrer.Shared.Helpers
         /// <param name="baseType">parent type that should contain generic parameters</param>
         /// <returns></returns>
 
-        public static Type[] GetGenericArgumentsFromParent(Type type, Type baseType)
+        public static Type[] GetTypeArgumentsFromParent(Type type, Type baseType)
         {
             if (baseType.IsInterface)
             {

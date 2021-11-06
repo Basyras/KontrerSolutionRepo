@@ -32,32 +32,6 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
             RequestItemViewModel.IsLoading = false;
         }
 
-        //private async void SetParamValue(int index, object value)
-        //{
-        //    string stringValue = value.ToString();
-        //    var paramInfo = RequestItemViewModel.RequestInfo.Parameters[index];
-        //    if (paramInfo.Type.IsValueType)
-        //    {
-        //    }
-
-        //    if (stringValue == string.Empty)
-        //    {
-        //        await Task.Delay(1);
-        //        SetParamDefaultValue(index);
-        //    }
-        //    else
-        //    {
-        //        RequestItemViewModel.ParameterValues[index] = stringValue;
-        //    }
-        //}
-
-        //private void SetParamDefaultValue(int index)
-        //{
-        //    var paramType = RequestItemViewModel.RequestInfo.Parameters[index].Type;
-        //    var defaultString = GetDefaultValueString(paramType);
-        //    RequestItemViewModel.ParameterValues[index] = defaultString;
-        //}
-
         private string GetDefaultValueString(Type type)
         {
             if (type.IsValueType)
@@ -77,7 +51,6 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
         protected override void OnInitialized()
         {
             RequestItemViewModel.ParameterValues.CollectionChanged += ParameterValues_CollectionChanged;
-            //Enumerable.Range(0, RequestItemViewModel.RequestInfo.Parameters.Count).ToList().ForEach(x => SetParamDefaultValue(x));
             for (int paramIndex = 0; paramIndex < RequestItemViewModel.RequestInfo.Parameters.Count; paramIndex++)
             {
                 var defaultValue = GetDefaultValueString(RequestItemViewModel.RequestInfo.Parameters[paramIndex].Type);
@@ -92,7 +65,6 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
             var defaultValue = GetDefaultValueString(RequestItemViewModel.RequestInfo.Parameters[e.NewStartingIndex].Type);
             if (newValue == string.Empty && newValue != defaultValue)
             {
-                //SetParamDefaultValue(e.NewStartingIndex);
                 RequestItemViewModel.ParameterValues[e.NewStartingIndex] = defaultValue;
             }
         }

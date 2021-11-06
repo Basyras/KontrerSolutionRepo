@@ -1,5 +1,6 @@
 ﻿using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Infrastructure;
+using Basyc.MessageBus.Manager.Infrastructure.Formatters;
 using Kontrer.Shared.MessageBus;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,13 @@ namespace Basyc.MessageBus.Manager
     public class BasycInterfaceTypedBusClient : IBusClient
     {
         private readonly IRequestInfoTypeStorage requestInfoTypeStorage;
+        private readonly IResponseFormatter responseFormatter;
 
-        public BasycInterfaceTypedBusClient(IMessageBusManager messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage)
+        public BasycInterfaceTypedBusClient(IMessageBusManager messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
         {
             MessageBusManager = messageBusManager;
             this.requestInfoTypeStorage = requestInfoTypeStorage;
+            this.responseFormatter = responseFormatter;
         }
 
         public IMessageBusManager MessageBusManager { get; }
@@ -36,7 +39,7 @@ namespace Basyc.MessageBus.Manager
                 {
                     var response = await MessageBusManager.RequestAsync(requestType, requestInstance, request.RequestInfo.ResponseType);
                     stopWatch.Stop();
-                    return new RequestResult(false, response, string.Empty, stopWatch.Elapsed);
+                    return new RequestResult(false, responseFormatter.Format(response), string.Empty, stopWatch.Elapsed);
                 }
                 else
                 {

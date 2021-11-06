@@ -18,10 +18,9 @@ namespace SandBox.AspApiApp
         public static void Main(string[] args)
         {
             //CreateHostBuilder(args).Build().Run();
-            var handlersAssemblies = typeof(Program).Assembly;
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
             builder.AddMessageBus()
-                     .AddMassTransitProvider();
+                     .AddMassTransitProvider(false);
 
             builder.Back().Build().Run();
         }

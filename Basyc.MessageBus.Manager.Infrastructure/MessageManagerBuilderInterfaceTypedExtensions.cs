@@ -25,14 +25,14 @@ namespace Basyc.MessageBus.Manager
         //    return new TypedFormatterBuilder(managerBuilder.services);
         //}
 
-        public static TypedFormatterBuilder AddInterfaceTypedCQRSProvider(this BusManagerBuilder managerBuilder, Type iQueryType, Type iCommandType, Type iCommandWithResponseType, params Assembly[] assemblies)
+        public static TypedFormatterBuilder AddInterfaceTypedCQRSProvider(this BusManagerBuilder managerBuilder, Type iQueryType, Type iCommandType, Type iCommandWithResponseType, params Assembly[] assembliesToScan)
         {
             managerBuilder.services.Configure<InterfaceTypedDomainProviderOptions>(options =>
             {
                 options.IQueryType = iQueryType;
                 options.ICommandType = iCommandType;
                 options.ICommandWithResponseType = iCommandWithResponseType;
-                options.AssembliesToScan = assemblies.ToList();
+                options.AssembliesToScan = assembliesToScan.ToList();
             });
             managerBuilder.AddProvider<InterfaceTypedDomainProvider>();
             return new TypedFormatterBuilder(managerBuilder.services);

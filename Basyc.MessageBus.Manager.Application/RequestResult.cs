@@ -16,7 +16,7 @@ namespace Basyc.MessageBus.Manager.Application
             Latency = latency;
         }
 
-        public RequestResult(bool failed, object response, string errorMessage, TimeSpan latency)
+        public RequestResult(bool failed, string response, string errorMessage, TimeSpan latency)
         {
             Failed = failed;
             HasResponse = true;
@@ -27,7 +27,7 @@ namespace Basyc.MessageBus.Manager.Application
 
         public bool Failed { get; }
         public bool HasResponse { get; }
-        public object Response { get; }
+        public string Response { get; }
         public string ErrorMessage { get; }
         public TimeSpan Latency { get; }
     }

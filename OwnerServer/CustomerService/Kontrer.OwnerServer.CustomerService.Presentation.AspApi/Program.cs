@@ -26,11 +26,10 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
         public static async Task Main(string[] args)
         {
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
-            var handlersAssembly = typeof(CustomerServiceApplicationAssemblyMarker).Assembly;
 
             builder.AddMessageBus()
-                 .RegisterRequestHandlers(handlersAssembly)
-                 .AddMassTransitProvider(handlersAssembly);
+                 .RegisterBasycRequestHandlers<CustomerServiceApplicationAssemblyMarker>()
+                 .AddMassTransitProvider();
 
             new CustomerInfrastructureBuilder(builder.services)
                 .AddEFRespository()

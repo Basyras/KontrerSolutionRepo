@@ -20,36 +20,66 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             requestHandlerInterfacesTypes = new Type[] { typeof(IRequestHandler<>), typeof(IRequestHandler<,>) };
         }
 
-        public static void WrapRequestHandlersAsConsumers(this IServiceCollectionBusConfigurator configurator, params Assembly[] handlersAssemblies)
-        {
-            var assemblyTypes = handlersAssemblies.SelectMany(x => x.GetTypes());
+        //public static void WrapRequestHandlersAsConsumers(this IServiceCollectionBusConfigurator configurator, params Assembly[] handlersAssemblies)
+        //{
+        //    var assemblyTypes = handlersAssemblies.SelectMany(x => x.GetTypes());
 
-            var commandHandlers = assemblyTypes.Where(sendHandlerType => GenericsHelper.IsAssignableToGenericType(sendHandlerType, requestHandlerInterfacesTypes[0]))
-                .Select(handlerType => new
+        //    var commandHandlers = assemblyTypes.Where(sendHandlerType => GenericsHelper.IsAssignableToGenericType(sendHandlerType, requestHandlerInterfacesTypes[0]))
+        //        .Select(handlerType => new
+        //        {
+        //            RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[0])[0]
+        //        });
+
+        //    foreach (var commandHandler in commandHandlers)
+        //    {
+        //        Type proxyConsumer;
+        //        proxyConsumer = typeof(MassTransitBasycConsumerProxy<>).MakeGenericType(commandHandler.RequestType);
+        //        configurator.AddConsumer(proxyConsumer);
+        //    }
+
+        //    var queryHandlers = assemblyTypes.Where(requestHandlerType => GenericsHelper.IsAssignableToGenericType(requestHandlerType, requestHandlerInterfacesTypes[1]))
+        //            .Select(handlerType => new
+        //            {
+        //                RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[0],
+        //                ResponseType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[1]
+        //            });
+
+        //    foreach (var queryHandler in queryHandlers)
+        //    {
+        //        Type proxyConsumer;
+        //        proxyConsumer = typeof(MassTransitBasycConsumerProxy<,>).MakeGenericType(queryHandler.RequestType, queryHandler.ResponseType);
+        //        configurator.AddConsumer(proxyConsumer);
+        //    }
+        //}
+
+        public static void WrapRequestHandlersAsConsumers(this IServiceCollectionBusConfigurator configurator)
+        {
+            var commandHandlers = configurator.Collection
+                .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, requestHandlerInterfacesTypes[0]))
+                .Select(service => new
                 {
-                    HandlerType = handlerType,
-                    RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[0])[0]
-                });
+                    RequestType = GenericsHelper.GetTypeArgumentsFromParent(service.ImplementationType, requestHandlerInterfacesTypes[0])[0]
+                }).ToArray(); //ToArray because configurator.AddConsumer() is modifying services collection
 
             foreach (var commandHandler in commandHandlers)
             {
                 Type proxyConsumer;
-                proxyConsumer = typeof(MassTransitGenericConsumerProxy<>).MakeGenericType(commandHandler.RequestType);
+                proxyConsumer = typeof(MassTransitBasycConsumerProxy<>).MakeGenericType(commandHandler.RequestType);
                 configurator.AddConsumer(proxyConsumer);
             }
 
-            var queryHandlers = assemblyTypes.Where(requestHandlerType => GenericsHelper.IsAssignableToGenericType(requestHandlerType, requestHandlerInterfacesTypes[1]))
-                    .Select(handlerType => new
-                    {
-                        HandlerType = handlerType,
-                        RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[0],
-                        ResponseType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[1]
-                    });
+            var queryHandlers = configurator.Collection
+                .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, requestHandlerInterfacesTypes[1]))
+                .Select(service => new
+                {
+                    RequestType = GenericsHelper.GetTypeArgumentsFromParent(service.ImplementationType, requestHandlerInterfacesTypes[1])[0],
+                    ResponseType = GenericsHelper.GetTypeArgumentsFromParent(service.ImplementationType, requestHandlerInterfacesTypes[1])[1]
+                }).ToArray(); //ToArray because configurator.AddConsumer() is modifying services collection
 
             foreach (var queryHandler in queryHandlers)
             {
                 Type proxyConsumer;
-                proxyConsumer = typeof(MassTransitGenericConsumerProxy<,>).MakeGenericType(queryHandler.RequestType, queryHandler.ResponseType);
+                proxyConsumer = typeof(MassTransitBasycConsumerProxy<,>).MakeGenericType(queryHandler.RequestType, queryHandler.ResponseType);
                 configurator.AddConsumer(proxyConsumer);
             }
         }

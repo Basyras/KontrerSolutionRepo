@@ -1,4 +1,5 @@
-﻿using Kontrer.Shared.Helpers;
+﻿using Basyc.DependencyInjection;
+using Kontrer.Shared.Helpers;
 using Kontrer.Shared.MessageBus.RequestResponse;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -10,30 +11,32 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.MessageBus
 {
-    public class MessageBusBuilder
+    public class MessageBusBuilder : DependencyBuilderBase
     {
-        public readonly IServiceCollection services;
-
-        public MessageBusBuilder(IServiceCollection services)
+        public MessageBusBuilder(IServiceCollection services) : base(services)
         {
-            this.services = services;
         }
 
-        public MessageBusBuilder RegisterRequestHandlers(params Assembly[] assembliesToScan)
+        public MessageBusBuilder RegisterBasycRequestHandlers<THandlerAssemblyMarker>()
+        {
+            return RegisterBasycRequestHandlers(typeof(THandlerAssemblyMarker).Assembly);
+        }
+
+        public MessageBusBuilder RegisterBasycRequestHandlers(params Assembly[] assembliesToScan)
         {
             this.services.Scan(scan =>
             scan.FromAssemblies(assembliesToScan)
             .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>)))
             .As(handler => new Type[1]
             {
-                typeof(IRequestHandler<>).MakeGenericType(GenericsHelper.GetGenericArgumentsFromParent(handler, typeof(IRequestHandler<>)))
+                typeof(IRequestHandler<>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handler, typeof(IRequestHandler<>)))
             })
             .WithScopedLifetime()
 
             .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
             .As(handler => new Type[1]
             {
-                typeof(IRequestHandler<,>).MakeGenericType(GenericsHelper.GetGenericArgumentsFromParent(handler, typeof(IRequestHandler<,>)))
+                typeof(IRequestHandler<,>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handler, typeof(IRequestHandler<,>)))
             })
             .WithScopedLifetime());
 

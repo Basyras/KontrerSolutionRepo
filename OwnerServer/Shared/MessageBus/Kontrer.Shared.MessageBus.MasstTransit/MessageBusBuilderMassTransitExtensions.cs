@@ -18,15 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Takes registered Basyc IRequestHandlers and wrap them with MassTransit IConsumers, Hosted by RabbitMQ
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="handlersAssemblies"></param>
-        /// <returns></returns>
-        public static MessageBusBuilder AddMassTransitProvider(this MessageBusBuilder builder)
-        {
-            return AddMassTransitProvider(builder, null);
-        }
-
-        public static MessageBusBuilder AddMassTransitProvider(this MessageBusBuilder builder, params Assembly[] handlersAssemblies)
+        public static MessageBusBuilder AddMassTransitProvider(this MessageBusBuilder builder, bool hasHandlers = true)
         {
             var services = builder.services;
             services.AddSingleton<IMessageBusManager, MassTransitMessageBusManager>();
@@ -34,9 +26,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddHealthChecks();
             services.AddMassTransit(x =>
             {
-                if (handlersAssemblies != null && handlersAssemblies.Any())
+                if (hasHandlers)
                 {
-                    x.WrapRequestHandlersAsConsumers(handlersAssemblies);
+                    x.WrapRequestHandlersAsConsumers();
                 }
                 x.UsingRabbitMq((transitContext, rabbitConfig) =>
                 {

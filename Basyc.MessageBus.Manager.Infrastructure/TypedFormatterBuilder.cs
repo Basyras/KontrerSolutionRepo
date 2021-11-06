@@ -1,5 +1,6 @@
 ﻿using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Infrastructure;
+using Basyc.MessageBus.Manager.Infrastructure.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -17,16 +18,17 @@ namespace Basyc.MessageBus.Manager
         public TypedFormatterBuilder(IServiceCollection services)
         {
             this.services = services;
-            AddDefaultFormatting();
+            SetDefaultFormatting();
             services.AddSingleton<IRequestInfoTypeStorage, InMemoryRequestInfoTypeStorage>();
         }
 
-        private void AddDefaultFormatting()
+        private void SetDefaultFormatting()
         {
-            AddDomainNameFormatter<TypedDomainNameFormatter>();
-            AddRequestNameFormatter<TypedRequestNameFormatter>();
-            AddParamaterNameFormatter<TypedParameterTypeNameFormatter>();
-            AddResponseNameFormatter<TypedResponseNameFormatter>();
+            SetDomainNameFormatter<TypedDomainNameFormatter>();
+            SetRequestNameFormatter<TypedRequestNameFormatter>();
+            SetParamaterNameFormatter<TypedParameterTypeNameFormatter>();
+            SetResponseNameFormatter<TypedResponseNameFormatter>();
+            SetResponseFormatter<JsonResponseFormatter>();
         }
 
         //Removes all formatters
@@ -36,35 +38,43 @@ namespace Basyc.MessageBus.Manager
             services.RemoveAll<ITypedRequestNameFormatter>();
             services.RemoveAll<ITypedParameterNameFormatter>();
             services.RemoveAll<ITypedResponseNameFormatter>();
-            AddDefaultFormatting();
+            services.RemoveAll<IResponseFormatter>();
+            SetDefaultFormatting();
             return this;
         }
 
-        public TypedFormatterBuilder AddDomainNameFormatter<TDomainNameFormatter>() where TDomainNameFormatter : class, ITypedDomainNameFormatter
+        public TypedFormatterBuilder SetDomainNameFormatter<TDomainNameFormatter>() where TDomainNameFormatter : class, ITypedDomainNameFormatter
         {
             services.RemoveAll<ITypedDomainNameFormatter>();
             services.AddSingleton<ITypedDomainNameFormatter, TDomainNameFormatter>();
             return this;
         }
 
-        public TypedFormatterBuilder AddRequestNameFormatter<TRequestNameFormatter>() where TRequestNameFormatter : class, ITypedRequestNameFormatter
+        public TypedFormatterBuilder SetRequestNameFormatter<TRequestNameFormatter>() where TRequestNameFormatter : class, ITypedRequestNameFormatter
         {
             services.RemoveAll<ITypedRequestNameFormatter>();
             services.AddSingleton<ITypedRequestNameFormatter, TRequestNameFormatter>();
             return this;
         }
 
-        public TypedFormatterBuilder AddParamaterNameFormatter<TParameterTypeNameFormatter>() where TParameterTypeNameFormatter : class, ITypedParameterNameFormatter
+        public TypedFormatterBuilder SetParamaterNameFormatter<TParameterTypeNameFormatter>() where TParameterTypeNameFormatter : class, ITypedParameterNameFormatter
         {
             services.RemoveAll<ITypedParameterNameFormatter>();
             services.AddSingleton<ITypedParameterNameFormatter, TParameterTypeNameFormatter>();
             return this;
         }
 
-        public TypedFormatterBuilder AddResponseNameFormatter<TResponseNameFormatter>() where TResponseNameFormatter : class, ITypedResponseNameFormatter
+        public TypedFormatterBuilder SetResponseNameFormatter<TResponseNameFormatter>() where TResponseNameFormatter : class, ITypedResponseNameFormatter
         {
             services.RemoveAll<ITypedResponseNameFormatter>();
             services.AddSingleton<ITypedResponseNameFormatter, TResponseNameFormatter>();
+            return this;
+        }
+
+        public TypedFormatterBuilder SetResponseFormatter<TResponseFormatter>() where TResponseFormatter : class, IResponseFormatter
+        {
+            services.RemoveAll<IResponseFormatter>();
+            services.AddSingleton<IResponseFormatter, TResponseFormatter>();
             return this;
         }
     }

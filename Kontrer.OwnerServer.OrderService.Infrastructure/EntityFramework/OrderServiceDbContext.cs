@@ -89,6 +89,7 @@ namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
                 {
                     discount.OwnsOne(x => x.AmountDiscount);
                 });
+
                 requirement.OwnsMany(x => x.Rooms, room =>
                 {
                     room.OwnsMany(x => x.People, person =>

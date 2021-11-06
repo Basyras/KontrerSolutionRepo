@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Kontrer.Shared.MessageBus.MasstTransit
 {
-    public class MassTransitGenericConsumerProxy<TRequest> : IConsumer<TRequest>
+    public class MassTransitBasycConsumerProxy<TRequest> : IConsumer<TRequest>
         where TRequest : class, IRequest
     {
         private readonly IRequestHandler<TRequest> requestHandler;
 
-        public MassTransitGenericConsumerProxy(IRequestHandler<TRequest> requestHandler)
+        public MassTransitBasycConsumerProxy(IRequestHandler<TRequest> requestHandler)
         {
             this.requestHandler = requestHandler;
         }
@@ -24,13 +24,13 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
         }
     }
 
-    public class MassTransitGenericConsumerProxy<TRequest, TResponse> : IConsumer<TRequest>
+    public class MassTransitBasycConsumerProxy<TRequest, TResponse> : IConsumer<TRequest>
      where TRequest : class, IRequest<TResponse>
      where TResponse : class
     {
         private readonly IRequestHandler<TRequest, TResponse> requestHandler;
 
-        public MassTransitGenericConsumerProxy(IRequestHandler<TRequest, TResponse> requestHandler)
+        public MassTransitBasycConsumerProxy(IRequestHandler<TRequest, TResponse> requestHandler)
         {
             this.requestHandler = requestHandler;
         }

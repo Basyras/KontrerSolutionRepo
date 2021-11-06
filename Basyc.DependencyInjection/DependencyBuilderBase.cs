@@ -5,7 +5,7 @@ namespace Basyc.DependencyInjection
 {
     public abstract class DependencyBuilderBase<TParentBuilder>
     {
-        private readonly IServiceCollection services;
+        public readonly IServiceCollection services;
         private readonly TParentBuilder parentBuilder;
 
         public DependencyBuilderBase(IServiceCollection services, TParentBuilder parentBuilder)

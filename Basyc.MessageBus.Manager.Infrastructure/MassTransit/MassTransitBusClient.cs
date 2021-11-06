@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.Manager.Application;
+using Basyc.MessageBus.Manager.Infrastructure.Formatters;
 using Kontrer.Shared.MessageBus;
 using MassTransit;
 using System;
@@ -11,8 +12,8 @@ namespace Basyc.MessageBus.Manager.Infrastructure.MassTransit
 {
     public class MassTransitBusClient : BasycInterfaceTypedBusClient, IBusClient
     {
-        public MassTransitBusClient(IMessageBusManager messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage)
-            : base(messageBusManager, requestInfoTypeStorage)
+        public MassTransitBusClient(IMessageBusManager messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
+            : base(messageBusManager, requestInfoTypeStorage, responseFormatter)
         {
         }
 
