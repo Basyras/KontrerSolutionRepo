@@ -17,11 +17,27 @@ namespace Basyc.MessageBus.Manager
         public TypedFormatterBuilder(IServiceCollection services)
         {
             this.services = services;
+            AddDefaultFormatting();
+            services.AddSingleton<IRequestInfoTypeStorage, InMemoryRequestInfoTypeStorage>();
+        }
+
+        private void AddDefaultFormatting()
+        {
             AddDomainNameFormatter<TypedDomainNameFormatter>();
             AddRequestNameFormatter<TypedRequestNameFormatter>();
             AddParamaterNameFormatter<TypedParameterTypeNameFormatter>();
             AddResponseNameFormatter<TypedResponseNameFormatter>();
-            services.AddSingleton<IRequestInfoTypeStorage, InMemoryRequestInfoTypeStorage>();
+        }
+
+        //Removes all formatters
+        public TypedFormatterBuilder ResetFormatting()
+        {
+            services.RemoveAll<ITypedDomainNameFormatter>();
+            services.RemoveAll<ITypedRequestNameFormatter>();
+            services.RemoveAll<ITypedParameterNameFormatter>();
+            services.RemoveAll<ITypedResponseNameFormatter>();
+            AddDefaultFormatting();
+            return this;
         }
 
         public TypedFormatterBuilder AddDomainNameFormatter<TDomainNameFormatter>() where TDomainNameFormatter : class, ITypedDomainNameFormatter

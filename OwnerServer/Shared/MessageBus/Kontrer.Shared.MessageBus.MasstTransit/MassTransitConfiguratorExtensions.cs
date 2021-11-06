@@ -13,12 +13,10 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
 {
     public static class MassTransitConfiguratorExtensions
     {
-        //private static readonly Type[] requestIntefaceTypes;
         private static readonly Type[] requestHandlerInterfacesTypes;
 
         static MassTransitConfiguratorExtensions()
         {
-            //requestIntefaceTypes = new Type[] { typeof(IRequest), typeof(IRequest<>) };
             requestHandlerInterfacesTypes = new Type[] { typeof(IRequestHandler<>), typeof(IRequestHandler<,>) };
         }
 

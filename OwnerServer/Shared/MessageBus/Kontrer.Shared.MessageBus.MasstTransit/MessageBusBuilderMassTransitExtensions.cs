@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class MessageBusBuilderMassTransitExtensions
     {
         /// <summary>
-        /// Takes registerd Basyc IRequestHandlers and wrap them with MassTransit IConsumers, Hosted by RabbitMQ
+        /// Takes registered Basyc IRequestHandlers and wrap them with MassTransit IConsumers, Hosted by RabbitMQ
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="handlersAssemblies"></param>
