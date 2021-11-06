@@ -26,7 +26,7 @@ namespace Basyc.MessageBus.Manager
 
         public static BusManagerBuilder UseMasstransitReqeustClient(this BusManagerBuilder managerBuilder)
         {
-            managerBuilder.services.AddSingleton<IRequestClient, MassTransitRequestClient>();
+            managerBuilder.services.AddSingleton<IBusClient, MassTransitBusClient>();
             return managerBuilder;
         }
     }

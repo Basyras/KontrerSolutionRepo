@@ -23,7 +23,7 @@
                         @if (RequestItemViewModel.IsLoading)
                         {
                             <latency>
-                                <MudProgressCircular Style="height: 18px; width: 18px; padding: -5px; margin: -5px;"  Color="Color.Default" Indeterminate="true" />
+                                <MudProgressCircular Style="height: 18px; width: 18px; padding: -5px; margin: -5px;" Color="Color.Default" Indeterminate="true" />
                             </latency>
                         }
                     </headingSection>
@@ -63,18 +63,20 @@
                                 <MudProgressCircular Color="Color.Default" Indeterminate="true" />
                             </loadingContainer>
                         }
-
-                        <inputContainer>
-                            @if (RequestItemViewModel.Response != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.Response.Failed is false)
-                            {
-                                string hasErrorClass = RequestItemViewModel.Response.Failed ? "inputBorder--error" : "";
-                                <textarea readonly disabled="@RequestItemViewModel.Response.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.Response.Response</textarea>
-                            }
-                            @if (RequestItemViewModel.Response != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.Response.Failed)
-                            {
-                                <errorMessage>@RequestItemViewModel.Response.ErrorMessage</errorMessage>
-                            }
-                        </inputContainer>
+                        else
+                        {
+                            <inputContainer>
+                                @if (RequestItemViewModel.Response != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.Response.Failed is false)
+                                {
+                                    string hasErrorClass = RequestItemViewModel.Response.Failed ? "inputBorder--error" : "";
+                                    <textarea readonly disabled="@RequestItemViewModel.Response.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.Response.Response</textarea>
+                                }
+                                @if (RequestItemViewModel.Response != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.Response.Failed)
+                                {
+                                    <errorMessage>@RequestItemViewModel.Response.ErrorMessage</errorMessage>
+                                }
+                            </inputContainer>
+                        }
                     </bodySection>
                 </requestBody>
             </ChildContent>

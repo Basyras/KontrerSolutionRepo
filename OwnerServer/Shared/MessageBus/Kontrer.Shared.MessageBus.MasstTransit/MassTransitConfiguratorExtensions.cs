@@ -13,34 +13,34 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
 {
     public static class MassTransitConfiguratorExtensions
     {
-        private static readonly Type[] requestIntefaceTypes;
+        //private static readonly Type[] requestIntefaceTypes;
         private static readonly Type[] requestHandlerInterfacesTypes;
 
         static MassTransitConfiguratorExtensions()
         {
-            requestIntefaceTypes = new Type[] { typeof(IRequest), typeof(IRequest<>) };
+            //requestIntefaceTypes = new Type[] { typeof(IRequest), typeof(IRequest<>) };
             requestHandlerInterfacesTypes = new Type[] { typeof(IRequestHandler<>), typeof(IRequestHandler<,>) };
         }
 
-        public static void RegisterReqeustHandlersAsConsumers(this IServiceCollectionBusConfigurator configurator, Assembly handlersAssembly)
+        public static void WrapRequestHandlersAsConsumers(this IServiceCollectionBusConfigurator configurator, params Assembly[] handlersAssemblies)
         {
-            var assemblyTypes = handlersAssembly.GetTypes();
+            var assemblyTypes = handlersAssemblies.SelectMany(x => x.GetTypes());
 
-            var sendHandlers = assemblyTypes.Where(sendHandlerType => GenericsHelper.IsAssignableToGenericType(sendHandlerType, requestHandlerInterfacesTypes[0]))
+            var commandHandlers = assemblyTypes.Where(sendHandlerType => GenericsHelper.IsAssignableToGenericType(sendHandlerType, requestHandlerInterfacesTypes[0]))
                 .Select(handlerType => new
                 {
                     HandlerType = handlerType,
                     RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[0])[0]
                 });
 
-            foreach (var senderHandler in sendHandlers)
+            foreach (var commandHandler in commandHandlers)
             {
                 Type proxyConsumer;
-                proxyConsumer = typeof(MassTransitGenericConsumerProxy<>).MakeGenericType(senderHandler.RequestType);
+                proxyConsumer = typeof(MassTransitGenericConsumerProxy<>).MakeGenericType(commandHandler.RequestType);
                 configurator.AddConsumer(proxyConsumer);
             }
 
-            var requestHandlers = assemblyTypes.Where(requestHandlerType => GenericsHelper.IsAssignableToGenericType(requestHandlerType, requestHandlerInterfacesTypes[1]))
+            var queryHandlers = assemblyTypes.Where(requestHandlerType => GenericsHelper.IsAssignableToGenericType(requestHandlerType, requestHandlerInterfacesTypes[1]))
                     .Select(handlerType => new
                     {
                         HandlerType = handlerType,
@@ -48,10 +48,10 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
                         ResponseType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[1]
                     });
 
-            foreach (var requestHandler in requestHandlers)
+            foreach (var queryHandler in queryHandlers)
             {
                 Type proxyConsumer;
-                proxyConsumer = typeof(MassTransitGenericConsumerProxy<,>).MakeGenericType(requestHandler.RequestType, requestHandler.ResponseType);
+                proxyConsumer = typeof(MassTransitGenericConsumerProxy<,>).MakeGenericType(queryHandler.RequestType, queryHandler.ResponseType);
                 configurator.AddConsumer(proxyConsumer);
             }
         }

@@ -19,7 +19,7 @@ namespace Kontrer.Shared.MessageBus
             this.services = services;
         }
 
-        public MessageBusBuilder RegisterRequestHandlers(Assembly assembliesToScan)
+        public MessageBusBuilder RegisterRequestHandlers(params Assembly[] assembliesToScan)
         {
             this.services.Scan(scan =>
             scan.FromAssemblies(assembliesToScan)

@@ -12,7 +12,7 @@ namespace Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework
 {
     public class EFCustomerRepository : EFInstantCrudRepositoryBase<CustomerEntity, int>, ICustomerRepository
     {
-        public EFCustomerRepository(DbContext dbContext) : base(dbContext, x => x.Id)
+        public EFCustomerRepository(CustomerServiceDbContext dbContext) : base(dbContext, x => x.Id)
         {
         }
 

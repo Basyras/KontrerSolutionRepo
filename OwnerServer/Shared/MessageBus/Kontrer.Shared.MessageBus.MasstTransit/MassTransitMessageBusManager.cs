@@ -91,7 +91,7 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
         {
             var task = (Task)@this.Invoke(obj, parameters);
             await task.ConfigureAwait(false);
-            var resultProperty = task.GetType().GetProperty("Result");
+            var resultProperty = task.GetType().GetProperty(nameof(Task<object>.Result));
             return resultProperty.GetValue(task);
         }
     }

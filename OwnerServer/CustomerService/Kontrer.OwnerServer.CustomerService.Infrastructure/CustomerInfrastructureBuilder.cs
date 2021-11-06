@@ -10,16 +10,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.CustomerService.Infrastructure
+namespace Microsoft.Extensions.DependencyInjection
 {
     public class CustomerInfrastructureBuilder : DependencyBuilderBase
-
     {
-        public readonly IServiceCollection services;
-
+        //public readonly IServiceCollection services;
         public CustomerInfrastructureBuilder(IServiceCollection services) : base(services)
         {
-            this.services = services;
+            //this.services = services;
         }
 
         public CustomerInfrastructureBuilder UseRepository<TCustomerRepository>()

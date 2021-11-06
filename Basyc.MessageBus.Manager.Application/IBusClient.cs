@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Application
 {
-    public interface IRequestClient
+    public interface IBusClient
     {
         public Task<RequestResult> TrySendRequest(Request request);
     }

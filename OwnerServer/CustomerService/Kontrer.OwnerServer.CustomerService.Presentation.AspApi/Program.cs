@@ -5,6 +5,7 @@ using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.CustomerService.Infrastructure;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Kontrer.Shared.DomainDrivenDesign.Domain;
+using Kontrer.Shared.MessageBus.MasstTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,49 +25,16 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
 
         public static async Task Main(string[] args)
         {
-            //MicroserviceBootstrapper.CreateMicroserviceHostBuilder<Startup, GetCustomersQueryHandler>(args)
-            //    .Build()
-            //    .Run();
-
-            //var tasks = new List<Task>();
-
-            //var builder = MicroserviceBootstrapper.CreateBuilder<Startup, GetCustomersQueryHandler>(args);
-
-            //builder.AddMessageBus(typeof(CustomerServiceApplicationAssemblyMarker).Assembly);
-
-            //new CustomerInfrastructureBuilder(builder.services)
-            //    .UseEFRespository()
-            //    .UseSqlServer(debugConnectionString);
-
-            //await builder.Back()
-            //     .Build()
-            //     .RunAsync();
-
-            //tasks.Add(builder.Back()
-            //     .Build()
-            //     .RunAsync());
-
-            //var assembliesToScan = new Assembly[] { typeof(CreateCustomerCommand).Assembly };
-            //var managerBuilder = MessageBusManagerBlazorAppBuilder.Create(args);
-            //managerBuilder.services.AddMessageBus()
-            //    .UseProxy()
-            //    .SetProxyServerUri(new Uri("https://localhost:44371/"));
-
-            //managerBuilder
-            //    .AddReqeustClient<BasycMessageBusTypedRequestClient>()
-            //    .AddInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), assembliesToScan)
-            //    .AddDomainNameFormatter<TypedDDDDomainNameFormatter>();
-            //var managerApp = MessageBusManagerBlazorAppBuilder.Build();
-            //tasks.Add(managerApp.RunAsync());
-
-            //Task.WaitAll(tasks.ToArray());
-
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
+            var handlersAssembly = typeof(CustomerServiceApplicationAssemblyMarker).Assembly;
 
-            builder.AddMessageBus(typeof(CustomerServiceApplicationAssemblyMarker).Assembly);
+            builder.AddMessageBus()
+                 .RegisterRequestHandlers(handlersAssembly)
+                 .AddMassTransitProvider(handlersAssembly);
+
             new CustomerInfrastructureBuilder(builder.services)
-                .UseEFRespository()
-                .UseSqlServer(debugConnectionString);
+                .AddEFRespository()
+                .AddSqlServer(debugConnectionString);
 
             await builder.Back()
                  .Build()

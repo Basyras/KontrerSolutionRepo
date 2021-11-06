@@ -116,9 +116,15 @@ namespace Kontrer.Shared.MessageBus.HttpProxy.Client
             {
                 return null;
             }
-            MemoryStream mem = new MemoryStream();
-            await httpResult.Content.CopyToAsync(mem);
-            var bytes = mem.ToArray();
+
+            if (httpResult.IsSuccessStatusCode is false)
+            {
+                throw new Exception($"Message bus response failure. Code: {httpResult.StatusCode}. {httpResult.RequestMessage}");
+            }
+
+            MemoryStream httpMemomoryStream = new MemoryStream();
+            await httpResult.Content.CopyToAsync(httpMemomoryStream);
+            var bytes = httpMemomoryStream.ToArray();
             var busResponse = serializer.Deserialize(bytes, responseType);
             //string resultContent = await httpResult.Content.ReadAsStringAsync();
             return busResponse;

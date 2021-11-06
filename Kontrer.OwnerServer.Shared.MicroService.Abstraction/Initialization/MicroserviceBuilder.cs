@@ -1,4 +1,5 @@
 ﻿using Basyc.DependencyInjection;
+using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
 using Kontrer.Shared.MessageBus;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,18 +11,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization
+namespace Microsoft.Extensions.DependencyInjection
 {
     public class MicroserviceBuilder<TParentBuilder> : DependencyBuilderBase<TParentBuilder>
     {
         public readonly IServiceCollection services;
 
-        //public IHostBuilder webBuilder;
-
-        //public MicroserviceBuilder(IHostBuilder hostBuilder) : base(null, hostBuilder)
-        //{
-        //    this.webBuilder = hostBuilder;
-        //}
         public MicroserviceBuilder(IServiceCollection services, TParentBuilder parentBuilder) : base(services, parentBuilder)
         {
             this.services = services;
@@ -35,16 +30,10 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization
             return this;
         }
 
-        public MessageBusBuilder AddMessageBus(Assembly assembliesToScan)
+        public MessageBusBuilder AddMessageBus()
         {
-            //webBuilder.ConfigureServices(services =>
-            //{
-            //    services.AddMessageBus()
-            //        .RegisterRequestHandlers(assembliesToScan);
-            //});
-
-            return services.AddMessageBus()
-                 .RegisterRequestHandlers(assembliesToScan);
+            return services.AddMessageBus();
+            //.RegisterRequestHandlers(assembliesToScan);
         }
     }
 }

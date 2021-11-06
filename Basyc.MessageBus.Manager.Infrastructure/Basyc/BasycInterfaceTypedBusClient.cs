@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager
 {
-    public class BasycMessageBusTypedRequestClient : IRequestClient
+    public class BasycInterfaceTypedBusClient : IBusClient
     {
         private readonly IRequestInfoTypeStorage requestInfoTypeStorage;
 
-        public BasycMessageBusTypedRequestClient(IMessageBusManager messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage)
+        public BasycInterfaceTypedBusClient(IMessageBusManager messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage)
         {
             MessageBusManager = messageBusManager;
             this.requestInfoTypeStorage = requestInfoTypeStorage;
@@ -45,7 +45,8 @@ namespace Basyc.MessageBus.Manager
                     .ContinueWith(x =>
                     {
                         stopWatch.Stop();
-                        result = new RequestResult(x.IsFaulted, x.Exception.Message, stopWatch.Elapsed);
+                        string errorMessage = x.Exception != null ? x.Exception.Message : string.Empty;
+                        result = new RequestResult(x.IsFaulted, errorMessage, stopWatch.Elapsed);
                     });
 
                     return result;

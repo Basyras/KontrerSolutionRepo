@@ -2,6 +2,7 @@ using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Kontrer.Shared.MessageBus.MasstTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,11 +18,11 @@ namespace SandBox.AspApiApp
         public static void Main(string[] args)
         {
             //CreateHostBuilder(args).Build().Run();
+            var handlersAssemblies = typeof(Program).Assembly;
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
-            builder.AddMessageBus(typeof(Program).Assembly)
-                     .AddMassTransitProvider(typeof(Program).Assembly);
-            //builder.AddMessageBus(null);
-            // .UseMassTransit(typeof(Delete));
+            builder.AddMessageBus()
+                     .AddMassTransitProvider();
+
             builder.Back().Build().Run();
         }
 

@@ -27,7 +27,7 @@ namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
         public IDialogService DialogService { get; private set; }
 
         [Inject]
-        public IRequestClient RequestClient { get; private set; }
+        public IBusClient RequestClient { get; private set; }
 
         public List<DomainItemViewModel> DomainInfoViewModel { get; private set; } = new List<DomainItemViewModel>();
 

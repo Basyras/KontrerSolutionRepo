@@ -36,8 +36,7 @@ namespace SandBox.AspApiApp
             //});
 
             services.AddMessageBusProxyServer();
-
-            //.UseMassTransit(Assembly.GetExecutingAssembly());
+            //.AddMassTransit(Assembly.GetExecutingAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

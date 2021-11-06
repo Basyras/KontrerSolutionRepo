@@ -31,7 +31,7 @@ namespace Basyc.DependencyInjection
 
     public abstract class DependencyBuilderBase
     {
-        private readonly IServiceCollection services;
+        public readonly IServiceCollection services;
 
         public DependencyBuilderBase(IServiceCollection services)
         {

@@ -8,7 +8,7 @@ using System;
 
 namespace Kontrer.Shared.MessageBus.MasstTransit
 {
-    public class MasstransitStartupFilter : IStartupFilter
+    public class MassTransitStartupFilter : IStartupFilter
     {
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {

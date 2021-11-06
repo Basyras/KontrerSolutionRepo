@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.CustomerService.Infrastructure
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class InfrastructureBuilderEFRepositoryBuilderExtensions
     {
-        public static EFRepositoryBuilder UseEFRespository(this CustomerInfrastructureBuilder infrastructureBuilder)
+        public static EFRepositoryBuilder AddEFRespository(this CustomerInfrastructureBuilder infrastructureBuilder)
         {
             return new EFRepositoryBuilder(infrastructureBuilder.services);
         }

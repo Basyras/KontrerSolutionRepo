@@ -1,4 +1,5 @@
 ﻿using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
+using Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework;
 using Kontrer.Shared.Repositories.EF;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework
+namespace Microsoft.Extensions.DependencyInjection
 {
     public class EFRepositoryBuilder
     {
@@ -22,9 +23,9 @@ namespace Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework
             services.AddScoped<ICustomerRepository, EFCustomerRepository>();
         }
 
-        public EFRepositoryBuilder UseSqlServer(string connectionString)
+        public EFRepositoryBuilder AddSqlServer(string connectionString)
         {
-            services.AddDbContext<DbContext, CustomerServiceDbContext>(options =>
+            services.AddDbContext<CustomerServiceDbContext>(options =>
                 options.UseSqlServer(connectionString));
             return this;
         }
