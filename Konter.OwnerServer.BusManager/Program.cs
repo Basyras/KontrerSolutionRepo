@@ -27,21 +27,18 @@ namespace Konter.OwnerServer.BusManager
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
             var domains = new Assembly[]
             {
                 typeof(CustomerServiceDomainAssemblyMarker).Assembly,
                 typeof(OrderServiceDomainAssemblyMarker).Assembly,
                 typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
             };
+
             builder.Services.AddBlazorMessageBus()
                 .AddBusClient<BasycInterfaceTypedBusClient>()
                 .AddInterfaceTypedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
                 .SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
-
-            //builder.Services.AddBlazorMessageBus()
-            //    .AddBusClient<BasycInterfaceTypedBusClient>()
-            //    .AddInterfaceTypedProvider(typeof(IRequest), typeof(IRequest<>), typeof(CreateCustomerCommand).Assembly)
-            //    .AddDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
             builder.Services.AddMessageBus()
                 .AddProxyProvider()

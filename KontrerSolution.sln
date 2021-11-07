@@ -202,9 +202,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.DomainDrivenDesign.De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Microservice.DomainDrivenDesign", "Basyc.Microservice.DomainDrivenDesign\Basyc.Microservice.DomainDrivenDesign.csproj", "{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.Manager.Presentation.BlazorLibrary", "Basyc.MessageBus.Manager.Presentation.BlazorLibrary\Basyc.MessageBus.Manager.Presentation.BlazorLibrary.csproj", "{1A785E9B-81BC-4751-A526-6E59E0AF6A20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Manager.Presentation.BlazorLibrary", "Basyc.MessageBus.Manager.Presentation.BlazorLibrary\Basyc.MessageBus.Manager.Presentation.BlazorLibrary.csproj", "{1A785E9B-81BC-4751-A526-6E59E0AF6A20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Konter.OwnerServer.BusManager", "Konter.OwnerServer.BusManager\Konter.OwnerServer.BusManager.csproj", "{498CBD22-76E7-4648-9D3A-C86754FA57AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konter.OwnerServer.BusManager", "Konter.OwnerServer.BusManager\Konter.OwnerServer.BusManager.csproj", "{498CBD22-76E7-4648-9D3A-C86754FA57AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.HttpProxy.Client.Tests", "Basyc.MessageBus.HttpProxy.Client.Tests\Basyc.MessageBus.HttpProxy.Client.Tests.csproj", "{F661663F-2138-4F00-BB52-2F8E7A1933B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.HttpProxy.Server.Asp.Tests", "Basyc.MessageBus.HttpProxy.Server.Asp.Tests\Basyc.MessageBus.HttpProxy.Server.Asp.Tests.csproj", "{5CC75386-AFFA-4C4A-A70D-76B216D8AD01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -484,6 +488,14 @@ Global
 		{498CBD22-76E7-4648-9D3A-C86754FA57AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{498CBD22-76E7-4648-9D3A-C86754FA57AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{498CBD22-76E7-4648-9D3A-C86754FA57AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F661663F-2138-4F00-BB52-2F8E7A1933B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F661663F-2138-4F00-BB52-2F8E7A1933B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F661663F-2138-4F00-BB52-2F8E7A1933B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F661663F-2138-4F00-BB52-2F8E7A1933B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CC75386-AFFA-4C4A-A70D-76B216D8AD01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CC75386-AFFA-4C4A-A70D-76B216D8AD01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CC75386-AFFA-4C4A-A70D-76B216D8AD01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CC75386-AFFA-4C4A-A70D-76B216D8AD01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -585,6 +597,8 @@ Global
 		{1F4ABC7C-8D7D-4496-BE7E-E17A6D3DB89E} = {7CFAA5A8-991C-42C1-A44F-1CAA8AF0E660}
 		{1A785E9B-81BC-4751-A526-6E59E0AF6A20} = {AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4}
 		{498CBD22-76E7-4648-9D3A-C86754FA57AE} = {027424FD-BF04-4D83-837E-EA2912E4AED1}
+		{F661663F-2138-4F00-BB52-2F8E7A1933B5} = {6594F570-14ED-4420-9942-00D4669ADD25}
+		{5CC75386-AFFA-4C4A-A70D-76B216D8AD01} = {6594F570-14ED-4420-9942-00D4669ADD25}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

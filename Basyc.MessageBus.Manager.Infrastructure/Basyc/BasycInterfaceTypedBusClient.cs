@@ -48,7 +48,15 @@ namespace Basyc.MessageBus.Manager
                     .ContinueWith(x =>
                     {
                         stopWatch.Stop();
-                        string errorMessage = x.Exception != null ? x.Exception.Message : string.Empty;
+                        string errorMessage;
+                        if (x.Exception is AggregateException aggregateException)
+                        {
+                            errorMessage = aggregateException.InnerExceptions.Select(x => x.Message).Aggregate((x, y) => $"{x},\n{y}");
+                        }
+                        else
+                        {
+                            errorMessage = x.Exception != null ? x.Exception.Message : string.Empty;
+                        }
                         result = new RequestResult(x.IsFaulted, errorMessage, stopWatch.Elapsed);
                     });
 

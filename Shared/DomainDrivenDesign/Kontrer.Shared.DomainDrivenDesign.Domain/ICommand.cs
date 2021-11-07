@@ -14,4 +14,13 @@ namespace Kontrer.Shared.DomainDrivenDesign.Domain
     public interface ICommand<TResponse> : IRequest<TResponse> where TResponse : class
     {
     }
+
+    //public interface ICommandWithContext<TContext> : ICommand, IRequestWithContext<TContext>
+    //{
+    //}
+
+    //public interface ICommandWithContext<TResponse, TContext> : ICommand<TResponse>, IRequestWithContext<TResponse, TContext>
+    //    where TResponse : class
+    //{
+    //}
 }

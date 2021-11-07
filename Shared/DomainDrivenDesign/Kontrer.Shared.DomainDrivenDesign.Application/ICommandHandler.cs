@@ -19,4 +19,15 @@ namespace Kontrer.Shared.DomainDrivenDesign.Application
         where TReponse : class
     {
     }
+
+    //public interface ICommandWithContextHandler<TCommand, TContext> : IRequestWithContextHandler<TCommand, TContext>
+    //    where TCommand : class, ICommandWithContext<TContext>
+    //{
+    //}
+
+    //public interface ICommandWithContextHandler<TCommand, TReponse, TContext> : IRequestWithContextHandler<TCommand, TReponse, TContext>
+    //    where TCommand : class, ICommandWithContext<TReponse, TContext>
+    //    where TReponse : class
+    //{
+    //}
 }

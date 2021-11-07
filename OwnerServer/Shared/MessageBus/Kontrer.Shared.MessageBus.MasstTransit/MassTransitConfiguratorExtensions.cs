@@ -20,41 +20,9 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             requestHandlerInterfacesTypes = new Type[] { typeof(IRequestHandler<>), typeof(IRequestHandler<,>) };
         }
 
-        //public static void WrapRequestHandlersAsConsumers(this IServiceCollectionBusConfigurator configurator, params Assembly[] handlersAssemblies)
-        //{
-        //    var assemblyTypes = handlersAssemblies.SelectMany(x => x.GetTypes());
-
-        //    var commandHandlers = assemblyTypes.Where(sendHandlerType => GenericsHelper.IsAssignableToGenericType(sendHandlerType, requestHandlerInterfacesTypes[0]))
-        //        .Select(handlerType => new
-        //        {
-        //            RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[0])[0]
-        //        });
-
-        //    foreach (var commandHandler in commandHandlers)
-        //    {
-        //        Type proxyConsumer;
-        //        proxyConsumer = typeof(MassTransitBasycConsumerProxy<>).MakeGenericType(commandHandler.RequestType);
-        //        configurator.AddConsumer(proxyConsumer);
-        //    }
-
-        //    var queryHandlers = assemblyTypes.Where(requestHandlerType => GenericsHelper.IsAssignableToGenericType(requestHandlerType, requestHandlerInterfacesTypes[1]))
-        //            .Select(handlerType => new
-        //            {
-        //                RequestType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[0],
-        //                ResponseType = GenericsHelper.GetGenericArgumentsFromParent(handlerType, requestHandlerInterfacesTypes[1])[1]
-        //            });
-
-        //    foreach (var queryHandler in queryHandlers)
-        //    {
-        //        Type proxyConsumer;
-        //        proxyConsumer = typeof(MassTransitBasycConsumerProxy<,>).MakeGenericType(queryHandler.RequestType, queryHandler.ResponseType);
-        //        configurator.AddConsumer(proxyConsumer);
-        //    }
-        //}
-
-        public static void WrapRequestHandlersAsConsumers(this IServiceCollectionBusConfigurator configurator)
+        public static void WrapRequestHandlersAsConsumers(this IServiceCollectionBusConfigurator busConfigurator)
         {
-            var commandHandlers = configurator.Collection
+            var commandHandlers = busConfigurator.Collection
                 .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, requestHandlerInterfacesTypes[0]))
                 .Select(service => new
                 {
@@ -63,12 +31,11 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
 
             foreach (var commandHandler in commandHandlers)
             {
-                Type proxyConsumer;
-                proxyConsumer = typeof(MassTransitBasycConsumerProxy<>).MakeGenericType(commandHandler.RequestType);
-                configurator.AddConsumer(proxyConsumer);
+                Type proxyConsumerType = typeof(MassTransitBasycConsumerProxy<>).MakeGenericType(commandHandler.RequestType);
+                busConfigurator.AddConsumer(proxyConsumerType);
             }
 
-            var queryHandlers = configurator.Collection
+            var queryHandlers = busConfigurator.Collection
                 .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, requestHandlerInterfacesTypes[1]))
                 .Select(service => new
                 {
@@ -78,9 +45,8 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
 
             foreach (var queryHandler in queryHandlers)
             {
-                Type proxyConsumer;
-                proxyConsumer = typeof(MassTransitBasycConsumerProxy<,>).MakeGenericType(queryHandler.RequestType, queryHandler.ResponseType);
-                configurator.AddConsumer(proxyConsumer);
+                Type proxyConsumerType = typeof(MassTransitBasycConsumerProxy<,>).MakeGenericType(queryHandler.RequestType, queryHandler.ResponseType);
+                busConfigurator.AddConsumer(proxyConsumerType);
             }
         }
     }

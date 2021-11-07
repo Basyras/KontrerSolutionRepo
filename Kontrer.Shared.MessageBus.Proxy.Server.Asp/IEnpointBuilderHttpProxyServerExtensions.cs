@@ -1,5 +1,6 @@
 ﻿using Kontrer.Shared.Helpers;
 using Kontrer.Shared.MessageBus;
+using Kontrer.Shared.MessageBus.HttpProxy.Server.Asp;
 using Kontrer.Shared.MessageBus.HttpProxy.Shared;
 using Kontrer.Shared.MessageBus.RequestResponse;
 using Microsoft.AspNetCore.Builder;
@@ -15,42 +16,26 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IEnpointBuilderHttpProxyServerExtensions
     {
+        private static IMessageBusManager messageBus;
+        private static IRequestSerializer serializer;
+        private static ProxyHttpReqeustHandler httpHandler;
+
         public static void MapMessageBusProxyServer(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPost("", HandleRequest);
-        }
+            httpHandler = endpoints.ServiceProvider.GetRequiredService<ProxyHttpReqeustHandler>();
 
-        private static async Task HandleRequest(HttpContext context)
-        {
-            IMessageBusManager messageBus = context.RequestServices.GetRequiredService<IMessageBusManager>();
-            var serializer = context.RequestServices.GetRequiredService<IRequestSerializer>();
-            MemoryStream mem = new MemoryStream();
-            await context.Request.Body.CopyToAsync(mem);
-            var bytes = mem.ToArray();
-            var proxyRequest = serializer.Deserialize<ProxyRequest>(bytes);
-
-            var requestType = Type.GetType(proxyRequest.RequestType);
-            if (requestType == null)
-                throw new Exception();
-            var request = serializer.Deserialize(proxyRequest.Request, requestType);
-            if (request == null)
+            endpoints.MapPost("", async (HttpContext context) =>
             {
-                request = Activator.CreateInstance(requestType);
-            }
-
-            if (requestType.IsAssignableTo(typeof(IRequest)))
-            {
-                await messageBus.SendAsync(requestType, request);
-                return;
-            }
-            if (GenericsHelper.IsAssignableToGenericType(requestType, typeof(IRequest<>)))
-            {
-                var responseType = GenericsHelper.GetTypeArgumentsFromParent(requestType, typeof(IRequest<>))[0];
-                var busResponse = await messageBus.RequestAsync(requestType, request, responseType);
-                await context.Response.WriteAsync(serializer.Serialize(busResponse, responseType));
-                return;
-            }
-            throw new InvalidOperationException("Invalid request");
+                try
+                {
+                    await httpHandler.Handle(context);
+                }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    await context.Response.WriteAsync(ex.Message);
+                }
+            });
         }
     }
 }

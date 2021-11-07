@@ -19,10 +19,12 @@ namespace Kontrer.Shared.MessageBus.HttpProxy.Client
         private readonly IOptions<MessageBusHttpProxyClientOptions> options;
         private readonly IRequestSerializer serializer;
 
-        public HttpProxyClientMessageBusManager(IOptions<MessageBusHttpProxyClientOptions> options, IRequestSerializer serializer)
+        public HttpProxyClientMessageBusManager(IOptions<MessageBusHttpProxyClientOptions> options, HttpClient httpClient, IRequestSerializer serializer)
         {
-            this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
+            //this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
             this.options = options;
+            httpClient.BaseAddress = options.Value.ProxyHostUri;
+            this.httpClient = httpClient;
             this.serializer = serializer;
         }
 
@@ -46,7 +48,7 @@ namespace Kontrer.Shared.MessageBus.HttpProxy.Client
             return SendToProxy(request);
         }
 
-        Task IMessageBusManager.SendAsync(Type requestType, object request, CancellationToken cancellationToken)
+        public Task SendAsync(Type requestType, object request, CancellationToken cancellationToken)
         {
             return SendToProxy(requestType, request);
         }
@@ -71,7 +73,7 @@ namespace Kontrer.Shared.MessageBus.HttpProxy.Client
             return RequestToProxy(requestType, responseType, null);
         }
 
-        Task<object> IMessageBusManager.RequestAsync(Type requestType, object request, Type responseType, CancellationToken cancellationToken)
+        public Task<object> RequestAsync(Type requestType, object request, Type responseType, CancellationToken cancellationToken)
         {
             return RequestToProxy(requestType, responseType, request);
         }
@@ -86,9 +88,9 @@ namespace Kontrer.Shared.MessageBus.HttpProxy.Client
             return SendToProxy(requestType, Activator.CreateInstance(requestType));
         }
 
-        private async Task SendToProxy(Type requestType, object request)
+        private Task SendToProxy(Type requestType, object request)
         {
-            await HttpCallToProxyServer(requestType, request);
+            return HttpCallToProxyServer(requestType, request);
         }
 
         private Task<object> RequestToProxy(Type requestType, Type responseType, object request = null)
@@ -107,19 +109,22 @@ namespace Kontrer.Shared.MessageBus.HttpProxy.Client
         private async Task<object> HttpCallToProxyServer(Type requestType, object request, Type responseType = null)
         {
             var requestJson = serializer.Serialize(request, requestType);
-            var responseTypeName = responseType == null ? null : responseType.AssemblyQualifiedName;
-            var proxyRequest = new ProxyRequest(requestType.AssemblyQualifiedName, responseTypeName, requestJson);
+            //var responseTypeName = responseType == null ? null : responseType.AssemblyQualifiedName;
+            //var proxyRequest = new ProxyRequest(requestType.AssemblyQualifiedName, responseTypeName, requestJson);
+            var proxyRequest = ProxyRequest.Create(requestType, requestJson, responseType);
             var proxyRequestJson = serializer.Serialize(proxyRequest);
             var httpContent = new StringContent(proxyRequestJson, Encoding.UTF8, "application/json");
             var httpResult = await httpClient.PostAsync("", httpContent);
-            if (responseType == null)
-            {
-                return null;
-            }
 
             if (httpResult.IsSuccessStatusCode is false)
             {
-                throw new Exception($"Message bus response failure. Code: {httpResult.StatusCode}. {httpResult.RequestMessage}");
+                var httpErrorContent = await httpResult.Content.ReadAsStringAsync();
+                throw new Exception($"Message bus response failure, code: {(int)httpResult.StatusCode},\nreason: {httpResult.ReasonPhrase},\ncontent: {httpErrorContent}");
+            }
+
+            if (responseType == null)
+            {
+                return null;
             }
 
             MemoryStream httpMemomoryStream = new MemoryStream();

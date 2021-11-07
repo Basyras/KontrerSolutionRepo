@@ -18,4 +18,17 @@ namespace Kontrer.Shared.MessageBus.RequestResponse
     {
         Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken = default);
     }
+
+    //public interface IRequestWithContextHandler<TRequest, TContext>
+    //    where TRequest : IRequestWithContext<TContext>
+    //{
+    //    Task Handle(TRequest request, TContext context, CancellationToken cancellationToken = default);
+    //}
+
+    //public interface IRequestWithContextHandler<TRequest, TResponse, TContext>
+    //    where TRequest : IRequestWithContext<TResponse, TContext>
+    //    where TResponse : class
+    //{
+    //    Task<TResponse> Handle(TRequest request, TContext context, CancellationToken cancellationToken = default);
+    //}
 }

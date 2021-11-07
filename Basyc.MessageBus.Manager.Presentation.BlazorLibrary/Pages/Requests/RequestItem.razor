@@ -68,6 +68,7 @@
                             <inputContainer>
                                 @if (RequestItemViewModel.Response != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.Response.Failed is false)
                                 {
+                                    //https://www.jqueryscript.net/other/Beautiful-JSON-Viewer-Editor.html
                                     string hasErrorClass = RequestItemViewModel.Response.Failed ? "inputBorder--error" : "";
                                     <textarea readonly disabled="@RequestItemViewModel.Response.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.Response.Response</textarea>
                                 }

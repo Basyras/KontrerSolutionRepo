@@ -18,9 +18,11 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             this.requestHandler = requestHandler;
         }
 
-        public Task Consume(ConsumeContext<TRequest> context)
+        public async Task Consume(ConsumeContext<TRequest> context)
         {
-            return requestHandler.Handle(context.Message);
+            await requestHandler.Handle(context.Message, context.CancellationToken);
+            await context.RespondAsync(new CommandResult());
+            //context.Nori
         }
     }
 
@@ -37,7 +39,7 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
 
         public async Task Consume(ConsumeContext<TRequest> context)
         {
-            var response = await requestHandler.Handle(context.Message);
+            var response = await requestHandler.Handle(context.Message, context.CancellationToken);
             await context.RespondAsync(response);
         }
     }
