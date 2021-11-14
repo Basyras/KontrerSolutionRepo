@@ -32,7 +32,7 @@ namespace Basyc.MessageBus.Manager
                 options.IQueryType = iQueryType;
                 options.ICommandType = iCommandType;
                 options.ICommandWithResponseType = iCommandWithResponseType;
-                options.AssembliesToScan = assembliesToScan.ToList();
+                options.AssembliesToScan = assembliesToScan;
             });
             managerBuilder.AddProvider<InterfaceTypedDomainProvider>();
             return new TypedFormatterBuilder(managerBuilder.services);
@@ -49,7 +49,7 @@ namespace Basyc.MessageBus.Manager
             {
                 options.IMessageType = iMessageType;
                 options.IMessageWithResponseType = iMessageWithResponseType;
-                options.AssembliesToScan = assemblies.ToList();
+                options.AssembliesToScan = assemblies;
             });
             managerBuilder.AddProvider<InterfaceTypedDomainProvider>();
             return new TypedFormatterBuilder(managerBuilder.services);

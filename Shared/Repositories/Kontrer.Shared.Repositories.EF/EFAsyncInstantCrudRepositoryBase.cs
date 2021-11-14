@@ -1,5 +1,6 @@
 ﻿using Kontrer.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Kontrer.Shared.Repositories.EF
         protected static Func<TModel, TModelId> ModelIdGetter { get; private set; }
         protected static Action<TModel, TModelId> ModelIdSetter { get; private set; }
 
-        public EFAsyncInstantCrudRepositoryBase(DbContext dbContext, Expression<Func<TEntity, TEntityId>> entityIdPropertyNameSelector, Expression<Func<TModel, TModelId>> modelIdPropertyNameSelector) : base(dbContext)
+        public EFAsyncInstantCrudRepositoryBase(DbContext dbContext, Expression<Func<TEntity, TEntityId>> entityIdPropertyNameSelector, Expression<Func<TModel, TModelId>> modelIdPropertyNameSelector, ILogger<EFAsyncInstantCrudRepositoryBase<TEntity, TEntityId, TModel, TModelId>> logger) : base(dbContext, logger)
         {
             if (isInitialized is false)
             {
@@ -35,7 +36,7 @@ namespace Kontrer.Shared.Repositories.EF
                 EntityIdGetter = (Func<TEntity, TEntityId>)Delegate.CreateDelegate(typeof(Func<TEntity, TEntityId>), entityPropertyInfo.GetGetMethod());
                 EntityIdSetter = (Action<TEntity, TEntityId>)Delegate.CreateDelegate(typeof(Action<TEntity, TEntityId>), entityPropertyInfo.GetSetMethod());
             }
-            isInitialized = true;
+            isInitialized = true;           
         }
 
         protected abstract TModelId ToModelId(TEntityId id);
@@ -54,7 +55,11 @@ namespace Kontrer.Shared.Repositories.EF
 
         public async Task<Dictionary<TModelId, TModel>> GetAllAsync()
         {
-            var models = await dbContext.Set<TEntity>().AsQueryable().ToDictionaryAsync(entity => ToModelId(EntityIdGetter(entity)), entity => ToModel(entity));
+            var models = await dbContext.Set<TEntity>()
+                .AsQueryable()
+                .AsNoTracking()
+                .AsSplitQuery()
+                .ToDictionaryAsync(entity => ToModelId(EntityIdGetter(entity)), entity => ToModel(entity));
             return models;
         }
 
@@ -118,7 +123,7 @@ namespace Kontrer.Shared.Repositories.EF
         where TModel : class
         where TEntity : class, new()
     {
-        public EFInstantCrudRepositoryBase(DbContext dbContext, Expression<Func<TEntity, TModelId>> entityIdSelector, Expression<Func<TModel, TModelId>> modelIdSelector) : base(dbContext, entityIdSelector, modelIdSelector)
+        public EFInstantCrudRepositoryBase(DbContext dbContext, Expression<Func<TEntity, TModelId>> entityIdSelector, Expression<Func<TModel, TModelId>> modelIdSelector, ILogger<EFInstantCrudRepositoryBase<TEntity, TModelId, TModel>> logger) : base(dbContext, entityIdSelector, modelIdSelector, logger)
         {
         }
 
@@ -141,7 +146,7 @@ namespace Kontrer.Shared.Repositories.EF
     public abstract class EFInstantCrudRepositoryBase<TModel, TModelKey> : EFInstantCrudRepositoryBase<TModel, TModelKey, TModel>
        where TModel : class, new()
     {
-        protected EFInstantCrudRepositoryBase(DbContext dbContext, Expression<Func<TModel, TModelKey>> modelIdPropertyNameSelector) : base(dbContext, modelIdPropertyNameSelector, modelIdPropertyNameSelector)
+        protected EFInstantCrudRepositoryBase(DbContext dbContext, Expression<Func<TModel, TModelKey>> modelIdPropertyNameSelector, ILogger<EFInstantCrudRepositoryBase<TModel, TModelKey>> logger) : base(dbContext, modelIdPropertyNameSelector, modelIdPropertyNameSelector, logger)
         {
         }
 
@@ -152,6 +157,7 @@ namespace Kontrer.Shared.Repositories.EF
 
         protected override TModel ToModel(TModel entity)
         {
+            //logger.LogInformation($"{nameof(ToModel)} called on {dbContext.GetType().Name}");
             return entity;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +11,32 @@ namespace Kontrer.Shared.Repositories.EF
 {
     public abstract class EFRepositoryBase<TEntity, TModel> where TEntity : class
     {
-        private static bool isInitialized = false;
+        private static bool isDbContextValidated = false;
         protected readonly DbContext dbContext;
+        protected readonly ILogger<EFRepositoryBase<TEntity, TModel>> logger;
 
-        public EFRepositoryBase(DbContext dbContext)
+        public EFRepositoryBase(DbContext dbContext, ILogger<EFRepositoryBase<TEntity, TModel>> logger)
         {
             this.dbContext = dbContext;
-            if (isInitialized is false)
+            this.logger = logger;
+            if (isDbContextValidated is false)
             {
                 ValidateDbContext(dbContext);
+                isDbContextValidated = true;
             }
-            isInitialized = true;
         }
 
         /// <summary>
         /// Checks if generic DbContext contains a requiered Set<<see cref="TEntity"/>>
         /// </summary>
         /// <param name="dbContext"></param>
-        private static void ValidateDbContext(DbContext dbContext)
+        private void ValidateDbContext(DbContext dbContext)
         {
+            logger.LogInformation($"Validating dbContext: {dbContext.GetType().Name}");
             dbContext.Set<TEntity>();
         }
 
-        protected abstract TEntity ToEntity(TModel model);
+        protected abstract TEntity ToEntity(TModel model);       
 
         protected abstract TModel ToModel(TEntity entity);
     }

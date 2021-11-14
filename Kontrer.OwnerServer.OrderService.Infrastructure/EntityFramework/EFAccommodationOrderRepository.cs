@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using Kontrer.Shared.Repositories.EF;
 using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
+using Microsoft.Extensions.Logging;
 
 namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
 {
     public class EFAccommodationOrderRepository : EFInstantCrudRepositoryBase<AccommodationOrderEntity, int>, IAccommodationOrderRepository
     {
-        public EFAccommodationOrderRepository(DbContext dbContext) : base(dbContext, entity => entity.Id)
+        public EFAccommodationOrderRepository(DbContext dbContext, ILogger<EFAccommodationOrderRepository> logger) : base(dbContext, entity => entity.Id, logger)
         {
         }
 
