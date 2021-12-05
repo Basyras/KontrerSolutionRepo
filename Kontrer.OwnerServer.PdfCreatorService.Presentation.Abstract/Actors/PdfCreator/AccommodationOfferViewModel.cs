@@ -1,5 +1,5 @@
-﻿using Kontrer.Shared.Models;
-using Kontrer.Shared.Models.Pricing.Costs;
+﻿using Basyc.Shared.Models;
+using Basyc.Shared.Models.Pricing.Costs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

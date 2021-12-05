@@ -3,9 +3,7 @@ using Kontrer.OwnerServer.CustomerService.Application;
 using Kontrer.OwnerServer.CustomerService.Application.Customer;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.CustomerService.Infrastructure;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
-using Kontrer.Shared.DomainDrivenDesign.Domain;
-using Kontrer.Shared.MessageBus.MasstTransit;
+using Basyc.DomainDrivenDesign.Domain;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Basyc.MicroService.Asp.Bootstrapper;
 
 namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator.EF
+namespace Basyc.Localizator.Infrastructure.EF
 {
     public class LocalizatorSectionEntity
     {
@@ -17,6 +17,6 @@ namespace Kontrer.Shared.Localizator.EF
         [Key]
         public string UniqueSectionName { get; set; }
         public List<LocalizatorEntity> Localizators { get; set; }
-        
+
     }
 }

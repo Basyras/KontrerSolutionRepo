@@ -1,8 +1,8 @@
-﻿using Kontrer.OwnerServer.OrderService.Application.Interfaces;
+﻿using Basyc.DomainDrivenDesign.Application;
+using Basyc.MessageBus;
+using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Dtos.Models;
-using Kontrer.Shared.DomainDrivenDesign.Application;
-using Kontrer.Shared.MessageBus;
 using System;
 using System.Collections.Generic;
 using System.Linq;

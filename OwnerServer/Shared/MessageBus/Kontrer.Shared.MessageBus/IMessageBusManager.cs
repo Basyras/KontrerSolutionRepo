@@ -1,5 +1,5 @@
-﻿using Kontrer.Shared.MessageBus.PublishSubscribe;
-using Kontrer.Shared.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.PublishSubscribe;
+using Basyc.MessageBus.RequestResponse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus
+namespace Basyc.MessageBus
 {
     public interface IMessageBusManager
     {

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
+namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests;
+
+public enum ResponseType
 {
-    public enum ResponseType
-    {
-        Json,
-        Text,
-        NoResponse
-    }
+    Json,
+    Text,
+    NoResponse
 }

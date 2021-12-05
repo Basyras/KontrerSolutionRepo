@@ -1,5 +1,5 @@
-﻿using Dapr.Actors;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
+﻿using Basyc.MicroService.Abstraction.Initialization;
+using Dapr.Actors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.Actors
+namespace Basyc.MicroService.Asp.Bootstrapper.Actors
 {
     public class ActorRegistrator
     {

@@ -5,21 +5,16 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.Actors;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using MassTransit;
 using MassTransit.Definition;
 using MassTransit.Monitoring.Health;
-using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.Shared.MessageBus;
-using Kontrer.Shared.MessageBus.Asp;
-using Kontrer.Shared.MessageBus.MasstTransit;
+using Basyc.Asp;
+using Basyc.MicroService.Abstraction.Initialization;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
+namespace Basyc.MicroService.Asp.Bootstrapper
 {
     public static class IHostBuilderBootstrapperExtensions
     {
@@ -27,56 +22,22 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
 
         public static MicroserviceBuilder<IHostBuilder> CreateMicroserviceBuilder<TStartup>(this IHostBuilder hostBuilder) where TStartup : class, IStartupClass
         {
-            ServiceCollection services = new ServiceCollection();
-            //hostBuilder.ConfigureServices((s, a) =>
-            //{
-            //    foreach (var service in services)
-            //    {
-            //        a.Add(service);
-            //    }
-            //});
+            ServiceCollection builderServices = new ServiceCollection();
 
             hostBuilder.ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.ConfigureServices((s, a) =>
+                //Builder services needs to be manualy moved into web builder services
+                webBuilder.ConfigureServices((s, aspServices) =>
                 {
-                    foreach (var service in services)
+                    foreach (var service in builderServices)
                     {
-                        a.Add(service);
+                        aspServices.Add(service);
                     }
                 });
                 webBuilder.ConfigureAsp<TStartup>(entryAssembly.GetName().Name);
-                //webBuilder.UseStartupWorkaround<TStartup>(entryAssembly.GetName().Name);
-
-                //webBuilder.ConfigureMicroservice();
-                //webBuilder.ConfigureMicroservice()
-                //.AddMessageBus(handlersAssembly);
-                //webBuilder.ConfigureServices(services =>
-                //{
-                //    services.AddMessageBus()
-                //    .RegisterRequestHandlers(handlersAssembly);
-                //});
-                //webBuilder.ConfigureMessageBusServices<TStartup>(handlersAssembly);
             });
 
-            return new MicroserviceBuilder<IHostBuilder>(services, hostBuilder);
-        }
-
-        private static IWebHostBuilder ConfigureMessageBusServices<TStartup>(this IWebHostBuilder webBuilder, Assembly handlersAssembly) where TStartup : class, IStartupClass
-        {
-            //?
-            //webBuilder.RegisterHandlersToDI(handlersAssembly);
-
-            //webBuilder.ConfigureMassTransitServices(handlersAssembly);
-            //webBuilder.ConfigureDaprServices((MicroserviceBuilder<IHostBuilder> serviceBuilder) =>
-            //{
-            //    var actorRegistrator = new ActorRegistrator(serviceBuilder.MicroserviceProvider);
-            //    actorRegistrator.RegisterActors<TStartup>();
-            //});
-
-            //?
-            //webBuilder.RegisterCommnandQueriesEndpoints<TCommand>();
-            return webBuilder;
+            return new MicroserviceBuilder<IHostBuilder>(builderServices, hostBuilder);
         }
     }
 }

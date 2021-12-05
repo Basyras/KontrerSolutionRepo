@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Basyc.DomainDrivenDesign.DependencyInjection\Basyc.DomainDrivenDesign.DependencyInjection.csproj" />
-    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Basyc.MicroService.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

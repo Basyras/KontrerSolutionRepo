@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Kontrer.OwnerServer.OrderService.Dtos\Kontrer.OwnerServer.OrderService.Dtos.csproj" />
-    <ProjectReference Include="..\..\..\..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Kontrer.OwnerServer.Shared.MicroService.Abstraction.csproj" />
-    <ProjectReference Include="..\..\..\..\Kontrer.Shared\Kontrer.Shared.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Application\Kontrer.Shared.DomainDrivenDesign.Application.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Domain\Kontrer.Shared.DomainDrivenDesign.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Basyc.MicroService.Abstraction.csproj" />
+    <ProjectReference Include="..\..\..\..\Kontrer.Shared\Basyc.Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Application\Basyc.DomainDrivenDesign.Application.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Domain\Basyc.DomainDrivenDesign.Domain.csproj" />
     <ProjectReference Include="..\..\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
   </ItemGroup>
 

@@ -5,13 +5,13 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public interface ILocalizator : IStringLocalizer
     {
-        
+
         CultureInfo Culture { get; }
-        string  SectionUniqueName { get; }
+        string SectionUniqueName { get; }
         bool CanGetReturnDefaultCultureValue { get; set; }
         bool CanGetReturnKey { get; set; }
 
@@ -21,7 +21,7 @@ namespace Kontrer.Shared.Localizator
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        string Get(string key);       
+        string Get(string key);
         /// <summary>
         /// If values is not found the default value is returned
         /// </summary>
@@ -34,10 +34,10 @@ namespace Kontrer.Shared.Localizator
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        new string this[string key] { get;}
+        new string this[string key] { get; }
 
         event EventHandler<LocalizatorValuesChangedArgs> ValuesChanged;
-        Task EditValues(IDictionary<string, string> newValues); 
+        Task EditValues(IDictionary<string, string> newValues);
 
 
     }

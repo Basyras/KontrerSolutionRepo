@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories
+namespace Basyc.Repositories
 {
     /// <summary>
     /// Repository wich does not contain any navigation properties/other repositories types.

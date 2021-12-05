@@ -1,4 +1,8 @@
-﻿<div>
+﻿<HeadContent>
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+</HeadContent>
+
+<div>
     <MudThemeProvider />
     <MudDialogProvider />
     <MudSnackbarProvider />
@@ -11,4 +15,6 @@
         }
     </MudExpansionPanels>
     <button @onclick="()=> { busManager.Load(); }">Reload</button>
+
+    @*<script src="_content/MudBlazor/MudBlazor.min.js" suppress-error="BL9992"></script>*@
 </div>

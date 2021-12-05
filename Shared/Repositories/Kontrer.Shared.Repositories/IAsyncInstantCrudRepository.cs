@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories
+namespace Basyc.Repositories
 {
     /// <summary>
     /// Does not require Save method, commands are executed immidietly

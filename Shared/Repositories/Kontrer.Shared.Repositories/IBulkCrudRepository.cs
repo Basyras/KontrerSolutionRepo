@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories
+namespace Basyc.Repositories
 {
     public interface IBulkCrudRepository<TModel, TKey> : IBulkRepository
     {

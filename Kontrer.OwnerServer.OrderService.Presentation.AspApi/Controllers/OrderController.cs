@@ -1,6 +1,5 @@
 ﻿using Kontrer.OwnerServer.OrderService.Dtos.Models;
 using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
-using Kontrer.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;

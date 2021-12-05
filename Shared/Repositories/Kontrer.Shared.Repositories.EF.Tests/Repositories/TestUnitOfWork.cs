@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.Repositories;
+﻿using Basyc.Repositories.EF.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories.EF.Tests.Repositories
+namespace Basyc.Repositories.EF.Tests.Repositories
 {
     public class TestUnitOfWork : IUnitOfWork
     {

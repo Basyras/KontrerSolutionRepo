@@ -1,6 +1,5 @@
-﻿using Dapr;
-using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.Shared.MessageBus;
+﻿using Basyc.MessageBus;
+using Dapr;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -9,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
+namespace Basyc.MicroService.Asp.Dapr
 {
     public class DaprStartupFilter : IStartupFilter
     {
@@ -22,7 +21,7 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
 
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-            return (IApplicationBuilder app) =>
+            return (app) =>
             {
                 Configure(app);
                 next(app);

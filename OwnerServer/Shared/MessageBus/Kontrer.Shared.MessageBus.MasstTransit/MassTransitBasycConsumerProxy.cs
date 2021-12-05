@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.RequestResponse;
 using MassTransit;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.MasstTransit
+namespace Basyc.MessageBus.MasstTransit
 {
     public class MassTransitBasycConsumerProxy<TRequest> : IConsumer<TRequest>
         where TRequest : class, IRequest

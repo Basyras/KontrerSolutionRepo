@@ -4,23 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
+namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests;
+
+public partial class RequestTag
 {
-    public partial class RequestTag
+    private RequestTagType requestType;
+
+    public string Content { get; private set; }
+
+    [Parameter]
+    public RequestTagType RequestType
     {
-        private RequestTagType requestType;
-
-        public string Content { get; private set; }
-
-        [Parameter]
-        public RequestTagType RequestType
+        get => requestType;
+        set
         {
-            get => requestType;
-            set
-            {
-                requestType = value;
-                Content = requestType == RequestTagType.Generic ? "message" : requestType.ToString().ToLower();
-            }
+            requestType = value;
+            Content = requestType == RequestTagType.Generic ? "message" : requestType.ToString().ToLower();
         }
     }
 }

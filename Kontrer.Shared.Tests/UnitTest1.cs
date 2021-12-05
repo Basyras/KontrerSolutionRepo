@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Kontrer.Shared.Tests
+namespace Basyc.Shared.Tests
 {
     public class UnitTest1
     {

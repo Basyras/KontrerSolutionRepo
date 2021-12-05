@@ -6,7 +6,6 @@ using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Razor.SelectPdf;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus;
 using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
 using Kontrer.Shared.Localizator;
-using Kontrer.Shared.Localizator.Initialization;
 using Kontrer.Shared.Localizator.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +25,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Initialization;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
-using Kontrer.OwnerServer.Shared.Asp;
+using Basyc.Asp;
+using Basyc.Localizator.Abstraction.Initialization;
+using Basyc.Localizator.Infrastructure.EF.Initialization;
 
 namespace Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi
 {

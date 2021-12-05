@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.Localizator;
+﻿using Basyc.Localizator.Abstraction;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

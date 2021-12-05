@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.Asp
+namespace Basyc.Asp
 {
-    public interface IStartupClass 
+    public interface IStartupClass
     {
         void ConfigureServices(IServiceCollection services);
         void Configure(IApplicationBuilder app, IWebHostEnvironment env);

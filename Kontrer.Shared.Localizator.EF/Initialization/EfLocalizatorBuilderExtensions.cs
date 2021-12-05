@@ -1,12 +1,11 @@
-﻿using Kontrer.Shared.Localizator.EF;
-using Kontrer.Shared.Localizator.Initialization;
+﻿using Basyc.Localizator.Abstraction.Initialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator.Initialization
+namespace Basyc.Localizator.Infrastructure.EF.Initialization
 {
     public static class EfLocalizatorBuilderExtensions
     {

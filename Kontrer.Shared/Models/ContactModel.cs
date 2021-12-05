@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Models
+namespace Basyc.Shared.Models
 {
     public class ContactModel
     {
-        public ContactModel(string email,string phoneNumber, AddressModel address)
+        public ContactModel(string email, string phoneNumber, AddressModel address)
         {
             Email = email;
             PhoneNumber = phoneNumber;

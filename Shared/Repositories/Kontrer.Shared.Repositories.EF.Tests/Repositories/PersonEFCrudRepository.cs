@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.Shared.Data.EF.Tests;
-using Kontrer.Shared.Repositories.EF;
+﻿using Basyc.Repositories.EF;
+using Kontrer.OwnerServer.Shared.Data.EF.Tests;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories.EF.Tests.Repositories
+namespace Basyc.Repositories.EF.Tests.Repositories
 {
     public class PersonEFCrudRepository : EFInstantCrudRepositoryBase<PersonEntity, int, PersonModel>
     {

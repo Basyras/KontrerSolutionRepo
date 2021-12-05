@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.Localizator;
+﻿using Basyc.Localizator.Abstraction;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator.EF
+namespace Basyc.Localizator.Infrastructure.EF
 {
     public class EFLocalizatorStorage : ILocalizatorStorage
     {
@@ -66,7 +66,7 @@ namespace Kontrer.Shared.Localizator.EF
 
         private ILocalizator LocalizatorToModel(LocalizatorEntity entity)
         {
-            var model = new Localizator(new CultureInfo(entity.CultureName), entity.SectionUniqueName, entity.Values);
+            var model = new Basyc.Localizator.Abstraction.Localizator(new CultureInfo(entity.CultureName), entity.SectionUniqueName, entity.Values);
             return model;
         }
 

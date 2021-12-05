@@ -1,7 +1,7 @@
 ﻿using Kontrer.OwnerClient.Application.Utilities.Cache;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.Shared.MessageBus;
+using Basyc.MessageBus;
 using System;
 using System.Collections.Generic;
 using System.Linq;

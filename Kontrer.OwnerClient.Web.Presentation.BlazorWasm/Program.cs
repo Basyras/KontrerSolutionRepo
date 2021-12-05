@@ -1,7 +1,8 @@
+using Basyc.MessageBus.HttpProxy.Client;
 using Kontrer.OwnerClient.Application.Customers;
 using Kontrer.OwnerClient.Application.Orders;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.Shared.MessageBus;
+using Basyc.MessageBus;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

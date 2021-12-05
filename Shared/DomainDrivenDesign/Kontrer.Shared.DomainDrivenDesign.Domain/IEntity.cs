@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kontrer.Shared.DomainDrivenDesign.Domain
+namespace Basyc.DomainDrivenDesign.Domain
 {
     public interface IEntity
     {

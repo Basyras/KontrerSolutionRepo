@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public class SectionCultureChangedArgs : EventArgs
     {
-        public SectionCultureChangedArgs(string sectionName,CultureInfo oldCulture, CultureInfo newCulture )
+        public SectionCultureChangedArgs(string sectionName, CultureInfo oldCulture, CultureInfo newCulture)
         {
             SectionName = sectionName;
             OldCulture = oldCulture;

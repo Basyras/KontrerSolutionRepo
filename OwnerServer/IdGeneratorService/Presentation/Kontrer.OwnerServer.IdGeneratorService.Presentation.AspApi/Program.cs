@@ -1,6 +1,6 @@
+using Basyc.MicroService.Asp.Bootstrapper;
 using Kontrer.OwnerServer.IdGeneratorService.Application;
 using Kontrer.OwnerServer.IdGeneratorService.Infrastructure.EntityFramework;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Kontrer.Shared.Repositories.EF;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

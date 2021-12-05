@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>128038f9-9985-4930-a52d-d95cd068a68b</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.OwnerServer.IdGeneratorService.Domain\Kontrer.OwnerServer.IdGeneratorService.Domain.csproj" />
-    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper.csproj" />
-    <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Server.Asp\Kontrer.Shared.MessageBus.HttpProxy.Server.Asp.csproj" />
+    <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Basyc.MicroService.Asp.Bootstrapper.csproj" />
+    <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Server.Asp\Basyc.MessageBus.HttpProxy.Server.Asp.csproj" />
     <ProjectReference Include="..\OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Domain\Kontrer.OwnerServer.CustomerService.Domain.csproj" />
     <ProjectReference Include="..\OwnerServer\OrderService\Domain\Kontrer.OwnerServer.OrderService.Domain\Kontrer.OwnerServer.OrderService.Domain.csproj" />
   </ItemGroup>

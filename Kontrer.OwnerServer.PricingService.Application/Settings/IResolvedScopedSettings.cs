@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.PricingService.Application.Processing;
-using Kontrer.Shared.Models;
+﻿using Basyc.Shared.Models;
+using Kontrer.OwnerServer.PricingService.Application.Processing;
 using Kontrer.Shared.Models.Pricing;
 using System;
 using System.Threading.Tasks;

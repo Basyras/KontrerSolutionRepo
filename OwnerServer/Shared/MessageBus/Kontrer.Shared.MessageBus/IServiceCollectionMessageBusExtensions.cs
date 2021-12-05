@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.MessageBus;
+﻿using Basyc.MessageBus;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

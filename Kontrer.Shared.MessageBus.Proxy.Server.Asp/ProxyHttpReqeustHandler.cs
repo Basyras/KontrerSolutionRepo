@@ -1,6 +1,6 @@
-﻿using Kontrer.Shared.Helpers;
-using Kontrer.Shared.MessageBus.HttpProxy.Shared;
-using Kontrer.Shared.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.HttpProxy.Shared;
+using Basyc.MessageBus.RequestResponse;
+using Basyc.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.HttpProxy.Server.Asp
+namespace Basyc.MessageBus.HttpProxy.Server.Asp
 {
     public class ProxyHttpReqeustHandler
     {

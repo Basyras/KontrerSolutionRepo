@@ -1,6 +1,6 @@
-﻿using Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEditors;
+﻿using Basyc.Shared.Models;
+using Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEditors;
 using Kontrer.OwnerServer.PricingService.Application.Settings;
-using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using System;
 using System.Collections.Generic;

@@ -6,18 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public class Localizator : ILocalizator
     {
 
         private IDictionary<string, string> _values;
 
-   
+
 
         public CultureInfo Culture { get; private set; }
         public string SectionUniqueName { get; private set; }
-        public ILocalizator _defaultLocalizator { get; private set; }
+        public ILocalizator _backupLocalizator { get; private set; }
         public bool CanGetReturnDefaultCultureValue { get; set; }
         public bool CanGetReturnKey { get; set; }
 
@@ -26,7 +26,7 @@ namespace Kontrer.Shared.Localizator
         public string this[string key]
         {
             get
-            {                
+            {
                 return Get(key);
             }
         }
@@ -36,10 +36,10 @@ namespace Kontrer.Shared.Localizator
 
         }
 
-        public Localizator(CultureInfo culture, string sectionName, IDictionary<string, string> values, ILocalizator defaultLocalizator)
+        public Localizator(CultureInfo culture, string sectionName, IDictionary<string, string> values, ILocalizator backupLocalizator)
         {
-            _defaultLocalizator = defaultLocalizator;
-            this._values = values;
+            _backupLocalizator = backupLocalizator;
+            _values = values;
             Culture = culture;
             SectionUniqueName = sectionName;
         }
@@ -48,7 +48,7 @@ namespace Kontrer.Shared.Localizator
 
         public event EventHandler<LocalizatorValuesChangedArgs> ValuesChanged;
         private void OnValuesChanged(IDictionary<string, string> newValues)
-        {            
+        {
             ValuesChanged?.Invoke(this, new LocalizatorValuesChangedArgs(newValues));
         }
 
@@ -64,9 +64,9 @@ namespace Kontrer.Shared.Localizator
             {
                 if (CanGetReturnDefaultCultureValue)
                 {
-                    if (_defaultLocalizator != null)
+                    if (_backupLocalizator != null)
                     {
-                        var defaultValueExists = _defaultLocalizator.TryGet(key, out value);
+                        var defaultValueExists = _backupLocalizator.TryGet(key, out value);
                         if (defaultValueExists)
                         {
                             return value;
@@ -79,7 +79,7 @@ namespace Kontrer.Shared.Localizator
                             }
                             else
                             {
-                                throw new Exception($"Localizer of section {SectionUniqueName} could not find value for {key} in culture {Culture.Name} and default culture {_defaultLocalizator.Culture}. Try add localized value or set property {nameof(CanGetReturnKey)} to true");
+                                throw new Exception($"Localizer of section {SectionUniqueName} could not find value for {key} in culture {Culture.Name} and default culture {_backupLocalizator.Culture}. Try add localized value or set property {nameof(CanGetReturnKey)} to true");
                             }
                         }
                     }
@@ -128,13 +128,13 @@ namespace Kontrer.Shared.Localizator
 
             if (isValueFound == false)
             {
-                if (_defaultLocalizator == null)
+                if (_backupLocalizator == null)
                 {
                     value = key;
                 }
                 else
                 {
-                    var defaultFound = _defaultLocalizator.TryGet(key, out value);
+                    var defaultFound = _backupLocalizator.TryGet(key, out value);
                     if (defaultFound == false)
                     {
                         value = key;
@@ -162,7 +162,7 @@ namespace Kontrer.Shared.Localizator
         {
             get
             {
-                var wasLocalized = this.TryGet(name, out string localizedValue);
+                var wasLocalized = TryGet(name, out string localizedValue);
                 LocalizedString localString = new LocalizedString(name, localizedValue, !wasLocalized);
                 return localString;
             }
@@ -175,7 +175,7 @@ namespace Kontrer.Shared.Localizator
             var allKeys = GetAll().Keys;
             foreach (var key in allKeys)
             {
-                var wasLocalized = this.TryGet(key, out string localizedValue);
+                var wasLocalized = TryGet(key, out string localizedValue);
                 LocalizedString localizedString = new LocalizedString(key, localizedValue, !wasLocalized);
                 localizedStrings.Add(localizedString);
             }
@@ -184,7 +184,7 @@ namespace Kontrer.Shared.Localizator
 
         }
 
-   
+
 
         public Task EditValues(IDictionary<string, string> newValues)
         {

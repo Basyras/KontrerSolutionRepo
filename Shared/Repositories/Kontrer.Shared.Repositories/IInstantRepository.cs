@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories
+namespace Basyc.Repositories
 {
     /// <summary>
     /// Performs modyfing actions instatly when called. Repository should not have save/commint/complete implementation

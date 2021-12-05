@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapr.Actors" Version="1.0.0-rc02" />
+    <PackageReference Include="Dapr.Actors" Version="1.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kontrer.Shared\Kontrer.Shared.csproj" />
+    <ProjectReference Include="..\Kontrer.Shared\Basyc.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder.ValueObjects.Requirements;
-using Kontrer.Shared.Models.Pricing;
+﻿using Basyc.Shared.Models.Pricing;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder.ValueObjects.Requirements;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System;

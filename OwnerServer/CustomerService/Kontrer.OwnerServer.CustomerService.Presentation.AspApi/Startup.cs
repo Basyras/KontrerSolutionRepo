@@ -1,8 +1,8 @@
+using Basyc.Asp;
 using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework;
-using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.Shared.DomainDrivenDesign.Domain;
+using Basyc.DomainDrivenDesign.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

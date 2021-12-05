@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.Shared.Repositories;
+﻿using Basyc.Repositories;
+using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using System;
 using System.Collections.Generic;
 using System.Linq;

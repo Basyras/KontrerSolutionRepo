@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+//using Kontrer.Shared.Repositories.EF.Tests;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Kontrer.Shared.Repositories.EF.Tests.Repositories
+namespace Basyc.Repositories.EF.Tests.Repositories
 {
     public class EFInstantCrudRepositoryTests
     {

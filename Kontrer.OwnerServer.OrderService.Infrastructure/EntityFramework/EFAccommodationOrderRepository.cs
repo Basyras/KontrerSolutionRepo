@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Kontrer.Shared.Repositories.EF;
 using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Microsoft.Extensions.Logging;
+using Basyc.Repositories.EF;
 
 namespace Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework
 {

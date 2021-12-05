@@ -1,7 +1,6 @@
 ﻿using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Application.Initialization;
-using Kontrer.Shared.Helpers;
-using Kontrer.Shared.MessageBus;
+using Basyc.MessageBus;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System;
@@ -12,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Basyc.Shared.Helpers;
 
 namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
 {

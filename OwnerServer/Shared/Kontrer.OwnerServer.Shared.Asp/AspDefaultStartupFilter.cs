@@ -4,13 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace Kontrer.OwnerServer.Shared.Asp
+namespace Basyc.Asp
 {
     public class AspDefaultStartupFilter : IStartupFilter
     {
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-            return (IApplicationBuilder app) =>
+            return (app) =>
             {
                 var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
 

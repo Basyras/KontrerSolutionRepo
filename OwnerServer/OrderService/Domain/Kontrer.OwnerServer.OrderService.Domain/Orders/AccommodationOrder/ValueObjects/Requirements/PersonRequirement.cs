@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.Models;
+﻿using Basyc.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

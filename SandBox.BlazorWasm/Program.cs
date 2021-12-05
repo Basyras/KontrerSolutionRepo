@@ -1,4 +1,4 @@
-using Kontrer.Shared.MessageBus;
+using Basyc.MessageBus;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

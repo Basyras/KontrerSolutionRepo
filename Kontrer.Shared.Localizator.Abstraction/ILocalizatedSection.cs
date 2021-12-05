@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public interface ILocalizatedSection<T> : ILocalizatedSection
     {
@@ -22,7 +22,7 @@ namespace Kontrer.Shared.Localizator
         /// Default culture will be always same as it is in LocalizationManager.
         /// </summary>
         bool InheritsDefaultCulture { get; set; }
-   
+
 
         /// <summary>
         /// Return localizazor for provided culture
@@ -33,7 +33,7 @@ namespace Kontrer.Shared.Localizator
         /// <summary>
         /// Returns localizazor with default localization culture or default culture of this section when section's culture is setuped
         /// </summary>        
-        Task<ILocalizator> GetLocalizatorAsync();        
+        Task<ILocalizator> GetLocalizatorAsync();
         /// <param name="culture"></param>
         /// <param name="localizator"></param>
         /// <param name="canReturnDefault"></param>
@@ -60,7 +60,7 @@ namespace Kontrer.Shared.Localizator
 
         event EventHandler<SectionCultureChangedArgs> SectionCultureChanged;
 
-        
+
 
 
 

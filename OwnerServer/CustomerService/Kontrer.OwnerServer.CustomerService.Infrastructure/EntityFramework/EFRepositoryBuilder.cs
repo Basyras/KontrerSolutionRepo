@@ -1,6 +1,6 @@
-﻿using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
+﻿using Basyc.Repositories.EF;
+using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
 using Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework;
-using Kontrer.Shared.Repositories.EF;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

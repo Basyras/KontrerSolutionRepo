@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>b00f5fd6-8954-4c43-beee-d834fef1b860</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Server.Asp\Basyc.MessageBus.HttpProxy.Server.Asp.csproj" />
+    <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus.MasstTransit\Basyc.MessageBus.MasstTransit.csproj" />
+  </ItemGroup>
+
+</Project>

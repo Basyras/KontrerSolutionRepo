@@ -1,5 +1,5 @@
-﻿using Kontrer.Shared.MessageBus.HttpProxy.Server.Asp;
-using Kontrer.Shared.MessageBus.HttpProxy.Shared;
+﻿using Basyc.MessageBus.HttpProxy.Server.Asp;
+using Basyc.MessageBus.HttpProxy.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Shared\Repositories\Kontrer.Shared.Repositories\Kontrer.Shared.Repositories.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\Repositories\Kontrer.Shared.Repositories\Basyc.Repositories.csproj" />
     <ProjectReference Include="..\..\Domain\Kontrer.OwnerServer.OfferService.Domain\Kontrer.OwnerServer.OfferService.Domain.csproj" />
   </ItemGroup>
 </Project>

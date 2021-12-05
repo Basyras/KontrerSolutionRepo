@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public class LocalizatorValuesChangedArgs
     {
-        public LocalizatorValuesChangedArgs(IDictionary<string,string> newValues)
+        public LocalizatorValuesChangedArgs(IDictionary<string, string> newValues)
         {
             NewValues = newValues;
         }

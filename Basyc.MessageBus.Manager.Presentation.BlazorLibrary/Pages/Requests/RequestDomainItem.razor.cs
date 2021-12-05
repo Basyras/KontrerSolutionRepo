@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Manager.Presentation.Blazor.Pages.Requests
-{
-    public partial class RequestDomainItem
-    {
-        [Parameter]
-        public DomainItemViewModel DomainItemViewModel { get; set; }
+namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests;
 
-        [Parameter]
-        public EventCallback<RequestItem> OnMessageSending { get; set; }
-    }
+public partial class RequestDomainItem
+{
+    [Parameter]
+    public DomainItemViewModel DomainItemViewModel { get; set; }
+
+    [Parameter]
+    public EventCallback<RequestItem> OnMessageSending { get; set; }
 }

@@ -1,7 +1,6 @@
 ﻿using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.Formatters;
-using Kontrer.Shared.MessageBus;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

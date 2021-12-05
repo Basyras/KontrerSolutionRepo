@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Models
+namespace Basyc.Shared.Models
 {
     public class TraderModel
     {
@@ -13,7 +13,7 @@ namespace Kontrer.Shared.Models
 
         }
 
-        public TraderModel(string traderName,AddressModel address,ContactModel contact, string CIN, string VATID )
+        public TraderModel(string traderName, AddressModel address, ContactModel contact, string CIN, string VATID)
         {
             TraderName = traderName;
             Address = address;

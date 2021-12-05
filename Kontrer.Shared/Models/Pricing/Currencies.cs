@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Models.Pricing
+namespace Basyc.Shared.Models.Pricing
 {
     public enum Currencies
-    {        
+    {
         /// <summary>
         /// Euro
         /// </summary>

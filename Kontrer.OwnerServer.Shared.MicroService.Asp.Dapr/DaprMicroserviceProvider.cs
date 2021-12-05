@@ -1,8 +1,7 @@
-﻿using Dapr.Actors.AspNetCore;
+﻿using Basyc.MicroService.Abstraction.Initialization;
+//using Dapr.Actors.AspNetCore;
 using Dapr.Actors.Runtime;
 using Dapr.Client;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
-using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +16,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
+namespace Basyc.MicroService.Asp.Dapr
 {
     public class DaprMicroserviceProvider : IMicroserviceProvider
     {
@@ -35,12 +34,12 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
 
         public void RegisterActor(Type actorType)
         {
-            webBuilder.UseActors(x =>
-            {
-                ActorTypeInformation actorTypeInfo = ActorTypeInformation.Get(actorType);
-                var registration = new ActorRegistration(actorTypeInfo);
-                x.Actors.Add(registration);
-            });
+            //webBuilder.UseActors(x =>
+            //{
+            //    ActorTypeInformation actorTypeInfo = ActorTypeInformation.Get(actorType);
+            //    var registration = new ActorRegistration(actorTypeInfo);
+            //    x.Actors.Add(registration);
+            //});
         }
     }
 }

@@ -1,6 +1,6 @@
+using Basyc.MicroService.Asp.Bootstrapper;
 using Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.Actors;
 using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

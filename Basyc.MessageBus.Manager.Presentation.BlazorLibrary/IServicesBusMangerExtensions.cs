@@ -1,5 +1,5 @@
 ﻿using Basyc.MessageBus.Manager;
-using Basyc.MessageBus.Manager.Presentation.Blazor;
+using Basyc.MessageBus.Manager.Presentation.BlazorLibrary;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
 using System;

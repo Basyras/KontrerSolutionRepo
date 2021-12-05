@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories.EF
+namespace Basyc.Repositories.EF
 {
     public static class IHostEFMigratorExtensions
     {

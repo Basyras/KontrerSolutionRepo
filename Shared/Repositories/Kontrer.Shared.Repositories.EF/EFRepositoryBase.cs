@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories.EF
+namespace Basyc.Repositories.EF
 {
     public abstract class EFRepositoryBase<TEntity, TModel> where TEntity : class
     {
@@ -36,7 +36,7 @@ namespace Kontrer.Shared.Repositories.EF
             dbContext.Set<TEntity>();
         }
 
-        protected abstract TEntity ToEntity(TModel model);       
+        protected abstract TEntity ToEntity(TModel model);
 
         protected abstract TModel ToModel(TEntity entity);
     }

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public class LocalizationStorageChangedArgs
     {
         public HashSet<string> ChangedSectionUniqueNames { get; }
-        public LocalizationStorageChangedArgs(HashSet<string>  sections)
+        public LocalizationStorageChangedArgs(HashSet<string> sections)
         {
             ChangedSectionUniqueNames = sections;
         }

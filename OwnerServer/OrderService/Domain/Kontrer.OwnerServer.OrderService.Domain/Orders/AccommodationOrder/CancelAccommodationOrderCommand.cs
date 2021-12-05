@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.OrderService.Domain.Customers;
-using Kontrer.Shared.DomainDrivenDesign.Domain;
+﻿using Basyc.DomainDrivenDesign.Domain;
+using Kontrer.OwnerServer.OrderService.Domain.Customers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

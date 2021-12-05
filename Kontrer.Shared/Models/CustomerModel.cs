@@ -1,9 +1,8 @@
-﻿using Kontrer.Shared.Models.Pricing.Costs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kontrer.Shared.Models
+namespace Basyc.Shared.Models
 {
     public class CustomerModel
     {

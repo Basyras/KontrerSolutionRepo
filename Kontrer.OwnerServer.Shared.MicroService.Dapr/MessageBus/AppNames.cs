@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus
+namespace Basyc.MicroService.Dapr.MessageBus
 {
     public static class AppNames
     {

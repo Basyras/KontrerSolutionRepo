@@ -1,6 +1,7 @@
-﻿using Kontrer.Shared.MessageBus;
-using Kontrer.Shared.MessageBus.HttpProxy.Client;
-using Kontrer.Shared.MessageBus.HttpProxy.Shared;
+﻿using Basyc.MessageBus;
+using Basyc.MessageBus.HttpProxy.Client;
+using Basyc.MessageBus.HttpProxy.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;

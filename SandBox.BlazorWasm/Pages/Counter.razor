@@ -1,7 +1,7 @@
 ﻿@using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder
 @using Kontrer.OwnerServer.CustomerService.Domain.Customer
 @page "/counter"
-@inject Kontrer.Shared.MessageBus.IMessageBusManager bus
+@*@inject Kontrer.Shared.MessageBus.IMessageBusManager bus*@
 
 <h1>Counter</h1>
 
@@ -21,10 +21,11 @@
     private async void SendCommandAction()
     {
         //await bus.RequestAsync<CancelAccommodationOrderCommand>(new(5, null, true), default);
-        await bus.SendAsync<DeleteCustomerCommand>(new(0));
         //var results = await bus.RequestAsync<GetAccommodationOrdersQuery, GetAccommodationOrdersResponse>();
         //var results = await bus.RequestAsync<GetAccommodationOrdersQuery, GetAccommodationOrdersResponse>();
         //NewOrders = System.Text.Json.JsonSerializer.Serialize(results);
+
+        //await bus.SendAsync<DeleteCustomerCommand>(new(0));
         this.StateHasChanged();
     }
 

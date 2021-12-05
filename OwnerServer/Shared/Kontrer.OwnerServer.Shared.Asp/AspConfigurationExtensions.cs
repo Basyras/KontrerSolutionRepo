@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.Asp
+namespace Basyc.Asp
 {
     public static class AspConfigurationExtensions
     {
@@ -17,14 +17,9 @@ namespace Kontrer.OwnerServer.Shared.Asp
         /// </summary>
         public static IWebHostBuilder ConfigureAsp<TStartup>(this IWebHostBuilder webBuilder, string assemblyName)
             where TStartup : class, IStartupClass
-        {
-            /// <summary>
-            /// Workaround to setup Startup class from different assembly. Bug described here: https://github.com/dotnet/aspnetcore/issues/7315
-            /// </summary>
-            webBuilder.UseSetting(WebHostDefaults.ApplicationKey, assemblyName);
-            webBuilder.UseStartup<TStartup>();
-
-            webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
+        {            
+            webBuilder.UseStartupWorkaround<TStartup>(assemblyName);
+            webBuilder.ConfigureServices((context, services) =>
             {
                 services.AddTransient<IStartupFilter, AspDefaultStartupFilter>();
                 services.AddControllers().FixJsonSerialization(); //Required for swagger

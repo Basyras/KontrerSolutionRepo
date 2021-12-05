@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus.Handlers
+namespace Basyc.MicroService.Dapr.MessageBus.Handlers
 {
     public abstract class DaprRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
@@ -20,8 +20,8 @@ namespace Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus.Handlers
             this.appName = appName;
         }
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
-        {            
-            return daprClient.InvokeMethodAsync<TRequest, TResponse>(appName, nameof(TResponse), request, null, cancellationToken).AsTask();
+        {
+            return daprClient.InvokeMethodAsync<TRequest, TResponse>(appName, nameof(TResponse), request, cancellationToken);
         }
     }
 }

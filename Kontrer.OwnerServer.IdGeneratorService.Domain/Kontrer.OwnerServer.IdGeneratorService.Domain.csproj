@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Domain\Kontrer.Shared.DomainDrivenDesign.Domain.csproj" />
+    <ProjectReference Include="..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Domain\Basyc.DomainDrivenDesign.Domain.csproj" />
   </ItemGroup>
 
 </Project>

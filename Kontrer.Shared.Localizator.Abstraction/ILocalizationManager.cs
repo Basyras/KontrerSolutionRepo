@@ -4,13 +4,13 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public interface ILocalizationManager
     {
         CultureInfo DefaultCulture { get; set; }
 
-        IDictionary<string,ILocalizatedSection> GetSections();
+        IDictionary<string, ILocalizatedSection> GetSections();
         ILocalizatedSection GetSection(string sectionName);
         /// <summary>
         /// Returns false if section does not exist.

@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.DomainDrivenDesign.Domain;
+﻿using Basyc.DomainDrivenDesign.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;

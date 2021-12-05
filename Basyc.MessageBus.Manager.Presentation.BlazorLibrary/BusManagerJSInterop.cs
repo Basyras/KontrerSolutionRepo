@@ -5,31 +5,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Manager.Presentation.Blazor
+namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary;
+
+public class BusManagerJSInterop : IAsyncDisposable
 {
-    public class BusManagerJSInterop : IAsyncDisposable
+    private readonly Lazy<Task<IJSObjectReference>> moduleTask;
+
+    public BusManagerJSInterop(IJSRuntime jsRuntime)
     {
-        private readonly Lazy<Task<IJSObjectReference>> moduleTask;
+        moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
+           "import", "./_content/Basyc.MessageBus.Manager.Presentation.BlazorLibrary/BusManagerJSInterop.js").AsTask());
+    }
 
-        public BusManagerJSInterop(IJSRuntime jsRuntime)
+    public async Task ApplyChangesToIndexHtml()
+    {
+        var module = await moduleTask.Value;
+        await module.InvokeVoidAsync("addBusMangerStaticFiles");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (moduleTask.IsValueCreated)
         {
-            moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-               "import", "./_content/Basyc.MessageBus.Manager.Presentation.BlazorLibrary/BusManagerJSInterop.js").AsTask());
-        }
-
-        //public async Task ApplyChangesToIndexHtml()
-        //{
-        //    var module = await moduleTask.Value;
-        //    await module.InvokeVoidAsync("addBusMangerStaticFiles");
-        //}
-
-        public async ValueTask DisposeAsync()
-        {
-            if (moduleTask.IsValueCreated)
-            {
-                var module = await moduleTask.Value;
-                await module.DisposeAsync();
-            }
+            var module = await moduleTask.Value;
+            await module.DisposeAsync();
         }
     }
 }

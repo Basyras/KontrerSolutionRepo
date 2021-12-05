@@ -11,9 +11,6 @@ namespace Basyc.MessageBus.Manager.Infrastructure
     {
         public static TypedProviderBuilder UseTypedProvider(this BusManagerBuilder managerBuilder)
         {
-            //managerBuilder.services.Configure<TypedDomainProviderOptions>(options =>
-            //{
-            //});
             managerBuilder.AddProvider<TypedDomainProvider>();
             return new TypedProviderBuilder(managerBuilder.services);
         }

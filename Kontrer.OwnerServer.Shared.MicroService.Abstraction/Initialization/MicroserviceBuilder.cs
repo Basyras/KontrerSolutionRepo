@@ -1,6 +1,6 @@
 ﻿using Basyc.DependencyInjection;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
-using Kontrer.Shared.MessageBus;
+using Basyc.MessageBus;
+using Basyc.MicroService.Abstraction.Initialization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,14 +26,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public MicroserviceBuilder<TParentBuilder> AddProvider(IMicroserviceProvider provider)
         {
-            this.MicroserviceProvider = provider;
+            MicroserviceProvider = provider;
             return this;
         }
 
         public MessageBusBuilder AddMessageBus()
         {
             return services.AddMessageBus();
-            //.RegisterRequestHandlers(assembliesToScan);
         }
     }
 }

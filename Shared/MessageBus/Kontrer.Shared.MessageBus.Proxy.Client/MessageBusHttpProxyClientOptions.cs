@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.HttpProxy.Client
+namespace Basyc.MessageBus.HttpProxy.Client
 {
     public class MessageBusHttpProxyClientOptions
     {

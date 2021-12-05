@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Helpers
+namespace Basyc.Shared.Helpers
 {
     public static class GenericsHelper
     {

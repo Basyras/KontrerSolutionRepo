@@ -5,7 +5,7 @@
 //using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 //using Kontrer.OwnerServer.IdGeneratorService.Domain;
 //using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-//using Kontrer.Shared.DomainDrivenDesign.Domain;
+//using Basyc.DomainDrivenDesign.Domain;
 //using Kontrer.Shared.MessageBus.RequestResponse;
 //using MassTransit;
 

@@ -1,6 +1,6 @@
-﻿using Kontrer.OwnerServer.PricingService.Application;
+﻿using Basyc.Shared.Models;
+using Kontrer.OwnerServer.PricingService.Application;
 using Kontrer.OwnerServer.PricingService.Application.Settings;
-using Kontrer.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -62,7 +62,7 @@ namespace Kontrer.OwnerServer.PricingService.Presentation.AspApi.Controllers
         [HttpGet]
         public async Task<ActionResult<Dictionary<string, Dictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>>> GetScopedSettings()
         {
-            Dictionary<string, Dictionary<Tuple<DateTime, DateTime>, NullableResult<object>>> scopedSettings = (Dictionary<string, Dictionary<Tuple<DateTime, DateTime>, Kontrer.Shared.Models.NullableResult<object>>>) (await _pricingManager.SettingRepository.GetAllScopedSettingsAsync());
+            Dictionary<string, Dictionary<Tuple<DateTime, DateTime>, NullableResult<object>>> scopedSettings = (Dictionary<string, Dictionary<Tuple<DateTime, DateTime>, NullableResult<object>>>) (await _pricingManager.SettingRepository.GetAllScopedSettingsAsync());
             return Ok(scopedSettings);
         }
 

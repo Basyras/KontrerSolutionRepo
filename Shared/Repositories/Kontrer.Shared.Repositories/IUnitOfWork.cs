@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories
+namespace Basyc.Repositories
 {
     /// <summary>
     /// All repositories must inherit <see cref="IUnitOfWorkRepository{TModel, TKey}"/>

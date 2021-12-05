@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
-using Kontrer.Shared.Models;
+﻿using Basyc.Shared.Models;
+using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using Kontrer.Shared.Models.Pricing;
 using System;
 using System.Collections.Generic;

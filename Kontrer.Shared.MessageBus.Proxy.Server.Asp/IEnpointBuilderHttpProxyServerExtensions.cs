@@ -1,8 +1,6 @@
-﻿using Kontrer.Shared.Helpers;
-using Kontrer.Shared.MessageBus;
-using Kontrer.Shared.MessageBus.HttpProxy.Server.Asp;
-using Kontrer.Shared.MessageBus.HttpProxy.Shared;
-using Kontrer.Shared.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus;
+using Basyc.MessageBus.HttpProxy.Server.Asp;
+using Basyc.MessageBus.HttpProxy.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,16 +14,15 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IEnpointBuilderHttpProxyServerExtensions
     {
-        private static IMessageBusManager messageBus;
-        private static IRequestSerializer serializer;
-        private static ProxyHttpReqeustHandler httpHandler;
+        //private static ProxyHttpReqeustHandler httpHandler;
 
         public static void MapMessageBusProxyServer(this IEndpointRouteBuilder endpoints)
         {
-            httpHandler = endpoints.ServiceProvider.GetRequiredService<ProxyHttpReqeustHandler>();
+            //httpHandler = endpoints.ServiceProvider.GetRequiredService<ProxyHttpReqeustHandler>();
 
             endpoints.MapPost("", async (HttpContext context) =>
             {
+                var httpHandler = context.RequestServices.GetRequiredService<ProxyHttpReqeustHandler>();
                 try
                 {
                     await httpHandler.Handle(context);

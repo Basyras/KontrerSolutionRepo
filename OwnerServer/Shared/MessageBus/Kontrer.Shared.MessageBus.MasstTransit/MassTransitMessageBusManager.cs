@@ -8,12 +8,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Kontrer.Shared.MessageBus.PublishSubscribe;
-using Kontrer.Shared.MessageBus.RequestResponse;
-using Kontrer.Shared.MessageBus;
 using System.Reflection;
 
-namespace Kontrer.Shared.MessageBus.MasstTransit
+namespace Basyc.MessageBus.MasstTransit
 {
     public class MassTransitMessageBusManager : IMessageBusManager
     {
@@ -59,7 +56,7 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             var methodParameterTypes = new Type[] { typeof(IBus), requestType, typeof(CancellationToken), typeof(RequestTimeout), actionType };
             //MassTransit does not have Request variant that accepts type as parameter (not type parameter)
             //MethodInfo requestMethodInfo = typeof(MassTransit.RequestExtensions).GetMethod(nameof(MassTransit.RequestExtensions.Request), BindingFlags.Public | BindingFlags.Static, null, methodParameterTypes, null);
-            MethodInfo requestMethodInfo = typeof(MassTransit.RequestExtensions).GetMethods().Where(x => x.Name == nameof(MassTransit.RequestExtensions.Request)).Skip(2).First();
+            MethodInfo requestMethodInfo = typeof(RequestExtensions).GetMethods().Where(x => x.Name == nameof(RequestExtensions.Request)).Skip(2).First();
             var parameters = requestMethodInfo.GetParameters();
             MethodInfo genericMethod = requestMethodInfo.MakeGenericMethod(requestType, responseType);
 
@@ -73,7 +70,7 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             //await _massTransitBus.Send(request, requestType, cancellationToken); //Does not work
 
             //Command can return response, but should not query data, returning command completion status is allowed
-            await this.RequestAsync(requestType, request, typeof(CommandResult), cancellationToken);
+            await RequestAsync(requestType, request, typeof(CommandResult), cancellationToken);
         }
 
         public async Task SendAsync(Type requestType, CancellationToken cancellationToken)
@@ -81,19 +78,19 @@ namespace Kontrer.Shared.MessageBus.MasstTransit
             var request = Activator.CreateInstance(requestType);
             //await _massTransitBus.Publish(request, requestType, cancellationToken);
 
-            await this.SendAsync(requestType, request, cancellationToken);
+            await SendAsync(requestType, request, cancellationToken);
         }
 
         async Task IMessageBusManager.SendAsync<TRequest>(CancellationToken cancellationToken)
         {
             //await _massTransitBus.Publish<TRequest>(cancellationToken);
-            await this.SendAsync(typeof(TRequest), cancellationToken);
+            await SendAsync(typeof(TRequest), cancellationToken);
         }
 
         async Task IMessageBusManager.SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
         {
             //await _massTransitBus.Publish(request, cancellationToken);
-            await this.SendAsync(typeof(TRequest), request, cancellationToken);
+            await SendAsync(typeof(TRequest), request, cancellationToken);
         }
 
         private static async Task<object> InvokeAsync(MethodInfo masstransitRequestMethod, object obj, params object[] parameters)

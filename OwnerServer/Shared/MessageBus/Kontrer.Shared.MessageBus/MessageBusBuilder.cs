@@ -1,6 +1,6 @@
 ﻿using Basyc.DependencyInjection;
-using Kontrer.Shared.Helpers;
-using Kontrer.Shared.MessageBus.RequestResponse;
+using Basyc.MessageBus.RequestResponse;
+//using Basyc.Shared.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus
+namespace Basyc.MessageBus
 {
     public class MessageBusBuilder : DependencyBuilderBase
     {
@@ -24,21 +24,21 @@ namespace Kontrer.Shared.MessageBus
 
         public MessageBusBuilder RegisterBasycRequestHandlers(params Assembly[] assembliesToScan)
         {
-            this.services.Scan(scan =>
-            scan.FromAssemblies(assembliesToScan)
-            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>)))
-            .As(handler => new Type[1]
-            {
-                typeof(IRequestHandler<>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handler, typeof(IRequestHandler<>)))
-            })
-            .WithScopedLifetime()
+            //services.Scan(scan =>
+            //scan.FromAssemblies(assembliesToScan)
+            //.AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>)))
+            //.As(handler => new Type[1]
+            //{
+            //    typeof(IRequestHandler<>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handler, typeof(IRequestHandler<>)))
+            //})
+            //.WithScopedLifetime()
 
-            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
-            .As(handler => new Type[1]
-            {
-                typeof(IRequestHandler<,>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handler, typeof(IRequestHandler<,>)))
-            })
-            .WithScopedLifetime());
+            //.AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
+            //.As(handler => new Type[1]
+            //{
+            //    typeof(IRequestHandler<,>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handler, typeof(IRequestHandler<,>)))
+            //})
+            //.WithScopedLifetime());
 
             return this;
         }

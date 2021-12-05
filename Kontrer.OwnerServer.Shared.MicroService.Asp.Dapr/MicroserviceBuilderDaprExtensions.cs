@@ -1,5 +1,5 @@
-﻿using Dapr.Actors.AspNetCore;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
+﻿using Basyc.MicroService.Abstraction.Initialization;
+//using Dapr.Actors.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
+namespace Basyc.MicroService.Asp.Dapr
 {
     public static class MicroserviceBuilderDaprExtensions
     {

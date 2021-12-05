@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared
+namespace Basyc.Shared
 {
     public abstract class ConverterBase<TSource, TTarget> : IConverter<TSource, TTarget>
     {

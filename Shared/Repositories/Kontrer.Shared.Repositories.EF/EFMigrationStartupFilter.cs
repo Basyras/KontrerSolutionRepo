@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Kontrer.Shared.Repositories.EF
+namespace Basyc.Repositories.EF
 {
     public class EFMigrationStartupFilter<TDbContext> : IStartupFilter where TDbContext : DbContext
     {

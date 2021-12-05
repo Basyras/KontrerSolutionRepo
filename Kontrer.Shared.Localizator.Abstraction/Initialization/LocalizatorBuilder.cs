@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator.Initialization
+namespace Basyc.Localizator.Abstraction.Initialization
 {
     public class LocalizatorBuilder
     {
@@ -16,7 +16,7 @@ namespace Kontrer.Shared.Localizator.Initialization
             this.services = services;
         }
 
-        public void AddStorage<TLocalizatorStorage>() where TLocalizatorStorage : class,ILocalizatorStorage
+        public void AddStorage<TLocalizatorStorage>() where TLocalizatorStorage : class, ILocalizatorStorage
         {
             services.AddSingleton<ILocalizatorStorage, TLocalizatorStorage>();
         }

@@ -31,7 +31,7 @@ namespace Basyc.MessageBus.Manager
             SetResponseFormatter<JsonResponseFormatter>();
         }
 
-        //Removes all formatters
+        ///Removes all formatters
         public TypedFormatterBuilder ResetFormatting()
         {
             services.RemoveAll<ITypedDomainNameFormatter>();

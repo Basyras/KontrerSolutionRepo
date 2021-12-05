@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.MasstTransit
+namespace Basyc.MessageBus.MasstTransit
 {
     public record CommandResult;
 }

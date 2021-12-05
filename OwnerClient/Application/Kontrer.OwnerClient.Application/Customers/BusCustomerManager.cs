@@ -1,5 +1,5 @@
 ﻿using Kontrer.OwnerServer.CustomerService.Domain.Customer;
-using Kontrer.Shared.MessageBus;
+using Basyc.MessageBus;
 using System;
 using System.Collections.Generic;
 using System.Linq;

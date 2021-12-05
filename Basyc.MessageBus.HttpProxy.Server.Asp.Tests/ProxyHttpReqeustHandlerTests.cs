@@ -1,8 +1,5 @@
 using FluentAssertions;
-using Kontrer.Shared.MessageBus;
-using Kontrer.Shared.MessageBus.HttpProxy.Server.Asp;
-using Kontrer.Shared.MessageBus.HttpProxy.Shared;
-using Kontrer.Shared.MessageBus.RequestResponse;
+using Basyc.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System;
@@ -13,6 +10,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
+using Basyc.MessageBus.HttpProxy.Shared;
+using Basyc.MessageBus.RequestResponse;
 
 namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
 {

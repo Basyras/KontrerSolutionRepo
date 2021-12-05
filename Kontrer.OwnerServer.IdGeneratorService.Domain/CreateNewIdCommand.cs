@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.DomainDrivenDesign.Domain;
+﻿using Basyc.DomainDrivenDesign.Domain;
 using System;
 
 namespace Kontrer.OwnerServer.IdGeneratorService.Domain

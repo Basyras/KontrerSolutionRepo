@@ -1,6 +1,6 @@
-﻿using Kontrer.OwnerServer.OrderService.Application.Interfaces;
+﻿using Basyc.DomainDrivenDesign.Application;
+using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Kontrer.Shared.DomainDrivenDesign.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;

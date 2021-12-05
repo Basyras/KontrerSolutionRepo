@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public record GetLocalizatorResult(bool localizatorFound, ILocalizator localizator);
-    
+
 }

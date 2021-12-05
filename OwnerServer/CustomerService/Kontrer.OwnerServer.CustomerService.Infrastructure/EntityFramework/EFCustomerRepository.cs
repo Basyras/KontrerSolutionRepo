@@ -1,6 +1,6 @@
-﻿using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
+﻿using Basyc.Repositories.EF;
+using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
-using Kontrer.Shared.Repositories.EF;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

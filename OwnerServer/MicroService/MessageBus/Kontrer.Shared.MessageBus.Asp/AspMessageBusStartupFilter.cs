@@ -1,6 +1,5 @@
-﻿using Kontrer.Shared.DomainDrivenDesign.Application;
-using Kontrer.Shared.DomainDrivenDesign.Domain;
-using Kontrer.Shared.MessageBus.RequestResponse;
+﻿using Basyc.DomainDrivenDesign.Domain;
+using Basyc.MessageBus.RequestResponse;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.Asp
+namespace Basyc.MessageBus.Asp
 {
     [Obsolete("command are register via masstransit instead of endpoints")]
     public class AspMessageBusStartupFilter<TCommand> : IStartupFilter

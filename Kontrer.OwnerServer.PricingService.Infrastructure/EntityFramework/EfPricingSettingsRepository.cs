@@ -1,5 +1,4 @@
 ﻿using Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework;
-using Kontrer.Shared.Models;
 using Kontrer.Shared.Models.Pricing;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Kontrer.OwnerServer.Shared.Data.Abstraction.Repositories;
 using Kontrer.OwnerServer.PricingService.Application.Settings;
+using Basyc.Shared.Models;
 
 namespace Kontrer.OwnerServer.PricingService.Infrastructure.EntityFramework
 {

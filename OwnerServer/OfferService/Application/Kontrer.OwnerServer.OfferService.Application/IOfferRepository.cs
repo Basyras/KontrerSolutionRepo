@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.OfferService.Domain;
-using Kontrer.Shared.Repositories;
+﻿using Basyc.Repositories;
+using Kontrer.OwnerServer.OfferService.Domain;
 using System;
 using System.Collections.Generic;
 

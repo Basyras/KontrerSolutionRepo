@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kontrer.Shared.MessageBus.HttpProxy.Shared
+namespace Basyc.MessageBus.HttpProxy.Shared
 {
     public interface IRequestSerializer
     {

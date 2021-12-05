@@ -1,4 +1,4 @@
-﻿namespace Kontrer.Shared.Models
+﻿namespace Basyc.Shared.Models
 {
     public class AddressModel
     {

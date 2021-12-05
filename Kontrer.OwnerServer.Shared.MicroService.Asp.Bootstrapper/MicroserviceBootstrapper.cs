@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
+﻿using Basyc.Asp;
+using Basyc.MicroService.Abstraction.Initialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper
+namespace Basyc.MicroService.Asp.Bootstrapper
 {
     public static class MicroserviceBootstrapper
     {

@@ -1,6 +1,6 @@
-﻿using Kontrer.OwnerServer.IdGeneratorService.Application.Interfaces;
+﻿using Basyc.DomainDrivenDesign.Application;
+using Kontrer.OwnerServer.IdGeneratorService.Application.Interfaces;
 using Kontrer.OwnerServer.IdGeneratorService.Domain;
-using Kontrer.Shared.DomainDrivenDesign.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;

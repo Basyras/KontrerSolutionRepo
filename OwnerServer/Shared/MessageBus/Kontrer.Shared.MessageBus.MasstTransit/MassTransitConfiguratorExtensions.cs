@@ -1,5 +1,5 @@
-﻿using Kontrer.Shared.Helpers;
-using Kontrer.Shared.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.RequestResponse;
+using Basyc.Shared.Helpers;
 using MassTransit;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
 using System;
@@ -9,7 +9,7 @@ using System.Reflection;
 #warning should add answer with my approach
 
 //https://stackoverflow.com/questions/52805079/how-to-register-a-generic-consumer-adapter-in-masstransit-if-i-have-a-list-of-me
-namespace Kontrer.Shared.MessageBus.MasstTransit
+namespace Basyc.MessageBus.MasstTransit
 {
     public static class MassTransitConfiguratorExtensions
     {

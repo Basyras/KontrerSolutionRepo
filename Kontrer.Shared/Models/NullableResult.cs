@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Models
+namespace Basyc.Shared.Models
 {
     public struct NullableResult<T>
     {
@@ -17,7 +17,7 @@ namespace Kontrer.Shared.Models
         {
             Value = value;
             WasFound = wasFound;
-            DefaultValue = checkValueType ? (T)GetDefaultValue(value.GetType()) : default(T);
+            DefaultValue = checkValueType ? (T)GetDefaultValue(value.GetType()) : default;
         }
 
         public NullableResult(T value, bool wasFound, T defaultValue)

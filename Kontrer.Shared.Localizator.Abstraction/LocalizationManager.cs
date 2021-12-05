@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public class LocalizationManager : ILocalizationManager
     {
@@ -101,7 +101,7 @@ namespace Kontrer.Shared.Localizator
         public bool TryGetSection(string sectionName, out ILocalizatedSection localizatedSection)
         {
 
-            if (String.IsNullOrWhiteSpace(sectionName))
+            if (string.IsNullOrWhiteSpace(sectionName))
             {
                 throw new ArgumentNullException(nameof(sectionName));
             }
@@ -126,7 +126,7 @@ namespace Kontrer.Shared.Localizator
 
         public void ChangeDefaultSectionCulture(string sectionName, CultureInfo newCulture)
         {
-            if (String.IsNullOrWhiteSpace(sectionName))
+            if (string.IsNullOrWhiteSpace(sectionName))
             {
                 throw new ArgumentNullException(nameof(sectionName));
             }

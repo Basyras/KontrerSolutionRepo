@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator.Initialization
+namespace Basyc.Localizator.Abstraction.Initialization
 {
     public static class IServiceCollectionLocalizatorExtensions
     {

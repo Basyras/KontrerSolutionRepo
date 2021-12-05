@@ -1,7 +1,7 @@
-﻿using Kontrer.OwnerServer.PricingService.Application.Processing;
+﻿using Basyc.Shared.Models.Pricing;
+using Kontrer.OwnerServer.PricingService.Application.Processing;
 using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
 using Kontrer.Shared.Models;
-using Kontrer.Shared.Models.Pricing;
 using Kontrer.Shared.Models.Pricing.Blueprints;
 using Kontrer.Shared.Models.Pricing.Costs;
 using Kontrer.Shared.Tests.FakeData;

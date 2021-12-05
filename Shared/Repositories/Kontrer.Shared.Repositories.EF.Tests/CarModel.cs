@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories.EF.Tests
+namespace Basyc.Repositories.EF.Tests
 {
     public class CarModel
     {

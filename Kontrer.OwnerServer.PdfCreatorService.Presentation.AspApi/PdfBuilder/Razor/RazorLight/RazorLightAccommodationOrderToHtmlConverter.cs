@@ -1,7 +1,7 @@
-﻿using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Razor.Abstraction;
+﻿using Basyc.Localizator.Abstraction;
+using Kontrer.OwnerServer.PdfCreatorService.PdfBuilder.Razor.Abstraction;
 using Kontrer.OwnerServer.PdfCreatorService.Presentation.Abstract.Actors.PdfCreator;
 using Kontrer.OwnerServer.PdfCreatorService.Presentation.AspApi.PdfBuilder.Razor.RazorViews;
-using Kontrer.Shared.Localizator;
 using Kontrer.Shared.Models;
 using Microsoft.Extensions.Options;
 using RazorLight;

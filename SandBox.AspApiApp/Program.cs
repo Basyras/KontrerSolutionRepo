@@ -1,5 +1,4 @@
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
-using Kontrer.Shared.MessageBus.MasstTransit;
+using Basyc.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

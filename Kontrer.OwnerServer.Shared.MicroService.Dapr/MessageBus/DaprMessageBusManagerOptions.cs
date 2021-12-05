@@ -1,4 +1,4 @@
-﻿namespace Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus
+﻿namespace Basyc.MicroService.Dapr.MessageBus
 {
     public class DaprMessageBusManagerOptions
     {

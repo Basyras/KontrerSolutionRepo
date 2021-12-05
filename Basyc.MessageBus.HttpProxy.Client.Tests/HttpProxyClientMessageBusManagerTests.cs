@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Kontrer.Shared.MessageBus.HttpProxy.Client;
 using Kontrer.Shared.MessageBus.HttpProxy.Shared;
 using Microsoft.Extensions.Options;
 using Moq;

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator.EF
+namespace Basyc.Localizator.Infrastructure.EF
 {
-    public interface ILocalizatorDbContext 
+    public interface ILocalizatorDbContext
     {
         DbSet<LocalizatorSectionEntity> LocalizatedSections { get; }
         DbSet<LocalizatorEntity> Localizators { get; }

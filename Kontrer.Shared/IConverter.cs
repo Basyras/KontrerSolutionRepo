@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared
+namespace Basyc.Shared
 {
-    public interface IConverter<TSource,TTarget>
+    public interface IConverter<TSource, TTarget>
     {
         TSource ToSource(TTarget target);
         TTarget ToTarget(TSource source);

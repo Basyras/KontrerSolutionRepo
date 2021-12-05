@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator.EF
+namespace Basyc.Localizator.Infrastructure.EF
 {
     public class LocalizatorEntity
     {
@@ -19,7 +19,7 @@ namespace Kontrer.Shared.Localizator.EF
 
         public string CultureName { get; set; }
         public string SectionUniqueName { get; set; }
-        public Dictionary<string,string> Values { get; set; }
+        public Dictionary<string, string> Values { get; set; }
         public LocalizatorSectionEntity Section { get; set; }
     }
 }

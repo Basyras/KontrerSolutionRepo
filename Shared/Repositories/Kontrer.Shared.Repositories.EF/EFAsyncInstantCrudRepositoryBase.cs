@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared;
+﻿using Basyc.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories.EF
+namespace Basyc.Repositories.EF
 {
     public abstract class EFAsyncInstantCrudRepositoryBase<TEntity, TEntityId, TModel, TModelId> : EFRepositoryBase<TEntity, TModel>, IAsyncInstantCrudRepository<TModel, TModelId>
         where TModel : class
@@ -36,7 +36,7 @@ namespace Kontrer.Shared.Repositories.EF
                 EntityIdGetter = (Func<TEntity, TEntityId>)Delegate.CreateDelegate(typeof(Func<TEntity, TEntityId>), entityPropertyInfo.GetGetMethod());
                 EntityIdSetter = (Action<TEntity, TEntityId>)Delegate.CreateDelegate(typeof(Action<TEntity, TEntityId>), entityPropertyInfo.GetSetMethod());
             }
-            isInitialized = true;           
+            isInitialized = true;
         }
 
         protected abstract TModelId ToModelId(TEntityId id);

@@ -1,6 +1,6 @@
 ﻿using Kontrer.OwnerServer.IdGeneratorService.Domain;
-using Kontrer.Shared.DomainDrivenDesign.Domain;
-using Kontrer.Shared.MessageBus;
+using Basyc.DomainDrivenDesign.Domain;
+using Basyc.MessageBus;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;

@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     /// <summary>
     /// Contains and manages storage for all localization sections
@@ -18,14 +18,14 @@ namespace Kontrer.Shared.Localizator
         /// </summary>
         /// <param name="sectionUniqueName"></param>
         /// <returns></returns>
-        Task<IDictionary<string,CultureInfo>> GetSupportedCulturesAsync(string sectionUniqueName);               
+        Task<IDictionary<string, CultureInfo>> GetSupportedCulturesAsync(string sectionUniqueName);
 
-        Task<ILocalizator> LoadLocalizatorAsync(CultureInfo requiredCulture,string sectionUniqueName);
-          
+        Task<ILocalizator> LoadLocalizatorAsync(CultureInfo requiredCulture, string sectionUniqueName);
+
         Task SaveOrUpdateLocalizatorsAsync(params ILocalizator[] localizators);
 
         event EventHandler<LocalizationStorageChangedArgs> StorageChanged;
-          
+
 
     }
 }

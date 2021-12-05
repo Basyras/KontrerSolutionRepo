@@ -1,5 +1,4 @@
-﻿using Kontrer.Shared.MessageBus.HttpProxy.Shared;
-using Kontrer.Shared.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.HttpProxy.Shared;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.MessageBus.HttpProxy.Client
+namespace Basyc.MessageBus.HttpProxy.Client
 {
     public class HttpProxyClientMessageBusManager : IMessageBusManager
     {
@@ -19,11 +18,11 @@ namespace Kontrer.Shared.MessageBus.HttpProxy.Client
         private readonly IOptions<MessageBusHttpProxyClientOptions> options;
         private readonly IRequestSerializer serializer;
 
-        public HttpProxyClientMessageBusManager(IOptions<MessageBusHttpProxyClientOptions> options, HttpClient httpClient, IRequestSerializer serializer)
+        public HttpProxyClientMessageBusManager(IOptions<MessageBusHttpProxyClientOptions> options, /*HttpClient httpClient,*/ IRequestSerializer serializer)
         {
-            //this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
+            this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
+            //httpClient.BaseAddress = options.Value.ProxyHostUri;
             this.options = options;
-            httpClient.BaseAddress = options.Value.ProxyHostUri;
             this.httpClient = httpClient;
             this.serializer = serializer;
         }

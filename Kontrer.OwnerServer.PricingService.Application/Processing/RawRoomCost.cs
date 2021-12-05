@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.Models.Pricing;
+﻿using Basyc.Shared.Models.Pricing;
 using System.Collections.Generic;
 
 namespace Kontrer.OwnerServer.PricingService.Application.Processing

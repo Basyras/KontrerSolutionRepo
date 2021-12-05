@@ -1,7 +1,6 @@
-﻿using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.OwnerServer.Shared.MicroService.Abstraction.Initialization;
-using Kontrer.OwnerServer.Shared.MicroService.Dapr.MessageBus;
-using Kontrer.Shared.MessageBus;
+﻿using Basyc.Asp;
+using Basyc.MessageBus;
+using Basyc.MicroService.Dapr.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +15,13 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr
+namespace Basyc.MicroService.Asp.Dapr
 {
     public static class IWebHostBuilderDaprExtensions
     {
         public static IWebHostBuilder ConfigureDaprServices(this IWebHostBuilder webBuilder)
         {
-            webBuilder.ConfigureServices((WebHostBuilderContext context, IServiceCollection services) =>
+            webBuilder.ConfigureServices((context, services) =>
             {
                 services.AddTransient<IStartupFilter, DaprStartupFilter>();
                 services.AddDaprClient();

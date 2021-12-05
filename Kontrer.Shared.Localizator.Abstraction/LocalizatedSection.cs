@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Localizator
+namespace Basyc.Localizator.Abstraction
 {
     public class LocalizatedSection<TSection> : LocalizatedSection
     {
@@ -25,7 +25,7 @@ namespace Kontrer.Shared.Localizator
         private ILocalizatorStorage _storage;
         private bool inheritsDefaultCulture = true;
         private Dictionary<string, CultureInfo> supportedCultures { get; set; }
-        public IReadOnlyDictionary<string, CultureInfo> SupportedCultures { get => (IReadOnlyDictionary<string, CultureInfo>)supportedCultures; }
+        public IReadOnlyDictionary<string, CultureInfo> SupportedCultures { get => supportedCultures; }
         public CultureInfo DefaultCulture
         {
             get => defaultCulture;
@@ -87,7 +87,7 @@ namespace Kontrer.Shared.Localizator
 
             if (getResult.localizatorFound == false)
             {
-                if (InheritsDefaultCulture == true & this.DefaultCulture == culture)
+                if (InheritsDefaultCulture == true & DefaultCulture == culture)
                 {
                     localizator = new Localizator(culture, SectionUniqueName, new Dictionary<string, string>());
                     localizator.CanGetReturnKey = true;
@@ -143,7 +143,7 @@ namespace Kontrer.Shared.Localizator
         {
             foreach (var localizator in localizators)
             {
-                localizator.SectionUniqueName.Should().Be(this.SectionUniqueName, "Section name does not match");
+                localizator.SectionUniqueName.Should().Be(SectionUniqueName, "Section name does not match");
 
                 if (SupportedCultures.ContainsKey(localizator.Culture.Name) == false)
                 {

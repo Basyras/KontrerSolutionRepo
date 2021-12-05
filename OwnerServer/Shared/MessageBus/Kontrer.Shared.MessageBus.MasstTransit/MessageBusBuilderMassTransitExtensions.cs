@@ -1,5 +1,5 @@
-﻿using Kontrer.Shared.MessageBus;
-using Kontrer.Shared.MessageBus.MasstTransit;
+﻿using Basyc.MessageBus;
+using Basyc.MessageBus.MasstTransit;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

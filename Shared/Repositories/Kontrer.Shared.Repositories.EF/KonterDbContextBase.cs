@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kontrer.Shared.Repositories.EF
+namespace Basyc.Repositories.EF
 {
     public class KonterDbContextBase<TDbContextImplementation> : DbContext, IDesignTimeDbContextFactory<TDbContextImplementation>
         where TDbContextImplementation : KonterDbContextBase<TDbContextImplementation>
@@ -28,7 +28,7 @@ namespace Kontrer.Shared.Repositories.EF
             //builder.UseSqlServer(connectionString);
 
             var constructor = typeof(TDbContextImplementation).GetConstructor(new Type[] { typeof(DbContextOptions<TDbContextImplementation>) });
-            return (TDbContextImplementation)constructor.Invoke(new object?[] { builder.Options });
+            return (TDbContextImplementation)constructor.Invoke(new object[] { builder.Options });
         }
     }
 }

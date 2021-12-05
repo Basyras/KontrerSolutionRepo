@@ -2,10 +2,6 @@ using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework;
-using Kontrer.OwnerServer.Shared.Asp;
-using Kontrer.Shared.MessageBus.MasstTransit;
-using Kontrer.Shared.MessageBus.RequestResponse;
-using Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -22,6 +18,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder.ValueObjects.Requirements;
+using Basyc.Asp;
 
 namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
 {
