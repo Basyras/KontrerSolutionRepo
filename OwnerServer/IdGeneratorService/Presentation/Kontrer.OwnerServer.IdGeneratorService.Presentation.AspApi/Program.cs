@@ -1,7 +1,6 @@
 using Basyc.MicroService.Asp.Bootstrapper;
 using Kontrer.OwnerServer.IdGeneratorService.Application;
 using Kontrer.OwnerServer.IdGeneratorService.Infrastructure.EntityFramework;
-using Kontrer.Shared.Repositories.EF;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +20,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                .RegisterBasycRequestHandlers(typeof(CreateNewIdCommandHandler).Assembly)
-                .AddMassTransitProvider();
+                .AddMassTransitProvider(true);
 
             await builder.Back()
                  .Build()

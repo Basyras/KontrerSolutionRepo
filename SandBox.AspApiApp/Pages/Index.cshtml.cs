@@ -14,11 +14,11 @@ namespace SandBox.AspApiApp.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IMessageBusManager messageBus;
+        private readonly IMessageBusClient messageBus;
 
         public List<Type> Messages { get; set; } = new List<Type>();
 
-        public IndexModel(ILogger<IndexModel> logger, IMessageBusManager messageBus)
+        public IndexModel(ILogger<IndexModel> logger, IMessageBusClient messageBus)
         {
             _logger = logger;
             this.messageBus = messageBus;

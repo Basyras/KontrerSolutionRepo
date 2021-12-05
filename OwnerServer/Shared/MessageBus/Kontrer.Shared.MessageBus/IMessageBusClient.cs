@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus
 {
-    public interface IMessageBusManager
+    public interface IMessageBusClient
     {
         Task PublishAsync<TEvent>(CancellationToken cancellationToken = default)
               where TEvent : class, IBusEvent, new();
 
         Task PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken = default)
-               where TEvent : class, IBusEvent;
+               where TEvent : notnull, IBusEvent;
 
-        Task SendAsync<TRequest>(CancellationToken cancellationToken = default)
-             where TRequest : class, IRequest, new();
+        Task SendAsync<TCommand>(CancellationToken cancellationToken = default)
+             where TCommand : class, IRequest, new();
 
-        Task SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-             where TRequest : class, IRequest;
+        Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+             where TCommand : notnull, IRequest;
 
-        Task SendAsync(Type requestType, object request, CancellationToken cancellationToken = default);
+        Task SendAsync(Type commandType, object command, CancellationToken cancellationToken = default);
 
-        Task SendAsync(Type requestType, CancellationToken cancellationToken = default);
+        Task SendAsync(Type commandType, CancellationToken cancellationToken = default);
 
         Task<TResponse> RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken = default)
              where TRequest : class, IRequest<TResponse>, new()

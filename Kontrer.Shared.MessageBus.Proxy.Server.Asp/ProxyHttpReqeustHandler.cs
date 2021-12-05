@@ -13,10 +13,10 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
 {
     public class ProxyHttpReqeustHandler
     {
-        private readonly IMessageBusManager messageBus;
+        private readonly IMessageBusClient messageBus;
         private readonly IRequestSerializer serializer;
 
-        public ProxyHttpReqeustHandler(IMessageBusManager messageBus, IRequestSerializer serializer)
+        public ProxyHttpReqeustHandler(IMessageBusClient messageBus, IRequestSerializer serializer)
         {
             this.messageBus = messageBus;
             this.serializer = serializer;

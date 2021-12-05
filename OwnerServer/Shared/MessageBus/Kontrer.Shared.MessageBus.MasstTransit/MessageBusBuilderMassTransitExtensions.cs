@@ -18,15 +18,15 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Takes registered Basyc IRequestHandlers and wrap them with MassTransit IConsumers, Hosted by RabbitMQ
         /// </summary>
-        public static MessageBusBuilder AddMassTransitProvider(this MessageBusBuilder builder, bool hasHandlers = true)
+        public static MessageBusBuilder AddMassTransitProvider(this MessageBusBuilder builder, bool scanForHandlers = true)
         {
             var services = builder.services;
-            services.AddSingleton<IMessageBusManager, MassTransitMessageBusManager>();
+            services.AddSingleton<IMessageBusClient, MassTransitMessageBusClient>();
             services.AddTransient<IStartupFilter, MassTransitStartupFilter>();
             services.AddHealthChecks();
             services.AddMassTransit(x =>
             {
-                if (hasHandlers)
+                if (scanForHandlers)
                 {
                     x.WrapRequestHandlersAsConsumers();
                 }

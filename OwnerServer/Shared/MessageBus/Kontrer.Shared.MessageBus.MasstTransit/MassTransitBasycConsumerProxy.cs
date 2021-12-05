@@ -21,8 +21,7 @@ namespace Basyc.MessageBus.MasstTransit
         public async Task Consume(ConsumeContext<TRequest> context)
         {
             await requestHandler.Handle(context.Message, context.CancellationToken);
-            await context.RespondAsync(new CommandResult());
-            //context.Nori
+            await context.RespondAsync(new VoidCommandResult());
         }
     }
 

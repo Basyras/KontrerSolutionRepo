@@ -6,5 +6,8 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.MasstTransit
 {
-    public record CommandResult;
+    /// <summary>
+    /// Dummy type for returning void result
+    /// </summary>
+    public record VoidCommandResult;
 }

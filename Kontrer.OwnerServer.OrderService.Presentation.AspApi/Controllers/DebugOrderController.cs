@@ -15,10 +15,10 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
     [ApiController]
     public class DebugOrderController : ControllerBase
     {
-        private readonly IMessageBusManager messageBusManager;
+        private readonly IMessageBusClient messageBusManager;
         private readonly IAccommodationOrderRepository repo;
 
-        public DebugOrderController(IMessageBusManager messageBusManager, IAccommodationOrderRepository repo)
+        public DebugOrderController(IMessageBusClient messageBusManager, IAccommodationOrderRepository repo)
         {
             this.messageBusManager = messageBusManager;
             this.repo = repo;

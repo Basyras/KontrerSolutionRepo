@@ -15,14 +15,14 @@ namespace Basyc.MessageBus.Manager
         private readonly IRequestInfoTypeStorage requestInfoTypeStorage;
         private readonly IResponseFormatter responseFormatter;
 
-        public BasycInterfaceTypedBusClient(IMessageBusManager messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
+        public BasycInterfaceTypedBusClient(IMessageBusClient messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
         {
             MessageBusManager = messageBusManager;
             this.requestInfoTypeStorage = requestInfoTypeStorage;
             this.responseFormatter = responseFormatter;
         }
 
-        public IMessageBusManager MessageBusManager { get; }
+        public IMessageBusClient MessageBusManager { get; }
 
         public async Task<RequestResult> TrySendRequest(Request request)
         {

@@ -14,7 +14,7 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
         public MessageBusHttpProxyClientBuilder(IServiceCollection services)
         {
-            services.AddSingleton<IMessageBusManager, HttpProxyClientMessageBusManager>();
+            services.AddSingleton<IMessageBusClient, HttpProxyClientMessageBusClient>();
             this.services = services;
         }
 

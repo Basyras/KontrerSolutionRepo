@@ -10,9 +10,9 @@ namespace Kontrer.OwnerClient.Application.Customers
 {
     public class BusCustomerManager : ICustomerManager
     {
-        private readonly IMessageBusManager bus;
+        private readonly IMessageBusClient bus;
 
-        public BusCustomerManager(IMessageBusManager bus)
+        public BusCustomerManager(IMessageBusClient bus)
         {
             this.bus = bus;
         }

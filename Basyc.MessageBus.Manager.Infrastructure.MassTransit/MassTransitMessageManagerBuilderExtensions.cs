@@ -3,7 +3,7 @@ using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.MassTransit;
-using MassTransit;
+//using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

@@ -12,12 +12,12 @@ namespace Kontrer.OwnerClient.Application.Orders
 {
     public class BusOrderManager : IOrderManager
     {
-        private readonly IMessageBusManager bus;
+        private readonly IMessageBusClient bus;
         private List<OrderViewModel> ordersCache = new List<OrderViewModel>();
         private DateTime lastRefresh;
         private bool shouldRefresh;
 
-        public BusOrderManager(IMessageBusManager bus)
+        public BusOrderManager(IMessageBusClient bus)
         {
             this.bus = bus;
             shouldRefresh = true;
