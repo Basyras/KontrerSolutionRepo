@@ -1,8 +1,7 @@
 ﻿using Basyc.DependencyInjection;
-using Basyc.MessageBus;
+using Basyc.MessageBus.Client;
 using Basyc.MicroService.Abstraction.Initialization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -30,9 +29,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return this;
         }
 
-        public MessageBusBuilder AddMessageBus()
+        public MessageBusClientBuilder AddMessageBus()
         {
-            return services.AddMessageBus();
+            return services.AddMessageBusClient();
         }
     }
 }

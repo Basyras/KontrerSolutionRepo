@@ -1,5 +1,5 @@
-﻿using Basyc.MessageBus.HttpProxy.Shared;
-using Basyc.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.Client;
+using Basyc.MessageBus.HttpProxy.Shared;
 using Basyc.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -36,21 +36,21 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
                 request = Activator.CreateInstance(requestType);
             }
 
-            if (requestType.IsAssignableTo(typeof(IRequest)))
+            if (requestType.IsAssignableTo(typeof(IMessage)))
             {
                 await messageBus.SendAsync(requestType, request);
                 return;
             }
 
-            if (GenericsHelper.IsAssignableToGenericType(requestType, typeof(IRequest<>)))
+            if (GenericsHelper.IsAssignableToGenericType(requestType, typeof(IMessage<>)))
             {
-                var responseType = GenericsHelper.GetTypeArgumentsFromParent(requestType, typeof(IRequest<>))[0];
+                var responseType = GenericsHelper.GetTypeArgumentsFromParent(requestType, typeof(IMessage<>))[0];
                 var busResponse = await messageBus.RequestAsync(requestType, request, responseType);
                 await context.Response.WriteAsync(serializer.Serialize(busResponse, responseType));
                 return;
             }
 
-            throw new InvalidOperationException($"Request does not inherit from {nameof(IRequest)}");
+            throw new InvalidOperationException($"IMessage does not inherit from {nameof(IMessage)}");
         }
 
         private async Task<ProxyRequest> ParseProxyRequestFromHttp(HttpContext context)

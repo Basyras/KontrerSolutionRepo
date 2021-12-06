@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using ProtoBuf;
 
-namespace Basyc.MessageBus.InMemory;
+namespace Basyc.MessageBus.Client.NetMQ;
 
 [ProtoContract]
 public class ProtoBufCommandWrapper
 {
+    //Supressing warning since this ctor is only used for serializers
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     protected ProtoBufCommandWrapper()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
 
     }
@@ -19,11 +22,11 @@ public class ProtoBufCommandWrapper
     {
         CommandAssemblyQualifiedName = commandAssemblyQualifiedName;
         CommandBytes = commandBytes;
-        CommunicationId = communicationId;
+        SessionId = communicationId;
     }
 
     [ProtoMember(1)]
-    public int CommunicationId { get; set; }
+    public int SessionId { get; set; }
 
     [ProtoMember(2)]
     public string? CommandAssemblyQualifiedName { get; set; }

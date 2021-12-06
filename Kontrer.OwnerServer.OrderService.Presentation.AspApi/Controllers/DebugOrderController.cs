@@ -1,13 +1,13 @@
 ﻿using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
-using Basyc.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Basyc.MessageBus.Client;
 
 namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi.Controllers
 {

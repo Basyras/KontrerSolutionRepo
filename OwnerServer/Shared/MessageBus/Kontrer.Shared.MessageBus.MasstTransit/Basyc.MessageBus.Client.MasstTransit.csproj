@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Kontrer.Shared\Basyc.Shared.csproj" />
-    <ProjectReference Include="..\Kontrer.Shared.MessageBus\Basyc.MessageBus.csproj" />
+    <ProjectReference Include="..\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />
   </ItemGroup>
 
 </Project>

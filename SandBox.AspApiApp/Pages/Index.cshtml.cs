@@ -1,6 +1,5 @@
 ﻿using Kontrer.OwnerServer.IdGeneratorService.Domain;
 using Basyc.DomainDrivenDesign.Domain;
-using Basyc.MessageBus;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Basyc.MessageBus.Client;
 
 namespace SandBox.AspApiApp.Pages
 {

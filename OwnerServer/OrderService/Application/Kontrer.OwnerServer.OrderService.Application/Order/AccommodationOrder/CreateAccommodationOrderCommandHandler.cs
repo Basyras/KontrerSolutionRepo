@@ -1,5 +1,5 @@
 ﻿using Basyc.DomainDrivenDesign.Application;
-using Basyc.MessageBus;
+using Basyc.MessageBus.Client;
 using Kontrer.OwnerServer.OrderService.Application.Interfaces;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
 using Kontrer.OwnerServer.OrderService.Dtos.Models;

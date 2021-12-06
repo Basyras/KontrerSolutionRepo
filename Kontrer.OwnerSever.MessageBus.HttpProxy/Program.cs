@@ -1,12 +1,14 @@
+using Basyc.MessageBus.Client;
+using Basyc.MessageBus.Client.MasstTransit;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //builder.Services.AddRazorPages();
-builder.Services.AddMessageBus()
-    .AddMassTransitProvider(false);
+builder.Services.AddMessageBusClient()
+    .AddMassTransitProvider();
+
 builder.Services.AddMessageBusProxyServer()
 ;
 

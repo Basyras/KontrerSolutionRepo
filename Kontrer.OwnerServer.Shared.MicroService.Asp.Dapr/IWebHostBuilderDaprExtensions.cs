@@ -1,5 +1,5 @@
 ﻿using Basyc.Asp;
-using Basyc.MessageBus;
+using Basyc.MessageBus.Client;
 using Basyc.MicroService.Dapr.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

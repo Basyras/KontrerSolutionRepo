@@ -1,4 +1,4 @@
-﻿using Basyc.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.DomainDrivenDesign.Domain
 {
-    public interface IQuery<TResponse> : IRequest<TResponse> where TResponse : class
+    public interface IQuery<TResponse> : IMessage<TResponse> where TResponse : class
     {
     }
 }

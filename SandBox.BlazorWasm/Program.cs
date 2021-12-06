@@ -1,4 +1,5 @@
 using Basyc.MessageBus;
+using Basyc.MessageBus.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,7 @@ namespace SandBox.BlazorWasm
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddMessageBus()
+            builder.Services.AddMessageBusClient()
                 .AddProxyProvider()
                 .SetProxyServerUri(new Uri("https://localhost:44371/"));
 

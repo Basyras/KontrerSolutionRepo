@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus;
+using Basyc.MessageBus.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionMessageBusExtensions
     {
-        public static MessageBusBuilder AddMessageBus(this IServiceCollection services)
+        public static MessageBusClientBuilder AddMessageBusClient(this IServiceCollection services)
         {
-            return new MessageBusBuilder(services);
+            return new MessageBusClientBuilder(services);
         }
     }
 }

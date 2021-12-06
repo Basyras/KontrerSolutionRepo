@@ -1,12 +1,12 @@
 ﻿using Kontrer.OwnerClient.Application.Utilities.Cache;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Basyc.MessageBus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Basyc.MessageBus.Client;
 
 namespace Kontrer.OwnerClient.Application.Orders
 {

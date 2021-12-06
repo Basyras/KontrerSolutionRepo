@@ -10,7 +10,7 @@ namespace Basyc.Shared.Helpers
     {
         public static object GetDefaultValue(this Type type)
         {
-            if (type.IsValueType)
+            if (type.IsValueType && Nullable.GetUnderlyingType(type) == null)
             {
                 return Activator.CreateInstance(type);
             }

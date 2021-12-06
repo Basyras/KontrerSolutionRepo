@@ -14,9 +14,8 @@
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Abstraction\Basyc.MicroService.Abstraction.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Asp.Dapr\Basyc.MicroService.Asp.Dapr.csproj" />
     <ProjectReference Include="..\Kontrer.OwnerServer.Shared.MicroService.Dapr\Basyc.MicroService.Dapr.csproj" />
-    <ProjectReference Include="..\OwnerServer\MicroService\MessageBus\Kontrer.Shared.MessageBus.Asp\Basyc.MessageBus.Asp.csproj" />
-    <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus.MasstTransit\Basyc.MessageBus.MasstTransit.csproj" />
-    <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.csproj" />
+    <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus.MasstTransit\Basyc.MessageBus.Client.MasstTransit.csproj" />
+    <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />
   </ItemGroup>
 
 </Project>

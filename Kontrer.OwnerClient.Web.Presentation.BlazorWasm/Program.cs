@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Basyc.MessageBus.Client;
 
 namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
 {
@@ -25,7 +26,7 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddMudServices();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddMessageBus()
+            builder.Services.AddMessageBusClient()
                 .AddProxyProvider()
                 .SetProxyServerUri(new Uri("https://localhost:44371/"));
 

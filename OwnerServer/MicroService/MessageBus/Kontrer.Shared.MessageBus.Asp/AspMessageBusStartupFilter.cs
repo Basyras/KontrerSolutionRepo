@@ -1,5 +1,5 @@
 ﻿using Basyc.DomainDrivenDesign.Domain;
-using Basyc.MessageBus.RequestResponse;
+using Basyc.MessageBus.Client.RequestResponse;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

@@ -10,9 +10,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Kontrer.OwnerServer.OrderService.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Basyc.MicroService.Asp.Bootstrapper;
 using Basyc.Repositories.EF;
+using Basyc.MessageBus.Client.MasstTransit;
 
 namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
 {
@@ -23,7 +23,7 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                .RegisterBasycRequestHandlers<CreateAccommodationOrderCommandHandler>()
+                .RegisterMessageHandlers<CreateAccommodationOrderCommandHandler>()
                 .AddMassTransitProvider();
 
             builder

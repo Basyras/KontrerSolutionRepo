@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Server.Asp\Basyc.MessageBus.HttpProxy.Server.Asp.csproj" />
-    <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus.MasstTransit\Basyc.MessageBus.MasstTransit.csproj" />
+    <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus.MasstTransit\Basyc.MessageBus.Client.MasstTransit.csproj" />
   </ItemGroup>
 
 </Project>

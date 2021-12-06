@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace Basyc.MessageBus.MasstTransit
+namespace Basyc.MessageBus.Client.MasstTransit
 {
     public class MassTransitStartupFilter : IStartupFilter
     {

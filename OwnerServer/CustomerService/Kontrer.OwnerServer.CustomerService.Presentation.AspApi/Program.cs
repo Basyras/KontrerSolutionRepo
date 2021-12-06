@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Basyc.MicroService.Asp.Bootstrapper;
+using Basyc.MessageBus.Client.MasstTransit;
 
 namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
 {
@@ -27,7 +28,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                 .RegisterBasycRequestHandlers<CustomerServiceApplicationAssemblyMarker>()
+                 .RegisterMessageHandlers<CustomerServiceApplicationAssemblyMarker>()
                  .AddMassTransitProvider();
 
             new CustomerInfrastructureBuilder(builder.services)

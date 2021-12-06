@@ -1,12 +1,12 @@
 ﻿using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Kontrer.OwnerServer.OrderService.Domain.Orders.AccommodationOrder;
-using Basyc.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Basyc.MessageBus.Client;
 
 namespace SandBox.AspApiApp.Controllers
 {

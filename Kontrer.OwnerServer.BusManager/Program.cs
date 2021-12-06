@@ -6,8 +6,8 @@ using Kontrer.OwnerServer.OrderService.Domain;
 using Kontrer.OwnerServer.BusManager;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Basyc.MessageBus.Client;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -25,7 +25,7 @@ builder.Services.AddBlazorMessageBus()
     .AddInterfacedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
     .SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
-builder.Services.AddMessageBus()
+builder.Services.AddMessageBusClient()
     .AddProxyProvider()
     .SetProxyServerUri(new Uri("https://localhost:44310/"));
 

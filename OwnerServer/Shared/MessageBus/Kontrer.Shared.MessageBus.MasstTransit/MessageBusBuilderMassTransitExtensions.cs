@@ -1,6 +1,4 @@
-﻿using Basyc.MessageBus;
-using Basyc.MessageBus.MasstTransit;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -11,14 +9,14 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Basyc.MessageBus.Client.MasstTransit
 {
     public static class MessageBusBuilderMassTransitExtensions
     {
         /// <summary>
         /// Takes registered Basyc IRequestHandlers and wrap them with MassTransit IConsumers, Hosted by RabbitMQ
         /// </summary>
-        public static MessageBusBuilder AddMassTransitProvider(this MessageBusBuilder builder, bool scanForHandlers = true)
+        public static MessageBusClientBuilder AddMassTransitProvider(this MessageBusClientBuilder builder)
         {
             var services = builder.services;
             services.AddSingleton<IMessageBusClient, MassTransitMessageBusClient>();
@@ -26,10 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddHealthChecks();
             services.AddMassTransit(x =>
             {
-                if (scanForHandlers)
-                {
-                    x.WrapRequestHandlersAsConsumers();
-                }
+                x.RegisterBasycHandlersAsMassTransitConsumers();
                 x.UsingRabbitMq((transitContext, rabbitConfig) =>
                 {
                     rabbitConfig.ConfigureEndpoints(transitContext);
@@ -38,5 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMassTransitHostedService();
             return builder;
         }
+
+
     }
 }

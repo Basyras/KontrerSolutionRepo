@@ -1,9 +1,9 @@
+using Basyc.MessageBus.Client.MasstTransit;
 using Basyc.MicroService.Asp.Bootstrapper;
 using Kontrer.OwnerServer.IdGeneratorService.Application;
 using Kontrer.OwnerServer.IdGeneratorService.Infrastructure.EntityFramework;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,7 +20,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                .AddMassTransitProvider(true);
+                .AddMassTransitProvider();
 
             await builder.Back()
                  .Build()

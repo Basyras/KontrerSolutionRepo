@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
+using Basyc.Shared.Helpers;
 using ProtoBuf;
 
-namespace Basyc.MessageBus.InMemory;
+namespace Basyc.MessageBus.Client.NetMQ;
 
-public static class BinarySerializer
+public static class ProtoBufMessageSerializer
 {
-    static BinarySerializer()
+    static ProtoBufMessageSerializer()
     {
         Serializer.PrepareSerializer<ProtoBufCommandWrapper>();
         //Serializer.PrepareSerializer<CloseCommand>();
@@ -43,13 +44,13 @@ public static class BinarySerializer
         return Serializer.Deserialize<T>(stream);
     }
 
-    public static object? Deserialize(byte[] bytes, Type commandType)
+    public static object Deserialize(byte[] bytes, Type commandType)
     {
         if (bytes == null)
             return commandType.GetDefaultValue();
 
         if (bytes.Length == 0)
-            return Activator.CreateInstance(commandType);
+            return Activator.CreateInstance(commandType)!;
 
         using var stream = new MemoryStream();
 
@@ -59,14 +60,5 @@ public static class BinarySerializer
         //var instance = Activator.CreateInstance(commandType);
         var result = Serializer.Deserialize(commandType, stream);
         return result;
-    }
-
-
-    private static object? GetDefaultValue(this Type t)
-    {
-        if (t.IsValueType && Nullable.GetUnderlyingType(t) == null)
-            return Activator.CreateInstance(t);
-        else
-            return null;
     }
 }

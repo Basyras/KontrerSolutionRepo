@@ -1,7 +1,7 @@
+using Basyc.MessageBus.Client.MasstTransit;
 using Basyc.MicroService.Asp.Bootstrapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,7 +19,7 @@ namespace SandBox.AspApiApp
             //CreateHostBuilder(args).Build().Run();
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
             builder.AddMessageBus()
-                     .AddMassTransitProvider(false);
+                     .AddMassTransitProvider();
 
             builder.Back().Build().Run();
         }

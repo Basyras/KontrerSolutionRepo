@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
 
-namespace Basyc.MessageBus.MasstTransit
+namespace Basyc.MessageBus.Client.MasstTransit
 {
     public class MassTransitMessageBusClient : IMessageBusClient
     {

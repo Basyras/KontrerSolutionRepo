@@ -2,43 +2,66 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Basyc.MessageBus.Client.RequestResponse;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NetMQ;
 using NetMQ.Sockets;
 
-namespace Basyc.MessageBus.InMemory;
+namespace Basyc.MessageBus.Client.NetMQ;
 
 public class NetMQMessageBusClient : IMessageBusClient, IDisposable
-{    
+{
+    private readonly IServiceProvider serviceProvider;
+    private readonly IOptions<NetMQMessageBusClientOptions> options;
     private readonly ILogger<NetMQMessageBusClient> logger;
     private readonly PublisherSocket publisherSocker;
-    private readonly SubscriberSocket subscriberSocket;
+    private readonly SubscriberSocket? subscriberSocket;
     private Dictionary<int, Session> sessions = new Dictionary<int, Session>();
     private int lastUsedSessionId = 1;
 
-    public NetMQMessageBusClient(ILogger<NetMQMessageBusClient> logger)
-    {       
+    public NetMQMessageBusClient(IServiceProvider serviceProvider, IOptions<NetMQMessageBusClientOptions> options, ILogger<NetMQMessageBusClient> logger)
+    {
+        this.serviceProvider = serviceProvider;
+        this.options = options;
         this.logger = logger;
         publisherSocker = new PublisherSocket("tcp://localhost:5555");
-        subscriberSocket = new SubscriberSocket("tcp://localhost:5555");
-        subscriberSocket.SubscribeToAnyTopic();
 
-        Task.Run(() =>
+        if (options.Value.IsConsumerOfMessages)
         {
-            while (true)
+            subscriberSocket = new SubscriberSocket("tcp://localhost:5555");
+            subscriberSocket.SubscribeToAnyTopic();
+            Task.Run(() =>
             {
-                HandleResponse();                
-            }
-        });
+                while (true)
+                {
+                    HandleResponse();
+                }
+            });
+        }
     }
 
     private void HandleResponse()
     {
-        byte[] messageBytes = publisherSocker.ReceiveFrameBytes();
-        (int sessionId, object? message) = MessageSerializer.DeserializeMessage(messageBytes);
-        sessions[sessionId].responseSource.SetResult(message);
+        string topic = subscriberSocket!.ReceiveFrameString();
+        byte[] messageBytes = subscriberSocket!.ReceiveFrameBytes();
+        DeserializedMessageResult deserializedMessageResult = MessageSerializer.DeserializeMessage(messageBytes);
+        MessageHandlerInfo handlerInfo = options.Value.Handlers.First(x => x.MessageType == deserializedMessageResult.MessageType);
+        object handlerInstace = serviceProvider.GetRequiredService(handlerInfo.HandlerType)!;
+        object? handlerResult = handlerInfo.HandleMethod.Invoke(handlerInstace, new object[] { deserializedMessageResult.Message });
+        if (deserializedMessageResult.ExpectsResponse)
+        {            
+            sessions[deserializedMessageResult.SessionId].responseSource.SetResult(handlerResult!);
+        }
+        else
+        {
+            sessions[deserializedMessageResult.SessionId].responseSource.SetResult(null);
+        }
+
     }
 
     Task IMessageBusClient.PublishAsync<TEvent>(CancellationToken cancellationToken)
@@ -51,7 +74,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         return PublishAsync(data, cancellationToken);
     }
 
-    private Task PublishAsync<TEvent>(TEvent? eventMessage, CancellationToken cancellationToken)
+    private Task PublishAsync<TEvent>(TEvent? eventMessage, CancellationToken cancellationToken) where TEvent : IEventMessage
     {
         if (cancellationToken.IsCancellationRequested)
             return Task.CompletedTask;
@@ -165,7 +188,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
 
     async Task<TResponse> IMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
     {
-        return (TResponse) (await Request(null, typeof(TRequest), typeof(TResponse), cancellationToken))!;
+        return (TResponse)(await Request(null, typeof(TRequest), typeof(TResponse), cancellationToken))!;
     }
 
     Task<object> IMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
@@ -180,7 +203,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
 
     async Task<TResponse> IMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
     {
-        return (TResponse) (await Request(request,typeof(TRequest),typeof(TResponse), cancellationToken))!;
+        return (TResponse)(await Request(request, typeof(TRequest), typeof(TResponse), cancellationToken))!;
     }
 
 
@@ -188,7 +211,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
     public void Dispose()
     {
         publisherSocker.Dispose();
-        subscriberSocket.Dispose();
+        subscriberSocket?.Dispose();
     }
     private record Session(int CommunicationId, Type ResponseType, TaskCompletionSource<object?> responseSource);
 

@@ -1,4 +1,4 @@
-﻿using Basyc.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.Shared.Helpers;
 using MassTransit;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
@@ -9,43 +9,33 @@ using System.Reflection;
 #warning should add answer with my approach
 
 //https://stackoverflow.com/questions/52805079/how-to-register-a-generic-consumer-adapter-in-masstransit-if-i-have-a-list-of-me
-namespace Basyc.MessageBus.MasstTransit
+namespace Basyc.MessageBus.Client.MasstTransit
 {
     public static class MassTransitConfiguratorExtensions
     {
-        private static readonly Type[] requestHandlerInterfacesTypes;
-
-        static MassTransitConfiguratorExtensions()
+        public static void RegisterBasycHandlersAsMassTransitConsumers(this IServiceCollectionBusConfigurator busConfigurator)
         {
-            requestHandlerInterfacesTypes = new Type[] { typeof(IRequestHandler<>), typeof(IRequestHandler<,>) };
-        }
+            var messageHandlerTypes = busConfigurator.Collection
+             .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, typeof(IMessageHandler<>)));
 
-        public static void WrapRequestHandlersAsConsumers(this IServiceCollectionBusConfigurator busConfigurator)
-        {
-            var commandHandlers = busConfigurator.Collection
-                .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, requestHandlerInterfacesTypes[0]))
-                .Select(service => new
-                {
-                    RequestType = GenericsHelper.GetTypeArgumentsFromParent(service.ImplementationType, requestHandlerInterfacesTypes[0])[0]
-                }).ToArray(); //ToArray because configurator.AddConsumer() is modifying services collection
-
-            foreach (var commandHandler in commandHandlers)
+            foreach (var messageHandlerService in messageHandlerTypes)
             {
-                Type proxyConsumerType = typeof(MassTransitBasycConsumerProxy<>).MakeGenericType(commandHandler.RequestType);
+                Type handlerType = messageHandlerService.ImplementationType!;
+                Type messageType = GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<,>))[0];
+                Type proxyConsumerType = typeof(MassTransitBasycConsumerProxy<>).MakeGenericType(messageType);
                 busConfigurator.AddConsumer(proxyConsumerType);
             }
 
-            var queryHandlers = busConfigurator.Collection
-                .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, requestHandlerInterfacesTypes[1]))
-                .Select(service => new
-                {
-                    RequestType = GenericsHelper.GetTypeArgumentsFromParent(service.ImplementationType, requestHandlerInterfacesTypes[1])[0],
-                    ResponseType = GenericsHelper.GetTypeArgumentsFromParent(service.ImplementationType, requestHandlerInterfacesTypes[1])[1]
-                }).ToArray(); //ToArray because configurator.AddConsumer() is modifying services collection
+            var messagesWithResponse = busConfigurator.Collection
+                .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, typeof(IMessageHandler<,>)));
 
-            foreach (var queryHandler in queryHandlers)
+            foreach (var messageHandlerServiceWithResponse in messagesWithResponse)
             {
-                Type proxyConsumerType = typeof(MassTransitBasycConsumerProxy<,>).MakeGenericType(queryHandler.RequestType, queryHandler.ResponseType);
+                Type handlerType = messageHandlerServiceWithResponse.ImplementationType!;
+                Type[] typeArguments = GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<,>));
+                Type messageType = typeArguments[0];
+                Type responseType = typeArguments[1];
+                Type proxyConsumerType = typeof(MassTransitBasycConsumerProxy<,>).MakeGenericType(messageType, responseType);
                 busConfigurator.AddConsumer(proxyConsumerType);
             }
         }

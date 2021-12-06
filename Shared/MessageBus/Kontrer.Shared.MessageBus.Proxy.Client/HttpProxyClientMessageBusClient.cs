@@ -1,4 +1,5 @@
-﻿using Basyc.MessageBus.HttpProxy.Shared;
+﻿using Basyc.MessageBus.Client;
+using Basyc.MessageBus.HttpProxy.Shared;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;

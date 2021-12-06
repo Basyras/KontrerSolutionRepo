@@ -1,4 +1,5 @@
-﻿using Basyc.MessageBus.Manager.Application;
+﻿using Basyc.MessageBus.Client;
+using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Infrastructure.Formatters;
 using System;
 using System.Collections.Generic;

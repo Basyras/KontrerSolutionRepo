@@ -1,4 +1,5 @@
-using Basyc.MessageBus.RequestResponse;
+using Basyc.MessageBus.Client;
+using Basyc.MessageBus.Client.NetMQ;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading.Tasks;
@@ -25,6 +26,6 @@ namespace Basyc.MessageBus.InMemory.Tests
         }
     }
 
-    public record TestRequest : IRequest<Customer>;
+    public record TestRequest : IMessage<Customer>;
     public record Customer;
 }

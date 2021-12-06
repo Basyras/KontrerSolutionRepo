@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Basyc.MessageBus;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System;
@@ -11,7 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 using Basyc.MessageBus.HttpProxy.Shared;
-using Basyc.MessageBus.RequestResponse;
+using Basyc.MessageBus.Client;
 
 namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
 {
@@ -53,5 +52,5 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
         }
     }
 
-    public record DummyRequest : IRequest;
+    public record DummyRequest : IMessage;
 }

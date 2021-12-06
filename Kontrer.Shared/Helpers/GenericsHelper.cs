@@ -8,50 +8,58 @@ namespace Basyc.Shared.Helpers
 {
     public static class GenericsHelper
     {
-        public static bool IsAssignableToGenericType(Type givenType, Type genericType)
+        public static bool IsAssignableToGenericType(Type childType, Type parentType)
         {
-            var interfaceTypes = givenType.GetInterfaces();
+            var interfaceTypes = childType.GetInterfaces();
 
             foreach (var it in interfaceTypes)
             {
-                if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
+                if (it.IsGenericType && it.GetGenericTypeDefinition() == parentType)
                     return true;
             }
 
-            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+            if (childType.IsGenericType && childType.GetGenericTypeDefinition() == parentType)
                 return true;
 
-            Type baseType = givenType.BaseType;
+            Type baseType = childType.BaseType;
             if (baseType == null)
                 return false;
 
-            return IsAssignableToGenericType(baseType, genericType);
+            return IsAssignableToGenericType(baseType, parentType);
+        }
+
+        public static bool IsAssignableToGenericType<TChildType>(Type parentType)
+        {
+            var childType = typeof(TChildType);
+            return IsAssignableToGenericType(childType, parentType);
+
+
         }
 
         /// <summary>
         /// Get generic argument from base class
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="baseType">parent type that should contain generic parameters</param>
+        /// <param name="childType"></param>
+        /// <param name="parentType">parent type that should contain generic parameters</param>
         /// <returns></returns>
 
-        public static Type[] GetTypeArgumentsFromParent(Type type, Type baseType)
+        public static Type[] GetTypeArgumentsFromParent(Type childType, Type parentType)
         {
-            if (baseType.IsInterface)
+            if (parentType.IsInterface)
             {
-                var baseInterface = type.GetInterface(baseType.Name);
+                var baseInterface = childType.GetInterface(parentType.Name);
                 return baseInterface.GetGenericArguments();
             }
 
-            while (type.BaseType != null)
+            while (childType.BaseType != null)
             {
-                type = type.BaseType;
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == baseType)
+                childType = childType.BaseType;
+                if (childType.IsGenericType && childType.GetGenericTypeDefinition() == parentType)
                 {
-                    return type.GetGenericArguments();
+                    return childType.GetGenericArguments();
                 }
             }
-            if (type != typeof(object))
+            if (childType != typeof(object))
             {
                 throw new InvalidOperationException("Class does not have specified base class");
             }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ProtoBuf;
 
-namespace Basyc.MessageBus.InMemory;
+namespace Basyc.MessageBus.Client.NetMQ;
 
 [ProtoContract]
 public class ProtoRequest

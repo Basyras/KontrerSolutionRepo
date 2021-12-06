@@ -18,6 +18,6 @@
 		<ProjectReference Include="..\Basyc.DependencyInjection\Basyc.DependencyInjection.csproj" />
 		<ProjectReference Include="..\Kontrer.Shared\Basyc.Shared.csproj" />
 		<ProjectReference Include="..\OwnerServer\Shared\Kontrer.OwnerServer.Shared.Asp\Basyc.Asp.csproj" />
-		<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.csproj" />
+		<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />
 	</ItemGroup>
 </Project>

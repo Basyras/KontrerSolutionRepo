@@ -1,4 +1,4 @@
-﻿using Basyc.MessageBus;
+﻿using Basyc.MessageBus.Client;
 using Dapr;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

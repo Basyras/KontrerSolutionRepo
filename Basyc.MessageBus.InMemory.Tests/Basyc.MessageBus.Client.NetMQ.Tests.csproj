@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Basyc.MessageBus.InMemory\Basyc.MessageBus.InMemory.csproj" />
+    <ProjectReference Include="..\Basyc.MessageBus.InMemory\Basyc.MessageBus.Client.NetMQ.csproj" />
     <ProjectReference Include="..\Kontrer.Shared.Tests\Basyc.Shared.Tests.csproj" />
   </ItemGroup>
 
