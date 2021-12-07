@@ -9,17 +9,17 @@ namespace Basyc.MessageBus.Client.NetMQ
 {
     public static class MessageSerializer
     {
-        public static byte[] SerializeCommand<TMessage>(TMessage message, int sessionId) where TMessage : notnull
+        public static byte[] SerializeCommand<TMessage>(TMessage message, int sessionId, bool isResponse = false) where TMessage : notnull
         {
             var serializedRequest = ProtoBufMessageSerializer.Serialize(message);
-            var commandWrapper = new ProtoBufCommandWrapper(message.GetType().AssemblyQualifiedName!, serializedRequest, sessionId);
+            var commandWrapper = new ProtoBufCommandWrapper(message.GetType().AssemblyQualifiedName!, serializedRequest, sessionId, isResponse);
             var serializedWrapper = ProtoBufMessageSerializer.Serialize(commandWrapper);
             return serializedWrapper;
         }
 
-        public static byte[] SerializeCommand<TMessage>(int sessionId)
+        public static byte[] SerializeCommand<TMessage>(int sessionId,bool isResponse)
         {
-            var commandWrapper = new ProtoBufCommandWrapper(typeof(TMessage).AssemblyQualifiedName!, new byte[0], sessionId);
+            var commandWrapper = new ProtoBufCommandWrapper(typeof(TMessage).AssemblyQualifiedName!, new byte[0], sessionId, isResponse);
             var serializedWrapper = ProtoBufMessageSerializer.Serialize(commandWrapper);
             return serializedWrapper;
         }
@@ -31,7 +31,9 @@ namespace Basyc.MessageBus.Client.NetMQ
 
             Type messageType = Type.GetType(messageWrapper.CommandAssemblyQualifiedName!)!;
             object message = ProtoBufMessageSerializer.Deserialize(messageWrapper.CommandBytes, messageType);
-            bool expectsResponse;
+            bool expectsResponse = false;
+            Type? responseType = null;
+            bool isResponse = false;
             if(message is IMessage)
             {
                 expectsResponse = false;
@@ -41,13 +43,16 @@ namespace Basyc.MessageBus.Client.NetMQ
                 if (GenericsHelper.IsAssignableToGenericType(messageType, typeof(IMessage<>)))
                 {
                     expectsResponse = true;
+                    responseType = GenericsHelper.GetTypeArgumentsFromParent(messageType, typeof(IMessage<>))[0];
                 }
                 else
                 {
-                    throw new Exception("message type not recognized");
+                    isResponse = true;
+                    //throw new Exception("message type not recognized");
+
                 }
             }
-            return new DeserializedMessageResult(messageWrapper.SessionId, expectsResponse, message, messageType);
+            return new DeserializedMessageResult(messageWrapper.SessionId, isResponse, expectsResponse, message, messageType, responseType);
         }
     }
 }

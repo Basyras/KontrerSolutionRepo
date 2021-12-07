@@ -6,5 +6,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client.NetMQ
 {
-    public record DeserializedMessageResult(int SessionId, bool IsResponse, bool ExpectsResponse, object Message, Type MessageType, Type? ResponseType);
+    public class VoidResult
+    {
+    }
 }

@@ -222,9 +222,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Masstransit", "Masstransit"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetMQ", "NetMQ", "{1271B6F0-F69B-4F6D-BB4A-D5DF26BBB7A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.Broker.NetMQ", "Basyc.MessageBus.Broker.NetMQ\Basyc.MessageBus.Broker.NetMQ.csproj", "{B4454A81-9703-49B5-867D-CFBD2515E967}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Broker.NetMQ", "Basyc.MessageBus.Broker.NetMQ\Basyc.MessageBus.Broker.NetMQ.csproj", "{B4454A81-9703-49B5-867D-CFBD2515E967}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.Broker", "Basyc.MessageBus.Broker\Basyc.MessageBus.Broker.csproj", "{C66FBAF7-D7E2-422F-BA70-C15EEF308594}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Broker", "Basyc.MessageBus.Broker\Basyc.MessageBus.Broker.csproj", "{C66FBAF7-D7E2-422F-BA70-C15EEF308594}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandBox.ConsoleApp", "SandBox.ConsoleApp\SandBox.ConsoleApp.csproj", "{D8000B4A-588C-482C-B4EF-DC3C585007C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -532,6 +534,10 @@ Global
 		{C66FBAF7-D7E2-422F-BA70-C15EEF308594}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C66FBAF7-D7E2-422F-BA70-C15EEF308594}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C66FBAF7-D7E2-422F-BA70-C15EEF308594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8000B4A-588C-482C-B4EF-DC3C585007C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8000B4A-588C-482C-B4EF-DC3C585007C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8000B4A-588C-482C-B4EF-DC3C585007C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8000B4A-588C-482C-B4EF-DC3C585007C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -643,6 +649,7 @@ Global
 		{1271B6F0-F69B-4F6D-BB4A-D5DF26BBB7A2} = {E264017C-961C-4734-9367-A090858A5C3B}
 		{B4454A81-9703-49B5-867D-CFBD2515E967} = {1271B6F0-F69B-4F6D-BB4A-D5DF26BBB7A2}
 		{C66FBAF7-D7E2-422F-BA70-C15EEF308594} = {042C92C8-B6C6-4602-8762-0B7A4D75CF8A}
+		{D8000B4A-588C-482C-B4EF-DC3C585007C7} = {4F31B45E-F786-4BC6-9F17-B2ED65239D24}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

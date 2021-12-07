@@ -21,7 +21,7 @@ namespace Basyc.MessageBus.Client.MasstTransit
             foreach (var messageHandlerService in messageHandlerTypes)
             {
                 Type handlerType = messageHandlerService.ImplementationType!;
-                Type messageType = GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<,>))[0];
+                Type messageType = GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<>))[0];
                 Type proxyConsumerType = typeof(MassTransitBasycConsumerProxy<>).MakeGenericType(messageType);
                 busConfigurator.AddConsumer(proxyConsumerType);
             }

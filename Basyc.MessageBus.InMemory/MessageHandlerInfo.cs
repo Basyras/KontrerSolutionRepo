@@ -13,7 +13,7 @@ namespace Basyc.MessageBus.Client.NetMQ
         {
             HandlerType = handlerType;
             MessageType = messageType;
-            HandleMethod = handleMethod;
+            HandleMethodInfo = handleMethod;
         }
 
         public MessageHandlerInfo(Type handlerType, Type messageType, Type responseType, MethodInfo handleMethod)
@@ -21,13 +21,13 @@ namespace Basyc.MessageBus.Client.NetMQ
             HandlerType = handlerType;
             MessageType = messageType;
             ResponseType = responseType;
-            HandleMethod = handleMethod;
+            HandleMethodInfo = handleMethod;
         }
 
         public Type MessageType { get; }
         public Type? ResponseType { get; }
         public bool HasResponse => ResponseType is not null;
-        public MethodInfo HandleMethod { get; }
+        public MethodInfo HandleMethodInfo { get; }
         public Type HandlerType { get; }
     }
 }

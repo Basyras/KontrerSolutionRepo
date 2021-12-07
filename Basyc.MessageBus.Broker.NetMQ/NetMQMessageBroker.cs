@@ -17,8 +17,8 @@ public class NetMQMessageBroker : IMessageBroker
     {
         this.options = options;
         this.logger = logger;
-        publisherSocker = new XPublisherSocket($"tcp://localhost:{options.Value.PortForSubscribers}");
-        subscriberSocket = new XSubscriberSocket($"tcp://localhost:{options.Value.PortForPublishers}");
+        publisherSocker = new XPublisherSocket($"@tcp://127.0.0.1:{options.Value.PortForSubscribers}");
+        subscriberSocket = new XSubscriberSocket($"@tcp://127.0.0.1:{options.Value.PortForPublishers}");
 
     }
 

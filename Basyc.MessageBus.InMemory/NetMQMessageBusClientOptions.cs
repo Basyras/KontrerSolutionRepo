@@ -14,5 +14,7 @@ namespace Basyc.MessageBus.Client.NetMQ
         /// Have and can use register handlers to handle messages, if yes, socket for listening is initialized;
         /// </summary>
         public bool IsConsumerOfMessages { get => Handlers.Count > 0; }
+        public int PortForPublishers { get; set; }
+        public int PortForSubscribers { get; set; }
     }
 }

@@ -18,18 +18,22 @@ public class ProtoBufCommandWrapper
 
     }
 
-    public ProtoBufCommandWrapper(string commandAssemblyQualifiedName, byte[] commandBytes, int communicationId)
+    public ProtoBufCommandWrapper(string commandAssemblyQualifiedName, byte[] commandBytes, int communicationId, bool isResponse)
     {
         CommandAssemblyQualifiedName = commandAssemblyQualifiedName;
         CommandBytes = commandBytes;
         SessionId = communicationId;
+        IsResponse = isResponse;
     }
 
     [ProtoMember(1)]
     public int SessionId { get; set; }
-
     [ProtoMember(2)]
-    public string? CommandAssemblyQualifiedName { get; set; }
+    public bool IsResponse { get; set; }
+
     [ProtoMember(3)]
+    public string? CommandAssemblyQualifiedName { get; set; }
+
+    [ProtoMember(4)]
     public byte[] CommandBytes { get; set; }
 }
