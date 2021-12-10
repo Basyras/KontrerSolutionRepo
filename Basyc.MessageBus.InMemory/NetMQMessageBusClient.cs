@@ -19,7 +19,8 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
     private readonly IServiceProvider serviceProvider;
     private readonly IOptions<NetMQMessageBusClientOptions> options;
     private readonly ILogger<NetMQMessageBusClient> logger;
-    private readonly PublisherSocket publisherSocker;
+    private readonly NetMQPoller poller = new NetMQPoller();
+    private readonly PublisherSocket publisherSocket;
     private SubscriberSocket? subscriberSocket;
     private Dictionary<int, Session> sessions = new Dictionary<int, Session>();
     private int lastUsedSessionId = 1;
@@ -29,48 +30,42 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         this.serviceProvider = serviceProvider;
         this.options = options;
         this.logger = logger;
-        publisherSocker = new PublisherSocket($">tcp://127.0.0.1:{options.Value.PortForPublishers}");
+        publisherSocket = new PublisherSocket($">tcp://127.0.0.1:{options.Value.PortForPublishers}");
 
         if (options.Value.IsConsumerOfMessages)
         {
-            Task.Run(async () =>
+            subscriberSocket = new SubscriberSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
+            subscriberSocket.SubscribeToAnyTopic();
+            subscriberSocket.ReceiveReady += async (s, a) =>
             {
-                subscriberSocket = new SubscriberSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
-                subscriberSocket.SubscribeToAnyTopic();
-                while (true)
-                {
-                    try
-                    {
-                        await HandleResponse();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                }
-            });
+                await WaitAndHandleNextMessage();
+            };
+            poller.Add(subscriberSocket);
+            //Task.Run(async () =>
+            //{
+            //    while (true)
+            //    {
+            //        try
+            //        {
+            //            await WaitAndHandleNextMessage();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            throw ex;
+            //        }
+            //    }
+            //});
         }
+        poller.Add(publisherSocket);
+       
+    }    
 
-        //Task.Run(async () =>
-        //{
-        //    subscriberSocket = new SubscriberSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
-        //    subscriberSocket.Subscribe("TEST");
-        //    while (true)
-        //    {
-        //        try
-        //        {
-        //             //sessions[deserializedMessageResult.SessionId].responseSource.SetResult(taskResult);
-        //             //sessions[deserializedMessageResult.SessionId].responseSource.SetResult(null);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            throw ex;
-        //        }
-        //    }
-        //});
+    public void StartAsync()
+    {
+        poller.RunAsync("asdasdasd",true);
     }
 
-    private async Task HandleResponse()
+    private async Task WaitAndHandleNextMessage()
     {
         logger.LogInformation($"Waiting for message");
         string topic = subscriberSocket!.ReceiveFrameString();
@@ -147,27 +142,49 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (eventMessage is null)
             eventMessage = Activator.CreateInstance(eventType);
 
-        logger.LogInformation($"Publishing {eventType} event");
+   
+
+        //Task task = new Task(() =>
+        //{
+        //    if (cancellationToken.IsCancellationRequested)
+        //        return;
+
+        //    byte[] serializedEvent = MessageSerializer.SerializeCommand(eventMessage!, sessionId, isResponse)!;
+        //    publisherSocket.SendMoreFrame(eventType.FullName!).SendFrame(serializedEvent);
+        //});
+
+        //Task task = Task.Run(() =>
+        //{
+        //    if (cancellationToken.IsCancellationRequested)
+        //        return;
+
+        //    byte[] serializedEvent = MessageSerializer.SerializeCommand(eventMessage!, sessionId, isResponse)!;
+        //    publisherSocker.SendMoreFrame(eventType.FullName!).SendFrame(serializedEvent);
+        //});
         var task = Task.Run(() =>
         {
+            logger.LogInformation($"Publishing {eventType} event");
+
             if (cancellationToken.IsCancellationRequested)
                 return;
 
             byte[] serializedEvent = MessageSerializer.SerializeCommand(eventMessage!, sessionId, isResponse)!;
-            publisherSocker.SendMoreFrame(eventType.FullName!).SendFrame(serializedEvent);
+            publisherSocket.SendMoreFrame(eventType.FullName!).SendFrame(serializedEvent);
+            logger.LogInformation($"Published {eventType} event");
         });
 
         using var runtime = new NetMQRuntime();
         if (cancellationToken.IsCancellationRequested)
             return Task.CompletedTask;
 
-        runtime.Run(task);
+        //runtime.Run(task);
 
         if (task.Exception is not null)
             throw task.Exception;
 
-        logger.LogInformation($"Published {eventType} event");
-        return Task.CompletedTask;
+        
+        //return Task.CompletedTask;
+        return task;
     }
 
     private Task Send(object? command, Type commandType, CancellationToken cancellationToken)
@@ -179,30 +196,35 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (command is null)
             command = Activator.CreateInstance(commandType);
 
-        logger.LogInformation($"Sending {commandType} request");
+     
         var task = Task.Run(() =>
         {
+            logger.LogInformation($"Sending {commandType} request");
+
             if (cancellationToken.IsCancellationRequested)
                 return;
 
             var data = MessageSerializer.SerializeCommand(command!, newSessionId);
-            publisherSocker.SendMoreFrame(commandType.FullName!).SendFrame(data);
+            publisherSocket.SendMoreFrame(commandType.FullName!).SendFrame(data);
+            TaskCompletionSource<object?> responseSource = new TaskCompletionSource<object?>();
+            sessions.Add(newSessionId, new Session(newSessionId, null, responseSource));
+
+            logger.LogInformation($"Sent {commandType} request");
         });
 
         if (cancellationToken.IsCancellationRequested)
             return Task.CompletedTask;
 
-        TaskCompletionSource<object?> responseSource = new TaskCompletionSource<object?>();
-        sessions.Add(newSessionId, new Session(newSessionId, null, responseSource));
+    
 
-        using var runtime = new NetMQRuntime();
-        runtime.Run(task);
+        //using var runtime = new NetMQRuntime();
+        //runtime.Run(task);
 
         if (task.Exception is not null)
             throw task.Exception;
 
-        logger.LogInformation($"Sent {commandType} request");
-        return responseSource.Task;
+      
+        return task;
     }
 
     private Task<object?> Request(object? request, Type requestType, Type responseType, CancellationToken cancellationToken)
@@ -213,19 +235,23 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (request is null)
             request = Activator.CreateInstance(requestType);
 
-        logger.LogInformation($"Sending {requestType} request");
-        Task task = Task.Run(() =>
+        
+        Task<object?> task = Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
-            publisherSocker.SendMoreFrame("*").SendFrame(MessageSerializer.SerializeCommand(request!, newSessionId));
+            logger.LogInformation($"Sending {requestType} request");
+            publisherSocket.SendMoreFrame("*").SendFrame(MessageSerializer.SerializeCommand(request!, newSessionId));
+            logger.LogInformation($"Send finished {requestType} request");
+            TaskCompletionSource<object?> responseSource = new TaskCompletionSource<object?>();
+            sessions.Add(newSessionId, new Session(newSessionId, responseType, responseSource));
+            return responseSource.Task;
         });
 
-        using NetMQRuntime runtime = new NetMQRuntime();
         cancellationToken.ThrowIfCancellationRequested();
-        TaskCompletionSource<object?> responseSource = new TaskCompletionSource<object?>();
-        sessions.Add(newSessionId, new Session(newSessionId, responseType, responseSource));
+      
 
-        runtime.Run(task);
+        //using NetMQRuntime runtime = new NetMQRuntime();
+        //runtime.Run(task);
 
         if (task.Exception is not null)
             throw task.Exception;
@@ -234,8 +260,9 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
 
 
 
-        logger.LogInformation($"Send finished {requestType} request");
-        return responseSource.Task;
+
+       
+        return task;
     }
 
     Task IMessageBusClient.SendAsync<TCommand>(CancellationToken cancellationToken)
@@ -282,8 +309,9 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
 
     public void Dispose()
     {
-        publisherSocker.Dispose();
+        publisherSocket.Dispose();
         subscriberSocket?.Dispose();
+        poller.Dispose();
     }
     private record Session(int SessionId, Type? ResponseType, TaskCompletionSource<object?> responseSource);
 

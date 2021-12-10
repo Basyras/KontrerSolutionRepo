@@ -25,7 +25,13 @@ public class NetMQMessageBroker : IMessageBroker
     public void Start()
     {
         Proxy proxy = new Proxy(subscriberSocket, publisherSocker);
-        proxy.Start();
+        proxy.Start();        
+    }
+    public Task StartASync()
+    {
+        Proxy proxy = new Proxy(subscriberSocket, publisherSocker);
+        return Task.Run(() => proxy.Start());
+        
     }
 
     public void Dispose()

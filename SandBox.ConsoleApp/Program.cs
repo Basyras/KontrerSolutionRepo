@@ -15,45 +15,38 @@ int portForSub = 8987;
 int portForPub = 8988;
 
 
+var broker = new NetMQMessageBroker(Options.Create(new NetMQMessageBrokerOptions() { PortForPublishers = portForPub, PortForSubscribers = portForSub }), NullLoggerFactory.Instance.CreateLogger<NetMQMessageBroker>());
+Task brokerTask = broker.StartASync();
+IServiceCollection clientServices = new ServiceCollection();
 
-Task brokerTask = Task.Run(() =>
+clientServices.AddLogging(x =>
 {
-    var broker = new NetMQMessageBroker(Options.Create(new NetMQMessageBrokerOptions() { PortForPublishers = portForPub, PortForSubscribers = portForSub }), NullLoggerFactory.Instance.CreateLogger<NetMQMessageBroker>());
-    broker.Start();
+    x.AddDebug();
+    x.AddConsole();
 });
 
-Task clientTask = Task.Run(async () =>
+clientServices
+    .AddMessageBusClient()
+    .RegisterMessageHandlers<Program>()
+    .AddNetMQProvider(portForPub, portForSub);
+
+var services = clientServices.BuildServiceProvider();
+
+IMessageBusClient client = services.GetRequiredService<IMessageBusClient>();
+(client as NetMQMessageBusClient)!.StartAsync();
+
+
+async Task Test()
 {
-    try
+    while (Console.ReadLine() != "stop")
     {
-        IServiceCollection clientServices = new ServiceCollection();
-        
-        clientServices.AddLogging(x => 
-        {
-            x.AddDebug();
-            x.AddConsole();
-        });
-
-        clientServices
-            .AddMessageBusClient()
-            .RegisterMessageHandlers<Program>()
-            .AddNetMQProvider(portForPub, portForSub);
-
-        var services = clientServices.BuildServiceProvider();
-
-        var client = services.GetRequiredService<IMessageBusClient>();
-        while (Console.ReadLine() != "stop")
-        {
-           var response = await client.RequestAsync<CreateCustomerCommand, CreateCustomerResponse>(new("Jan"));
-        }
+        var response = await client.RequestAsync<CreateCustomerCommand, CreateCustomerResponse>(new("Jan"));
     }
-    catch (Exception ex)
-    {
+}
+await Test();
 
-    }
 
-});
 
-await Task.WhenAll(brokerTask, clientTask);
+//await Task.WhenAll(consoleTask);
 
 
