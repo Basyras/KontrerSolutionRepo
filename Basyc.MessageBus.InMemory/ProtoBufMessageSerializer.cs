@@ -10,6 +10,7 @@ public static class ProtoBufMessageSerializer
     static ProtoBufMessageSerializer()
     {
         Serializer.PrepareSerializer<ProtoBufCommandWrapper>();
+        //Serializer.PrepareSerializer<CreateCustomerCommandResponse>()
         //Serializer.PrepareSerializer<CloseCommand>();
         //Serializer.PrepareSerializer<CommandWrapper>();
         //Serializer.PrepareSerializer<ConsistencyCheckRequest>();

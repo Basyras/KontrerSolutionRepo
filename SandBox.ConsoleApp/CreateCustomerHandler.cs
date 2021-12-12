@@ -1,4 +1,5 @@
 ﻿using Basyc.DomainDrivenDesign.Application;
+using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SandBox.ConsoleApp
 {
-    public class CreateCustomerHandler : ICommandHandler<CreateCustomerCommand, CreateCustomerResponse>
+    public class CreateCustomerHandler : ICommandHandler<CreateCustomerCommand, CreateCustomerCommandResponse>
     {
         private readonly ILogger<CreateCustomerHandler> logger;
 
@@ -16,11 +17,19 @@ namespace SandBox.ConsoleApp
         {
             this.logger = logger;
         }
-        public Task<CreateCustomerResponse> Handle(CreateCustomerCommand message, CancellationToken cancellationToken = default)
+        public Task<CreateCustomerCommandResponse> Handle(CreateCustomerCommand message, CancellationToken cancellationToken = default)
         {
             logger.LogInformation($"Handeling message {message.GetType().FullName}");
             logger.LogInformation($"Handeled message {message.GetType().FullName}");
-            return Task.FromResult(new CreateCustomerResponse(message.Name));
+            var newCustomer = new CustomerEntity()
+            {
+                Email = message.Email,
+                FirstName = message.FirstName,
+                SecondName = message.LastName,
+                Id = new Random().Next()
+            };
+            return Task.FromResult(new CreateCustomerCommandResponse());
+            
         }
     }
 }

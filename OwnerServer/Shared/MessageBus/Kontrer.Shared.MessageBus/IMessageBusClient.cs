@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
 {
-    public interface IMessageBusClient
+    public interface IMessageBusClient: IDisposable
     {
         Task PublishAsync<TEvent>(CancellationToken cancellationToken = default)
               where TEvent : class, IEventMessage, new();

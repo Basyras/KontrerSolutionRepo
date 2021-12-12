@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace SandBox.ConsoleApp
 {
-    public record CreateCustomerCommand(string Name) : ICommand<CreateCustomerResponse>;
-    public record CreateCustomerResponse(string Name);
+    //public record CreateCustomerCommand(string Name) : ICommand<CreateCustomerResponse>;
+    //public record CreateCustomerResponse(string Name);
 }

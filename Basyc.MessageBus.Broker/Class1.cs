@@ -3,5 +3,6 @@
     public interface IMessageBroker : IDisposable
     {
         void Start();
+        Task StartAsync();
     }
 }

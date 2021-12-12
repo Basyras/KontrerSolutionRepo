@@ -14,7 +14,7 @@ using NetMQ.Sockets;
 
 namespace Basyc.MessageBus.Client.NetMQ;
 
-public class NetMQMessageBusClient : IMessageBusClient, IDisposable
+public class NetMQMessageBusClient : IMessageBusClient
 {
     private readonly IServiceProvider serviceProvider;
     private readonly IOptions<NetMQMessageBusClientOptions> options;
@@ -31,38 +31,19 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         this.options = options;
         this.logger = logger;
         publisherSocket = new PublisherSocket($">tcp://127.0.0.1:{options.Value.PortForPublishers}");
-
-        if (options.Value.IsConsumerOfMessages)
+        subscriberSocket = new SubscriberSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
+        subscriberSocket.SubscribeToAnyTopic();
+        subscriberSocket.ReceiveReady += async (s, a) =>
         {
-            subscriberSocket = new SubscriberSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
-            subscriberSocket.SubscribeToAnyTopic();
-            subscriberSocket.ReceiveReady += async (s, a) =>
-            {
-                await WaitAndHandleNextMessage();
-            };
-            poller.Add(subscriberSocket);
-            //Task.Run(async () =>
-            //{
-            //    while (true)
-            //    {
-            //        try
-            //        {
-            //            await WaitAndHandleNextMessage();
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            throw ex;
-            //        }
-            //    }
-            //});
-        }
+            await WaitAndHandleNextMessage();
+        };
+        poller.Add(subscriberSocket);
         poller.Add(publisherSocket);
-       
-    }    
+    }
 
     public void StartAsync()
     {
-        poller.RunAsync("asdasdasd",true);
+        poller.RunAsync("asdasdasd", true);
     }
 
     private async Task WaitAndHandleNextMessage()
@@ -73,28 +54,33 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         DeserializedMessageResult deserializedMessageResult = MessageSerializer.DeserializeMessage(messageBytes);
         if (deserializedMessageResult.IsResponse)
         {
-            logger.LogInformation($"Response recieved");
-            if (sessions.TryGetValue(deserializedMessageResult.SessionId, out var session))
+
+            if (sessions.TryGetValue(deserializedMessageResult.SessionId, out var session) is false)
             {
-                if (deserializedMessageResult.Message is VoidResult)
-                {
-                    sessions[deserializedMessageResult.SessionId].responseSource.SetResult(null);
-                }
-                else
-                {
-                    sessions[deserializedMessageResult.SessionId].responseSource.SetResult(deserializedMessageResult.Message);
-                }
-                sessions.Remove(deserializedMessageResult.SessionId);
-                logger.LogInformation($"Session completed");
+                return;
+            }
+
+            logger.LogInformation($"Response recieved");
+            if (deserializedMessageResult.Message is VoidResult)
+            {
+                sessions[deserializedMessageResult.SessionId].responseSource.SetResult(null);
             }
             else
             {
-                logger.LogInformation($"Response recieved with unknown sessionId");
+                sessions[deserializedMessageResult.SessionId].responseSource.SetResult(deserializedMessageResult.Message);
             }
+            sessions.Remove(deserializedMessageResult.SessionId);
+            logger.LogInformation($"Session completed");
+
         }
         else
         {
-            MessageHandlerInfo handlerInfo = options.Value.Handlers.First(x => x.MessageType == deserializedMessageResult.MessageType);
+            MessageHandlerInfo? handlerInfo = options.Value.Handlers.FirstOrDefault(x => x.MessageType == deserializedMessageResult.MessageType);
+            if (handlerInfo is null)
+            {
+                return;
+            }
+
             if (deserializedMessageResult.ExpectsResponse)
             {
                 Type proxyConsumerType = typeof(IMessageHandler<,>).MakeGenericType(deserializedMessageResult.MessageType, deserializedMessageResult.ResponseType!);
@@ -142,7 +128,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (eventMessage is null)
             eventMessage = Activator.CreateInstance(eventType);
 
-   
+
 
         //Task task = new Task(() =>
         //{
@@ -182,7 +168,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (task.Exception is not null)
             throw task.Exception;
 
-        
+
         //return Task.CompletedTask;
         return task;
     }
@@ -196,7 +182,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (command is null)
             command = Activator.CreateInstance(commandType);
 
-     
+
         var task = Task.Run(() =>
         {
             logger.LogInformation($"Sending {commandType} request");
@@ -215,7 +201,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (cancellationToken.IsCancellationRequested)
             return Task.CompletedTask;
 
-    
+
 
         //using var runtime = new NetMQRuntime();
         //runtime.Run(task);
@@ -223,7 +209,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (task.Exception is not null)
             throw task.Exception;
 
-      
+
         return task;
     }
 
@@ -235,7 +221,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         if (request is null)
             request = Activator.CreateInstance(requestType);
 
-        
+
         Task<object?> task = Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -248,7 +234,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
         });
 
         cancellationToken.ThrowIfCancellationRequested();
-      
+
 
         //using NetMQRuntime runtime = new NetMQRuntime();
         //runtime.Run(task);
@@ -261,7 +247,7 @@ public class NetMQMessageBusClient : IMessageBusClient, IDisposable
 
 
 
-       
+
         return task;
     }
 
