@@ -21,6 +21,8 @@ public class NetMQMessageBusClient : IMessageBusClient
     private readonly ILogger<NetMQMessageBusClient> logger;
     private readonly NetMQPoller poller = new NetMQPoller();
     private readonly PublisherSocket publisherSocket;
+    private readonly PushSocket pushSocket;
+    private readonly PullSocket pullSocket;
     private SubscriberSocket? subscriberSocket;
     private Dictionary<int, Session> sessions = new Dictionary<int, Session>();
     private int lastUsedSessionId = 1;
@@ -30,27 +32,39 @@ public class NetMQMessageBusClient : IMessageBusClient
         this.serviceProvider = serviceProvider;
         this.options = options;
         this.logger = logger;
+
         publisherSocket = new PublisherSocket($">tcp://127.0.0.1:{options.Value.PortForPublishers}");
-        subscriberSocket = new SubscriberSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
-        subscriberSocket.SubscribeToAnyTopic();
-        subscriberSocket.ReceiveReady += async (s, a) =>
-        {
-            await WaitAndHandleNextMessage();
-        };
-        poller.Add(subscriberSocket);
         poller.Add(publisherSocket);
+
+        //subscriberSocket = new SubscriberSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
+        //subscriberSocket.SubscribeToAnyTopic();
+        //subscriberSocket.ReceiveReady += async (s, a) =>
+        //{
+        //    await WaitAndHandleNextMessage();
+        //};
+        //poller.Add(subscriberSocket);
+
+        //pushSocket = new PushSocket($"@tcp://127.0.0.1:{options.Value.PortForPublishers}");
+        //poller.Add(pushSocket);
+
+        pullSocket = new PullSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
+        poller.Add(pullSocket);
     }
 
     public void StartAsync()
     {
-        poller.RunAsync("asdasdasd", true);
+        poller.RunAsync("netmqpollerthread",true);
     }
 
     private async Task WaitAndHandleNextMessage()
     {
         logger.LogInformation($"Waiting for message");
-        string topic = subscriberSocket!.ReceiveFrameString();
-        byte[] messageBytes = subscriberSocket!.ReceiveFrameBytes();
+
+        //string topic = subscriberSocket!.ReceiveFrameString();
+        //byte[] messageBytes = subscriberSocket!.ReceiveFrameBytes();
+        //
+        byte[] messageBytes = pullSocket!.ReceiveFrameBytes();
+
         DeserializedMessageResult deserializedMessageResult = MessageSerializer.DeserializeMessage(messageBytes);
         if (deserializedMessageResult.IsResponse)
         {
@@ -77,9 +91,7 @@ public class NetMQMessageBusClient : IMessageBusClient
         {
             MessageHandlerInfo? handlerInfo = options.Value.Handlers.FirstOrDefault(x => x.MessageType == deserializedMessageResult.MessageType);
             if (handlerInfo is null)
-            {
                 return;
-            }
 
             if (deserializedMessageResult.ExpectsResponse)
             {
@@ -226,6 +238,7 @@ public class NetMQMessageBusClient : IMessageBusClient
         {
             cancellationToken.ThrowIfCancellationRequested();
             logger.LogInformation($"Sending {requestType} request");
+            //pushSocket.SendMoreFrame("*").SendFrame(MessageSerializer.SerializeCommand(request!, newSessionId));
             publisherSocket.SendMoreFrame("*").SendFrame(MessageSerializer.SerializeCommand(request!, newSessionId));
             logger.LogInformation($"Send finished {requestType} request");
             TaskCompletionSource<object?> responseSource = new TaskCompletionSource<object?>();
@@ -297,6 +310,7 @@ public class NetMQMessageBusClient : IMessageBusClient
     {
         publisherSocket.Dispose();
         subscriberSocket?.Dispose();
+        pushSocket.Dispose();
         poller.Dispose();
     }
     private record Session(int SessionId, Type? ResponseType, TaskCompletionSource<object?> responseSource);
