@@ -16,5 +16,7 @@ namespace Basyc.MessageBus.Client.NetMQ
         public bool IsConsumerOfMessages { get => Handlers.Count > 0; }
         public int PortForPublishers { get; set; }
         public int PortForSubscribers { get; set; }
+        public int PortForPush { get; set; }
+        public int PortForPull { get; set; }
     }
 }

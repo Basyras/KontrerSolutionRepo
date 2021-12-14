@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 
 int portForSub = 8987;
 int portForPub = 8988;
+int portForPush = 5558;
+int portForPull = portForPush;
 
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
@@ -22,7 +24,7 @@ clientServices.AddLogging(x =>
 clientServices
     .AddMessageBusClient()
     .RegisterMessageHandlers<Program>()
-    .AddNetMQProvider(portForPub, portForSub);
+    .AddNetMQProvider(portForPub, portForSub, portForPush, portForPull);
 
 var services = clientServices.BuildServiceProvider();
 
