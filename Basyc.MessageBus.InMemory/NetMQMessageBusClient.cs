@@ -26,6 +26,7 @@ public class NetMQMessageBusClient : IMessageBusClient
     private SubscriberSocket? subscriberSocket;
     private Dictionary<int, Session> sessions = new Dictionary<int, Session>();
     private int lastUsedSessionId = 1;
+    private bool disposedValue;
 
     public NetMQMessageBusClient(IServiceProvider serviceProvider, IOptions<NetMQMessageBusClientOptions> options, ILogger<NetMQMessageBusClient> logger)
     {
@@ -33,10 +34,10 @@ public class NetMQMessageBusClient : IMessageBusClient
         this.options = options;
         this.logger = logger;
 
-        publisherSocket = new PublisherSocket($">tcp://127.0.0.1:{options.Value.PortForPublishers}");
+        publisherSocket = new PublisherSocket($">tcp://localhost:{options.Value.PortForPublishers}");
         poller.Add(publisherSocket);
 
-        subscriberSocket = new SubscriberSocket($">tcp://127.0.0.1:{options.Value.PortForSubscribers}");
+        subscriberSocket = new SubscriberSocket($">tcp://localhost:{options.Value.PortForSubscribers}");
         subscriberSocket.SubscribeToAnyTopic();
         subscriberSocket.ReceiveReady += async (s, a) =>
         {
@@ -44,12 +45,12 @@ public class NetMQMessageBusClient : IMessageBusClient
         };
         poller.Add(subscriberSocket);
 
-        pushSocket = new PushSocket($">tcp://127.0.0.1:{options.Value.PortForPush}");
+        pushSocket = new PushSocket($"@tcp://*:{options.Value.PortForPull}");
         poller.Add(pushSocket);
 
         if (options.Value.IsConsumerOfMessages)
         {
-            pullSocket = new PullSocket($">tcp://127.0.0.1:{options.Value.PortForPull}");
+            pullSocket = new PullSocket($">tcp://localhost:{options.Value.PortForPull}");
             pullSocket.ReceiveReady += async (s, a) =>
             {
                 await WaitAndHandleNextMessage();
@@ -323,16 +324,39 @@ public class NetMQMessageBusClient : IMessageBusClient
 
 
 
-    public void Dispose()
-    {
-        publisherSocket.Dispose();
-        subscriberSocket?.Dispose();
-        pushSocket.Dispose();
-        pullSocket?.Dispose();
-        poller.Dispose();
-    }
+
     private record Session(int SessionId, Type? ResponseType, TaskCompletionSource<object?> responseSource);
 
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                publisherSocket.Dispose();
+                subscriberSocket?.Dispose();
+                pushSocket.Dispose();
+                pullSocket?.Dispose();
+                poller.Dispose();
+            }
 
+            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+            // TODO: set large fields to null
+            disposedValue = true;
+        }
+    }
 
+    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+    // ~NetMQMessageBusClient()
+    // {
+    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+    //     Dispose(disposing: false);
+    // }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }

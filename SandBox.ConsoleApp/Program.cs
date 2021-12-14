@@ -15,8 +15,8 @@ using SandBox.ConsoleApp;
 
 int portForSub = 8987;
 int portForPub = 8988;
-int portForPush = 5558;
-int portForPull = portForPush;
+int portForPull = 4558;
+int portForPush = 5557;
 Serializer.PrepareSerializer<CreateCustomerCommandResponse>();
 
 IServiceCollection clientServices = new ServiceCollection();

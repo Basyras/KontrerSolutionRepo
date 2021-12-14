@@ -8,11 +8,13 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
+using NetMQ;
+using NetMQ.Sockets;
 
 int portForSub = 8987;
 int portForPub = 8988;
-int portForPush = 5558;
-int portForPull = portForPush;
+int portForPull = 4558;
+int portForPush = 5557;
 
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
@@ -42,5 +44,12 @@ void Test()
 }
 
 Test();
+//using var pullsocket = new PullSocket($">tcp://localhost:{portForPush}");
+
+//while (true)
+//{
+//    var stru = pullsocket.ReceiveFrameString();
+    
+//}
 
 
