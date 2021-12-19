@@ -135,6 +135,11 @@ namespace Basyc.MessageBus.HttpProxy.Client
             return busResponse;
         }
 
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
         //private static Dictionary<string, object> DictionaryFromType(object atype)
         //{
         //    if (atype == null)

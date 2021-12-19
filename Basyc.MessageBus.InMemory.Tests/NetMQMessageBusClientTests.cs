@@ -1,5 +1,6 @@
 using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Client.NetMQ;
+using Basyc.MessageBus.Shared;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading.Tasks;

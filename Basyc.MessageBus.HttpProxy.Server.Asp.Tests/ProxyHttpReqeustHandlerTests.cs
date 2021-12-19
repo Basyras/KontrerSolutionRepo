@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Basyc.MessageBus.HttpProxy.Shared;
 using Basyc.MessageBus.Client;
+using Basyc.MessageBus.Shared;
 
 namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
 {

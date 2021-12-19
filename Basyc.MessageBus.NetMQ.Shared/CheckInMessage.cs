@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Client.NetMQ
+namespace Basyc.MessageBus.NetMQ.Shared
 {
-    public class VoidResult
-    {
-    }
+    public record CheckInMessage(string clientIdentity, int handlers);
 }

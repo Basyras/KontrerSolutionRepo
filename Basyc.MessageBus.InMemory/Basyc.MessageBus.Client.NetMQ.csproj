@@ -17,6 +17,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <ProjectReference Include="..\Basyc.MessageBus.NetMQ.Shared\Basyc.MessageBus.NetMQ.Shared.csproj" />
 	  <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />
 	</ItemGroup>
 

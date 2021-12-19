@@ -17,6 +17,9 @@ namespace Basyc.MessageBus.Client.NetMQ
         public int PortForPublishers { get; set; }
         public int PortForSubscribers { get; set; }
         public int PortForPush { get; set; }
-        public int PortForPull { get; set; }
+        public int PortForPull { get; set; }        
+
+        public int BrokerServerPort { get; set; }
+        public string? ClientId { get; set; }
     }
 }

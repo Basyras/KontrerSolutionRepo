@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Basyc.MessageBus.Client.RequestResponse;
+using Basyc.MessageBus.NetMQ.Shared;
+using Basyc.MessageBus.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -24,6 +26,7 @@ public class NetMQMessageBusClient : IMessageBusClient
     private readonly PushSocket pushSocket;
     private readonly PullSocket? pullSocket;
     private SubscriberSocket? subscriberSocket;
+    private DealerSocket dealerSocket;
     private Dictionary<int, Session> sessions = new Dictionary<int, Session>();
     private int lastUsedSessionId = 1;
     private bool disposedValue;
@@ -34,39 +37,82 @@ public class NetMQMessageBusClient : IMessageBusClient
         this.options = options;
         this.logger = logger;
 
-        publisherSocket = new PublisherSocket($">tcp://localhost:{options.Value.PortForPublishers}");
-        poller.Add(publisherSocket);
+        //publisherSocket = new PublisherSocket($">tcp://localhost:{options.Value.PortForPublishers}");
+        //poller.Add(publisherSocket);
 
-        subscriberSocket = new SubscriberSocket($">tcp://localhost:{options.Value.PortForSubscribers}");
-        subscriberSocket.SubscribeToAnyTopic();
-        subscriberSocket.ReceiveReady += async (s, a) =>
-        {
-            await WaitAndHandleNextMessage();
-        };
-        poller.Add(subscriberSocket);
+        //subscriberSocket = new SubscriberSocket($">tcp://localhost:{options.Value.PortForSubscribers}");
+        //subscriberSocket.SubscribeToAnyTopic();
+        //subscriberSocket.ReceiveReady += async (s, a) =>
+        //{
+        //    await PullWaitAndHandleNextMessage();
+        //};
+        //poller.Add(subscriberSocket);
 
-        pushSocket = new PushSocket($"@tcp://*:{options.Value.PortForPull}");
-        poller.Add(pushSocket);
+        //pushSocket = new PushSocket($"@tcp://*:{options.Value.PortForPull}");
+        //poller.Add(pushSocket);
 
         if (options.Value.IsConsumerOfMessages)
         {
             pullSocket = new PullSocket($">tcp://localhost:{options.Value.PortForPull}");
             pullSocket.ReceiveReady += async (s, a) =>
             {
-                await WaitAndHandleNextMessage();
+                await PullWaitAndHandleNextMessage();
             };
             poller.Add(pullSocket);
         }
+
+        dealerSocket = new DealerSocket($"tcp://localhost:{options.Value.BrokerServerPort}");
+        if (options.Value.ClientId is not null)
+        {
+            //dealerSocket.Options.Identity = Encoding.Unicode.GetBytes("BusClient");
+            dealerSocket.Options.Identity = Encoding.Unicode.GetBytes(options.Value.ClientId);
+        }
+
+        
+        dealerSocket.ReceiveReady += async (s, a) =>
+        {
+            await DealerHandleResponseMessage();
+        };
+        poller.Add(dealerSocket);
     }
+
+
 
     public void StartAsync()
     {
         poller.RunAsync("netmqpollerthread", true);
+        string identity = Encoding.Unicode.GetString(dealerSocket.Options.Identity!);
+        CheckInMessage checkIn = new CheckInMessage(identity,0);        
+        var seriMessage = MessageSerializer.Serialize(checkIn, default, false);
+
+        var messageToServer = new NetMQMessage();
+        messageToServer.AppendEmptyFrame();
+        messageToServer.Append(seriMessage);
+        logger.LogInformation($"Sending CheckIn message");
+        dealerSocket.SendMultipartMessage(messageToServer);
+        logger.LogInformation($"CheckIn message sent");
     }
 
-    private async Task WaitAndHandleNextMessage()
+    private Task DealerHandleResponseMessage()
     {
-        logger.LogInformation($"Waiting for message");
+        logger.LogDebug($"Dealer waiting");
+        var message = dealerSocket.ReceiveMultipartMessage(3);
+        logger.LogDebug($"Dealer received");
+        var clientAddress = message[1].ConvertToString();
+        DeserializedMessageResult deserializedMessageResult = MessageSerializer.DeserializeMessage(message[3].Buffer);
+        var messageToServer = new NetMQMessage();
+        messageToServer.AppendEmptyFrame();
+        messageToServer.Append(message[3].Buffer);
+        logger.LogInformation($"Sending response message");
+        dealerSocket.SendMultipartMessage(messageToServer);
+        logger.LogInformation($"Response message sent");
+
+        return Task.CompletedTask;
+      
+    }
+    private async Task PullWaitAndHandleNextMessage()
+    {
+        logger.LogDebug($"Waiting for message");
 
         //string topic = subscriberSocket!.ReceiveFrameString();
         //byte[] messageBytes = subscriberSocket!.ReceiveFrameBytes();
@@ -76,13 +122,13 @@ public class NetMQMessageBusClient : IMessageBusClient
         DeserializedMessageResult deserializedMessageResult = MessageSerializer.DeserializeMessage(messageBytes);
         if (deserializedMessageResult.IsResponse)
         {
-
             if (sessions.TryGetValue(deserializedMessageResult.SessionId, out var session) is false)
             {
+                logger.LogDebug($"This bus client does not have active seesion for this message");
                 return;
             }
 
-            logger.LogInformation($"Response recieved");
+            logger.LogDebug($"Response recieved");
             if (deserializedMessageResult.Message is VoidResult voidResult)
             {
                 sessions[deserializedMessageResult.SessionId].responseSource.SetResult(voidResult);
@@ -92,7 +138,7 @@ public class NetMQMessageBusClient : IMessageBusClient
                 sessions[deserializedMessageResult.SessionId].responseSource.SetResult(deserializedMessageResult.Message);
             }
             sessions.Remove(deserializedMessageResult.SessionId);
-            logger.LogInformation($"Session completed");
+            logger.LogDebug($"Session completed");
 
         }
         else
@@ -100,9 +146,8 @@ public class NetMQMessageBusClient : IMessageBusClient
             MessageHandlerInfo? handlerInfo = options.Value.Handlers.FirstOrDefault(x => x.MessageType == deserializedMessageResult.MessageType);
             if (handlerInfo is null)
             {
-                //this bus client does not have handler for this messe sending to next one?
-
-
+                logger.LogDebug($"This bus client does not have handler for this message");
+                return;
             }
 
             if (deserializedMessageResult.ExpectsResponse)
@@ -173,6 +218,7 @@ public class NetMQMessageBusClient : IMessageBusClient
         //    byte[] serializedEvent = MessageSerializer.SerializeCommand(eventMessage!, sessionId, isResponse)!;
         //    publisherSocker.SendMoreFrame(eventType.FullName!).SendFrame(serializedEvent);
         //});
+
         var task = Task.Run(() =>
         {
             logger.LogInformation($"Publishing {eventType} event");
@@ -180,7 +226,7 @@ public class NetMQMessageBusClient : IMessageBusClient
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            byte[] serializedEvent = MessageSerializer.SerializeCommand(eventMessage!, sessionId, isResponse)!;
+            byte[] serializedEvent = MessageSerializer.Serialize(eventMessage!, sessionId, isResponse)!;
             publisherSocket.SendMoreFrame(eventType.FullName!).SendFrame(serializedEvent);
             //pushSocket.SendFrame(serializedEvent);
             logger.LogInformation($"Published {eventType} event");
@@ -219,7 +265,7 @@ public class NetMQMessageBusClient : IMessageBusClient
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            var data = MessageSerializer.SerializeCommand(command!, sessionId);
+            var data = MessageSerializer.Serialize(command!, sessionId);
             //publisherSocket.SendMoreFrame(commandType.FullName!).SendFrame(data);
             pushSocket.SendFrame(data);
             //TaskCompletionSource<object?> responseSource = new TaskCompletionSource<object?>();
@@ -255,18 +301,23 @@ public class NetMQMessageBusClient : IMessageBusClient
         Task<object?> task = Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
-            logger.LogInformation($"Pushing {requestType} request");
-            pushSocket.SendFrame(MessageSerializer.SerializeCommand(request!, newSessionId));
+        
+            var serializedMessage = MessageSerializer.Serialize(request!, newSessionId);
             //publisherSocket.SendMoreFrame("*").SendFrame(MessageSerializer.SerializeCommand(request!, newSessionId));
-            logger.LogInformation($"Pushed {requestType} request");
+            //pushSocket.SendFrame(MessageSerializer.SerializeCommand(request!, newSessionId));
+            var messageToServer = new NetMQMessage();
+            messageToServer.AppendEmptyFrame();
+            messageToServer.Append(serializedMessage);
+            logger.LogInformation($"Requesting {requestType}");
+            dealerSocket.SendMultipartMessage(messageToServer);
+            logger.LogInformation($"Requested {requestType}");
             TaskCompletionSource<object?> responseSource = new TaskCompletionSource<object?>();
             sessions.Add(newSessionId, new Session(newSessionId, responseType, responseSource));
+            logger.LogInformation($"Waiting for request response {requestType}");
             return responseSource.Task;
         });
 
         cancellationToken.ThrowIfCancellationRequested();
-
-
         //using NetMQRuntime runtime = new NetMQRuntime();
         //runtime.Run(task);
 
@@ -274,11 +325,6 @@ public class NetMQMessageBusClient : IMessageBusClient
             throw task.Exception;
 
         cancellationToken.ThrowIfCancellationRequested();
-
-
-
-
-
         return task;
     }
 
@@ -333,9 +379,9 @@ public class NetMQMessageBusClient : IMessageBusClient
         {
             if (disposing)
             {
-                publisherSocket.Dispose();
+                publisherSocket?.Dispose();
                 subscriberSocket?.Dispose();
-                pushSocket.Dispose();
+                pushSocket?.Dispose();
                 pullSocket?.Dispose();
                 poller.Dispose();
             }

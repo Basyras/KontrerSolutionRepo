@@ -1,6 +1,6 @@
 ﻿namespace Basyc.MessageBus.Broker
 {
-    public interface IMessageBroker : IDisposable
+    public interface IMessageBrokerServer : IDisposable
     {
         void Start();
         Task StartAsync();

@@ -54,98 +54,49 @@ namespace Basyc.Localizator.Abstraction
 
         public string Get(string key)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            var valueExists = _values.TryGetValue(key, out string value);
-            if (valueExists == false)
-            {
-                if (CanGetReturnDefaultCultureValue)
-                {
-                    if (_backupLocalizator != null)
-                    {
-                        var defaultValueExists = _backupLocalizator.TryGet(key, out value);
-                        if (defaultValueExists)
-                        {
-                            return value;
-                        }
-                        else
-                        {
-                            if (CanGetReturnKey)
-                            {
-                                return key;
-                            }
-                            else
-                            {
-                                throw new Exception($"Localizer of section {SectionUniqueName} could not find value for {key} in culture {Culture.Name} and default culture {_backupLocalizator.Culture}. Try add localized value or set property {nameof(CanGetReturnKey)} to true");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (CanGetReturnKey)
-                        {
-                            return key;
-                        }
-                        else
-                        {
-                            throw new Exception($"Localizer of section {SectionUniqueName} could not find value for {key} in culture {Culture.Name}. {nameof(CanGetReturnDefaultCultureValue)} is set to true but default localizer is null. Try add localized value or set property {nameof(CanGetReturnKey)} to true");
-                        }
-                    }
-                }
-                else
-                {
-                    if (CanGetReturnKey)
-                    {
-                        return key;
-                    }
-                    else
-                    {
-                        throw new Exception($"Localizer of section {SectionUniqueName} could not find value for {key} in culture {Culture.Name}. Try add localized value or set property {nameof(CanGetReturnDefaultCultureValue)} or {nameof(CanGetReturnKey)} to true");
-                    }
-                }
-
-            }
-            else
-            {
+            ArgumentNullException.ThrowIfNull(key);
+            if (_values.TryGetValue(key, out string value))
                 return value;
+
+            if (CanGetReturnDefaultCultureValue)
+            {
+                if (_backupLocalizator != null)
+                {
+                    if (_backupLocalizator.TryGet(key, out value))
+                        return value;
+
+                    if (CanGetReturnKey)
+                        return key;
+
+                    throw new Exception($"Localizer of section {SectionUniqueName} could not find value for {key} in culture {Culture.Name} and default culture {_backupLocalizator.Culture}. Try add localized value or set property {nameof(CanGetReturnKey)} to true");
+
+                }
+
+                if (CanGetReturnKey)
+                    return key;
+
+                throw new Exception($"Localizer of section {SectionUniqueName} could not find value for {key} in culture {Culture.Name}. {nameof(CanGetReturnDefaultCultureValue)} is set to true but default localizer is null. Try add localized value or set property {nameof(CanGetReturnKey)} to true");
+
             }
+            if (CanGetReturnKey)
+                return key;
+
+            throw new Exception($"Localizer of section {SectionUniqueName} could not find value for {key} in culture {Culture.Name}. Try add localized value or set property {nameof(CanGetReturnDefaultCultureValue)} or {nameof(CanGetReturnKey)} to true");
 
         }
 
-
-
         public bool TryGet(string key, out string value)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
+            ArgumentNullException.ThrowIfNull(key);
 
-            var isValueFound = _values.TryGetValue(key, out value);
+            if (_values.TryGetValue(key, out value))
+                return true;
 
-            if (isValueFound == false)
-            {
-                if (_backupLocalizator == null)
-                {
-                    value = key;
-                }
-                else
-                {
-                    var defaultFound = _backupLocalizator.TryGet(key, out value);
-                    if (defaultFound == false)
-                    {
-                        value = key;
-                    }
-                }
-            }
+            if (_backupLocalizator is not null && _backupLocalizator.TryGet(key, out value))
+                return true;
 
-
-            return isValueFound;
-
-
+            value = key;
+            return false;
         }
 
         public IDictionary<string, string> GetAll()

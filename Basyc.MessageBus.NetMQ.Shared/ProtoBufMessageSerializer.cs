@@ -3,13 +3,13 @@ using System.IO;
 using Basyc.Shared.Helpers;
 using ProtoBuf;
 
-namespace Basyc.MessageBus.Client.NetMQ;
+namespace Basyc.MessageBus.NetMQ.Shared;
 
 public static class ProtoBufMessageSerializer
 {
     static ProtoBufMessageSerializer()
     {
-        Serializer.PrepareSerializer<ProtoBufCommandWrapper>();
+        Serializer.PrepareSerializer<ProtoMessageWrapper>();
         //Serializer.PrepareSerializer<CreateCustomerCommandResponse>()
         //Serializer.PrepareSerializer<CloseCommand>();
         //Serializer.PrepareSerializer<CommandWrapper>();

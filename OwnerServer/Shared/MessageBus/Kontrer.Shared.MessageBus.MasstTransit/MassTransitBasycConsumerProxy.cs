@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.Client.RequestResponse;
+using Basyc.MessageBus.Shared;
 using MassTransit;
 using System;
 using System.Collections.Generic;

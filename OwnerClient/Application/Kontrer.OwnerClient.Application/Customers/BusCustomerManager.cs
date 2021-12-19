@@ -20,7 +20,8 @@ namespace Kontrer.OwnerClient.Application.Customers
         public async ValueTask<CustomerEntity> CreateCustomer(string firstName, string lastName, string email)
         {
             var response = await bus.RequestAsync<CreateCustomerCommand, CreateCustomerCommandResponse>(new(firstName, lastName, email));
-            return response.NewCustomer;
+            //return response.;
+            return null;
         }
 
         public async Task DeleteCustomer(int customerId)

@@ -1,6 +1,7 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Client.NetMQ;
 using Basyc.MessageBus.Client.RequestResponse;
+using Basyc.MessageBus.Shared;
 using Basyc.Shared.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +14,11 @@ public static class MessageBusBuildeNetMQExtensions
     //static MethodInfo handleMethodInfo = typeof(IMessageHandler<>).MakeGenericType().GetMethod(nameof(IMessageHandler<IMessage>.Handle))!;
     //static MethodInfo handleWithResponseMethodInfo = typeof(IMessageHandler<,>).GetMethod(nameof(IMessageHandler<IMessage<object>,object>.Handle))!;
 
-    public static MessageBusClientBuilder AddNetMQProvider(this MessageBusClientBuilder builder, int portForPublishers, int portForSubscribers, int portForPush, int portForPull)
+    public static MessageBusClientBuilder AddNetMQProvider(this MessageBusClientBuilder builder, 
+        int portForPublishers, int portForSubscribers, 
+        int portForPush, int portForPull,
+        int brokerServerPort, string? clientId
+        )
     {
         var services = builder.services;
         services.AddSingleton<IMessageBusClient, NetMQMessageBusClient>();
@@ -23,6 +28,8 @@ public static class MessageBusBuildeNetMQExtensions
             x.PortForPublishers = portForPublishers;
             x.PortForPush = portForPush;
             x.PortForPull = portForPull;
+            x.BrokerServerPort = brokerServerPort;
+            x.ClientId = clientId;
 
             var messageHandlerTypes = builder.services
                 .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, typeof(IMessageHandler<>)));

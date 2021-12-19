@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Client;
+namespace Basyc.MessageBus.Shared;
 
 /// <summary>
 /// Should be simple DTO
