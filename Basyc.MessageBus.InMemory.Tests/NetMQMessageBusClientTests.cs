@@ -10,7 +10,7 @@ namespace Basyc.MessageBus.InMemory.Tests
 {
     public class NetMQMessageBusClientTests
     {
-        IMessageBusClient client;
+        ITypedMessageBusClient client;
         
 
         public NetMQMessageBusClientTests()        

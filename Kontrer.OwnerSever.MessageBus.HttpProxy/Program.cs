@@ -1,20 +1,42 @@
 using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Client.MasstTransit;
+using Basyc.MessageBus.Client.NetMQ;
+using Kontrer.OwnerServer.CustomerService.Domain;
 using Microsoft.AspNetCore.Builder;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddRazorPages();
-builder.Services.AddMessageBusClient()
-    .AddMassTransitProvider();
 
-builder.Services.AddMessageBusProxyServer()
-;
+//builder.Services.AddRazorPages();
+
+int portForPub = 8988;
+int portForSub = 8987;
+
+var domains = new Assembly[]
+{
+    typeof(CustomerServiceDomainAssemblyMarker).Assembly,
+    //typeof(OrderServiceDomainAssemblyMarker).Assembly,
+    //typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
+};
+
+builder.Services.AddMessageBusClient()
+    //.AddMassTransitClient();
+    .AddNetMQClient(portForPub, portForSub, "Proxy");
+builder.Services.AddMessageBusProxyServer();
+
+builder.Services.AddCors(policy =>
+{
+    policy.AddPolicy("*", builder => builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        //.AllowCredentials()
+        );
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -25,12 +47,15 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 //app.UseStaticFiles();
-
 //app.UseRouting();
-
 //app.UseAuthorization();
-
 //app.MapRazorPages();
+
 app.MapBusManagerProxy();
+app.Services.StartMessageBusClientAsync();
+
+app.UseCors("*");
+
+
 
 app.Run();

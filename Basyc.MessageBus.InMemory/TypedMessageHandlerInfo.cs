@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client.NetMQ
 {
-    public class MessageHandlerInfo
+    public class TypedMessageHandlerInfo
     {
-        public MessageHandlerInfo(Type handlerType, Type messageType, MethodInfo handleMethod)
+        public TypedMessageHandlerInfo(Type handlerType, Type messageType, MethodInfo handleMethod)
         {
             HandlerType = handlerType;
             MessageType = messageType;
             HandleMethodInfo = handleMethod;
         }
 
-        public MessageHandlerInfo(Type handlerType, Type messageType, Type responseType, MethodInfo handleMethod)
+        public TypedMessageHandlerInfo(Type handlerType, Type messageType, Type responseType, MethodInfo handleMethod)
         {
             HandlerType = handlerType;
             MessageType = messageType;

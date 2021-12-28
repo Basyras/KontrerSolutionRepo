@@ -20,7 +20,7 @@ namespace Kontrer.OwnerServer.IdGeneratorService.Presentation.AspApi
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                .AddMassTransitProvider();
+                .AddMassTransitClient();
 
             await builder.Back()
                  .Build()

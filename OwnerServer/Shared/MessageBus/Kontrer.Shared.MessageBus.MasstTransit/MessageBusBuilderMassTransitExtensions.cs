@@ -16,11 +16,10 @@ namespace Basyc.MessageBus.Client.MasstTransit
         /// <summary>
         /// Takes registered Basyc IRequestHandlers and wrap them with MassTransit IConsumers, Hosted by RabbitMQ
         /// </summary>
-        public static MessageBusClientBuilder AddMassTransitProvider(this MessageBusClientBuilder builder)
+        public static MessageBusClientBuilder AddMassTransitClient(this MessageBusClientBuilder builder)
         {
             var services = builder.services;
-            services.AddSingleton<IMessageBusClient, MassTransitMessageBusClient>();
-            services.AddTransient<IStartupFilter, MassTransitStartupFilter>();
+            services.AddSingleton<ITypedMessageBusClient, MassTransitMessageBusClient>();
             services.AddHealthChecks();
             services.AddMassTransit(x =>
             {

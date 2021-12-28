@@ -12,8 +12,7 @@ namespace Basyc.MessageBus.Broker.NetMQ
         public static IServiceCollection AddNetMQMessageBroker(this IServiceCollection services, 
             string addressForSubscribers, int portForSubscribers,
             string addressForPublishers, int portForPublishers,
-            string addressForProducers, int portForProducers
-            )
+            int brokerServerPort = 5357, string brokerServerAddress = "localhost")
         {
             services.AddSingleton<IMessageBrokerServer, NetMQMessageBrokerServer>();
             services.Configure<NetMQMessageBrokerServerOptions>(x => 
@@ -22,8 +21,8 @@ namespace Basyc.MessageBus.Broker.NetMQ
                 x.PortForSubscribers = portForSubscribers;
                 x.AddressForPublishers = addressForPublishers;
                 x.PortForPublishers = portForPublishers;
-                x.AddressForProducers = addressForProducers;
-                x.PortForProducers = portForProducers;
+                x.BrokerServerAddress = brokerServerAddress;
+                x.BrokerServerPort = brokerServerPort;
             });
             return services;
         }

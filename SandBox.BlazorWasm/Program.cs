@@ -21,7 +21,7 @@ namespace SandBox.BlazorWasm
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddMessageBusClient()
-                .AddProxyProvider()
+                .AddProxyClient()
                 .SetProxyServerUri(new Uri("https://localhost:44371/"));
 
             await builder.Build().RunAsync();

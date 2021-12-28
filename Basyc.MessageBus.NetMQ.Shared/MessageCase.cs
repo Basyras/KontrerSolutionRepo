@@ -6,5 +6,11 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.NetMQ.Shared
 {
-    public record VoidResult();
+    public enum MessageCase
+    {
+        CheckIn,
+        Request,
+        Response,
+
+    }
 }

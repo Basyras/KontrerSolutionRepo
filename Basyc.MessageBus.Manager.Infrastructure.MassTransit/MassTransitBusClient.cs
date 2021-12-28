@@ -11,7 +11,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.MassTransit;
 
 public class MassTransitBusClient : BasycInterfaceTypedBusClient, IBusClient
 {
-    public MassTransitBusClient(IMessageBusClient messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
+    public MassTransitBusClient(ITypedMessageBusClient messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
         : base(messageBusManager, requestInfoTypeStorage, responseFormatter)
     {
     }

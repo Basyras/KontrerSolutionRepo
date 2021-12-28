@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NetMQ;
 using NetMQ.Sockets;
+using System.Text;
 
 namespace Basyc.MessageBus.Broker.NetMQ;
 
@@ -16,6 +17,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
     private readonly XSubscriberSocket subscriberSocket;
     private readonly RouterSocket producerRouterSocket;
     private readonly RouterSocket consumerRouterSocket;
+    private readonly WorkerRegistry workerRegistry;
 
     public NetMQMessageBrokerServer(IOptions<NetMQMessageBrokerServerOptions> options, ILogger<NetMQMessageBrokerServer> logger)
     {
@@ -24,52 +26,83 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 
         publisherSocker = new XPublisherSocket($"@tcp://{options.Value.AddressForSubscribers}:{options.Value.PortForSubscribers}");
         subscriberSocket = new XSubscriberSocket($"@tcp://{options.Value.AddressForPublishers}:{options.Value.PortForPublishers}");
-        consumerRouterSocket = new RouterSocket($"@tcp://{options.Value.AddressForProducers}:{options.Value.PortForProducers - 100}");
-        producerRouterSocket = new RouterSocket($"@tcp://{options.Value.AddressForProducers}:{options.Value.PortForProducers}");
+        consumerRouterSocket = new RouterSocket($"@tcp://{options.Value.BrokerServerAddress}:{options.Value.BrokerServerPort - 100}");
+        producerRouterSocket = new RouterSocket($"@tcp://{options.Value.BrokerServerAddress}:{options.Value.BrokerServerPort}");
+        workerRegistry = new WorkerRegistry();
+
         producerRouterSocket.ReceiveReady += (s, a) =>
         {
-            var clientMessage = a.Socket.ReceiveMultipartMessage(3);
-            logger.LogDebug("Message received from producer");
-            if (clientMessage.FrameCount != 3)
-                logger.LogInformation($"Request recieved with unexpected format");
+            var recievedMessageFrame = a.Socket.ReceiveMultipartMessage(3);
+            //0 WorkerId 1 Empty 2 Data 3 Empty 4 ProducerId
 
-            var clientAddress = clientMessage[0];
-            var clientAddressString = clientAddress.ConvertToString();
-
-            NetMQFrame? workerAddress = null;
-            if(clientAddressString.Contains("1"))
+            var senderAddressFrame = recievedMessageFrame[0];
+            var senderAddressString = senderAddressFrame.ConvertToString();
+            try
             {
-                workerAddress = new NetMQFrame("client2");
+                DeserializedMessage deserializedMessage = TypedMessageToByteSerializer.Deserialize(recievedMessageFrame[2].Buffer);
+
+                switch (deserializedMessage.MessageCase)
+                {
+                    case MessageCase.CheckIn:
+                        if (recievedMessageFrame.FrameCount != 3)
+                            logger.LogWarning($"CheckIn recieved with unexpected format");
+                        var checkIn = deserializedMessage.CheckIn!;
+                        logger.LogInformation($"CheckIn message {checkIn} received from {senderAddressString}");
+                        workerRegistry.RegisterWorker(checkIn.WorkerId, checkIn.SupportedMessageTypes);
+                        break;
+
+                    case MessageCase.Response:
+                        if (recievedMessageFrame.FrameCount != 5)
+                            logger.LogWarning($"Recieved response with unexpected format");
+                        var responseCase = deserializedMessage.Response!;
+                        logger.LogInformation($"Recieved response: '{responseCase.ReponseData}' from {senderAddressString}");
+                        var messageToConsumer = new NetMQMessage();
+                        var producerAddress = recievedMessageFrame[4];
+                        var producerAddressString = producerAddress.ConvertToString();
+                        messageToConsumer.Append(producerAddress);
+                        messageToConsumer.AppendEmptyFrame();
+                        messageToConsumer.Append(senderAddressFrame);
+                        messageToConsumer.AppendEmptyFrame();
+                        messageToConsumer.Append(recievedMessageFrame[2].Buffer);
+                        logger.LogDebug($"Sending response: '{responseCase.ReponseData}' to producer {producerAddressString}");
+                        producerRouterSocket.SendMultipartMessage(messageToConsumer);
+                        logger.LogDebug($"Response sent to producer {producerAddressString}");
+                        break;
+
+                    case MessageCase.Request:
+                        var requestCase = deserializedMessage.Request!;
+                        logger.LogInformation($"Recieved request: '{requestCase.RequestData}' from {senderAddressString}");
+                        string workerAddressString = workerRegistry.GetWorkerFor(requestCase.RequestType);
+                        byte[] requestBytes = recievedMessageFrame[2].Buffer;
+                        var messageToProducer = new NetMQMessage();
+                        messageToProducer.Append(workerAddressString);
+                        messageToProducer.AppendEmptyFrame();
+                        messageToProducer.Append(senderAddressFrame);
+                        messageToProducer.AppendEmptyFrame();
+                        messageToProducer.Append(requestBytes);
+                        logger.LogDebug($"Sending request: '{requestCase.RequestData}' to consumer {workerAddressString}");
+                        producerRouterSocket.SendMultipartMessage(messageToProducer);
+                        logger.LogDebug($"Request sent to consumer {workerAddressString}");
+                        break;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                workerAddress = new NetMQFrame("client1");
+                var failure = new FailResult(ex.Message);
+                var messageToProducer = new NetMQMessage();
+                messageToProducer.Append(senderAddressFrame);
+                messageToProducer.AppendEmptyFrame();
+                messageToProducer.AppendEmptyFrame();
+                messageToProducer.AppendEmptyFrame();
+                messageToProducer.Append(TypedMessageToByteSerializer.Serialize(failure, -1, true));
+                logger.LogInformation($"Sending failure: '{failure}' to {senderAddressFrame}");
+                producerRouterSocket.SendMultipartMessage(messageToProducer);
+                logger.LogInformation($"Failure sent to {senderAddressFrame}");
             }
-            DeserializedMessageResult deserializedMessageResult = MessageSerializer.DeserializeMessage(clientMessage[2].Buffer);
 
-            if(deserializedMessageResult.Message is CheckInMessage checkIn)
-            {
-                logger.LogDebug("CheckIn message received");
-                return;
-            }
-
-            logger.LogInformation($"Request recieved from {clientAddress.ConvertToString()}");         
-           // string response = "response";
-            var messageToClient = new NetMQMessage();
-            messageToClient.Append(workerAddress);
-            messageToClient.AppendEmptyFrame();
-            messageToClient.Append(clientAddress);            
-            messageToClient.AppendEmptyFrame();
-            messageToClient.Append(clientMessage[2].Buffer);
-
-            logger.LogDebug("Sending response to producer");
-            //            a.Socket.SendMultipartMessage(messageToClient);
-            consumerRouterSocket.SendMultipartMessage(messageToClient);
-            logger.LogDebug($"Response sent to producer {workerAddress.ConvertToString()}");
         };
 
         poller.Add(producerRouterSocket);
-      
         //poller.Add(producerRouterSocket);
 
 
@@ -90,12 +123,9 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
         }
         catch (Exception ex)
         {
-            logger.LogDebug("NetMQ proxy stopped");
+            logger.LogDebug($"NetMQ proxy stopped. Reason: {ex.Message}");
+            throw;
         }
-    }
-    public Task StartAsync()
-    {
-        return Task.Run(Start);
     }
 
     public void Dispose()
@@ -105,5 +135,10 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
         producerRouterSocket.Dispose();
         consumerRouterSocket.Dispose();
         logger.LogInformation("NetMQ proxy disposed");
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.Run(Start, cancellationToken);
     }
 }

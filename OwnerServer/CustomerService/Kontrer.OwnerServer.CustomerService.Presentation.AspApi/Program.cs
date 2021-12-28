@@ -28,8 +28,8 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                 .RegisterMessageHandlers<CustomerServiceApplicationAssemblyMarker>()
-                 .AddMassTransitProvider();
+                 .RegisterTypedMessageHandlers<CustomerServiceApplicationAssemblyMarker>()
+                 .AddMassTransitClient();
 
             new CustomerInfrastructureBuilder(builder.services)
                 .AddEFRespository()

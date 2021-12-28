@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Basyc.MessageBus.InMemory\Basyc.MessageBus.Client.NetMQ.csproj" />
 		<ProjectReference Include="..\Basyc.MessageBus.Manager.Application\Basyc.MessageBus.Manager.Application.csproj" />
 		<ProjectReference Include="..\Basyc.MessageBus.Manager.Infrastructure\Basyc.MessageBus.Manager.Infrastructure.csproj" />
 		<ProjectReference Include="..\Basyc.MessageBus.Manager.Presentation.BlazorLibrary\Basyc.MessageBus.Manager.Presentation.BlazorLibrary.csproj" />

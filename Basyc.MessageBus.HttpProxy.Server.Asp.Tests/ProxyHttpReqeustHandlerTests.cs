@@ -17,14 +17,14 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
 {
     public class ProxyHttpReqeustHandlerTests
     {
-        private readonly Mock<IMessageBusClient> messageBusMock;
+        private readonly Mock<ITypedMessageBusClient> messageBusMock;
         private readonly ProxyHttpReqeustHandler handler;
         private readonly Mock<HttpContext> httpContextMock;
         private readonly IRequestSerializer serializer;
 
         public ProxyHttpReqeustHandlerTests()
         {
-            messageBusMock = new Mock<IMessageBusClient>();
+            messageBusMock = new Mock<ITypedMessageBusClient>();
             handler = new ProxyHttpReqeustHandler(messageBusMock.Object, new JsonRequestSerializer());
             httpContextMock = new Mock<HttpContext>();
             serializer = new JsonRequestSerializer();

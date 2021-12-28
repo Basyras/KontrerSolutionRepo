@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Reflection;
 using Basyc.MessageBus.Client;
+using Microsoft.Extensions.DependencyInjection;
+using Basyc.MessageBus.Client.NetMQ;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -26,9 +28,13 @@ builder.Services.AddBlazorMessageBus()
     .SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
 builder.Services.AddMessageBusClient()
-    .AddProxyProvider()
+    .AddProxyClient()
     .SetProxyServerUri(new Uri("https://localhost:44310/"));
+
+
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-await builder.Build().RunAsync();
+var app = builder.Build();
+
+await app.RunAsync();

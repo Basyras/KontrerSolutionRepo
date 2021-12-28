@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.NetMQ.Shared
 {
-    public record VoidResult();
+    public record RequestCase(int SessionId, string RequestType, object RequestData, bool ExpectsResponse,Type? ResponseType);
 }

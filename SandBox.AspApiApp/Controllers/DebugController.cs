@@ -14,9 +14,9 @@ namespace SandBox.AspApiApp.Controllers
     [ApiController]
     public class DebugController : ControllerBase
     {
-        private readonly IMessageBusClient messageBusManager;
+        private readonly ITypedMessageBusClient messageBusManager;
 
-        public DebugController(IMessageBusClient messageBusManager)
+        public DebugController(ITypedMessageBusClient messageBusManager)
         {
             this.messageBusManager = messageBusManager;
         }

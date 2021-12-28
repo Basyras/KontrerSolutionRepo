@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.HttpProxy.Client
 {
-    public class HttpProxyClientMessageBusClient : IMessageBusClient
+    public class HttpProxyClientMessageBusClient : ITypedMessageBusClient
     {
         private readonly HttpClient httpClient;
         private readonly IOptions<MessageBusHttpProxyClientOptions> options;
@@ -22,28 +22,26 @@ namespace Basyc.MessageBus.HttpProxy.Client
         public HttpProxyClientMessageBusClient(IOptions<MessageBusHttpProxyClientOptions> options, /*HttpClient httpClient,*/ IRequestSerializer serializer)
         {
             this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
-            //httpClient.BaseAddress = options.Value.ProxyHostUri;
             this.options = options;
-            //this.httpClient = httpClient;
             this.serializer = serializer;
         }
 
-        Task IMessageBusClient.PublishAsync<TEvent>(CancellationToken cancellationToken)
+        Task ITypedMessageBusClient.PublishAsync<TEvent>(CancellationToken cancellationToken)
         {
             return SendToProxy(new TEvent());
         }
 
-        Task IMessageBusClient.PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken)
+        Task ITypedMessageBusClient.PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken)
         {
             return SendToProxy(data);
         }
 
-        Task IMessageBusClient.SendAsync<TRequest>(CancellationToken cancellationToken)
+        Task ITypedMessageBusClient.SendAsync<TRequest>(CancellationToken cancellationToken)
         {
             return SendToProxy(new TRequest());
         }
 
-        Task IMessageBusClient.SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+        Task ITypedMessageBusClient.SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
         {
             return SendToProxy(request);
         }
@@ -53,22 +51,22 @@ namespace Basyc.MessageBus.HttpProxy.Client
             return SendToProxy(requestType, request);
         }
 
-        Task IMessageBusClient.SendAsync(Type requestType, CancellationToken cancellationToken)
+        Task ITypedMessageBusClient.SendAsync(Type requestType, CancellationToken cancellationToken)
         {
             return SendToProxy(requestType);
         }
 
-        Task<TResponse> IMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
+        Task<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
         {
             return RequestToProxy<TRequest, TResponse>(new TRequest());
         }
 
-        Task<TResponse> IMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
+        Task<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
         {
             return RequestToProxy<TRequest, TResponse>(request);
         }
 
-        Task<object> IMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
+        Task<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
         {
             return RequestToProxy(requestType, responseType, null);
         }
@@ -109,8 +107,6 @@ namespace Basyc.MessageBus.HttpProxy.Client
         private async Task<object> HttpCallToProxyServer(Type requestType, object request, Type responseType = null)
         {
             var requestJson = serializer.Serialize(request, requestType);
-            //var responseTypeName = responseType == null ? null : responseType.AssemblyQualifiedName;
-            //var proxyRequest = new ProxyRequest(requestType.AssemblyQualifiedName, responseTypeName, requestJson);
             var proxyRequest = ProxyRequest.Create(requestType, requestJson, responseType);
             var proxyRequestJson = serializer.Serialize(proxyRequest);
             var httpContent = new StringContent(proxyRequestJson, Encoding.UTF8, "application/json");
@@ -131,29 +127,17 @@ namespace Basyc.MessageBus.HttpProxy.Client
             await httpResult.Content.CopyToAsync(httpMemomoryStream);
             var bytes = httpMemomoryStream.ToArray();
             var busResponse = serializer.Deserialize(bytes, responseType);
-            //string resultContent = await httpResult.Content.ReadAsStringAsync();
             return busResponse;
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
-        //private static Dictionary<string, object> DictionaryFromType(object atype)
-        //{
-        //    if (atype == null)
-        //        return new Dictionary<string, object>();
-
-        //    Type t = atype.GetType();
-        //    PropertyInfo[] props = t.GetProperties();
-        //    Dictionary<string, object> dict = new Dictionary<string, object>();
-        //    foreach (PropertyInfo prp in props)
-        //    {
-        //        object value = prp.GetValue(atype, new object[] { });
-        //        dict.Add(prp.Name, value);
-        //    }
-        //    return dict;
-        //}
+        public Task StartAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

@@ -23,8 +23,8 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                .RegisterMessageHandlers<CreateAccommodationOrderCommandHandler>()
-                .AddMassTransitProvider();
+                .RegisterTypedMessageHandlers<CreateAccommodationOrderCommandHandler>()
+                .AddMassTransitClient();
 
             builder
                 .Back()

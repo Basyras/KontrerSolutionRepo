@@ -17,9 +17,9 @@ namespace Kontrer.OwnerServer.OrderService.Application.Order.AccommodationOrder
     public class CancelAccommodationOrderCommandHandler : ICommandHandler<CancelAccommodationOrderCommand>
     {
         private readonly IAccommodationOrderRepository orderRepository;
-        private readonly IMessageBusClient messageBus;
+        private readonly ITypedMessageBusClient messageBus;
 
-        public CancelAccommodationOrderCommandHandler(IAccommodationOrderRepository orderRepository, IMessageBusClient messageBus)
+        public CancelAccommodationOrderCommandHandler(IAccommodationOrderRepository orderRepository, ITypedMessageBusClient messageBus)
         {
             this.orderRepository = orderRepository;
             this.messageBus = messageBus;

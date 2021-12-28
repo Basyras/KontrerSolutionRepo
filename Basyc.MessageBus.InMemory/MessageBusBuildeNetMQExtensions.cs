@@ -11,26 +11,27 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class MessageBusBuildeNetMQExtensions
 {
-    //static MethodInfo handleMethodInfo = typeof(IMessageHandler<>).MakeGenericType().GetMethod(nameof(IMessageHandler<IMessage>.Handle))!;
-    //static MethodInfo handleWithResponseMethodInfo = typeof(IMessageHandler<,>).GetMethod(nameof(IMessageHandler<IMessage<object>,object>.Handle))!;
+    public static MessageBusClientBuilder AddNetMQClient(this MessageBusClientBuilder builder,
+       int portForPublishers, int portForSubscribers,int brokerServerPort) => 
+        AddNetMQClient(builder, portForPublishers, portForSubscribers, brokerServerPort);
 
-    public static MessageBusClientBuilder AddNetMQProvider(this MessageBusClientBuilder builder, 
-        int portForPublishers, int portForSubscribers, 
-        int portForPush, int portForPull,
-        int brokerServerPort, string? clientId
-        )
+    public static MessageBusClientBuilder AddNetMQClient(this MessageBusClientBuilder builder, 
+        int portForPublishers, int portForSubscribers,        
+        string? clientId, int brokerServerPort = 5357, string brokerServerAddress = "localhost")
     {
         var services = builder.services;
-        services.AddSingleton<IMessageBusClient, NetMQMessageBusClient>();
+        services.AddSingleton<ISimpleMessageBusClient, NetMQMessageBusClient>();
         services.Configure<NetMQMessageBusClientOptions>(x =>
         {
             x.PortForSubscribers = portForSubscribers;
             x.PortForPublishers = portForPublishers;
-            x.PortForPush = portForPush;
-            x.PortForPull = portForPull;
             x.BrokerServerPort = brokerServerPort;
-            x.ClientId = clientId;
+            x.WorkerId = clientId;
+        });
 
+        services.AddSingleton<IMessageHandlerManager, TypedMessageHandlerManager>();
+        services.Configure<TypedMessageHandlerManagerOptions>(x =>
+        {
             var messageHandlerTypes = builder.services
                 .Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, typeof(IMessageHandler<>)));
 
@@ -39,7 +40,7 @@ public static class MessageBusBuildeNetMQExtensions
                 Type handlerType = messageHandlerService.ImplementationType!;
                 Type messageType = GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<>))[0];
                 MethodInfo handleMethodInfo = typeof(IMessageHandler<>).MakeGenericType(messageType).GetMethod(nameof(IMessageHandler<IMessage>.Handle))!;
-                x.Handlers.Add(new MessageHandlerInfo(handlerType,messageType, handleMethodInfo));
+                x.Handlers.Add(new TypedMessageHandlerInfo(handlerType, messageType, handleMethodInfo));
             }
 
             var messagesWithResponse = builder.services
@@ -54,9 +55,7 @@ public static class MessageBusBuildeNetMQExtensions
                 MethodInfo handleWithResponseMethodInfo = typeof(IMessageHandler<,>)
                 .MakeGenericType(messageType, responseType)
                 .GetMethod(nameof(IMessageHandler<IMessage<object>, object>.Handle))!;
-                //.MakeGenericMethod(responseType)!;
-                //MethodInfo generichandleMethodInfo = handleWithResponseMethodInfo.MakeGenericMethod(responseType)!;
-                x.Handlers.Add(new MessageHandlerInfo(handlerType, messageType, handleWithResponseMethodInfo));
+                x.Handlers.Add(new TypedMessageHandlerInfo(handlerType, messageType, responseType, handleWithResponseMethodInfo));
             }
         });
         return builder;

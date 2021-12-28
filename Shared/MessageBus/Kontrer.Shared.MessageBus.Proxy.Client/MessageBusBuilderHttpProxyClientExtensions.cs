@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class MessageBusBuilderHttpProxyClientExtensions
     {
-        public static MessageBusHttpProxyClientBuilder AddProxyProvider(this MessageBusClientBuilder builder)
+        public static MessageBusHttpProxyClientBuilder AddProxyClient(this MessageBusClientBuilder builder)
         {
             builder.services.AddSingleton<IRequestSerializer, JsonRequestSerializer>();
             builder.services.AddSingleton(new HttpClient());

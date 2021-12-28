@@ -16,9 +16,10 @@ namespace Basyc.MessageBus.Client
 
         public MessageBusClientBuilder(IServiceCollection services) : base(services)
         {
+            services.AddSingleton<ITypedMessageBusClient, TypedToSimpleMessageBusClient>();
         }
 
-        public MessageBusClientBuilder RegisterMessageHandlers<THandlerAssemblyMarker>()
+        public MessageBusClientBuilder RegisterTypedMessageHandlers<THandlerAssemblyMarker>()
         {
             return RegisterMessageHandlers(typeof(THandlerAssemblyMarker).Assembly);
         }

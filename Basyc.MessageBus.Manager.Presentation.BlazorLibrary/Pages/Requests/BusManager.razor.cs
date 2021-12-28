@@ -21,7 +21,7 @@ public partial class BusManager
     public IBusManager busManager { get; private set; }
 
     [Inject]
-    public IMessageBusClient MessageBusManager { get; private set; }
+    public ITypedMessageBusClient MessageBusManager { get; private set; }
 
     [Inject]
     public IDialogService DialogService { get; private set; }
