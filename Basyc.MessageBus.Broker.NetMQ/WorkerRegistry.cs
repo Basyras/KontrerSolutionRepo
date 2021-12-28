@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Broker.NetMQ
 {
-    public class WorkerRegistry
+    public class WorkerRegistry : IWorkerRegistry
     {
         Dictionary<string, MessageWorkers> workerStorage = new Dictionary<string, MessageWorkers>();
         public void RegisterWorker(string workerId, string[] suppportedMessages)
         {
-            foreach(var supportedMessage in suppportedMessages)
+            foreach (var supportedMessage in suppportedMessages)
             {
-                if(workerStorage.TryGetValue(supportedMessage, out var existingWorkerList))
+                if (workerStorage.TryGetValue(supportedMessage, out var existingWorkerList))
                 {
                     existingWorkerList.WorkerIds.Add(workerId);
-                }   
+                }
                 else
                 {
                     var newWorkerList = new List<string>();
                     newWorkerList.Add(workerId);
-                    workerStorage.Add(supportedMessage, new MessageWorkers(supportedMessage,newWorkerList,0));
+                    workerStorage.Add(supportedMessage, new MessageWorkers(supportedMessage, newWorkerList, 0));
                 }
             }
         }
 
-        public string GetWorkerFor(string messageType)
+        public bool TryGetWorkerFor(string messageType, out string? workerId)
         {
             if (workerStorage.TryGetValue(messageType, out var workers))
             {
@@ -35,17 +35,14 @@ namespace Basyc.MessageBus.Broker.NetMQ
                 else
                     workers.LastUsedWorkerId++;
 
-                return workers.WorkerIds[workers.LastUsedWorkerId];
+                workerId = workers.WorkerIds[workers.LastUsedWorkerId];
+                return true;
             }
             else
             {
-                throw new Exception("No worker what could consume this message");
+                workerId = null;
+                return false;
             }
-        }
-
-        public string GetWorkerFor(Type messageType)
-        {
-            return GetWorkerFor(messageType.AssemblyQualifiedName!);
         }
 
         public IEnumerable<string> GetWorkersFor(string messageType)

@@ -11,24 +11,22 @@ namespace Basyc.MessageBus.Broker.NetMQ;
 public class NetMQMessageBrokerServer : IMessageBrokerServer
 {
     private readonly IOptions<NetMQMessageBrokerServerOptions> options;
+    private readonly IWorkerRegistry workerRegistry;
     private readonly NetMQPoller poller = new NetMQPoller();
     private readonly ILogger<NetMQMessageBrokerServer> logger;
     private readonly XPublisherSocket publisherSocker;
     private readonly XSubscriberSocket subscriberSocket;
     private readonly RouterSocket producerRouterSocket;
-    private readonly RouterSocket consumerRouterSocket;
-    private readonly WorkerRegistry workerRegistry;
 
-    public NetMQMessageBrokerServer(IOptions<NetMQMessageBrokerServerOptions> options, ILogger<NetMQMessageBrokerServer> logger)
+    public NetMQMessageBrokerServer(IOptions<NetMQMessageBrokerServerOptions> options, IWorkerRegistry workerRegistry, ILogger<NetMQMessageBrokerServer> logger)
     {
         this.options = options;
+        this.workerRegistry = workerRegistry;
         this.logger = logger;
 
         publisherSocker = new XPublisherSocket($"@tcp://{options.Value.AddressForSubscribers}:{options.Value.PortForSubscribers}");
         subscriberSocket = new XSubscriberSocket($"@tcp://{options.Value.AddressForPublishers}:{options.Value.PortForPublishers}");
-        consumerRouterSocket = new RouterSocket($"@tcp://{options.Value.BrokerServerAddress}:{options.Value.BrokerServerPort - 100}");
-        producerRouterSocket = new RouterSocket($"@tcp://{options.Value.BrokerServerAddress}:{options.Value.BrokerServerPort}");
-        workerRegistry = new WorkerRegistry();
+        producerRouterSocket = new RouterSocket($"@tcp://{options.Value.BrokerServerAddress}:{options.Value.BrokerServerPort}");        
 
         producerRouterSocket.ReceiveReady += (s, a) =>
         {
@@ -46,16 +44,19 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
                     case MessageCase.CheckIn:
                         if (recievedMessageFrame.FrameCount != 3)
                             logger.LogWarning($"CheckIn recieved with unexpected format");
+
                         var checkIn = deserializedMessage.CheckIn!;
-                        logger.LogInformation($"CheckIn message {checkIn} received from {senderAddressString}");
+                        logger.LogInformation($"CheckIn recieved {checkIn} from {senderAddressString}");
                         workerRegistry.RegisterWorker(checkIn.WorkerId, checkIn.SupportedMessageTypes);
+
                         break;
 
                     case MessageCase.Response:
                         if (recievedMessageFrame.FrameCount != 5)
                             logger.LogWarning($"Recieved response with unexpected format");
+
                         var responseCase = deserializedMessage.Response!;
-                        logger.LogInformation($"Recieved response: '{responseCase.ReponseData}' from {senderAddressString}");
+                        logger.LogInformation($"Recieved response: '{responseCase.ReponseData}' from {senderAddressString}:{responseCase.SessionId}");
                         var messageToConsumer = new NetMQMessage();
                         var producerAddress = recievedMessageFrame[4];
                         var producerAddressString = producerAddress.ConvertToString();
@@ -64,25 +65,42 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
                         messageToConsumer.Append(senderAddressFrame);
                         messageToConsumer.AppendEmptyFrame();
                         messageToConsumer.Append(recievedMessageFrame[2].Buffer);
-                        logger.LogDebug($"Sending response: '{responseCase.ReponseData}' to producer {producerAddressString}");
+                        logger.LogDebug($"Sending response: '{responseCase.ReponseData}' to {producerAddressString}:{responseCase.SessionId}");
                         producerRouterSocket.SendMultipartMessage(messageToConsumer);
-                        logger.LogDebug($"Response sent to producer {producerAddressString}");
+                        logger.LogDebug($"Response sent to {producerAddressString}");
+
                         break;
 
                     case MessageCase.Request:
                         var requestCase = deserializedMessage.Request!;
-                        logger.LogInformation($"Recieved request: '{requestCase.RequestData}' from {senderAddressString}");
-                        string workerAddressString = workerRegistry.GetWorkerFor(requestCase.RequestType);
-                        byte[] requestBytes = recievedMessageFrame[2].Buffer;
-                        var messageToProducer = new NetMQMessage();
-                        messageToProducer.Append(workerAddressString);
-                        messageToProducer.AppendEmptyFrame();
-                        messageToProducer.Append(senderAddressFrame);
-                        messageToProducer.AppendEmptyFrame();
-                        messageToProducer.Append(requestBytes);
-                        logger.LogDebug($"Sending request: '{requestCase.RequestData}' to consumer {workerAddressString}");
-                        producerRouterSocket.SendMultipartMessage(messageToProducer);
-                        logger.LogDebug($"Request sent to consumer {workerAddressString}");
+                        logger.LogInformation($"Recieved request: '{requestCase.RequestData}' from {senderAddressString}:{requestCase.SessionId}");
+                        if (workerRegistry.TryGetWorkerFor(requestCase.RequestType, out string? workerAddressString))
+                        {
+                            byte[] requestBytes = recievedMessageFrame[2].Buffer;
+                            var messageToProducer = new NetMQMessage();
+                            messageToProducer.Append(workerAddressString!);
+                            messageToProducer.AppendEmptyFrame();
+                            messageToProducer.Append(senderAddressFrame);
+                            messageToProducer.AppendEmptyFrame();
+                            messageToProducer.Append(requestBytes);
+                            logger.LogDebug($"Sending request: '{requestCase.RequestData}' to {workerAddressString}:{requestCase.SessionId}");
+                            producerRouterSocket.SendMultipartMessage(messageToProducer);
+                            logger.LogDebug($"Request sent to {workerAddressString}");
+                        }
+                        else
+                        {
+                            var failure = new FailResult("Worker for this request not found!");
+                            var messageToProducer = new NetMQMessage();
+                            messageToProducer.Append(senderAddressFrame);
+                            messageToProducer.AppendEmptyFrame();
+                            messageToProducer.AppendEmptyFrame();
+                            messageToProducer.AppendEmptyFrame();
+                            messageToProducer.Append(TypedMessageToByteSerializer.Serialize(failure, requestCase.SessionId, true));
+                            logger.LogError($"Sending failure: '{failure}' to {senderAddressString}");
+                            producerRouterSocket.SendMultipartMessage(messageToProducer);
+                            logger.LogError($"Failure sent to {senderAddressFrame}");
+                        }
+
                         break;
                 }
             }
@@ -95,17 +113,14 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
                 messageToProducer.AppendEmptyFrame();
                 messageToProducer.AppendEmptyFrame();
                 messageToProducer.Append(TypedMessageToByteSerializer.Serialize(failure, -1, true));
-                logger.LogInformation($"Sending failure: '{failure}' to {senderAddressFrame}");
+                logger.LogCritical($"Sending failure: '{failure}' to {senderAddressString}");
                 producerRouterSocket.SendMultipartMessage(messageToProducer);
-                logger.LogInformation($"Failure sent to {senderAddressFrame}");
+                logger.LogCritical($"Failure sent to {senderAddressFrame}");
             }
 
         };
 
         poller.Add(producerRouterSocket);
-        //poller.Add(producerRouterSocket);
-
-
     }
 
     public void Start()
@@ -127,18 +142,18 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
             throw;
         }
     }
+    public Task StartAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.Run(Start, cancellationToken);
+    }
 
     public void Dispose()
     {
         publisherSocker.Dispose();
         subscriberSocket.Dispose();
         producerRouterSocket.Dispose();
-        consumerRouterSocket.Dispose();
         logger.LogInformation("NetMQ proxy disposed");
     }
 
-    public Task StartAsync(CancellationToken cancellationToken = default)
-    {
-        return Task.Run(Start, cancellationToken);
-    }
+
 }

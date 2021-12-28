@@ -15,6 +15,7 @@ namespace Basyc.MessageBus.Broker.NetMQ
             int brokerServerPort = 5357, string brokerServerAddress = "localhost")
         {
             services.AddSingleton<IMessageBrokerServer, NetMQMessageBrokerServer>();
+            services.AddSingleton<IWorkerRegistry, WorkerRegistry>();
             services.Configure<NetMQMessageBrokerServerOptions>(x => 
             {
                 x.AddressForSubscribers = addressForSubscribers;

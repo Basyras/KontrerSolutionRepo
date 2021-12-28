@@ -23,19 +23,25 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
     private readonly IOptions<NetMQMessageBusClientOptions> options;
     private readonly IMessageHandlerManager handlerManager;
     private readonly ILogger<NetMQMessageBusClient> logger;
+    private readonly IActiveSessionManager activeSessionStorage;
     private readonly NetMQPoller poller = new NetMQPoller();
     private readonly PublisherSocket publisherSocket;
     private SubscriberSocket? subscriberSocket;
     private DealerSocket dealerSocket;
-    private Dictionary<int, Session> sessions = new Dictionary<int, Session>();
+    //private Dictionary<int, ActiveSession> sessions = new Dictionary<int, ActiveSession>();
     private int lastUsedSessionId = 1;
 
-    public NetMQMessageBusClient(IServiceProvider serviceProvider, IOptions<NetMQMessageBusClientOptions> options, IMessageHandlerManager handlerManager, ILogger<NetMQMessageBusClient> logger)
+    public NetMQMessageBusClient(IServiceProvider serviceProvider, 
+        IOptions<NetMQMessageBusClientOptions> options, 
+        IMessageHandlerManager handlerManager, 
+        ILogger<NetMQMessageBusClient> logger,
+        IActiveSessionManager activeSessionStorage)
     {
         this.serviceProvider = serviceProvider;
         this.options = options;
         this.handlerManager = handlerManager;
         this.logger = logger;
+        this.activeSessionStorage = activeSessionStorage;
 
         //publisherSocket = new PublisherSocket($">tcp://localhost:{options.Value.PortForPublishers}");
         //poller.Add(publisherSocket);
@@ -61,6 +67,7 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
         {
             await DealerHandleMessage();
         };
+
         poller.Add(dealerSocket);
     }
 
@@ -92,7 +99,7 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
         {
             case MessageCase.Request:
                 var request = deserializedMessage.Request!;
-                logger.LogInformation($"Request recieved from {producerAddressString}");
+                logger.LogDebug($"Request recieved from {producerAddressString}");
                 var handlerResult = await handlerManager.ConsumeMessage(request.RequestType, request.RequestData);
                 byte[] responseBytes = TypedMessageToByteSerializer.Serialize(handlerResult, request.SessionId, true);
                 var messageToServer = new NetMQMessage();
@@ -107,25 +114,33 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
                 break;
 
             case MessageCase.Response:
-
                 var response = deserializedMessage.Response!;
-                logger.LogInformation($"Response recieved from {producerAddressString}, message: {response.ReponseData}");
-                if (sessions.TryGetValue(response.SessionId, out var session) is false)
+
+                if (response.ReponseData is FailResult failure)
                 {
-                    logger.LogError($"This bus client does not have active seesion for this message");
+                    logger.LogError($"Failure recieved: {failure.Message}");
+
+                    if (response.SessionId == ActiveSession.UnknownSessionId)
+                    {
+                       logger.LogCritical($"Cannot finish session, SessionId not recieved");                       
+                    }
+                    else
+                    {
+                        if (activeSessionStorage.TryCompleteSession(response.SessionId, response.ReponseData))
+                            logger.LogDebug($"Session '{response.SessionId}' completed");
+                        else
+                            logger.LogError($"Session '{response.SessionId}' failed. Session does not exist");
+                    }
                     return;
                 }
 
 
-                if (response.ReponseData is FailResult failure)
-                {
-                    logger.LogError($"Broker responded with error: {failure.Message}");
-                }
+                logger.LogInformation($"Response recieved from {producerAddressString}, message: {response.ReponseData}");
+                if(activeSessionStorage.TryCompleteSession(response.SessionId, response.ReponseData))
+                    logger.LogDebug($"Session '{response.SessionId}' completed");
+                else
+                    logger.LogError($"Session '{response.SessionId}' failed. Session does not exist");
 
-                sessions[response.SessionId].ResponseSource.SetResult(response.ReponseData);
-                sessions.Remove(response.SessionId);
-
-                logger.LogDebug($"Session '{session.SessionId}' completed");
                 break;
         }
 
@@ -198,15 +213,13 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
 
     private Task<object> RequestAsync(object? request, string requestType, CancellationToken cancellationToken)
     {
-        int newSessionId = ++lastUsedSessionId;
-
         Task<object> task = Task.Run(() =>
         {
             cancellationToken.ThrowIfCancellationRequested();
-
+            var newSession = activeSessionStorage.CreateSession();
+            logger.LogDebug($"Session '{newSession.SessionId}' created");
             var requestCLRType = TypedToSimpleConverter.ConvertSimpleToType(requestType);
-            //var requestCLRType = Assembly.GetEntryAssembly()!.GetType(requestType)!;
-            var serializedMessage = TypedMessageToByteSerializer.Serialize(request, requestCLRType, newSessionId);
+            var serializedMessage = TypedMessageToByteSerializer.Serialize(request, requestCLRType, newSession.SessionId);
             var messageToBroker = new NetMQMessage();
             messageToBroker.AppendEmptyFrame();
             messageToBroker.Append(serializedMessage);
@@ -214,14 +227,18 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
             cancellationToken.ThrowIfCancellationRequested();
 
             logger.LogInformation($"Requesting '{requestType}'");
-            dealerSocket.SendMultipartMessage(messageToBroker);
-            logger.LogInformation($"Requested '{requestType}'");
-
-            TaskCompletionSource<object> responseSource = new TaskCompletionSource<object>();
-            logger.LogDebug($"Session '{newSessionId}' started");
-            sessions.Add(newSessionId, new Session(newSessionId, responseSource));
-            logger.LogDebug($"Waiting for '{requestType}' response");
-            return responseSource.Task;
+            try
+            {
+                dealerSocket.SendMultipartMessage(messageToBroker);
+            }
+            catch(Exception ex)
+            {
+                logger.LogCritical(ex, "Failed to send request");
+                activeSessionStorage.TryCompleteSession(newSession.SessionId, new FailResult("Failed to send request"));                
+            }
+            
+            logger.LogInformation($"Requested '{requestType}'");         
+            return newSession.ResponseSource.Task;
         });
 
         if (task.Exception is not null)
@@ -229,59 +246,6 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
 
         return task;
     }
-
-    //Task ITypedMessageBusClient.PublishAsync<TEvent>(CancellationToken cancellationToken)
-    //{
-    //    return PublishAsync(default(TEvent), cancellationToken);
-    //}
-
-    //Task ITypedMessageBusClient.PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken)
-    //{
-    //    return PublishAsync(data, cancellationToken);
-    //}
-
-    //Task ITypedMessageBusClient.SendAsync<TCommand>(CancellationToken cancellationToken)
-    //{
-    //    return Send(default(TCommand), typeof(TCommand), cancellationToken);
-    //}
-
-    //Task ITypedMessageBusClient.SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
-    //{
-    //    return Send(command, typeof(TCommand), cancellationToken);
-    //}
-
-    //Task ITypedMessageBusClient.SendAsync(Type commandType, object command, CancellationToken cancellationToken)
-    //{
-    //    return Send(command, commandType, cancellationToken);
-    //}
-
-    //Task ITypedMessageBusClient.SendAsync(Type commandType, CancellationToken cancellationToken)
-    //{
-    //    return Send(Activator.CreateInstance(commandType), commandType, cancellationToken);
-    //}
-
-    //async Task<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
-    //{
-    //    return (TResponse)(await Request(null, typeof(TRequest), typeof(TResponse), cancellationToken))!;
-    //}
-
-    //Task<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
-    //{
-    //    return (Request(null, requestType, responseType, cancellationToken))!;
-    //}
-
-    //Task<object> ITypedMessageBusClient.RequestAsync(Type requestType, object request, Type responseType, CancellationToken cancellationToken)
-    //{
-    //    return (Request(request, requestType, responseType, cancellationToken))!;
-    //}
-
-    //async Task<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
-    //{
-    //    return (TResponse)(await Request(request, typeof(TRequest), typeof(TResponse), cancellationToken))!;
-    //}
-
-
-
     Task ISimpleMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
     {
         return PublishAsync(null, eventType, cancellationToken);
@@ -299,7 +263,7 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
 
     Task ISimpleMessageBusClient.SendAsync(string commandType, object commandData, CancellationToken cancellationToken)
     {
-        return SendAsync(null, commandType, cancellationToken);
+        return SendAsync(commandData, commandType, cancellationToken);
     }
 
     Task<object> ISimpleMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)

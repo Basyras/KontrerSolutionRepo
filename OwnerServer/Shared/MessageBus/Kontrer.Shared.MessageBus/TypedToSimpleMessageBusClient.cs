@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
 {
-    public class TypedToSimpleMessageBusClient : ITypedMessageBusClient
+    public sealed class TypedToSimpleMessageBusClient : ITypedMessageBusClient
     {
         private readonly ISimpleMessageBusClient messageBusClient;
 

@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client.NetMQ
 {
-    public class TypedMessageHandlerManager : IMessageHandlerManager
+    public class MessageHandlerManager : IMessageHandlerManager
     {
         private readonly IServiceProvider serviceProvider;
-        private Dictionary<string, TypedMessageHandlerInfo> handlerStorage = new();
-        public TypedMessageHandlerManager(IServiceProvider serviceProvider, IOptions<TypedMessageHandlerManagerOptions> options)
+        private Dictionary<string, MessageHandlerInfo> handlerStorage = new();
+        public MessageHandlerManager(IServiceProvider serviceProvider, IOptions<MessageHandlerManagerOptions> options)
         {
             this.serviceProvider = serviceProvider;
 

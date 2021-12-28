@@ -50,7 +50,7 @@ public static class TypedMessageToByteSerializer
 
         if (messageData is IMessage)
         {
-            return DeserializedMessage.CreateRequest(new RequestCase(messageWrapper.SessionId, messageType.FullName!, messageData, false, null));
+            return DeserializedMessage.CreateRequest(new RequestCase(messageWrapper.SessionId, TypedToSimpleConverter.ConvertTypeToSimple(messageType), messageData, false, null));
         }
 
         if (GenericsHelper.IsAssignableToGenericType(messageType, typeof(IMessage<>)))

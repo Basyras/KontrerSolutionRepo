@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.NetMQ.Shared
 {
-    //public record CheckInMessage(string WorkerId, string[] SupportedMessageTypes = Array.Empty<string>());
-
-    public class CheckInMessage
+    public record CheckInMessage
     {
         public CheckInMessage(string workerId, string[] supportedMessageTypes)
         {
@@ -16,7 +14,7 @@ namespace Basyc.MessageBus.NetMQ.Shared
             SupportedMessageTypes = supportedMessageTypes ?? Array.Empty<string>();
         }
 
-        public string WorkerId { get; init; }
         public string[] SupportedMessageTypes { get; init; }
+        public string WorkerId { get; init; }
     }
 }
