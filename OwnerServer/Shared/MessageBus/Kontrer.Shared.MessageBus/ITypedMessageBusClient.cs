@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.Shared;
+using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace Basyc.MessageBus.Client
 
         Task<object> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default);
 
-        Task<TResponse> RequestAsync<TRequest, TResponse>(TRequest requestData, CancellationToken cancellationToken = default)
+        Task<OneOf<TResponse, ErrorMessage>> RequestAsync<TRequest, TResponse>(TRequest requestData, CancellationToken cancellationToken = default)
             where TRequest : class, IMessage<TResponse>
             where TResponse : class;
 

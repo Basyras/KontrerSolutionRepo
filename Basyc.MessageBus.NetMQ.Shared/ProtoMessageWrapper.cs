@@ -18,22 +18,23 @@ public class ProtoMessageWrapper
 
     }
 
-    public ProtoMessageWrapper(string commandAssemblyQualifiedName, byte[] commandBytes, int communicationId, bool isResponse)
+    public ProtoMessageWrapper(int sessionId, MessageCase messageCase, string messageType, byte[] messageData)
     {
-        CommandAssemblyQualifiedName = commandAssemblyQualifiedName;
-        CommandBytes = commandBytes;
-        SessionId = communicationId;
-        IsResponse = isResponse;
+        MessageType = messageType;
+        MessageData = messageData;
+        SessionId = sessionId;
+        MessageCase = messageCase;
     }
 
     [ProtoMember(1)]
     public int SessionId { get; set; }
+
     [ProtoMember(2)]
-    public bool IsResponse { get; set; }
+    public MessageCase MessageCase { get; }
 
     [ProtoMember(3)]
-    public string? CommandAssemblyQualifiedName { get; set; }
+    public string MessageType { get; set; }
 
     [ProtoMember(4)]
-    public byte[] CommandBytes { get; set; }
+    public byte[] MessageData { get; set; }
 }

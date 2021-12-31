@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using Basyc.Shared.Helpers;
 using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace Basyc.MessageBus.NetMQ.Shared;
 
@@ -10,55 +11,67 @@ public static class TypedObjectToByteSerializer
 {
     static TypedObjectToByteSerializer()
     {
-        Serializer.PrepareSerializer<ProtoMessageWrapper>();
+        Serializer.PrepareSerializer<ProtoMessageWrapper>();        
     }
-    public static byte[] Serialize<T>(T instance)
+
+    public static byte[] Serialize(object objectData, Type objectType)
     {
-        if (instance == null)
+        if (objectData == null)
             return new byte[0];
 
-        if (instance.GetType().GetProperties().Length == 0)
-            return new byte[0];        
+        if (objectData.GetType().GetProperties().Length == 0)
+            return new byte[0];
 
         using var stream = new MemoryStream();
-        Serializer.Serialize(stream, instance);
-
-
+        PrepareSerializer(objectType);
+        Serializer.Serialize(stream, objectData);
         return stream.ToArray();
     }
 
-    public static T Deserialize<T>(byte[] bytes)
+    private static void PrepareSerializer(Type type)
     {
-        if (bytes.Length == 0)
-            return (T)Activator.CreateInstance(typeof(T))!;
-
-        using MemoryStream stream = new MemoryStream();
-
-        // Ensure that our stream is at the beginning.
-        stream.Write(bytes, 0, bytes.Length);
-        stream.Seek(0, SeekOrigin.Begin);
-        try
+        if (RuntimeTypeModel.Default.CanSerialize(type) is false)
         {
-            return Serializer.Deserialize<T>(stream);
-        }
-        catch (System.IO.EndOfStreamException ex)
-        {
-            throw new Exception($"Received message is not probably not correct format ${nameof(ProtoMessageWrapper)}", ex);
+            RuntimeTypeModel.Default.Add(type);
+            var parameters = type.GetConstructors().First().GetParameters();
+            foreach (var parameter in parameters)
+            {
+                PrepareSerializer(parameter.ParameterType);
+            }
         }
     }
+    
 
-    public static object Deserialize(byte[] bytes, Type commandType)
+    public static T Deserialize<T>(byte[] objectData)
     {
-        if (bytes == null)
-            return commandType.GetDefaultValue();
+        return (T)Deserialize(objectData, typeof(T));
+    }
 
-        if (bytes.Length == 0)
-            return Activator.CreateInstance(commandType)!;
+    public static object Deserialize(byte[] objectData, Type objectClrType)
+    {
+        PrepareSerializer(objectClrType);
+
+        if (objectData == null)
+            return objectClrType.GetDefaultValue();
+
+        if (objectData.Length == 0)
+        { 
+            try
+            {
+                return Activator.CreateInstance(objectClrType)!;
+            }
+            catch
+            {
+                throw new Exception("Cannot deserialize message. Message data is empty and message does not have empty constructor.");
+            }
+        }
+            
 
         using var stream = new MemoryStream();
-        stream.Write(bytes, 0, bytes.Length);
+        stream.Write(objectData, 0, objectData.Length);
         stream.Seek(0, SeekOrigin.Begin);
-        var result = Serializer.Deserialize(commandType, stream);
+
+        var result = Serializer.Deserialize(objectClrType, stream);
         return result;
     }
 }

@@ -39,12 +39,16 @@ var services = clientServices.BuildServiceProvider();
 using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();
 client.StartAsync();
 
-
 while (Console.ReadLine() != "stop")
 {
+
     var response = client.RequestAsync<CreateCustomerCommand, CreateCustomerCommandResponse>(new("Jan", "Console12", "aasdů"))
         .GetAwaiter()
         .GetResult();
+
+    response.Switch(x => Console.WriteLine(x),  x => Console.WriteLine(x));
+
+
 }
 
 

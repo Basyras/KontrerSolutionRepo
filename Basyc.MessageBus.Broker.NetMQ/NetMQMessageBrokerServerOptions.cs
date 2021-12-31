@@ -2,12 +2,6 @@
 {
     public class NetMQMessageBrokerServerOptions
     {
-        public string AddressForPublishers { get; set; } = "localhost";
-        public int PortForPublishers { get; set; } = 5551;
-
-        public string AddressForSubscribers { get; set; } = "localhost";
-        public int PortForSubscribers { get; set; } = 5552;
-
         public string BrokerServerAddress { get; set; } = "localhost";
         public int BrokerServerPort { get; set; } = 5553;
     }

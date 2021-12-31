@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -19,6 +19,7 @@
 		<ProjectReference Include="..\Basyc.MessageBus.InMemory\Basyc.MessageBus.Client.NetMQ.csproj" />
 		<ProjectReference Include="..\OwnerServer\CustomerService\Kontrer.OwnerServer.CustomerService.Domain\Kontrer.OwnerServer.CustomerService.Domain.csproj" />
 		<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />
+		<ProjectReference Include="..\Shared\DomainDrivenDesign\Kontrer.Shared.DomainDrivenDesign.Application\Basyc.DomainDrivenDesign.Application.csproj" />
 	</ItemGroup>
 
 </Project>

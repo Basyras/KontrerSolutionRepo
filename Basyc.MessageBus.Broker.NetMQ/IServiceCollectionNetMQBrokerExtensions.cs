@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Basyc.MessageBus.NetMQ.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +10,14 @@ namespace Basyc.MessageBus.Broker.NetMQ
 {
     public static class IServiceCollectionNetMQBrokerExtensions
     {
-        public static IServiceCollection AddNetMQMessageBroker(this IServiceCollection services, 
-            string addressForSubscribers, int portForSubscribers,
-            string addressForPublishers, int portForPublishers,
+        public static IServiceCollection AddNetMQMessageBroker(this IServiceCollection services,
             int brokerServerPort = 5357, string brokerServerAddress = "localhost")
         {
             services.AddSingleton<IMessageBrokerServer, NetMQMessageBrokerServer>();
             services.AddSingleton<IWorkerRegistry, WorkerRegistry>();
+            services.AddSingleton<IMessageToByteSerializer, TypedMessageToByteSerializer>();
             services.Configure<NetMQMessageBrokerServerOptions>(x => 
             {
-                x.AddressForSubscribers = addressForSubscribers;
-                x.PortForSubscribers = portForSubscribers;
-                x.AddressForPublishers = addressForPublishers;
-                x.PortForPublishers = portForPublishers;
                 x.BrokerServerAddress = brokerServerAddress;
                 x.BrokerServerPort = brokerServerPort;
             });

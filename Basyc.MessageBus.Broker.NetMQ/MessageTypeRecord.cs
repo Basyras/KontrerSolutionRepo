@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Broker.NetMQ
 {
-    public class MessageWorkers
+    public class MessageTypeRecord
     {
-        public MessageWorkers(string MessageType, List<string> WorkerAddresses, int LastUsedWorker)
+        public MessageTypeRecord(string MessageType, List<string> WorkerAddresses, int LastUsedWorker)
         {
             this.MessageType = MessageType;
             this.WorkerIds = WorkerAddresses;

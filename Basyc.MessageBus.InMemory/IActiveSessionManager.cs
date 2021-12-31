@@ -2,7 +2,7 @@
 {
     public interface IActiveSessionManager
     {
-        ActiveSession CreateSession();
+        ActiveSession CreateSession(string messageType);
         bool TryCompleteSession(int sessionId, object sessionResult);
     }
 }

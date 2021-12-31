@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.Shared;
+using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,22 +47,34 @@ namespace Basyc.MessageBus.Client
 
         }
 
-        Task<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
+        async Task<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
         {
-            var genericTask = messageBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple(requestType), cancellationToken);
+            var genericTask = await messageBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple(requestType), cancellationToken);
             return genericTask;
         }
 
-        Task<object> ITypedMessageBusClient.RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken)
+        async Task<object> ITypedMessageBusClient.RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken)
         {
-            var genericTask = messageBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple(requestType),requestData, cancellationToken);
-            return genericTask;
+            var genericTask = await messageBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple(requestType),requestData, cancellationToken);
+            return genericTask.AsT0;
         }
 
-        async Task<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest requestData, CancellationToken cancellationToken)
+        async Task<OneOf<TResponse,ErrorMessage>> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest requestData, CancellationToken cancellationToken)
         {
             var genericTask = messageBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple<TRequest>(), requestData, cancellationToken);
-            return (TResponse) await genericTask.ConfigureAwait(false);
+            var responseData = await genericTask.ConfigureAwait(false);
+            if (responseData.Value is ErrorMessage fail)
+            {
+                return fail;
+            }
+            else
+            {
+                return (TResponse)responseData.Value;
+            }
+            //if(responseData.Value.GetType() == typeof(object))
+            //{
+            //    return (TResponse)responseData.Value;
+            //}
         }
 
 

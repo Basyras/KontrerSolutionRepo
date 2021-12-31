@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
 using NetMQ;
 using NetMQ.Sockets;
+using ProtoBuf;
 using System.Text;
 
 
@@ -27,18 +28,21 @@ clientServices.AddLogging(x =>
 
 clientServices
     .AddMessageBusClient()
+    .RegisterTypedMessageHandlers<Program>()
     .AddNetMQClient(portForPub, portForSub, "Console2");
 
 var services = clientServices.BuildServiceProvider();
 
 using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();
-client.StartAsync();
-
+await client.StartAsync();
 
 
 while (Console.ReadLine() != "stop")
 {
-    client.SendAsync(new DeleteCustomerCommand(1)).GetAwaiter().GetResult();
+    //client.SendAsync(new DeleteCustomerCommand(1)).GetAwaiter().GetResult();
+    //client.PublishAsync(new CustomerCreatedEvent(new )).GetAwaiter().GetResult();
+    Task.Run(() => client.SendAsync(new DeleteCustomerCommand(1)).GetAwaiter().GetResult());
+    
 }
 
 

@@ -11,6 +11,7 @@ namespace Basyc.MessageBus.NetMQ.Shared
         CheckIn,
         Request,
         Response,
+        Event,
 
     }
 }

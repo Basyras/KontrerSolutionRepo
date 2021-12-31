@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.NetMQ.Shared
+namespace Basyc.MessageBus.Shared
 {
-    public record FailResult(string Message);
+    public record ErrorMessage(string Message);
 }

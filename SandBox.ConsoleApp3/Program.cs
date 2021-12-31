@@ -15,9 +15,6 @@ using NetMQ.Sockets;
 using ProtoBuf;
 using System.Text;
 
-int portForSub = 8987;
-int portForPub = 8988;
-
 
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
@@ -26,9 +23,11 @@ clientServices.AddLogging(x =>
     x.AddConsole();
     x.SetMinimumLevel(LogLevel.Debug);
 });
-clientServices.AddNetMQMessageBroker("localhost", portForSub, "localhost", portForPub);
+clientServices.AddNetMQMessageBroker();
 var services = clientServices.BuildServiceProvider();
 using var broker = services.GetRequiredService<IMessageBrokerServer>();
+
+
 broker.Start();
 
 Console.ReadLine();

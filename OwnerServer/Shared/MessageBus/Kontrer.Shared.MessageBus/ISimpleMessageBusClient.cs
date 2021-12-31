@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Basyc.MessageBus.Shared;
+using OneOf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +18,7 @@ namespace Basyc.MessageBus.Client
         Task SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default);
 
         Task<object> RequestAsync(string requestType, CancellationToken cancellationToken = default);
-        Task<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default);
+        Task<OneOf<object,ErrorMessage>> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default);
 
         Task StartAsync(CancellationToken cancellationToken = default);
     }

@@ -9,6 +9,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
+using Basyc.MessageBus.Shared;
+using OneOf;
 
 namespace Basyc.MessageBus.Client.MasstTransit
 {
@@ -37,7 +39,7 @@ namespace Basyc.MessageBus.Client.MasstTransit
             return response.Message;
         }
 
-        async Task<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
+        async Task<OneOf<TResponse,ErrorMessage>> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
         {
             var response = await massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
             return response.Message;

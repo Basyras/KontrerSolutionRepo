@@ -8,7 +8,7 @@ namespace Basyc.MessageBus.Broker.NetMQ
 {
     public class WorkerRegistry : IWorkerRegistry
     {
-        Dictionary<string, MessageWorkers> workerStorage = new Dictionary<string, MessageWorkers>();
+        Dictionary<string, MessageTypeRecord> workerStorage = new Dictionary<string, MessageTypeRecord>();
         public void RegisterWorker(string workerId, string[] suppportedMessages)
         {
             foreach (var supportedMessage in suppportedMessages)
@@ -21,7 +21,7 @@ namespace Basyc.MessageBus.Broker.NetMQ
                 {
                     var newWorkerList = new List<string>();
                     newWorkerList.Add(workerId);
-                    workerStorage.Add(supportedMessage, new MessageWorkers(supportedMessage, newWorkerList, 0));
+                    workerStorage.Add(supportedMessage, new MessageTypeRecord(supportedMessage, newWorkerList, 0));
                 }
             }
         }
@@ -45,15 +45,17 @@ namespace Basyc.MessageBus.Broker.NetMQ
             }
         }
 
-        public IEnumerable<string> GetWorkersFor(string messageType)
+        public bool TryGetWorkersFor(string messageType, out string[] workerIds)
         {
             if (workerStorage.TryGetValue(messageType, out var workers))
             {
-                return workers.WorkerIds;
+                workerIds = workers.WorkerIds.ToArray();
+                return true;
             }
             else
             {
-                throw new Exception("No worker what could consume this message");
+                workerIds = Array.Empty<string>();
+                return false;
             }
         }
     }

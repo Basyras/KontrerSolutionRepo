@@ -1,6 +1,7 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Client.NetMQ;
 using Basyc.MessageBus.Client.RequestResponse;
+using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.Shared;
 using Basyc.Shared.Helpers;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,7 @@ public static class MessageBusClientBuilderNetMQExtensions
             x.WorkerId = clientId;
         });
 
+        services.AddSingleton<IMessageToByteSerializer, TypedMessageToByteSerializer>();
         services.AddSingleton<IMessageHandlerManager, MessageHandlerManager>();
         services.Configure<MessageHandlerManagerOptions>(x =>
         {
