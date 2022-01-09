@@ -1,37 +1,38 @@
 ﻿using Basyc.MessageBus.Client;
+using Basyc.MessageBus.Client.Building;
 using Basyc.MessageBus.Client.NetMQ;
 using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.Shared;
 using Basyc.Shared.Helpers;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class MessageBusClientBuilderNetMQExtensions
+public static class BuildingNetMQExtensions
 {
-    public static MessageBusClientBuilder AddNetMQClient(this MessageBusClientBuilder builder,
-       int portForPublishers, int portForSubscribers,int brokerServerPort) => 
-        AddNetMQClient(builder, portForPublishers, portForSubscribers, brokerServerPort);
+    public static BusClientSelectClientProviderStage AddNetMQClient(this BusClientSelectClientProviderStage builder,
+       int? brokerServerPort) => 
+        AddNetMQClient(builder, brokerServerPort);
 
-    public static MessageBusClientBuilder AddNetMQClient(this MessageBusClientBuilder builder, 
-        int portForPublishers, int portForSubscribers,        
-        string? clientId, int brokerServerPort = 5357, string brokerServerAddress = "localhost")
+    public static BusClientSelectClientProviderStage AddNetMQClient(this BusClientSelectClientProviderStage builder,               
+        string? clientId = null, int brokerServerPort = 5357, string brokerServerAddress = "localhost")
     {
         var services = builder.services;
         services.AddSingleton<ISimpleMessageBusClient, NetMQMessageBusClient>();
         services.AddSingleton<IActiveSessionManager, ActiveSessionManager>();
         services.Configure<NetMQMessageBusClientOptions>(x =>
         {
-            x.PortForSubscribers = portForSubscribers;
-            x.PortForPublishers = portForPublishers;
+            x.BrokerServerAddress = brokerServerAddress;
             x.BrokerServerPort = brokerServerPort;
             x.WorkerId = clientId;
         });
 
-        services.AddSingleton<IMessageToByteSerializer, TypedMessageToByteSerializer>();
+        services.AddBasycSerialization()
+            .SelectProtobufNet();
+
+        services.AddSingleton<IMessageToByteSerializer, BasycTypedMessageToByteSerializer>();
         services.AddSingleton<IMessageHandlerManager, MessageHandlerManager>();
         services.Configure<MessageHandlerManagerOptions>(x =>
         {

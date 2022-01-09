@@ -1,4 +1,6 @@
 ﻿
+using OneOf;
+
 namespace Basyc.MessageBus.Client.NetMQ
 {
     public interface IMessageHandlerManager
@@ -9,7 +11,7 @@ namespace Basyc.MessageBus.Client.NetMQ
         /// <param name="messageType"></param>
         /// <param name="messageData"></param>
         /// <returns></returns>
-        Task<object> ConsumeMessage(string messageType, object messageData);
+        Task<OneOf<object,Exception>> ConsumeMessage(string messageType, object messageData, CancellationToken cancellationToken);
         string[] GetConsumableMessageTypes();
     }
 }

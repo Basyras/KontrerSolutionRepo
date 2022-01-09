@@ -1,5 +1,5 @@
 ﻿using Basyc.DependencyInjection;
-using Basyc.MessageBus.Client;
+using Basyc.MessageBus.Client.Building;
 using Basyc.MicroService.Abstraction.Initialization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -14,11 +14,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public class MicroserviceBuilder<TParentBuilder> : DependencyBuilderBase<TParentBuilder>
     {
-        public readonly IServiceCollection services;
-
         public MicroserviceBuilder(IServiceCollection services, TParentBuilder parentBuilder) : base(services, parentBuilder)
         {
-            this.services = services;
+            
         }
 
         public IMicroserviceProvider MicroserviceProvider { get; private set; }
@@ -29,9 +27,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return this;
         }
 
-        public MessageBusClientBuilder AddMessageBus()
+        public BusClientSelectMessageTypeStage AddMessageBus()
         {
-            return services.AddMessageBusClient();
+            return services.AddBasycMessageBusClient();
         }
     }
 }

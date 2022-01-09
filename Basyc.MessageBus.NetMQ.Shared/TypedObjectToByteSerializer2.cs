@@ -7,9 +7,9 @@ using ProtoBuf.Meta;
 
 namespace Basyc.MessageBus.NetMQ.Shared;
 
-public static class TypedObjectToByteSerializer
+public static class TypedObjectToByteSerializer2
 {
-    static TypedObjectToByteSerializer()
+    static TypedObjectToByteSerializer2()
     {
         Serializer.PrepareSerializer<ProtoMessageWrapper>();        
     }

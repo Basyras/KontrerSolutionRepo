@@ -232,9 +232,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox.ConsoleApp2", "Sand
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox.ConsoleApp3", "SandBox.ConsoleApp3\SandBox.ConsoleApp3.csproj", "{F362C8DF-02FB-4871-A875-AFF063D4750E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.NetMQ.Shared", "Basyc.MessageBus.NetMQ.Shared\Basyc.MessageBus.NetMQ.Shared.csproj", "{9C042240-D7B7-45DA-BB61-679350D42245}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.NetMQ.Shared", "Basyc.MessageBus.NetMQ.Shared\Basyc.MessageBus.NetMQ.Shared.csproj", "{9C042240-D7B7-45DA-BB61-679350D42245}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.Shared", "Basyc.MessageBus.Shared\Basyc.MessageBus.Shared.csproj", "{6587B50A-696C-4AC9-9A72-253B64ECAEED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Shared", "Basyc.MessageBus.Shared\Basyc.MessageBus.Shared.csproj", "{6587B50A-696C-4AC9-9A72-253B64ECAEED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.Serialization", "Basyc.Serialization", "{F3C29492-CD5D-46BA-85F9-DF2AA4D20352}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Serialization.Abstraction", "Basyc.Serialization.Abstraction\Basyc.Serialization.Abstraction.csproj", "{89EC25AC-4A4F-436D-A01C-B27669179217}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Serialization.ProtobufNet", "Basyc.Serialization.ProtobufNet\Basyc.Serialization.ProtobufNet.csproj", "{CE0F45ED-337C-432F-B312-5FE9A58EFF59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Serailization.SystemTextJson", "Basyc.Serailization.SystemTextJson\Basyc.Serailization.SystemTextJson.csproj", "{99D8811B-6510-486C-8A7F-D4AB879AB75B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -562,6 +570,18 @@ Global
 		{6587B50A-696C-4AC9-9A72-253B64ECAEED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6587B50A-696C-4AC9-9A72-253B64ECAEED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6587B50A-696C-4AC9-9A72-253B64ECAEED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89EC25AC-4A4F-436D-A01C-B27669179217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89EC25AC-4A4F-436D-A01C-B27669179217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89EC25AC-4A4F-436D-A01C-B27669179217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89EC25AC-4A4F-436D-A01C-B27669179217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE0F45ED-337C-432F-B312-5FE9A58EFF59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE0F45ED-337C-432F-B312-5FE9A58EFF59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE0F45ED-337C-432F-B312-5FE9A58EFF59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE0F45ED-337C-432F-B312-5FE9A58EFF59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99D8811B-6510-486C-8A7F-D4AB879AB75B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99D8811B-6510-486C-8A7F-D4AB879AB75B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99D8811B-6510-486C-8A7F-D4AB879AB75B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99D8811B-6510-486C-8A7F-D4AB879AB75B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -678,6 +698,10 @@ Global
 		{F362C8DF-02FB-4871-A875-AFF063D4750E} = {4F31B45E-F786-4BC6-9F17-B2ED65239D24}
 		{9C042240-D7B7-45DA-BB61-679350D42245} = {1271B6F0-F69B-4F6D-BB4A-D5DF26BBB7A2}
 		{6587B50A-696C-4AC9-9A72-253B64ECAEED} = {042C92C8-B6C6-4602-8762-0B7A4D75CF8A}
+		{F3C29492-CD5D-46BA-85F9-DF2AA4D20352} = {535823BC-CFA4-4DFC-A432-AC5913B75FE4}
+		{89EC25AC-4A4F-436D-A01C-B27669179217} = {F3C29492-CD5D-46BA-85F9-DF2AA4D20352}
+		{CE0F45ED-337C-432F-B312-5FE9A58EFF59} = {F3C29492-CD5D-46BA-85F9-DF2AA4D20352}
+		{99D8811B-6510-486C-8A7F-D4AB879AB75B} = {F3C29492-CD5D-46BA-85F9-DF2AA4D20352}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

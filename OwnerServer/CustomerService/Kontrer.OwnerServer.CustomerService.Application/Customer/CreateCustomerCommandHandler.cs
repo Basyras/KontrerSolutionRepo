@@ -25,6 +25,7 @@ namespace Kontrer.OwnerServer.CustomerService.Application.Customer
             newCustomer.FirstName = command.FirstName;
             newCustomer.SecondName = command.LastName;
             newCustomer.Email = command.Email;
+            cancellationToken.ThrowIfCancellationRequested();
             newCustomer = await repository.InstaAddAsync(newCustomer);
             return new CreateCustomerCommandResponse(newCustomer);
         }

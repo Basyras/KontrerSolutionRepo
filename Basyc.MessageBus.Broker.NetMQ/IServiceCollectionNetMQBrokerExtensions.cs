@@ -15,7 +15,11 @@ namespace Basyc.MessageBus.Broker.NetMQ
         {
             services.AddSingleton<IMessageBrokerServer, NetMQMessageBrokerServer>();
             services.AddSingleton<IWorkerRegistry, WorkerRegistry>();
-            services.AddSingleton<IMessageToByteSerializer, TypedMessageToByteSerializer>();
+
+            services.AddBasycSerialization()
+                .SelectProtobufNet();
+
+            services.AddSingleton<IMessageToByteSerializer, BasycTypedMessageToByteSerializer>();
             services.Configure<NetMQMessageBrokerServerOptions>(x => 
             {
                 x.BrokerServerAddress = brokerServerAddress;

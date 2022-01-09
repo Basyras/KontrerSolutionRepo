@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.HttpProxy.Shared
 {
-    public class JsonRequestSerializer : IRequestSerializer
+    public class JsonRequestSerializer2 : IRequestSerializer
     {
         TInput IRequestSerializer.Deserialize<TInput>(byte[] input)
         {

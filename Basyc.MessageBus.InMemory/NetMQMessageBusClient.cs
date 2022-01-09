@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.Shared;
+using Basyc.Serializaton.Abstraction;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -41,7 +42,7 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
         this.activeSessionStorage = activeSessionStorage;
         this.messageToByteSerializer = messageToByteSerializer;
 
-        dealerSocket = new DealerSocket($"tcp://localhost:{options.Value.BrokerServerPort}");
+        dealerSocket = new DealerSocket($"tcp://{options.Value.BrokerServerAddress}:{options.Value.BrokerServerPort}");
         if (options.Value.WorkerId is null)
         {
             options.Value.WorkerId = "Client-" + Guid.NewGuid();
@@ -52,7 +53,7 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
 
         dealerSocket.ReceiveReady += async (s, a) =>
         {
-            await DealerHandleMessage();
+            await DealerHandleMessage(CancellationToken.None);
         };
 
         poller.Add(dealerSocket);
@@ -75,7 +76,7 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
         return Task.CompletedTask;
     }
 
-    private async Task DealerHandleMessage()
+    private async Task DealerHandleMessage(CancellationToken cancellationToken)
     {
         var messageFrames = dealerSocket.ReceiveMultipartMessage(3);
         var senderAddressBytes = messageFrames[1].Buffer;
@@ -84,11 +85,12 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
 
         var deserializationResult = messageToByteSerializer.Deserialize(messageDataBytes);
         deserializationResult.Switch(
-            checkIn => throw new InvalidOperationException(),
+            checkIn => logger.LogError("Client is not supposed to receive CheckIn messages"),
             async request =>
             {
                 logger.LogDebug($"Request received from {senderAddressString}:{request.SessionId}, data: '{request.RequestData}'");
-                var responseData = await handlerManager.ConsumeMessage(request.RequestType, request.RequestData);
+                object responseData = await handlerManager.ConsumeMessage(request.RequestType, request.RequestData, cancellationToken);
+             
                 var responseType = TypedToSimpleConverter.ConvertTypeToSimple(responseData.GetType());
                 byte[] responseBytes = messageToByteSerializer.Serialize(responseData, responseType, request.SessionId, MessageCase.Response);
                 var messageToServer = new NetMQMessage();
@@ -105,12 +107,12 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
             {
                 logger.LogInformation($"Response received from {senderAddressString}:{response.SessionId}, data: {response.ReponseData}");
                 if (activeSessionStorage.TryCompleteSession(response.SessionId, response.ReponseData) is false)
-                    logger.LogError($"Session '{response.SessionId}' failed. Session does not exist");
+                    logger.LogError($"Session '{response.SessionId}' completation failed. Session does not exist");
             },
             async @event =>
             {
                 logger.LogInformation($"Event received from {senderAddressString}:{@event.SessionId}, data: '{@event.EventData}'");
-                var responseData = await handlerManager.ConsumeMessage(@event.EventType, @event.EventData);                
+                var responseData = await handlerManager.ConsumeMessage(@event.EventType, @event.EventData, cancellationToken);                
             },
             failure =>
             {

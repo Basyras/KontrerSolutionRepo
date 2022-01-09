@@ -22,11 +22,6 @@ namespace Basyc.DependencyInjection
         {
             return parentBuilder;
         }
-
-        //public TChildBuilder UseChildBuilder<TChildBuilder>(Func<IServiceCollection, TChildBuilder> createBuilder)
-        //{
-        //    return createBuilder(services);
-        //}
     }
 
     public abstract class DependencyBuilderBase

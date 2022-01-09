@@ -1,4 +1,3 @@
-using Basyc.Microservice.DomainDrivenDesign;
 using Kontrer.OwnerServer.CustomerService.Application;
 using Kontrer.OwnerServer.CustomerService.Application.Customer;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
@@ -28,8 +27,10 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
             builder.AddMessageBus()
-                 .RegisterTypedMessageHandlers<CustomerServiceApplicationAssemblyMarker>()
-                 .AddMassTransitClient();
+                 .WithTypedMessages()
+                 .RegisterBasycHandlers<CustomerServiceApplicationAssemblyMarker>()
+                 //.AddMassTransitClient();
+                 .AddNetMQClient();
 
             new CustomerInfrastructureBuilder(builder.services)
                 .AddEFRespository()

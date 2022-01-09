@@ -27,7 +27,7 @@ builder.Services.AddBlazorMessageBus()
     .AddInterfacedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
     .SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
-builder.Services.AddMessageBusClient()
+builder.Services.AddBasycMessageBusClient()
     .AddProxyClient()
     .SetProxyServerUri(new Uri("https://localhost:44310/"));
 

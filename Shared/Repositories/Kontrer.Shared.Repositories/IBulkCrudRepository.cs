@@ -6,25 +6,8 @@ using System.Threading.Tasks;
 
 namespace Basyc.Repositories
 {
-    public interface IBulkCrudRepository<TModel, TKey> : IBulkRepository
+    public interface IBulkCrudRepository<TModel, TKey> : IBulkRepository, IAsyncFetchRepository<TModel, TKey>
     {
-        /// <summary>
-        /// Returns all records as dictionary
-        /// </summary>
-        /// <returns></returns>
-        Task<Dictionary<TKey, TModel>> GetAllAsync();
-
-        /// <summary>
-        /// Returns default when not found,
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-#nullable enable
-
-        Task<TModel?> TryGetAsync(TKey id);
-
-#nullable disable
-
         /// <summary>
         /// If id is null it will be genereted
         /// </summary>

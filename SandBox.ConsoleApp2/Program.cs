@@ -14,10 +14,6 @@ using ProtoBuf;
 using System.Text;
 
 
-////Producer
-int portForSub = 8987;
-int portForPub = 8988;
-
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
 {
@@ -27,9 +23,10 @@ clientServices.AddLogging(x =>
 });
 
 clientServices
-    .AddMessageBusClient()
-    .RegisterTypedMessageHandlers<Program>()
-    .AddNetMQClient(portForPub, portForSub, "Console2");
+    .AddBasycMessageBusClient()
+    .WithTypedMessages()
+    .RegisterBasycHandlers<Program>()
+    .AddNetMQClient("Console2");
 
 var services = clientServices.BuildServiceProvider();
 

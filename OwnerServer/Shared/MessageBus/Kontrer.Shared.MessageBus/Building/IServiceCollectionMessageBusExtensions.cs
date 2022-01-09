@@ -1,5 +1,5 @@
 ﻿using Basyc.MessageBus;
-using Basyc.MessageBus.Client;
+using Basyc.MessageBus.Client.Building;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -11,9 +11,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionMessageBusExtensions
     {
-        public static MessageBusClientBuilder AddMessageBusClient(this IServiceCollection services)
+        public static BusClientSelectMessageTypeStage AddBasycMessageBusClient(this IServiceCollection services)
         {
-            return new MessageBusClientBuilder(services);
+            return new BusClientSelectMessageTypeStage(services);
         }
     }
 }

@@ -10,9 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddRazorPages();
 
-int portForPub = 8988;
-int portForSub = 8987;
-
 var domains = new Assembly[]
 {
     typeof(CustomerServiceDomainAssemblyMarker).Assembly,
@@ -20,9 +17,11 @@ var domains = new Assembly[]
     //typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
 };
 
-builder.Services.AddMessageBusClient()
+builder.Services.AddBasycMessageBusClient()
+    .WithSimpleMessages()
+    .SkipHandlers()
     //.AddMassTransitClient();
-    .AddNetMQClient(portForPub, portForSub, "Proxy");
+    .AddNetMQClient("HttpProxy");
 builder.Services.AddMessageBusProxyServer();
 
 builder.Services.AddCors(policy =>

@@ -1,5 +1,6 @@
 ﻿using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.Shared;
+using Basyc.Serializaton.Abstraction;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NetMQ;

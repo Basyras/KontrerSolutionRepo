@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\Basyc.MessageBus.InMemory\Basyc.MessageBus.Client.NetMQ.csproj" />
 		<ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Application\Kontrer.OwnerServer.CustomerService.Application.csproj" />
 		<ProjectReference Include="..\Kontrer.OwnerServer.CustomerService.Infrastructure\Kontrer.OwnerServer.CustomerService.Infrastructure.csproj" />
 		<ProjectReference Include="..\..\..\Kontrer.OwnerServer.Shared.MicroService.Asp.Bootstrapper\Basyc.MicroService.Asp.Bootstrapper.csproj" />

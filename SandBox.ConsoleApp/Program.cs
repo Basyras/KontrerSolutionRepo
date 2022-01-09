@@ -3,6 +3,7 @@ using Basyc.MessageBus.Broker;
 using Basyc.MessageBus.Broker.NetMQ;
 using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Client.NetMQ;
+using Basyc.Serialization;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,10 +17,7 @@ using ProtoBuf;
 using SandBox.ConsoleApp;
 using System.Text;
 
-////Consumer
-///
-int portForSub = 8987;
-int portForPub = 8988;
+
 
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
@@ -31,23 +29,23 @@ clientServices.AddLogging(x =>
 
 
 clientServices
-    .AddMessageBusClient()
-    .RegisterTypedMessageHandlers<Program>()
-    .AddNetMQClient(portForPub, portForSub, "Console1");
+    .AddBasycMessageBusClient()
+    .WithTypedMessages()
+    .RegisterBasycHandlers<Program>()
+    .AddNetMQClient("Console1");
 
 var services = clientServices.BuildServiceProvider();
 using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();
+
 client.StartAsync();
 
 while (Console.ReadLine() != "stop")
 {
-
     var response = client.RequestAsync<CreateCustomerCommand, CreateCustomerCommandResponse>(new("Jan", "Console12", "aasdů"))
         .GetAwaiter()
         .GetResult();
 
     response.Switch(x => Console.WriteLine(x),  x => Console.WriteLine(x));
-
 
 }
 

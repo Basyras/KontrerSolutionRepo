@@ -32,7 +32,7 @@ namespace Basyc.MessageBus.Client.NetMQ
         }
 
         /// <summary>
-        /// Return if session with specific id exists
+        /// Returns true if session with specific id exists
         /// </summary>
         /// <param name="sessionId"></param>
         /// <returns></returns>

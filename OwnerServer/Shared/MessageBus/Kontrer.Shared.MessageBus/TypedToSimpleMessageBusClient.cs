@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.Shared;
+using Basyc.Serializaton.Abstraction;
 using OneOf;
 using System;
 using System.Collections.Generic;
@@ -71,10 +72,6 @@ namespace Basyc.MessageBus.Client
             {
                 return (TResponse)responseData.Value;
             }
-            //if(responseData.Value.GetType() == typeof(object))
-            //{
-            //    return (TResponse)responseData.Value;
-            //}
         }
 
 

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.Shared
+namespace Basyc.Serializaton.Abstraction
 {
     public static class TypedToSimpleConverter
     {
         public static string ConvertTypeToSimple(Type type)
-        {           
+        {
             return type.AssemblyQualifiedName!;
         }
 
