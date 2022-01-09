@@ -28,7 +28,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
 
             builder.AddMessageBus()
                  .WithTypedMessages()
-                 .RegisterBasycHandlers<CustomerServiceApplicationAssemblyMarker>()
+                 .RegisterBasycTypedHandlers<CustomerServiceApplicationAssemblyMarker>()
                  //.AddMassTransitClient();
                  .AddNetMQClient();
 

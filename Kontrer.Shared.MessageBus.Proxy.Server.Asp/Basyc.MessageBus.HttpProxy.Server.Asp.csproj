@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Basyc.Serialization.ProtobufNet\Basyc.Serialization.ProtobufNet.csproj" />
     <ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />
     <ProjectReference Include="..\Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Shared\Basyc.MessageBus.HttpProxy.Shared.csproj" />
   </ItemGroup>

@@ -1,6 +1,8 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.HttpProxy.Shared;
 using Basyc.MessageBus.Shared;
+using Basyc.Serialization.Abstraction;
+using Basyc.Serializaton.Abstraction;
 using Basyc.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -14,10 +16,10 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
 {
     public class ProxyHttpReqeustHandler
     {
-        private readonly ITypedMessageBusClient messageBus;
-        private readonly IRequestSerializer serializer;
+        private readonly ISimpleMessageBusClient messageBus;
+        private readonly ISimpleByteSerailizer serializer;
 
-        public ProxyHttpReqeustHandler(ITypedMessageBusClient messageBus, IRequestSerializer serializer)
+        public ProxyHttpReqeustHandler(ISimpleMessageBusClient messageBus, ISimpleByteSerailizer serializer)
         {
             this.messageBus = messageBus;
             this.serializer = serializer;
@@ -25,42 +27,47 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
 
         public async Task Handle(HttpContext context)
         {
-            ProxyRequest proxyRequest = await ParseProxyRequestFromHttp(context);
-            var requestType = Type.GetType(proxyRequest.RequestAssemblyQualifiedTypeName);
-
-            if (requestType == null)
-                throw new Exception("Request type is not loaded or does not exist");
-
-            var request = serializer.Deserialize(proxyRequest.RequestJson, requestType);
-            if (request == null) //Messages with 0 parameters can be just created
-            {
-                request = Activator.CreateInstance(requestType);
-            }
-
-            if (requestType.IsAssignableTo(typeof(IMessage)))
-            {
-                await messageBus.SendAsync(requestType, request);
-                return;
-            }
-
-            if (GenericsHelper.IsAssignableToGenericType(requestType, typeof(IMessage<>)))
-            {
-                var responseType = GenericsHelper.GetTypeArgumentsFromParent(requestType, typeof(IMessage<>))[0];
-                var busResponse = await messageBus.RequestAsync(requestType, request, responseType);
-                await context.Response.WriteAsync(serializer.Serialize(busResponse, responseType));
-                return;
-            }
-
-            throw new InvalidOperationException($"IMessage does not inherit from {nameof(IMessage)}");
-        }
-
-        private async Task<ProxyRequest> ParseProxyRequestFromHttp(HttpContext context)
-        {
             MemoryStream mem = new MemoryStream();
             await context.Request.Body.CopyToAsync(mem);
             var bytes = mem.ToArray();
-            var proxyRequest = serializer.Deserialize<ProxyRequest>(bytes);
-            return proxyRequest;
+            var proxyRequestResult = serializer.Deserialize(bytes, TypedToSimpleConverter.ConvertTypeToSimple<ProxyRequest>());
+            ProxyRequest proxyRequest = (ProxyRequest)proxyRequestResult.Value;
+            //var requestType = Type.GetType(proxyRequest.MessageType);
+
+            //if (requestType == null)
+            //    throw new Exception("Request type is not loaded or does not exist");
+
+            //var request = serializer.Deserialize(proxyRequest.RequestData, requestType);
+            //if (request == null) //Messages with 0 parameters can be just created
+            //{
+            //    request = Activator.CreateInstance(requestType);
+            //}
+
+            var requestResult = serializer.Deserialize(proxyRequest.RequestData, proxyRequest.MessageType);
+            if(requestResult.Value is SerializationFailure)
+            {
+                throw new Exception(requestResult.AsT1.Message);
+            }
+            var requestData = requestResult.AsT0;
+
+
+            //if (requestType.IsAssignableTo(typeof(IMessage)))
+            //{
+            //    await messageBus.SendAsync(requestType, requestResult);
+            //    return;
+            //}
+
+            //if (GenericsHelper.IsAssignableToGenericType(requestType, typeof(IMessage<>)))
+            //{
+            //    var responseType = GenericsHelper.GetTypeArgumentsFromParent(requestType, typeof(IMessage<>))[0];
+            //    var busResponse = await messageBus.RequestAsync(requestType, request, responseType);
+            //    await context.Response.WriteAsync(serializer.Serialize(busResponse, responseType));
+            //    return;
+            //}
+
+             await messageBus.SendAsync(proxyRequest.MessageType, requestData);
+
+            //throw new InvalidOperationException($"IMessage does not inherit from {nameof(IMessage)}");
         }
     }
 }

@@ -2,6 +2,7 @@
 using Basyc.MessageBus.HttpProxy.Shared;
 using Basyc.MessageBus.Shared;
 using Basyc.Serialization.Abstraction;
+using Basyc.Serializaton.Abstraction;
 using Microsoft.Extensions.Options;
 using OneOf;
 using System;
@@ -20,17 +21,17 @@ namespace Basyc.MessageBus.HttpProxy.Client
     {
         private readonly HttpClient httpClient;
         private readonly IOptions<MessageBusHttpProxyClientOptions> options;
-        private readonly IRequestSerializer serializer;
+        //private readonly IRequestSerializer serializer;
         private readonly ISimpleByteSerailizer byteSerializer;
 
         public HttpProxyClientMessageBusClient(IOptions<MessageBusHttpProxyClientOptions> options, 
             /*HttpClient httpClient,*/ 
-            IRequestSerializer serializer,
+            //IRequestSerializer serializer,
             ISimpleByteSerailizer byteSerializer)
         {
             this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
             this.options = options;
-            this.serializer = serializer;
+            //this.serializer = serializer;
             this.byteSerializer = byteSerializer;
         }
 
@@ -115,8 +116,9 @@ namespace Basyc.MessageBus.HttpProxy.Client
             //var requestJson = serializer.Serialize(reqeustData, requestType);
             var seriResult2 = byteSerializer.Serialize(seriResult, requestType);
             var proxyRequest = ProxyRequest.Create(requestType, seriResult2.AsT0, responseType);
-            var proxyRequestJson = serializer.Serialize(proxyRequest);
-            var httpContent = new StringContent(proxyRequestJson, Encoding.UTF8, "application/json");
+            var proxyRequestJson = byteSerializer.Serialize(proxyRequest, requestType);
+            //var httpContent = new StringContent(proxyRequestJson, Encoding.UTF8, "application/json");
+            var httpContent = new ByteArrayContent(proxyRequestJson.AsT0);
             var httpResult = await httpClient.PostAsync("", httpContent);
 
             if (httpResult.IsSuccessStatusCode is false)
@@ -133,8 +135,13 @@ namespace Basyc.MessageBus.HttpProxy.Client
             MemoryStream httpMemomoryStream = new MemoryStream();
             await httpResult.Content.CopyToAsync(httpMemomoryStream);
             var bytes = httpMemomoryStream.ToArray();
-            var busResponse = serializer.Deserialize(bytes, responseType);
-            return busResponse;
+            //var busResponse = serializer.Deserialize(bytes, responseType);
+            var busResponse = byteSerializer.Deserialize(bytes, TypedToSimpleConverter.ConvertTypeToSimple(responseType));
+            if(busResponse.Value is SerializationFailure failure)
+            {
+                throw new Exception(failure.Message);
+            }
+            return busResponse.AsT0;
         }
 
         public void Dispose()
@@ -149,7 +156,7 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
         Task ISimpleMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
         {
-            return SendToProxy();
+            throw new NotImplementedException();
         }
 
         Task ISimpleMessageBusClient.PublishAsync(string eventType, object eventData, CancellationToken cancellationToken)

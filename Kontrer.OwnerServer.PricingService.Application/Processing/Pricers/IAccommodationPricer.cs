@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.Models.Pricing.Blueprints;
+﻿using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
 
 namespace Kontrer.OwnerServer.PricingService.Application.Processing.Pricers
 {

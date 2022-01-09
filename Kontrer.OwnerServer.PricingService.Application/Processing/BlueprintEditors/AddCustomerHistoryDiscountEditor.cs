@@ -1,7 +1,7 @@
 ﻿using Basyc.Shared.Models;
+using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
 using Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEditors;
 using Kontrer.OwnerServer.PricingService.Application.Settings;
-using Kontrer.Shared.Models.Pricing.Blueprints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,9 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEdi
         public void EditBlueprint(AccommodationBlueprint blueprint, IResolvedScopedSettings resolver)
         {
 
-            var accommodationCount = blueprint.CustomerId.Accomodations.Count();
+            //var accommodationCount = blueprint.CustomerId.Accomodations.Count();
+            var accommodationCount = 0;
+            throw new NotImplementedException();
             NullableResult<float> loyaltyPercentagePerAcco = resolver.GetSetting(SettingNameConstants.CustomerPercentageDiscountPerAccommodationRequest);
             NullableResult<float> maxLoyaltyPercentage = resolver.GetSetting(SettingNameConstants.MaxCustomerPercentageDiscountPerAccommodationRequest);
             loyaltyPercentagePerAcco.Value *= accommodationCount;
@@ -30,8 +32,8 @@ namespace Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEdi
         {
             return new List<SettingRequest>()
             {
-                new SettingRequest<float>(SettingNameConstants.CustomerPercentageDiscountPerAccommodation), 
-                new SettingRequest<float>(SettingNameConstants.MaxCustomerPercentageDiscountPerAccommodation) 
+                new SettingRequest<float>(SettingNameConstants.CustomerPercentageDiscountPerAccommodation),
+                new SettingRequest<float>(SettingNameConstants.MaxCustomerPercentageDiscountPerAccommodation)
             };
         }
     }

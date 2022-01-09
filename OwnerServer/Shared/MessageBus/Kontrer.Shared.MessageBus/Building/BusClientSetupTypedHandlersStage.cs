@@ -23,7 +23,7 @@ namespace Basyc.MessageBus.Client.Building
             return new BusClientSelectClientProviderStage(services);
         }
 
-        public BusClientSelectClientProviderStage RegisterBasycHandlers<THandlerAssemblyMarker>()
+        public BusClientSelectClientProviderStage RegisterBasycTypedHandlers<THandlerAssemblyMarker>()
         {
             return RegisterBasycHandlers(typeof(THandlerAssemblyMarker).Assembly);
         }

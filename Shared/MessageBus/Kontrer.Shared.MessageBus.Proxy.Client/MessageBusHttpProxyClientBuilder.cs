@@ -15,15 +15,16 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
         public MessageBusHttpProxyClientBuilder(IServiceCollection services)
         {
-            services.AddSingleton<ITypedMessageBusClient, HttpProxyClientMessageBusClient>();
+            services.AddSingleton<ISimpleMessageBusClient, HttpProxyClientMessageBusClient>();
+            services.AddSingleton<ITypedMessageBusClient, TypedFromSimpleMessageBusClient>();
             this.services = services;
         }
 
-        public MessageBusHttpProxyClientBuilder UseSerializer<TSerializer>() where TSerializer : class, IRequestSerializer
-        {
-            services.AddSingleton<TSerializer>();
-            return this;
-        }
+        //public MessageBusHttpProxyClientBuilder UseSerializer<TSerializer>() where TSerializer : class, IRequestSerializer
+        //{
+        //    services.AddSingleton<TSerializer>();
+        //    return this;
+        //}
 
         public MessageBusHttpProxyClientBuilder SetProxyServerUri(Uri hostUri)
         {

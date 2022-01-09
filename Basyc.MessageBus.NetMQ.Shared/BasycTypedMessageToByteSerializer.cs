@@ -14,24 +14,23 @@ namespace Basyc.MessageBus.NetMQ.Shared;
 public class BasycTypedMessageToByteSerializer : IMessageToByteSerializer
 {
     private readonly ISimpleByteSerailizer byteSerailizer;
-    private readonly string wrapperSimpleType;
+    private readonly string wrapperMessageType;
 
     public BasycTypedMessageToByteSerializer(ISimpleByteSerailizer byteSerailizer)
     {
         this.byteSerailizer = byteSerailizer;
-        wrapperSimpleType = TypedToSimpleConverter.ConvertTypeToSimple<ProtoMessageWrapper>();
+        wrapperMessageType = TypedToSimpleConverter.ConvertTypeToSimple<ProtoMessageWrapper>();
 
     }
-    public byte[] Serialize(object? messageData, string messageType, int sessionId, MessageCase messageCase)
+    public byte[] Serialize(object messageData, string messageType, int sessionId, MessageCase messageCase)
     {
-        //Type messageClrType = TypedToSimpleConverter.ConvertSimpleToType(messageType);
-        var messageDataSeriliazationResult = byteSerailizer.Serialize(messageData!, messageType);
+        var messageDataSeriliazationResult = byteSerailizer.Serialize(messageData, messageType);
         if (messageDataSeriliazationResult.IsT1)
             throw new Exception(messageDataSeriliazationResult.AsT1.Message);
 
 
-        var wrapperData = new ProtoMessageWrapper(sessionId, messageCase, messageType, messageDataSeriliazationResult.AsT0);
-        var wrapperSerializationResult = byteSerailizer.Serialize(wrapperData,wrapperSimpleType );
+        var wrapperMessageData = new ProtoMessageWrapper(sessionId, messageCase, messageType, messageDataSeriliazationResult.AsT0);
+        var wrapperSerializationResult = byteSerailizer.Serialize(wrapperMessageData,wrapperMessageType );
         if (wrapperSerializationResult.IsT1)
             throw new Exception(wrapperSerializationResult.AsT1.Message);
 
@@ -42,7 +41,7 @@ public class BasycTypedMessageToByteSerializer : IMessageToByteSerializer
     public OneOf<CheckInMessage, RequestCase, ResponseCase, EventCase, DeserializationFailureCase> Deserialize(byte[] wrapperBytes)
     {
         //ProtoMessageWrapper messageWrapper = TypedObjectToByteSerializer.Deserialize<ProtoMessageWrapper>(commandBytes);
-        var wrapperDeserializationResult = byteSerailizer.Deserialize(wrapperBytes, wrapperSimpleType);
+        var wrapperDeserializationResult = byteSerailizer.Deserialize(wrapperBytes, wrapperMessageType);
         if(wrapperDeserializationResult.IsT1)
             throw new Exception(wrapperDeserializationResult.AsT1.Message);
 

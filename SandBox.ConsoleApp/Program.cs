@@ -31,7 +31,7 @@ clientServices.AddLogging(x =>
 clientServices
     .AddBasycMessageBusClient()
     .WithTypedMessages()
-    .RegisterBasycHandlers<Program>()
+    .RegisterBasycTypedHandlers<Program>()
     .AddNetMQClient("Console1");
 
 var services = clientServices.BuildServiceProvider();

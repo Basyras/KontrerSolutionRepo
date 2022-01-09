@@ -3,26 +3,26 @@ using System.Threading.Tasks;
 
 namespace Basyc.Repositories
 {
-    public interface IFetchRepository<TModel, TKey>
+    public interface IAsyncReadRepository<TModel, TKey>
     {
         /// <summary>
         /// Returns all records as dictionary
         /// </summary>
         /// <returns></returns>
-        Dictionary<TKey, TModel> GetAll();
+        Task<Dictionary<TKey, TModel>> GetAllAsync();
 
         /// <summary>
         /// Throws exception when not found,
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        TModel Get(TKey id);
+        Task<TModel> GetAsync(TKey id);
 
         /// <summary>
         /// Returns default when not found,
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        TModel TryGet(TKey id);
+        Task<TModel> TryGetAsync(TKey id);
     }
 }

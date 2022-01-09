@@ -20,10 +20,10 @@ public class ProtoMessageWrapper
 
     public ProtoMessageWrapper(int sessionId, MessageCase messageCase, string messageType, byte[] messageData)
     {
+        SessionId = sessionId;
+        MessageCase = messageCase;        
         MessageType = messageType;
         MessageData = messageData;
-        SessionId = sessionId;
-        MessageCase = messageCase;
     }
 
     [ProtoMember(1)]

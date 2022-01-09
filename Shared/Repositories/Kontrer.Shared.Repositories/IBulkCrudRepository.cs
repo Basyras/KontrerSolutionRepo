@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.Repositories
 {
-    public interface IBulkCrudRepository<TModel, TKey> : IBulkRepository, IAsyncFetchRepository<TModel, TKey>
+    public interface IBulkCrudRepository<TModel, TKey> : IBulkRepository, IAsyncReadRepository<TModel, TKey>
     {
         /// <summary>
         /// If id is null it will be genereted

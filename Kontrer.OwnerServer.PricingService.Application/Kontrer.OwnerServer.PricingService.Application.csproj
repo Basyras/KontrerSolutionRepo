@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Kontrer.OwnerServer.OrderService.Dtos\Kontrer.OwnerServer.OrderService.Dtos.csproj" />
     <ProjectReference Include="..\Kontrer.Shared\Basyc.Shared.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿using Kontrer.Shared.Models.Pricing.Blueprints;
+﻿using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
 using System;
 using System.Collections.Generic;
 using System.Linq;

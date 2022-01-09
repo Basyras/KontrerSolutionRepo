@@ -1,10 +1,10 @@
 ﻿using Basyc.Shared.Models.Pricing;
 using Basyc.Shared.Models.Pricing.Costs;
+using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
 using Kontrer.OwnerServer.PricingService.Application.Processing;
 using Kontrer.OwnerServer.PricingService.Application.Processing.BlueprintEditors;
 using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
 using Kontrer.OwnerServer.PricingService.Application.Settings;
-using Kontrer.Shared.Models;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;

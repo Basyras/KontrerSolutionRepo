@@ -64,9 +64,8 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
     public Task StartAsync(CancellationToken cancellationToken = default)
     {
         poller.RunAsync();
-        CheckInMessage checkIn = new CheckInMessage(options.Value.WorkerId!, handlerManager.GetConsumableMessageTypes());
+        CheckInMessage checkIn = new CheckInMessage(options.Value.WorkerId!, handlerManager.GetConsumableMessageTypes());        
         var seriMessage = messageToByteSerializer.Serialize(checkIn, TypedToSimpleConverter.ConvertTypeToSimple(typeof(CheckInMessage)), default, MessageCase.CheckIn);
-
         var messageToServer = new NetMQMessage();
         messageToServer.AppendEmptyFrame();
         messageToServer.Append(seriMessage);
@@ -89,10 +88,19 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
             async request =>
             {
                 logger.LogDebug($"Request received from {senderAddressString}:{request.SessionId}, data: '{request.RequestData}'");
-                object responseData = await handlerManager.ConsumeMessage(request.RequestType, request.RequestData, cancellationToken);
-             
-                var responseType = TypedToSimpleConverter.ConvertTypeToSimple(responseData.GetType());
-                byte[] responseBytes = messageToByteSerializer.Serialize(responseData, responseType, request.SessionId, MessageCase.Response);
+                var consumerResult = await handlerManager.ConsumeMessage(request.RequestType, request.RequestData, cancellationToken);
+                object connsumerResultData;
+                if (consumerResult.Value is Exception ex)
+                {
+                    logger.LogCritical($"Message handler throwed exception. {ex.Message}");
+                    connsumerResultData = ex;
+
+                }
+                connsumerResultData = consumerResult.AsT0;
+
+
+                var responseType = TypedToSimpleConverter.ConvertTypeToSimple(connsumerResultData.GetType());
+                byte[] responseBytes = messageToByteSerializer.Serialize(connsumerResultData, responseType, request.SessionId, MessageCase.Response);
                 var messageToServer = new NetMQMessage();
                 messageToServer.AppendEmptyFrame();
                 messageToServer.Append(responseBytes);

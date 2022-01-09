@@ -11,7 +11,7 @@ namespace Basyc.Repositories
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public interface IAsyncInstantCrudRepository<TModel, TKey> : IInstantRepository, IAsyncFetchRepository<TModel, TKey>
+    public interface IAsyncInstantCrudRepository<TModel, TKey> : IInstantRepository, IAsyncReadRepository<TModel, TKey>
     {
         /// <summary>
         /// If id is null it will be genereted, After executing properties like Ids are updated

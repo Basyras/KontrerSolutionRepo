@@ -1,6 +1,4 @@
 ﻿using Dapr.Actors;
-using Kontrer.Shared.Models;
-using Kontrer.Shared.Models.Pricing.Costs;
 using System;
 using System.Collections.Generic;
 using System.IO;

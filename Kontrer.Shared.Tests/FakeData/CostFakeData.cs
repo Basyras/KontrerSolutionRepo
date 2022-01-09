@@ -1,7 +1,6 @@
 ﻿using Basyc.Shared.Models.Pricing;
 using Basyc.Shared.Models.Pricing.Costs;
 using Bogus;
-using Kontrer.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

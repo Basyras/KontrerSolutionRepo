@@ -238,11 +238,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Shared", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.Serialization", "Basyc.Serialization", "{F3C29492-CD5D-46BA-85F9-DF2AA4D20352}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Serialization.Abstraction", "Basyc.Serialization.Abstraction\Basyc.Serialization.Abstraction.csproj", "{89EC25AC-4A4F-436D-A01C-B27669179217}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serialization.Abstraction", "Basyc.Serialization.Abstraction\Basyc.Serialization.Abstraction.csproj", "{89EC25AC-4A4F-436D-A01C-B27669179217}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Serialization.ProtobufNet", "Basyc.Serialization.ProtobufNet\Basyc.Serialization.ProtobufNet.csproj", "{CE0F45ED-337C-432F-B312-5FE9A58EFF59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serialization.ProtobufNet", "Basyc.Serialization.ProtobufNet\Basyc.Serialization.ProtobufNet.csproj", "{CE0F45ED-337C-432F-B312-5FE9A58EFF59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Serailization.SystemTextJson", "Basyc.Serailization.SystemTextJson\Basyc.Serailization.SystemTextJson.csproj", "{99D8811B-6510-486C-8A7F-D4AB879AB75B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serailization.SystemTextJson", "Basyc.Serailization.SystemTextJson\Basyc.Serailization.SystemTextJson.csproj", "{99D8811B-6510-486C-8A7F-D4AB879AB75B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Serialization.ProtobufNet.Tests2", "Basyc.Serialization.ProtobufNet.Tests2\Basyc.Serialization.ProtobufNet.Tests2.csproj", "{786E5B92-A672-4269-8239-BF6E5CCDD8C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -582,6 +584,10 @@ Global
 		{99D8811B-6510-486C-8A7F-D4AB879AB75B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99D8811B-6510-486C-8A7F-D4AB879AB75B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99D8811B-6510-486C-8A7F-D4AB879AB75B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{786E5B92-A672-4269-8239-BF6E5CCDD8C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{786E5B92-A672-4269-8239-BF6E5CCDD8C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{786E5B92-A672-4269-8239-BF6E5CCDD8C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{786E5B92-A672-4269-8239-BF6E5CCDD8C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -702,6 +708,7 @@ Global
 		{89EC25AC-4A4F-436D-A01C-B27669179217} = {F3C29492-CD5D-46BA-85F9-DF2AA4D20352}
 		{CE0F45ED-337C-432F-B312-5FE9A58EFF59} = {F3C29492-CD5D-46BA-85F9-DF2AA4D20352}
 		{99D8811B-6510-486C-8A7F-D4AB879AB75B} = {F3C29492-CD5D-46BA-85F9-DF2AA4D20352}
+		{786E5B92-A672-4269-8239-BF6E5CCDD8C9} = {F3C29492-CD5D-46BA-85F9-DF2AA4D20352}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

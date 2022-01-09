@@ -2,7 +2,7 @@
 
 namespace Basyc.MessageBus.HttpProxy.Shared
 {
-    public interface IRequestSerializer
+    public interface IRequestSerializer2
     {
         TRequest Deserialize<TRequest>(string jsonInput);
 

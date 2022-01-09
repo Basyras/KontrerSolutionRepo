@@ -2,4 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup></Project>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Basyc.Serialization.Abstraction\Basyc.Serialization.Abstraction.csproj" />
+    <ProjectReference Include="..\..\..\Basyc.Serialization.ProtobufNet\Basyc.Serialization.ProtobufNet.csproj" />
+  </ItemGroup></Project>

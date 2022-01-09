@@ -29,11 +29,22 @@ namespace Basyc.Serialization.ProtobufNet
                 }
             }
 
-            using var stream = new MemoryStream();
+            //using var stream = new MemoryStream();
+            //stream.Write(objectData, 0, objectData.Length);
+            //stream.Seek(0, SeekOrigin.Begin);
+
+            var stream = new MemoryStream(objectData);
+            //stream.Position = 0;
             stream.Write(objectData, 0, objectData.Length);
             stream.Seek(0, SeekOrigin.Begin);
 
             object result = Serializer.Deserialize(dataType, stream);
+            var opt = new SchemaGenerationOptions();
+            opt.Types.Add(dataType);
+            //var ss = Serializer.GetProto(opt);
+            //var result = Serializer.NonGeneric.Deserialize(dataType, stream);
+            //var result = RuntimeTypeModel.Default.Deserialize(dataType, stream);
+            //var result = RuntimeTypeModel.Default.DeserializeWithLengthPrefix(stream, null, dataType, ProtoBuf.PrefixStyle.Base128, 0);
             return result;
         }
 
@@ -56,9 +67,9 @@ namespace Basyc.Serialization.ProtobufNet
 
             using var stream = new MemoryStream();
             PrepareSerializer(objectType);
-
-            Serializer.NonGeneric.Serialize(stream, objectType);
             Serializer.Serialize(stream, objectData);
+            //Serializer.NonGeneric.Serialize(stream, objectType);
+            //RuntimeTypeModel.Default.Serialize(stream, objectType);
             return stream.ToArray();
         }
 

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 
-namespace Basyc.Shared.Tests.Models.Pricing
+namespace Basyc.Serialization.ProtobufNet.Tests
 {
-    public class PricingSettingGroupTests
+    public class TestCar
     {
+        public string Name { get; set; }        
     }
 }

@@ -1,4 +1,4 @@
-﻿using Kontrer.OwnerServer.Shared.MicroService.Abstraction.MessageBus.RequestResponse;
+﻿using Basyc.MessageBus.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.PricingService.Presentation.Abstraction.RequestResponse
 {
-    public class CalculateAccommodationPrice : IRequest<object>
+    public class CalculateAccommodationPrice : IMessage<object>
     {
     }
 }

@@ -32,13 +32,13 @@ namespace Kontrer.OwnerClient.Application.Customers
         public async ValueTask<List<CustomerEntity>> GetCustomers()
         {
             var response = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new(new int[0]));
-            return response.Customers;
+            return response.AsT0.Customers;
         }
 
         public async ValueTask<List<CustomerEntity>> GetCustomers(int[] customerIds)
         {
             var response = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new(customerIds));
-            return response.Customers;
+            return response.AsT0.Customers;
         }
     }
 }

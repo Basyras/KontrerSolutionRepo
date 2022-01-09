@@ -21,7 +21,7 @@ namespace Basyc.MessageBus.Client.Building
 
         public BusClientSetupTypedHandlersStage WithTypedMessages()
         {
-            services.AddSingleton<ITypedMessageBusClient, TypedToSimpleMessageBusClient>();
+            services.AddSingleton<ITypedMessageBusClient, TypedFromSimpleMessageBusClient>();
             return new BusClientSetupTypedHandlersStage(services);
         }
 

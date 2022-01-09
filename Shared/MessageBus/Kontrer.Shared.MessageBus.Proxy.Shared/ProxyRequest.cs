@@ -12,23 +12,26 @@ namespace Basyc.MessageBus.HttpProxy.Shared
 
     public class ProxyRequest
     {
-        public static ProxyRequest Create(Type requestType, string requestJson, Type responseType = null)
+        public static ProxyRequest Create(string requestType, byte[] requestData, Type responseType = null)
         {
             string responseTypeString = responseType == null ? null : responseType.AssemblyQualifiedName;
-            return new ProxyRequest(requestType.AssemblyQualifiedName, responseTypeString, requestJson);
+            //return new ProxyRequest(requestType.AssemblyQualifiedName, responseTypeString, requestJson);
+#pragma warning disable CS0618 // Type or member is obsolete
+            return new ProxyRequest(requestType, responseTypeString, requestData);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         [Obsolete("This constructor is public only for serializer. Use static ProxyRequest.Create instead")]
-        public ProxyRequest(string requestAssemblyQualifiedTypeName, string responseAssemblyQualifiedTypeName, string requestJson = null)
-            : this(requestAssemblyQualifiedTypeName, requestJson)
+        public ProxyRequest(string requestAssemblyQualifiedTypeName, string responseAssemblyQualifiedTypeName, byte[] requestData = null)
+            : this(requestAssemblyQualifiedTypeName, requestData)
         {
             ResponseAssemblyQualifiedTypeName = responseAssemblyQualifiedTypeName;
         }
 
-        private ProxyRequest(string requestAssemblyQualifiedTypeName, string requestJson = null)
+        private ProxyRequest(string requestAssemblyQualifiedTypeName, byte[] requestData = null)
         {
-            RequestAssemblyQualifiedTypeName = requestAssemblyQualifiedTypeName;
-            RequestJson = requestJson;
+            MessageType = requestAssemblyQualifiedTypeName;
+            RequestData = requestData ?? Array.Empty<byte>();
         }
 
         //private ProxyRequest(string requestType, string requestResponseType = null, string request = null)
@@ -38,8 +41,8 @@ namespace Basyc.MessageBus.HttpProxy.Shared
         //    Request = request;
         //}
 
-        public string RequestAssemblyQualifiedTypeName { get; init; }
+        public string MessageType { get; init; }
         public string ResponseAssemblyQualifiedTypeName { get; init; }
-        public string RequestJson { get; init; }
+        public byte[] RequestData { get; init; }
     }
 }

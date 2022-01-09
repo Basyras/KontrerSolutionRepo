@@ -27,7 +27,7 @@ namespace Kontrer.OwnerClient.Application.Orders
         {
             var response = await bus.RequestAsync<CreateAccommodationOrderCommand, CreateAccommodationOrderResponse>(new(customerId, new()));
             var customerResponse = await bus.RequestAsync<GetCustomersQuery, GetCustomersQueryResponse>(new(new int[] { customerId }));
-            var vm = new OrderViewModel(customerResponse.Customers[0], response.NewOrder);
+            var vm = new OrderViewModel(customerResponse.AsT0.Customers[0], response.AsT0.NewOrder);
             shouldRefresh = true;
             return vm;
         }
@@ -54,7 +54,7 @@ namespace Kontrer.OwnerClient.Application.Orders
                 ordersCache.Clear();
                 foreach (var order in response.NewOrders.Values)
                 {
-                    var customer = customers.Customers.FirstOrDefault(x => x.Id == order.CustomerId);
+                    var customer = customers.AsT0.Customers.FirstOrDefault(x => x.Id == order.CustomerId);
                     customer = customer ?? new CustomerEntity();
                     ordersCache.Add(new OrderViewModel(customer, order));
                 }

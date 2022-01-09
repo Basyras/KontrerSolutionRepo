@@ -1,5 +1,5 @@
-﻿using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
-using Kontrer.Shared.Models.Pricing.Blueprints;
+﻿using Kontrer.OwnerServer.OrderService.Dtos.Models.Blueprints;
+using Kontrer.OwnerServer.PricingService.Application.Processing.Pricers;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 

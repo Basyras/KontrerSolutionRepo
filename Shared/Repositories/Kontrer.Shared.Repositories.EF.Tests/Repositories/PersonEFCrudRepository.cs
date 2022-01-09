@@ -1,6 +1,6 @@
 ﻿using Basyc.Repositories.EF;
-using Kontrer.OwnerServer.Shared.Data.EF.Tests;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Basyc.Repositories.EF.Tests.Repositories
 {
     public class PersonEFCrudRepository : EFInstantCrudRepositoryBase<PersonEntity, int, PersonModel>
     {
-        public PersonEFCrudRepository(DbContext dbContext) : base(dbContext, x => x.Id, x => x.Id)
+        public PersonEFCrudRepository(DbContext dbContext, ILogger<PersonEFCrudRepository> logger) : base(dbContext, x => x.Id, x => x.Id,logger)
         {
         }
 

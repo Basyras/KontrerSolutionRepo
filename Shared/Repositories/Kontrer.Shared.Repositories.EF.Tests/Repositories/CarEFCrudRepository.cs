@@ -1,4 +1,5 @@
 ﻿using Basyc.Repositories.EF;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Basyc.Repositories.EF.Tests.Repositories
 {
     public class CarEFCrudRepository : EFInstantCrudRepositoryBase<CarEntity, int, CarModel>
     {
-        public CarEFCrudRepository(TestDbContext dbContext) : base(dbContext, car => car.Id, car => car.Id)
+        public CarEFCrudRepository(TestDbContext dbContext, ILogger<CarEFCrudRepository> logger) : base(dbContext, car => car.Id, car => car.Id, logger)
         {
         }
 

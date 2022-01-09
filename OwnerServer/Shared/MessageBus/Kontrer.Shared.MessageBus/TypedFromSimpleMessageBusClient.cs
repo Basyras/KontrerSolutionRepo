@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
 {
-    public sealed class TypedToSimpleMessageBusClient : ITypedMessageBusClient
+    public sealed class TypedFromSimpleMessageBusClient : ITypedMessageBusClient
     {
         private readonly ISimpleMessageBusClient messageBusClient;
 
-        public TypedToSimpleMessageBusClient(ISimpleMessageBusClient messageBusClient)
+        public TypedFromSimpleMessageBusClient(ISimpleMessageBusClient messageBusClient)
         {
             this.messageBusClient = messageBusClient;
         }
