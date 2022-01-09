@@ -1,10 +1,4 @@
-﻿//using Bogus;
-//using FluentAssertions;
-//using System.Text.Json;
-//using Xunit;
-
-using Basyc.MessageBus.NetMQ.Shared;
-using Basyc.Serializaton.Abstraction;
+﻿using Basyc.Serializaton.Abstraction;
 using Bogus;
 using FluentAssertions;
 using System.Linq;
@@ -48,15 +42,15 @@ namespace Basyc.Serialization.ProtobufNet.Tests
 
 
         [Fact]
-        public void Serialization_Should_Proto()
+        public void Should_Serialize_Nested()
         {
             var originalCustomer = customerFaker.Generate();
             var seriCustomer = serializer.Serialize(originalCustomer, typeof(TestCustomer)).AsT0;
             var customerMessageType = TypedToSimpleConverter.ConvertTypeToSimple(originalCustomer.GetType());
-            var originalWrapper = new ProtoMessageWrapper(0, MessageCase.CheckIn, customerMessageType, seriCustomer);
-            var wrapperMessageType = TypedToSimpleConverter.ConvertTypeToSimple(originalWrapper.GetType());
-            var seriWrapper = serializer.Serialize(originalWrapper, typeof(ProtoMessageWrapper)).AsT0;
-            var deseriWrapper = (ProtoMessageWrapper)serializer.Deserialize(seriWrapper, typeof(ProtoMessageWrapper)).AsT0;
+            var originalWrapper = new ParentWrapperMessage(0, customerMessageType, seriCustomer);
+            
+            var seriWrapper = serializer.Serialize(originalWrapper, typeof(ParentWrapperMessage)).AsT0;
+            var deseriWrapper = (ParentWrapperMessage)serializer.Deserialize(seriWrapper, typeof(ParentWrapperMessage)).AsT0;
 
             var origialJson = JsonSerializer.Serialize(originalWrapper);
             var deseriJson = JsonSerializer.Serialize(deseriWrapper);
