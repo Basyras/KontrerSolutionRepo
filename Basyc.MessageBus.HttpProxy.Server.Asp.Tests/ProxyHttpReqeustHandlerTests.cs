@@ -12,28 +12,34 @@ using Xunit;
 using Basyc.MessageBus.HttpProxy.Shared;
 using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Shared;
+using Basyc.Serializaton.Abstraction;
+using Basyc.Serialization.Abstraction;
+using Basyc.Serailization.SystemTextJson;
 
 namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
 {
     public class ProxyHttpReqeustHandlerTests
     {
-        private readonly Mock<ITypedMessageBusClient> messageBusMock;
+        private readonly Mock<ISimpleMessageBusClient> messageBusMock;
         private readonly ProxyHttpReqeustHandler handler;
         private readonly Mock<HttpContext> httpContextMock;
-        private readonly IRequestSerializer serializer;
+        private readonly ISimpleByteSerailizer serializer;
 
         public ProxyHttpReqeustHandlerTests()
         {
-            messageBusMock = new Mock<ITypedMessageBusClient>();
-            handler = new ProxyHttpReqeustHandler(messageBusMock.Object, new JsonRequestSerializer());
+            messageBusMock = new Mock<ISimpleMessageBusClient>();
+            var serializer = new SimpleFromTypedSerializer(new JsonByteSerializer());
+            handler = new ProxyHttpReqeustHandler(messageBusMock.Object, serializer);
             httpContextMock = new Mock<HttpContext>();
-            serializer = new JsonRequestSerializer();
         }
 
         [Fact]
         public async Task Throws_When_MessageBus_Throws()
         {
-            var proxyRequest = ProxyRequest.Create(typeof(DummyRequest), serializer.Serialize(new DummyRequest()));
+            var dummyRequestType = TypedToSimpleConverter.ConvertTypeToSimple<DummyRequest>();
+            var ser = serializer.Serialize(new DummyRequest(), dummyRequestType);
+            var proxyRequest = new ProxyRequest(dummyRequestType, dummyRequestType);
+            
             var proxyBytes = JsonSerializer.SerializeToUtf8Bytes(proxyRequest);
             var proxyMemory = new MemoryStream(proxyBytes);
 
@@ -41,7 +47,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
 
             string busErrorMessage = "BUS_ERROR_MESSAGE";
             messageBusMock
-                .Setup(x => x.SendAsync(It.IsAny<Type>(), It.IsAny<DummyRequest>(), default))
+                .Setup(x => x.SendAsync(It.IsAny<string>(), It.IsAny<DummyRequest>(), default))
                 .Throws(new Exception(busErrorMessage));
 
             Func<Task> taskWrapper = async () =>

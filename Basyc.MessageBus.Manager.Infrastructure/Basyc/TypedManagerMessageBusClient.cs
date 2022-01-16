@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager
 {
-    public class BasycInterfaceTypedBusClient : IBusClient
+    public class TypedManagerMessageBusClient : IManagerMessageBusClient
     {
         private readonly IRequestInfoTypeStorage requestInfoTypeStorage;
         private readonly IResponseFormatter responseFormatter;
 
-        public BasycInterfaceTypedBusClient(ITypedMessageBusClient messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
+        public TypedManagerMessageBusClient(ITypedMessageBusClient messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
         {
             MessageBusManager = messageBusManager;
             this.requestInfoTypeStorage = requestInfoTypeStorage;
@@ -48,14 +48,17 @@ namespace Basyc.MessageBus.Manager
                     .ContinueWith(x =>
                     {
                         stopWatch.Stop();
-                        string errorMessage;
-                        if (x.Exception is AggregateException aggregateException)
+                        string errorMessage = string.Empty;
+                        if(x.IsFaulted)
                         {
-                            errorMessage = aggregateException.InnerExceptions.Select(x => x.Message).Aggregate((x, y) => $"{x},\n{y}");
-                        }
-                        else
-                        {
-                            errorMessage = x.Exception != null ? x.Exception.Message : string.Empty;
+                            if (x.Exception is AggregateException aggregateException)
+                            {
+                                errorMessage = aggregateException.InnerExceptions.Select(x => x.Message).Aggregate((x, y) => $"{x},\n{y}");
+                            }
+                            else
+                            {
+                                errorMessage = x.Exception != null ? x.Exception.Message : string.Empty;
+                            }
                         }
                         result = new RequestResult(x.IsFaulted, errorMessage, stopWatch.Elapsed);
                     });

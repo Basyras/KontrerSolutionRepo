@@ -30,7 +30,7 @@
                 </requestHeading>
             </TitleContent>
             <ChildContent>
-                <requestBody>
+                <requestBody class="@requestBodyClass">
                     <bodySection>
                         <table class="paramTable">
                             @for (int i = 0; i < RequestItemViewModel.RequestInfo.Parameters.Count; i++)
@@ -86,7 +86,9 @@
 </div>
 @code
 {
-    private string borderClass => "requestItem__border--" + RequestItemViewModel.RequestInfo.RequestType.ToString().ToLower();
-    private string backgroundClass => "background--" + RequestItemViewModel.RequestInfo.RequestType.ToString().ToLower();
+    private string requestType => RequestItemViewModel.RequestInfo.RequestType.ToString().ToLower();
+    private string borderClass => "requestItem__border--" + requestType;
+    private string backgroundClass => "background--" + requestType;
+    private string requestBodyClass => "requestBody--" + requestType;
 
 }

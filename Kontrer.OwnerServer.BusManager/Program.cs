@@ -11,6 +11,11 @@ using Basyc.MessageBus.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Basyc.MessageBus.Client.NetMQ;
 
+#if DEBUG
+await Task.Delay(5000);
+#endif
+
+
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
@@ -23,7 +28,7 @@ var domains = new Assembly[]
 };
 
 builder.Services.AddBlazorMessageBus()
-    .AddBusClient<BasycInterfaceTypedBusClient>()
+    .AddBusClient<TypedManagerMessageBusClient>()
     .AddInterfacedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
     .SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
 

@@ -24,7 +24,9 @@ namespace Basyc.Serialization.Abstraction
 
         public OneOf<byte[], SerializationFailure> Serialize(object data, string dataType)
         {
-            return typedByteSerializer.Serialize(data, TypedToSimpleConverter.ConvertSimpleToType(dataType));
+            var clrType = TypedToSimpleConverter.ConvertSimpleToType(dataType);
+            var seriResult =  typedByteSerializer.Serialize(data, clrType);
+            return seriResult;
         }
     }
 }

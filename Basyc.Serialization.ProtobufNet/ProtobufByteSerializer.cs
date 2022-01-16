@@ -23,9 +23,9 @@ namespace Basyc.Serialization.ProtobufNet
                 {
                     return Activator.CreateInstance(dataType)!;
                 }
-                catch
+                catch(Exception ex)
                 {
-                    throw new Exception("Cannot deserialize message. Message data is empty and message does not have empty constructor.");
+                    throw new Exception("Cannot deserialize message. Message data is empty and message does not have empty constructor.",ex);
                 }
             }
 

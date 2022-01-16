@@ -25,7 +25,7 @@ public static class MassTransitMessageManagerBuilderExtensions
 
     public static BusManagerBuilder UseMasstransitReqeustClient(this BusManagerBuilder managerBuilder)
     {
-        managerBuilder.services.AddSingleton<IBusClient, MassTransitBusClient>();
+        managerBuilder.services.AddSingleton<IManagerMessageBusClient, MassTransitBusClient>();
         return managerBuilder;
     }
 }

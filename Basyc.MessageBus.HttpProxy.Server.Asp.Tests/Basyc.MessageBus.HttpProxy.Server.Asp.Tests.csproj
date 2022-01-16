@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Basyc.Serailization.SystemTextJson\Basyc.Serailization.SystemTextJson.csproj" />
     <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Server.Asp\Basyc.MessageBus.HttpProxy.Server.Asp.csproj" />
     <ProjectReference Include="..\Kontrer.Shared.Tests\Basyc.Shared.Tests.csproj" />
   </ItemGroup>

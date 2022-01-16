@@ -19,9 +19,13 @@ namespace SandBox.AspApiApp
             //CreateHostBuilder(args).Build().Run();
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
             builder.AddMessageBus()
-                     .AddMassTransitClient();
+                    .WithTypedMessages()
+                    .SkipHandlers()
+                    .AddMassTransitClient();
 
-            builder.Back().Build().Run();
+            var originalBuilder = builder.Back();
+            var app = originalBuilder.Build();
+            app.Run();
         }
 
         //public static IHostBuilder CreateHostBuilder(string[] args) =>
