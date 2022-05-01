@@ -2,13 +2,15 @@
 @using Kontrer.OwnerClient.Application.Orders;
 @using Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Labels
 @inherits MudBlazor.MudButton
-<accommodationItem>
-    <statusRibbon style="background-color:@ribbonColor" />
+<mainBorder>
+    @*<statusRibbon style="background-color:@ribbonColor" />*@
+    <statusRibbon class="@statusRibbonModifierClass"/>
     <contentContainer>
-        <customerName>@Order.Customer.FirstName @Order.Customer.SecondName</customerName>
+        <statusLabel class="@statusLabelModifierClass">@Order.Order.State.ToString()</statusLabel>        
         <startDate><TimeLabel Time="Order.Order.Requirment.From" /> </startDate>
         <endDate> <TimeLabel Time="Order.Order.Requirment.To" /> </endDate>
+        <customerName>@Order.Customer.FirstName @Order.Customer.SecondName</customerName>
         <peopleCount><PeopleCount Count="Order.Order.Requirment.Rooms.Sum(x=>x.People.Count)" /></peopleCount>
         <roomCount><RoomCount Count="Order.Order.Requirment.Rooms.Count" /></roomCount>
     </contentContainer>
-</accommodationItem>
+</mainBorder>

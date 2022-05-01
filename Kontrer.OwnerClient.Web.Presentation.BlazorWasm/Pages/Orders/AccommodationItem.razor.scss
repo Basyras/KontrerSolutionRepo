@@ -1,46 +1,77 @@
-﻿accommodationItem {
-    background-color: #EFF3F6;
+﻿@import "../../Shared/Colors.scss";
+
+mainBorder {
+    background-color: $Grid_Item_Background;
     display: flex;
     flex-direction: row;
-    width: 400px;
+}
+
+mainBorder :hover {
+    background-color:  $Grid_Item_Hover_Background;
 }
 
 contentContainer {
-    padding: 0.8rem;
+    padding: 0.2rem 0.6rem;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr auto;
-    grid-template-areas:
-        "customerName customerName peopleCount" "startDate endDate roomCount";
+    align-items: center;
+    grid-template-columns: 3fr 2.5fr 2.5fr 4fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    padding: 0.5rem;
 }
 
 statusRibbon {
-    width: 10px;
+    width: 8px;
+}
+
+::deep .statusRibbon--New {
+    background-color: $Order_Status_New_Background;
+}
+
+::deep .statusRibbon--Processed {
+    background-color: $Order_Status_Processed_Background;
+}
+
+::deep .statusRibbon--Canceled {
+    background-color: $Order_Status_Canceled_Background;
 }
 
 customerName {
-    grid-area: customerName;
     font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    text-align: left;
 }
 
 startDate {
-    grid-area: startDate;
     display: inline;
+    text-align: left;
 }
 
 endDate {
-    grid-area: endDate;
     display: inline;
+    text-align: left;
 }
 
 roomCount {
-    grid-area: roomCount;
     text-align: right;
 }
 
 peopleCount {
-    grid-area: peopleCount;
     text-align: right;
+}
+
+statusLabel {
+    text-align: left;
+    font-weight: 500;
+}
+
+::deep .statusLabel--New {
+    color: $Order_Status_New_Foreground;
+}
+
+::deep .statusLabel--Processed {
+    color: $Order_Status_Processed_Foreground;
+}
+
+::deep .statusLabel--Canceled {
+    color: $Order_Status_Canceled_Foreground;
 }

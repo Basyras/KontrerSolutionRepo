@@ -1,3 +1,26 @@
 ﻿[
-
+  {
+    "outputFile": "Shared/Labels/CollectionCount.razor.css",
+    "inputFile": "Shared/Labels/CollectionCount.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Orders/Orders.razor.css",
+    "inputFile": "Pages/Orders/Orders.razor.scss"
+  },
+  {
+    "outputFile": "Shared/Containers/LayoutSection.razor.css",
+    "inputFile": "Shared/Containers/LayoutSection.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Orders/AccommodationItem.razor.css",
+    "inputFile": "Pages/Orders/AccommodationItem.razor.scss"
+  },
+  {
+    "outputFile": "Shared/MainLayout.razor.css",
+    "inputFile": "Shared/MainLayout.razor.scss"
+  },
+  {
+    "outputFile": "Shared/NavMenu.razor.css",
+    "inputFile": "Shared/NavMenu.razor.scss"
+  }
 ]

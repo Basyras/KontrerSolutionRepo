@@ -39,18 +39,15 @@ public class BasycTypedMessageToByteSerializer : IMessageToByteSerializer
 
 
     public OneOf<CheckInMessage, RequestCase, ResponseCase, EventCase, DeserializationFailureCase> Deserialize(byte[] wrapperBytes)
-    {
-        //ProtoMessageWrapper messageWrapper = TypedObjectToByteSerializer.Deserialize<ProtoMessageWrapper>(commandBytes);
+    {        
         var wrapperDeserializationResult = byteSerailizer.Deserialize(wrapperBytes, wrapperMessageType);
         if(wrapperDeserializationResult.IsT1)
             throw new Exception(wrapperDeserializationResult.AsT1.Message);
 
-        var wrapper = (ProtoMessageWrapper)wrapperDeserializationResult.Value;
-        //Type messageClrType = TypedToSimpleConverter.ConvertSimpleToType(wrapperDeserializationResult.MessageType);
+        var wrapper = (ProtoMessageWrapper)wrapperDeserializationResult.Value;        
         OneOf<object, SerializationFailure> messageDataSerialiaztionResult;
         try
-        {
-            //messageData = TypedObjectToByteSerializer.Deserialize(wrapperDeserializationResult.MessageData, messageClrType);
+        {            
             messageDataSerialiaztionResult = byteSerailizer.Deserialize(wrapper.MessageData, wrapper.MessageType);
         }
         catch (Exception ex)

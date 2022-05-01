@@ -68,5 +68,10 @@ namespace Kontrer.OwnerClient.Application.Orders
         {
             return lastRefresh.AddSeconds(2) < DateTime.Now || shouldRefresh;
         }
+
+        public Task Cancel(AccommodationOrderEntity order)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

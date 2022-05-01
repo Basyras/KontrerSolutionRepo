@@ -10,7 +10,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <SassFile Remove="Shared\Containers\LayoutSection.razor.scss" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Include="compilerconfig.json" />
+		<None Include="Shared\Containers\LayoutSection.razor.scss" />
 	</ItemGroup>
 
 	<ItemGroup>

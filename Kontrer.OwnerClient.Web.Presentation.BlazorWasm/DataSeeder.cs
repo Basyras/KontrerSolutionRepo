@@ -12,8 +12,8 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
 {
     public static class DataSeeder
     {
-        public static int NumberOfCustomers = 5;
-        public static int NumberOfOrders = 5;
+        public static int NumberOfCustomers = 10;
+        public static int NumberOfOrders = 25;
 
         public static async Task SeedData(IServiceProvider services)
         {
@@ -42,9 +42,19 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
             for (int orderIndex = 0; orderIndex < NumberOfOrders; orderIndex++)
             {
                 var newOrder = await orderMana.CreateOrder(customers[randomizer.Next(0, customers.Count)].Id);
-                if (randomizer.Next(0, 2) == 1)
+                var random = randomizer.Next(0, 3);
+                switch (random)
                 {
-                    await orderMana.Process(newOrder.Order);
+                    case 0:
+                        break;
+                    case 1:
+                        await orderMana.Process(newOrder.Order);
+                        break;
+                    case 2:
+                        await orderMana.Cancel(newOrder.Order);
+                        break;
+                    default:
+                        break;
                 }
             }
         }

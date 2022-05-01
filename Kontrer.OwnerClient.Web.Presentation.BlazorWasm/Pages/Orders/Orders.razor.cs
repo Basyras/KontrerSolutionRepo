@@ -11,8 +11,7 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Pages.Orders
 {
     public partial class Orders
     {
-        public List<OrderViewModel> NewOrders { get; set; } = new List<OrderViewModel>();
-        public List<OrderViewModel> WaitingOrders { get; set; } = new List<OrderViewModel>();
+        public List<OrderViewModel> ToProcessOrders { get; set; } = new List<OrderViewModel>();
         public List<OrderViewModel> HistoryOrders { get; set; } = new List<OrderViewModel>();
         private bool isLoading = false;
         private bool loadingFailed = false;
@@ -45,18 +44,21 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Pages.Orders
                 return;
             }
 
-            NewOrders.Clear();
-            WaitingOrders.Clear();
+            ToProcessOrders.Clear();
             foreach (var order in allOrders)
             {
                 switch (order.Order.State)
                 {
                     case OwnerServer.OrderService.Domain.Orders.OrderStates.New:
-                        NewOrders.Add(order);
+                        ToProcessOrders.Add(order);
                         break;
 
                     case OwnerServer.OrderService.Domain.Orders.OrderStates.Processed:
-                        WaitingOrders.Add(order);
+                        ToProcessOrders.Add(order);
+                        break;
+
+                    case OwnerServer.OrderService.Domain.Orders.OrderStates.CanceledByOwner:
+                        ToProcessOrders.Add(order);
                         break;
                 }
             }

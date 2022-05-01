@@ -3,10 +3,11 @@
 @using Kontrer.OwnerClient.Application.Orders;
 @using Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Labels;
 @using Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Dialogs;
+@using Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Containers;
 @using Microsoft.Extensions.Logging;
 
 @page "/offers"
-@inject Kontrer.Shared.MessageBus.IMessageBusManager bus
+@*@inject Kontrer.Shared.MessageBus.IMessageBusManager bus*@
 @inject Microsoft.Extensions.Logging.ILogger<Orders> logger
 @inject IOrderManager orderManager
 @inject IServiceProvider services
@@ -14,103 +15,74 @@
 <ordersContainer>
     <ordersGrid>
         <ordersColumn>
-            <columnHeading>
-                To process
-                <CollectionCount Collection="@NewOrders" IsLoading="@isLoading" />
-            </columnHeading>
-            @if (isLoading)
-            {
-                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-            }
-
-            @if (loadingFailed)
-            {
-                <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
-            }
-
-            @foreach (var newOrder in NewOrders)
-            {
-                <button @onclick="ShowEditor">
-                    <AccommodationItem Order="@newOrder" />
-                </button>
-                <itemSpacer />
-            }
-
-            @if (loadingFailed == false && isLoading == false && NewOrders.Count == 0)
-            {
-                <StatusLabel>all processed</StatusLabel>
-            }
-        </ordersColumn>
-        <horizontalLine />
-        <ordersColumn>
-            <columnHeading>
-                Waiting for response
-                <CollectionCount Collection="@WaitingOrders" IsLoading="@isLoading" />
-            </columnHeading>
-            @if (isLoading)
-            {
-                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-            }
-            else
-            {
-                if (loadingFailed)
-                {
-                    <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
-                }
-                else
-                {
-                    foreach (var newOrder in WaitingOrders)
+            <LayoutSection Heading="Orders">
+                <AdditionalHeading>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Refresh">Refresh</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SeedData">SeedData</MudButton>
+                </AdditionalHeading>
+                <ChildContent>
+                    @if (isLoading)
                     {
-                        <AccommodationItem Order="@newOrder" />
+                        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                    }
+
+                    @if (loadingFailed)
+                    {
+                        <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
+                    }
+
+                    <orderList>
+                    @foreach (var newOrder in ToProcessOrders)
+                    {
+                        <button @onclick="ShowEditor" style="width: 100%; display: block;">
+                            <AccommodationItem Order="@newOrder" />
+                        </button>
                         <itemSpacer />
-                    }
+                    }</orderList>
 
-                    @if (loadingFailed == false && isLoading == false && WaitingOrders.Count == 0)
+                    @if (loadingFailed == false && isLoading == false && ToProcessOrders.Count == 0)
                     {
-                        <StatusLabel>nothing to wait</StatusLabel>
+                        <StatusLabel>all processed</StatusLabel>
                     }
-                }
-            }
+                </ChildContent>
+            </LayoutSection>
         </ordersColumn>
-        <horizontalLine />
         <ordersColumn>
-            <columnHeading>
-                History
-            </columnHeading>
-            @if (isLoading)
-            {
-                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-            }
-            else
-            {
-                if (loadingFailed)
-                {
-                    <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
-                }
-                else
-                {
-                    foreach (var historyOrder in HistoryOrders)
+            <LayoutSection Heading="History">
+                <ChildContent>
+                    @if (isLoading)
                     {
-                        <AccommodationItem Order="@historyOrder" />
-                        <itemSpacer />
+                        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
                     }
+                    else
+                    {
+                        if (loadingFailed)
+                        {
+                            <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
+                        }
+                        else
+                        {
+                            foreach (var historyOrder in HistoryOrders)
+                            {
+                                <AccommodationItem Order="@historyOrder" />
+                                <itemSpacer />
+                            }
 
-                    @if (loadingFailed == false && isLoading == false && HistoryOrders.Count == 0)
-                    {
-                        <StatusLabel>history empty</StatusLabel>
+                            @if (loadingFailed == false && isLoading == false && HistoryOrders.Count == 0)
+                            {
+                                <StatusLabel>history empty</StatusLabel>
+                            }
+                        }
                     }
-                }
-            }
+                </ChildContent>
+            </LayoutSection>
         </ordersColumn>
     </ordersGrid>
 </ordersContainer>
-
-<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Refresh">Refresh</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SeedData">SeedData</MudButton>
 
 @code {
     private RenderFragment CreateEditor()
     {
         return@<AccommodationEditor />;
-}
+    }
 }

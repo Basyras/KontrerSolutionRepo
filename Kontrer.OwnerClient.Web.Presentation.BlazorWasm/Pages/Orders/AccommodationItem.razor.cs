@@ -1,4 +1,5 @@
 ﻿using Kontrer.OwnerClient.Application.Orders;
+using Kontrer.OwnerServer.OrderService.Domain.Orders;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
@@ -12,8 +13,9 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Pages.Orders
     public partial class AccommodationItem
     {
         [Parameter]
-        public OrderViewModel Order { get; set; }
-
-        private string ribbonColor { get => Order.Order.State == OwnerServer.OrderService.Domain.Orders.OrderStates.New ? "#FFF29E" : "#FFF29E"; }
+        public OrderViewModel Order { get; set; }        
+        private string modifier { get => Order.Order.State == OrderStates.CanceledByOwner || Order.Order.State == OrderStates.CanceledByCustomer ? "Canceled" : Order.Order.State.ToString(); }
+        private string statusLabelModifierClass { get => "statusLabel--" + modifier; }
+        private string statusRibbonModifierClass { get => "statusRibbon--" + modifier; }
     }
 }

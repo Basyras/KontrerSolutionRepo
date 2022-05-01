@@ -244,7 +244,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serialization.Protobu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serailization.SystemTextJson", "Basyc.Serailization.SystemTextJson\Basyc.Serailization.SystemTextJson.csproj", "{99D8811B-6510-486C-8A7F-D4AB879AB75B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Serialization.ProtobufNet.Tests2", "Basyc.Serialization.ProtobufNet.Tests2\Basyc.Serialization.ProtobufNet.Tests2.csproj", "{786E5B92-A672-4269-8239-BF6E5CCDD8C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serialization.ProtobufNet.Tests2", "Basyc.Serialization.ProtobufNet.Tests2\Basyc.Serialization.ProtobufNet.Tests2.csproj", "{786E5B92-A672-4269-8239-BF6E5CCDD8C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

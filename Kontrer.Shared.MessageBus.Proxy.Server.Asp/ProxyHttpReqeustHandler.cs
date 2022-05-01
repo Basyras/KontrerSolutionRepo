@@ -26,22 +26,12 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
         }
 
         public async Task Handle(HttpContext context)
-        {
+        {            
             MemoryStream mem = new MemoryStream();
             await context.Request.Body.CopyToAsync(mem);
             var bytes = mem.ToArray();
             var proxyRequestResult = serializer.Deserialize(bytes, TypedToSimpleConverter.ConvertTypeToSimple<ProxyRequest>());
             ProxyRequest proxyRequest = (ProxyRequest)proxyRequestResult.Value;
-            //var requestType = Type.GetType(proxyRequest.MessageType);
-
-            //if (requestType == null)
-            //    throw new Exception("Request type is not loaded or does not exist");
-
-            //var request = serializer.Deserialize(proxyRequest.RequestData, requestType);
-            //if (request == null) //Messages with 0 parameters can be just created
-            //{
-            //    request = Activator.CreateInstance(requestType);
-            //}
 
             var requestResult = serializer.Deserialize(proxyRequest.RequestData, proxyRequest.MessageType);
             if(requestResult.Value is SerializationFailure)
@@ -66,8 +56,6 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
             //}
 
              await messageBus.SendAsync(proxyRequest.MessageType, requestData);
-
-            //throw new InvalidOperationException($"IMessage does not inherit from {nameof(IMessage)}");
         }
     }
 }

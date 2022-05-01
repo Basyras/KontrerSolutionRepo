@@ -4,15 +4,19 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    color: $App_Foreground;
 }
 
 .main {
     flex: 1;
 }
 
-.sidebar {
-    /* background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);*/
-    background-color: $BackgroundStrong;
+.sidebar {    
+    background-color: $App_Navigation_Background;
+}
+
+::deep .nav-item a {
+    color: $App_Navigation_Foreground !important;
 }
 
 .top-row {

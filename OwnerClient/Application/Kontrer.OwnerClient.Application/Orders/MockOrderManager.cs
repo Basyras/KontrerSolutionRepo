@@ -44,5 +44,11 @@ namespace Kontrer.OwnerClient.Application.Orders
             order.State = OwnerServer.OrderService.Domain.Orders.OrderStates.Processed;
             return Task.CompletedTask;
         }
+
+        public Task Cancel(AccommodationOrderEntity order)
+        {
+            order.State = OwnerServer.OrderService.Domain.Orders.OrderStates.CanceledByOwner;
+            return Task.CompletedTask;
+        }
     }
 }

@@ -1,4 +1,7 @@
-﻿$BackgroundStrong: #111E2E;
+﻿@import "Colors/Order.scss";
+@import "Colors/App.scss";
+
+$BackgroundStrong: #111E2E;
 $ForegroundStrong: #CDDBF5;
 
 $ForegroundRegular: #6E739D;
@@ -22,3 +25,7 @@ $Basic_Secondary_Background: #eef1f6;
 $Basic_Ok_Background: #e4fbe4;
 $Basic_Ok_Foreground: #65b487;
 $Basic_Ok_Icon: #aae8c5;
+
+//Grid
+$Grid_Item_Background: #F5F5F9;
+$Grid_Item_Hover_Background: #F4EEFE;
