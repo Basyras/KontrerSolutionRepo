@@ -14,13 +14,18 @@
 @inject IDialogService DialogService
 <ordersContainer>
     <ordersGrid>
-        <ordersColumn>
-            <LayoutSection Heading="Orders">
+        <ordersSection>
+            <LayoutSection Heading="Orders" RemoveBorder="true">
                 <AdditionalHeading>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Refresh">Refresh</MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SeedData">SeedData</MudButton>
                 </AdditionalHeading>
                 <ChildContent>
+                    @if (loadingFailed == false && isLoading == false && ToProcessOrders.Count == 0)
+                    {
+                        <StatusLabel>all processed</StatusLabel>
+                    }
+
                     @if (isLoading)
                     {
                         <MudProgressCircular Color="Color.Default" Indeterminate="true" />
@@ -31,23 +36,30 @@
                         <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
                     }
 
-                    <orderList>
-                    @foreach (var newOrder in ToProcessOrders)
+                    @if(ToProcessOrders.Any())
                     {
-                        <button @onclick="ShowEditor" style="width: 100%; display: block;">
-                            <AccommodationItem Order="@newOrder" />
-                        </button>
-                        <itemSpacer />
-                    }</orderList>
-
-                    @if (loadingFailed == false && isLoading == false && ToProcessOrders.Count == 0)
-                    {
-                        <StatusLabel>all processed</StatusLabel>
+                        <orderHeaders>
+                            <orderHeader>status</orderHeader>
+                            <orderHeader>check in</orderHeader>
+                            <orderHeader>check out</orderHeader>
+                            <orderHeader>customer</orderHeader>
+                            <orderHeader>people</orderHeader>
+                            <orderHeader>rooms</orderHeader>
+                        </orderHeaders>
                     }
+                    <orderList>
+                        @foreach (var newOrder in ToProcessOrders)
+                        {
+                            <button @onclick="ShowEditor" style="width: 100%; display: block;">
+                                <AccommodationItem Order="@newOrder" />
+                            </button>
+                            <itemSpacer />
+                        }
+                    </orderList>
                 </ChildContent>
             </LayoutSection>
-        </ordersColumn>
-        <ordersColumn>
+        </ordersSection>
+        <historySection>
             <LayoutSection Heading="History">
                 <ChildContent>
                     @if (isLoading)
@@ -76,7 +88,7 @@
                     }
                 </ChildContent>
             </LayoutSection>
-        </ordersColumn>
+        </historySection>
     </ordersGrid>
 </ordersContainer>
 

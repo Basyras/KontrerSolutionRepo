@@ -1,5 +1,9 @@
-﻿@import "Colors/Order.scss";
-@import "Colors/App.scss";
+﻿@import "Colors/App.scss";
+@import "Colors/Ghost.scss";
+@import "Colors/Order.scss";
+
+//Breakpoints
+$breakpoint-desktop: 768px;
 
 $BackgroundStrong: #111E2E;
 $ForegroundStrong: #CDDBF5;

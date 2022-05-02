@@ -1,1 +1,1 @@
-﻿mainBorder{padding:2rem;display:flex;flex-direction:column;border-radius:11px;background:transparent;border:1px solid #e4e7ee;}headingBorder{font-weight:normal;font-size:1.5rem;text-align:left;color:#697494;padding-bottom:2rem;}
+﻿layoutSectionMainBorder{padding:2rem;display:flex;flex-direction:column;background:transparent;}.layoutSectionMainBorder--bordered ::deep{border-radius:11px;border:1px solid #e4e7ee;}headingBorder{font-weight:normal;font-size:1.5rem;text-align:left;color:#697494;padding-bottom:2rem;}

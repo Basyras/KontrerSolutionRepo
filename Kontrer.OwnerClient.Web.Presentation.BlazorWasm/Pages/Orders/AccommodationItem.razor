@@ -3,10 +3,9 @@
 @using Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Labels
 @inherits MudBlazor.MudButton
 <mainBorder>
-    @*<statusRibbon style="background-color:@ribbonColor" />*@
     <statusRibbon class="@statusRibbonModifierClass"/>
     <contentContainer>
-        <statusLabel class="@statusLabelModifierClass">@Order.Order.State.ToString()</statusLabel>        
+        <statusLabel class="@statusLabelModifierClass">@statusText</statusLabel>        
         <startDate><TimeLabel Time="Order.Order.Requirment.From" /> </startDate>
         <endDate> <TimeLabel Time="Order.Order.Requirment.To" /> </endDate>
         <customerName>@Order.Customer.FirstName @Order.Customer.SecondName</customerName>

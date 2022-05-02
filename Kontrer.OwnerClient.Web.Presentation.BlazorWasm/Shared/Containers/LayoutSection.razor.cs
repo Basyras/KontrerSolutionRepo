@@ -7,5 +7,7 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm.Shared.Containers
         [Parameter] public string Heading { get; set; }
         [Parameter] public RenderFragment AdditionalHeading { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public bool RemoveBorder { get; set; } = false;
+        private string layoutSectionMainBorderClass => $"layoutSectionMainBorder--" + (RemoveBorder ? "simple" : "bordered");
     }
 }

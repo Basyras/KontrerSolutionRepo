@@ -8,13 +8,14 @@
     border-color: gray;
     color: gray;
     background-color: lightgray;
+    border-radius: 7px;
 }
 
 .statusLabelContainer--Ok {
     @extend .statusLabelContainer;
-    border-color: $Basic_Ok_Foreground;
-    color: $Basic_Ok_Foreground;
-    background-color: $Basic_Ok_Background;
+    border-color: $Ghost_Ok_Foreground;
+    color: $Ghost_Ok_Foreground;
+    background-color: $Ghost_Ok_Background;
 }
 
 .statusLabelContainer--Error {

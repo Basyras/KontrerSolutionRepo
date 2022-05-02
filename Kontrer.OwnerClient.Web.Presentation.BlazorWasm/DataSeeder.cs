@@ -42,6 +42,10 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
             for (int orderIndex = 0; orderIndex < NumberOfOrders; orderIndex++)
             {
                 var newOrder = await orderMana.CreateOrder(customers[randomizer.Next(0, customers.Count)].Id);
+                var refDate = faker.Date.Between(DateTime.Now.AddDays(-12), DateTime.Now.AddDays(12));
+
+                newOrder.Order.Requirment.From = faker.Date.Recent(12, refDate);
+                newOrder.Order.Requirment.To = faker.Date.Soon(12, refDate);
                 var random = randomizer.Next(0, 3);
                 switch (random)
                 {

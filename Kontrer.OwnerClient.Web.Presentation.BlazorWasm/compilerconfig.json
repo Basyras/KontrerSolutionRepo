@@ -22,5 +22,13 @@
   {
     "outputFile": "Shared/NavMenu.razor.css",
     "inputFile": "Shared/NavMenu.razor.scss"
+  },
+  {
+    "outputFile": "Shared/Colors/Ghost.css",
+    "inputFile": "Shared/Colors/Ghost.scss"
+  },
+  {
+    "outputFile": "Shared/Labels/StatusLabel.razor.css",
+    "inputFile": "Shared/Labels/StatusLabel.razor.scss"
   }
 ]
