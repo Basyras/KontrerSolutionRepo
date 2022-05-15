@@ -30,7 +30,6 @@ namespace Basyc.MessageBus.Client.MasstTransit
                     rabbitConfig.ConfigureEndpoints(transitContext);
                 });
             });
-            services.AddMassTransitHostedService();
             return builder;
         }
 

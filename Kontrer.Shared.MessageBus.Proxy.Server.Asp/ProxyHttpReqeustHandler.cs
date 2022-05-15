@@ -33,13 +33,12 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
             var proxyRequestResult = serializer.Deserialize(bytes, TypedToSimpleConverter.ConvertTypeToSimple<ProxyRequest>());
             ProxyRequest proxyRequest = (ProxyRequest)proxyRequestResult.Value;
 
-            var requestResult = serializer.Deserialize(proxyRequest.RequestData, proxyRequest.MessageType);
-            if(requestResult.Value is SerializationFailure)
+            var requestDeserializatioResult = serializer.Deserialize(proxyRequest.RequestData, proxyRequest.MessageType);
+            if(requestDeserializatioResult.Value is SerializationFailure)
             {
-                throw new Exception(requestResult.AsT1.Message);
+                throw new Exception(requestDeserializatioResult.AsT1.Message);
             }
-            var requestData = requestResult.AsT0;
-
+            var requestData = requestDeserializatioResult.AsT0;
 
             //if (requestType.IsAssignableTo(typeof(IMessage)))
             //{
@@ -55,7 +54,36 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
             //    return;
             //}
 
-             await messageBus.SendAsync(proxyRequest.MessageType, requestData);
+
+            //await messageBus.SendAsync(proxyRequest.MessageType, requestData);
+
+            //var requestType = TypedToSimpleConverter.ConvertSimpleToType(proxyRequest.MessageType);
+
+            if (proxyRequest.HasResponse)
+            {
+                //var responseType = GenericsHelper.GetTypeArgumentsFromParent(requestType, typeof(IMessage<>))[0];
+                var busRequestResponse = await messageBus.RequestAsync(proxyRequest.MessageType, requestData);
+                //var responseSerializationResult = serializer.Serialize(busRequestResponse, busRequestResponse.AsT0);
+                //await responseSerializationResult.Match(
+                //    async bytes => await context.Response.BodyWriter.WriteAsync(bytes),
+                //    failure => throw new Exception(responseSerializationResult.AsT1.Message));
+
+                await busRequestResponse.Match(
+                    async response =>
+                    {
+                        var responseType = TypedToSimpleConverter.ConvertTypeToSimple(response.GetType());
+                        var responseSerializationResult = serializer.Serialize(response, responseType);
+                        await responseSerializationResult.Match(
+                            async bytes => await context.Response.BodyWriter.WriteAsync(bytes),
+                            failure => throw new Exception(responseSerializationResult.AsT1.Message));
+                    },
+                    error => throw new Exception(error.Message));
+
+            }
+            else
+            {
+                await messageBus.SendAsync(proxyRequest.MessageType, requestData);
+            }
         }
     }
 }

@@ -36,7 +36,7 @@
                         <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
                     }
 
-                    @if(ToProcessOrders.Any())
+                    @if (ToProcessOrders.Any())
                     {
                         <orderHeaders>
                             <orderHeader>status</orderHeader>
@@ -60,32 +60,36 @@
             </LayoutSection>
         </ordersSection>
         <historySection>
-            <LayoutSection Heading="History">
+            <LayoutSection RemoveBorder="true">
                 <ChildContent>
-                    @if (isLoading)
-                    {
-                        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-                    }
-                    else
-                    {
-                        if (loadingFailed)
-                        {
-                            <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
-                        }
-                        else
-                        {
-                            foreach (var historyOrder in HistoryOrders)
+                    <LayoutSection Heading="History">
+                        <ChildContent>
+                            @if (isLoading)
                             {
-                                <AccommodationItem Order="@historyOrder" />
-                                <itemSpacer />
+                                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
                             }
+                            else
+                            {
+                                if (loadingFailed)
+                                {
+                                    <StatusLabel Status="Statuses.Error">Failed to load</StatusLabel>
+                                }
+                                else
+                                {
+                                    foreach (var historyOrder in HistoryOrders)
+                                    {
+                                        <AccommodationItem Order="@historyOrder" />
+                                        <itemSpacer />
+                                    }
 
-                            @if (loadingFailed == false && isLoading == false && HistoryOrders.Count == 0)
-                            {
-                                <StatusLabel>history empty</StatusLabel>
+                                    @if (loadingFailed == false && isLoading == false && HistoryOrders.Count == 0)
+                                    {
+                                        <StatusLabel>history empty</StatusLabel>
+                                    }
+                                }
                             }
-                        }
-                    }
+                        </ChildContent>
+                    </LayoutSection>
                 </ChildContent>
             </LayoutSection>
         </historySection>

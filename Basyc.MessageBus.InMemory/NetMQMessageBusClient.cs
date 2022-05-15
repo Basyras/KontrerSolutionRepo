@@ -88,16 +88,15 @@ public partial class NetMQMessageBusClient : ISimpleMessageBusClient
             async request =>
             {
                 logger.LogDebug($"Request received from {senderAddressString}:{request.SessionId}, data: '{request.RequestData}'");
-                var consumerResult = await handlerManager.ConsumeMessage(request.RequestType, request.RequestData, cancellationToken);
+                var consumeResult = await handlerManager.ConsumeMessage(request.RequestType, request.RequestData, cancellationToken);
                 object connsumerResultData;
-                if (consumerResult.Value is Exception ex)
+                if (consumeResult.Value is Exception ex)
                 {
                     logger.LogCritical($"Message handler throwed exception. {ex.Message}");
                     connsumerResultData = ex;
 
                 }
-                connsumerResultData = consumerResult.AsT0;
-
+                connsumerResultData = consumeResult.AsT0;
 
                 var responseType = TypedToSimpleConverter.ConvertTypeToSimple(connsumerResultData.GetType());
                 byte[] responseBytes = messageToByteSerializer.Serialize(connsumerResultData, responseType, request.SessionId, MessageCase.Response);

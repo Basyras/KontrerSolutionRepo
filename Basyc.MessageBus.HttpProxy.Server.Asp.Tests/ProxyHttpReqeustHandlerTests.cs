@@ -38,7 +38,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
         {
             var dummyRequestType = TypedToSimpleConverter.ConvertTypeToSimple<DummyRequest>();
             var ser = serializer.Serialize(new DummyRequest(), dummyRequestType);
-            var proxyRequest = new ProxyRequest(dummyRequestType, dummyRequestType);
+            var proxyRequest = new ProxyRequest(dummyRequestType,null, dummyRequestType);
             
             var proxyBytes = JsonSerializer.SerializeToUtf8Bytes(proxyRequest);
             var proxyMemory = new MemoryStream(proxyBytes);

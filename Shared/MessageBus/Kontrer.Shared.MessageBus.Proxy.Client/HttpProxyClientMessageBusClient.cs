@@ -24,7 +24,7 @@ namespace Basyc.MessageBus.HttpProxy.Client
         private readonly ISimpleByteSerailizer byteSerializer;
         private readonly string wrapperMessageType;
 
-        public HttpProxyClientMessageBusClient(IOptions<MessageBusHttpProxyClientOptions> options, 
+        public HttpProxyClientMessageBusClient(IOptions<MessageBusHttpProxyClientOptions> options,
             ISimpleByteSerailizer byteSerializer)
         {
             this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
@@ -34,20 +34,22 @@ namespace Basyc.MessageBus.HttpProxy.Client
         }
 
         private async Task<object> HttpCallToProxyServer(string messageType, object messageData, Type responseType = null, CancellationToken cancellationToken = default)
-        {            
+        {
             var seriResult = byteSerializer.Serialize(messageData, messageType);
             if (seriResult.IsT1)
                 return seriResult.AsT1;
 
             var responseTypeString = responseType?.AssemblyQualifiedName;
-            var proxyRequest = new ProxyRequest(messageType, seriResult.AsT0, responseTypeString);
-            
-            var proxySeriResult = byteSerializer.Serialize(proxyRequest, wrapperMessageType);
-            if (proxySeriResult.IsT1)
-                return proxySeriResult.AsT1;
+            var hasResponse = responseType != null;
+            var proxyRequest = new ProxyRequest(messageType, hasResponse,seriResult.AsT0, responseTypeString);
 
-            var proxyBytes = proxySeriResult.AsT0;
-            var httpContent = new ByteArrayContent(proxyBytes);
+            var proxyRequestSerializationResult = byteSerializer.Serialize(proxyRequest, wrapperMessageType);
+
+            if (proxyRequestSerializationResult.IsT1)
+                return proxyRequestSerializationResult.AsT1;
+
+            var proxyRequestBytes = proxyRequestSerializationResult.AsT0;
+            var httpContent = new ByteArrayContent(proxyRequestBytes);
             var httpResult = await httpClient.PostAsync("", httpContent);
 
             if (httpResult.IsSuccessStatusCode is false)
@@ -63,11 +65,11 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
             using MemoryStream httpMemomoryStream = new MemoryStream();
             await httpResult.Content.CopyToAsync(httpMemomoryStream);
-            var bytes = httpMemomoryStream.ToArray();
+            var httpContentBytes = httpMemomoryStream.ToArray();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var busResponse = byteSerializer.Deserialize(bytes, TypedToSimpleConverter.ConvertTypeToSimple(responseType));
-            if(busResponse.Value is SerializationFailure failure)
+            var busResponse = byteSerializer.Deserialize(httpContentBytes, TypedToSimpleConverter.ConvertTypeToSimple(responseType));
+            if (busResponse.Value is SerializationFailure failure)
                 throw new Exception(failure.Message);
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -77,12 +79,12 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
         public void Dispose()
         {
-            
+
         }
 
         Task ISimpleMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
         {
-            return HttpCallToProxyServer(eventType,null,null, cancellationToken);
+            return HttpCallToProxyServer(eventType, null, null, cancellationToken);
         }
 
         Task ISimpleMessageBusClient.PublishAsync(string eventType, object eventData, CancellationToken cancellationToken)
@@ -102,12 +104,12 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
         Task<object> ISimpleMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
         {
-            return HttpCallToProxyServer(requestType,null, typeof(object), cancellationToken);
+            return HttpCallToProxyServer(requestType, null, typeof(UknownResponseType), cancellationToken);
         }
 
         async Task<OneOf<object, ErrorMessage>> ISimpleMessageBusClient.RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
         {
-            return (OneOf<object, ErrorMessage>)await HttpCallToProxyServer(requestType, requestData, typeof(object), cancellationToken);
+            return (OneOf<object, ErrorMessage>)await HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
         }
 
         Task ISimpleMessageBusClient.StartAsync(CancellationToken cancellationToken)
@@ -117,7 +119,9 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
         void IDisposable.Dispose()
         {
-            
+
         }
+
+        private class UknownResponseType { };
     }
 }
