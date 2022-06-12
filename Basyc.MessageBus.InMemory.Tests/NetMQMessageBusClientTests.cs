@@ -15,8 +15,8 @@ namespace Basyc.MessageBus.InMemory.Tests
 
         public NetMQMessageBusClientTests()        
         {
-            var mock = new Mock<ILogger<NetMQMessageBusClient>>();
-            ILogger<NetMQMessageBusClient> logger = mock.Object;
+            var mock = new Mock<ILogger<NetMQSimpleMessageBusClient>>();
+            ILogger<NetMQSimpleMessageBusClient> logger = mock.Object;
             client = new NetMQMessageBusClient(logger);
         }
 

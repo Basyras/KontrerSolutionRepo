@@ -20,7 +20,11 @@ namespace Basyc.Serializaton.Abstraction
 
         public static Type ConvertSimpleToType(string requestType)
         {
-            return Type.GetType(requestType)!;
+            var type =  Type.GetType(requestType);
+            if (type == null)
+                throw new Exception($"Failed to convert request simple type '{requestType}' to runtime type");
+
+            return type;
         }
     }
 }

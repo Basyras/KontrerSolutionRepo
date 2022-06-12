@@ -20,7 +20,7 @@ namespace SandBox.AspApiApp
             var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
             builder.AddMessageBus()
                     .WithTypedMessages()
-                    .SkipHandlers()
+                    .NoHandlers()
                     .AddMassTransitClient();
 
             var originalBuilder = builder.Back();

@@ -16,13 +16,13 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
     private readonly IWorkerRegistry workerRegistry;
     private readonly NetMQPoller poller = new NetMQPoller();
     private readonly ILogger<NetMQMessageBrokerServer> logger;
-    private readonly IMessageToByteSerializer messageToByteSerializer;
+    private readonly INetMQByteSerializer messageToByteSerializer;
     private readonly RouterSocket brokerSocket;
 
     public NetMQMessageBrokerServer(IOptions<NetMQMessageBrokerServerOptions> options,
         IWorkerRegistry workerRegistry,
         ILogger<NetMQMessageBrokerServer> logger,
-        IMessageToByteSerializer messageToByteSerializer
+        INetMQByteSerializer messageToByteSerializer
         )
     {
         this.options = options;
@@ -42,7 +42,8 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
             deserializationResult.Switch(
                 checkIn =>
                 {
-                    logger.LogInformation($"CheckIn received {checkIn} from {senderAddressString}");
+                    string handledTypesNamesString = string.Join(',', checkIn.SupportedMessageTypes.Select(assemblyTypeString => assemblyTypeString.Split(',').First().Split('.').Last()));
+                    logger.LogInformation($"CheckIn received from {senderAddressString}. WorkerId: {checkIn.WorkerId}, HandeledTypes: {handledTypesNamesString}");
                     workerRegistry.RegisterWorker(checkIn.WorkerId, checkIn.SupportedMessageTypes);
                 },
                 request =>

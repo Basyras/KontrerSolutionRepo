@@ -2,7 +2,7 @@
 
 namespace Basyc.Serialization.Abstraction
 {
-    public interface ISimpleByteSerailizer
+    public interface ISimpleToByteSerailizer
     {
         public OneOf<byte[], SerializationFailure> Serialize(object data, string dataType);
 

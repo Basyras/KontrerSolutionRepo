@@ -13,7 +13,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Tests
 {
     public class HttpProxyClientMessageBusManagerTests
     {
-        private readonly HttpProxyClientMessageBusClient manager;
+        private readonly ProxyClientSimpleMessageBusClient manager;
         private readonly Mock<HttpMessageHandler> httpHandlerMock;
 
         public HttpProxyClientMessageBusManagerTests()

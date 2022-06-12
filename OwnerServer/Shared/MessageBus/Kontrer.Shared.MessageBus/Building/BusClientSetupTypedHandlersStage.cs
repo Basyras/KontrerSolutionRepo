@@ -18,7 +18,7 @@ namespace Basyc.MessageBus.Client.Building
 
         }
 
-        public BusClientSelectClientProviderStage SkipHandlers()
+        public BusClientSelectClientProviderStage NoHandlers()
         {
             return new BusClientSelectClientProviderStage(services);
         }
