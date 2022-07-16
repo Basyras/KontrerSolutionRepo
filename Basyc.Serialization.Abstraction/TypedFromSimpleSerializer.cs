@@ -10,9 +10,9 @@ namespace Basyc.Serialization.Abstraction
 {
     public sealed class TypedFromSimpleSerializer : ITypedByteSerializer
     {
-        private readonly ISimpleToByteSerailizer byteSerailizer;
+        private readonly IObjectToByteSerailizer byteSerailizer;
 
-        public TypedFromSimpleSerializer(ISimpleToByteSerailizer byteSerailizer)
+        public TypedFromSimpleSerializer(IObjectToByteSerailizer byteSerailizer)
         {
             this.byteSerailizer = byteSerailizer;
         }

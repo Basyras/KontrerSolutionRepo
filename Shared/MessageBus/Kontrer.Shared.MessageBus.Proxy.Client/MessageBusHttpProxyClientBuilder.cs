@@ -10,8 +10,8 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
 		public MessageBusHttpProxyClientBuilder(IServiceCollection services)
 		{
-			services.AddSingleton<ISimpleMessageBusClient, ProxyClientSimpleMessageBusClient>();
-			services.AddSingleton<ITypedMessageBusClient, TypedFromSimpleMessageBusClient>();
+			services.AddSingleton<IObjectMessageBusClient, ProxyClientSimpleMessageBusClient>();
+			services.AddSingleton<ITypedMessageBusClient, TypedFromObjectMessageBusClient>();
 			this.services = services;
 		}
 

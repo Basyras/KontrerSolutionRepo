@@ -1,20 +1,28 @@
-﻿<HeadContent>
+﻿@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.SideBar
+
+<HeadContent>
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
 </HeadContent>
 
-<div>
+<busManager>
     <MudThemeProvider />
     <MudDialogProvider />
     <MudSnackbarProvider />
 
-    <MudExpansionPanels Class="requestPanel" DisableBorders="true" Elevation="0" MultiExpansion="true">
+    <sideBar>
+        <RequestsSideMenu DomainInfoViewModel="DomainInfoViewModel"/>    
+    </sideBar>
+    <requestPage>
+       <MudExpansionPanels Class="requestPanel" DisableBorders="true" Elevation="0" MultiExpansion="true">
         @foreach (var domainViewModel in DomainInfoViewModel)
         {
             @*<RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (s,a)=> await OnMessageSending(s,a))" />*@
             <RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (requestItem)=>await SendMessage(requestItem))" />
         }
     </MudExpansionPanels>
-    <button @onclick="()=> { busManager.Load(); }">Reload</button>
 
     @*<script src="_content/MudBlazor/MudBlazor.min.js" suppress-error="BL9992"></script>*@
-</div>
+    </requestPage>
+
+
+</busManager>

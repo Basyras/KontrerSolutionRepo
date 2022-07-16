@@ -11,11 +11,11 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
 {
 	public class ProxyHttpReqeustHandler2
 	{
-		private readonly ISimpleMessageBusClient messageBus;
-		private readonly ISimpleToByteSerailizer serializer;
+		private readonly IObjectMessageBusClient messageBus;
+		private readonly IObjectToByteSerailizer serializer;
 		private static readonly string proxyRequestSimpleDatatype = TypedToSimpleConverter.ConvertTypeToSimple<ProxyRequest>();
 
-		public ProxyHttpReqeustHandler2(ISimpleMessageBusClient messageBus, ISimpleToByteSerailizer serializer)
+		public ProxyHttpReqeustHandler2(IObjectMessageBusClient messageBus, IObjectToByteSerailizer serializer)
 		{
 			this.messageBus = messageBus;
 			this.serializer = serializer;

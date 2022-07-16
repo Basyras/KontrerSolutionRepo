@@ -3,11 +3,11 @@ using OneOf;
 
 namespace Basyc.Serialization.Abstraction
 {
-	public sealed class SimpleFromTypedByteSerializer : ISimpleToByteSerailizer
+	public sealed class ObjectFromTypedByteSerializer : IObjectToByteSerailizer
 	{
 		private readonly ITypedByteSerializer typedByteSerializer;
 
-		public SimpleFromTypedByteSerializer(ITypedByteSerializer typedByteSerializer)
+		public ObjectFromTypedByteSerializer(ITypedByteSerializer typedByteSerializer)
 		{
 			this.typedByteSerializer = typedByteSerializer;
 		}

@@ -17,7 +17,7 @@ namespace Basyc.MessageBus.Client.MasstTransit
         /// <summary>
         /// Takes registered Basyc IRequestHandlers and wraps them with MassTransit IConsumers, Hosted by RabbitMQ
         /// </summary>
-        public static BusClientSelectClientProviderStage AddMassTransitClient(this BusClientSelectClientProviderStage builder)
+        public static BusClientSelectClientProviderStage UseMassTransitProvider(this BusClientSelectClientProviderStage builder)
         {
             var services = builder.services;
             services.AddSingleton<ITypedMessageBusClient, MassTransitMessageBusClient>();

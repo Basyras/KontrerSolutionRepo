@@ -30,7 +30,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
                  .WithTypedMessages()
                  .RegisterBasycTypedHandlers<CustomerServiceApplicationAssemblyMarker>()
                  //.AddMassTransitClient();
-                 .AddNetMQClient();
+                 .UseNetMQProvider();
 
             new CustomerInfrastructureBuilder(builder.services)
                 .AddEFRespository()

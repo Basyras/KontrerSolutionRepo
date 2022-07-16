@@ -1,0 +1,16 @@
+﻿<sideMenu>
+    <MudExpansionPanels Class="requestPanel" DisableBorders="true" Elevation="0" MultiExpansion="true">
+        @foreach (var domainViewModel in DomainInfoViewModel)
+        {
+            <domainHeading>
+                @domainViewModel.RequestDomainInfo.DomainName
+            </domainHeading>
+            @*<RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (requestItem)=>await SendMessage(requestItem))" />*@
+            foreach(var requestItemViewModel in domainViewModel.RequestItemViewModels)
+            {
+                <SideBarRequestItem RequestViewModel="requestItemViewModel"/>                
+            }
+        }
+    </MudExpansionPanels>
+
+</sideMenu>

@@ -13,19 +13,17 @@ namespace Basyc.MessageBus.Client.Building
 
 		public BusClientSetupTypedHandlersStage WithTypedMessages()
 		{
-			services.AddSingleton<ITypedMessageBusClient, TypedFromSimpleMessageBusClient>();
-			return new BusClientSetupTypedHandlersStage(services);
+			return new BusClientSetupTypedHandlersStage(services, MessageTypeOptions.Typed);
 		}
 
-		public BusClientSetupTypedHandlersStage WithSimpleMessages()
+		public BusClientSetupTypedHandlersStage WithObjectMessages()
 		{
-			return new BusClientSetupTypedHandlersStage(services);
+			return new BusClientSetupTypedHandlersStage(services, MessageTypeOptions.Object);
 		}
 
 		public BusClientSetupTypedHandlersStage WithByteMessages()
 		{
-			services.AddSingleton<IByteMessageBusClient, ByteFromSimpleMessageBusClient>();
-			return new BusClientSetupTypedHandlersStage(services);
+			return new BusClientSetupTypedHandlersStage(services, MessageTypeOptions.Byte);
 		}
 	}
 }

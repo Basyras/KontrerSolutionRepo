@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		{
 			//services.AddSingleton<IRequestSerializer, JsonRequestSerializer>();
 			services.AddSingleton<ITypedByteSerializer, ProtobufByteSerializer>();
-			services.AddSingleton<ISimpleToByteSerailizer, SimpleFromTypedByteSerializer>();
+			services.AddSingleton<IObjectToByteSerailizer, ObjectFromTypedByteSerializer>();
 
 			services.AddSingleton<ProxyHttpReqeustHandler>();
 			return services;

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
 {
-    public interface ISimpleMessageBusClient : IDisposable
+    public interface IObjectMessageBusClient : IDisposable
     {
         Task PublishAsync(string eventType, CancellationToken cancellationToken = default);
         Task PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default);

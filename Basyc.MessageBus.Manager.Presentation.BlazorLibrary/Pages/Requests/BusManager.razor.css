@@ -1,1 +1,16 @@
-::deep .requestPanel{width:60vw}
+﻿::deep .requestPanel {
+  /*width: 60vw;*/
+}
+
+sideBar {
+  /*flex: 0;*/
+}
+
+requestPage {
+  flex: 1;
+}
+
+busManager {
+  background-color: red;
+  display: flex;
+}

@@ -26,7 +26,7 @@ clientServices
     .AddBasycMessageBusClient()
     .WithTypedMessages()
     .RegisterBasycTypedHandlers<Program>()
-    .AddNetMQClient("Console2");
+    .UseNetMQProvider("Console2");
 
 var services = clientServices.BuildServiceProvider();
 

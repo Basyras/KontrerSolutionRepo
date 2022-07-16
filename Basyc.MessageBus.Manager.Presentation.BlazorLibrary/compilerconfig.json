@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "Pages/Requests/SideBar/RequestsSideMenu.razor.css",
+    "inputFile": "Pages/Requests/SideBar/RequestsSideMenu.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/SideBar/SideBarRequestItem.razor.css",
+    "inputFile": "Pages/Requests/SideBar/SideBarRequestItem.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/BusManager.razor.css",
+    "inputFile": "Pages/Requests/BusManager.razor.scss"
+  }
+]

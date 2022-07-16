@@ -25,7 +25,7 @@ namespace Kontrer.OwnerServer.OrderService.Presentation.AspApi
             builder.AddMessageBus()
                 .WithTypedMessages()
                 .RegisterBasycTypedHandlers<CreateAccommodationOrderCommandHandler>()
-                .AddMassTransitClient();
+                .UseMassTransitProvider();
 
             builder
                 .Back()

@@ -1,6 +1,7 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Client.Building;
 using Basyc.MessageBus.Client.NetMQ;
+using Basyc.MessageBus.Client.NetMQ.Sessions;
 using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.Shared;
@@ -15,13 +16,32 @@ public static class BuildingNetMQExtensions
 	   int? brokerServerPort) =>
 		AddNetMQClient(builder, brokerServerPort);
 
-	public static BusClientSelectClientProviderStage AddNetMQClient(this BusClientSelectClientProviderStage builder,
+	public static BusClientSelectClientProviderStage UseNetMQProvider(this BusClientSelectClientProviderStage builder,
 		string? clientId = null, int brokerServerPort = 5367, string brokerServerAddress = "localhost")
 	{
 		var services = builder.services;
-		services.AddSingleton<ISimpleMessageBusClient, NetMQSimpleMessageBusClient>();
+		//switch (builder.MessageType)
+		//{
+		//	case MessageTypeOptions.Typed:
+		//		services.AddSingleton<IByteMessageBusClient, NetMQObjectMessageBusClient>();
+		//		services.AddSingleton<ITypedMessageBusClient, TypedFromByteMessageBusClient>();
+		//		//services.AddSingleton<IObjectMessageBusClient, ObjectFromByteMessageBusClient>();
+		//		break;
+		//	case MessageTypeOptions.Object:
+		//		throw new NotSupportedException();
+		//	case MessageTypeOptions.Byte:
+		//		services.AddSingleton<IByteMessageBusClient, NetMQObjectMessageBusClient>();
+		//		services.AddSingleton<ITypedMessageBusClient, TypedFromByteMessageBusClient>();
+		//		//services.AddSingleton<IObjectMessageBusClient, ObjectFromByteMessageBusClient>();
+		//		break;
+		//}
 
-		services.AddSingleton<IActiveSessionManager, ActiveSessionManager>();
+		services.AddSingleton<IByteMessageBusClient, NetMQByteMessageBusClient>();
+		services.AddSingleton<ITypedMessageBusClient, TypedFromByteMessageBusClient>();
+		services.AddSingleton<IObjectMessageBusClient, ObjectFromByteMessageBusClient>();
+
+
+		services.AddSingleton<ISessionManager<NetMQSessionResult>, InMemorySessionManager<NetMQSessionResult>>();
 		services.Configure<NetMQMessageBusClientOptions>(x =>
 		{
 			x.BrokerServerAddress = brokerServerAddress;
@@ -32,7 +52,7 @@ public static class BuildingNetMQExtensions
 		services.AddBasycSerialization()
 			.SelectProtobufNet();
 
-		services.AddSingleton<INetMQByteSerializer, NetMQByteSerializer>();
+		services.AddSingleton<INetMQByteMessageSerializer, NetMQByteSerializer>();
 		var areMessagesByte = services.FirstOrDefault(x => x.ServiceType == typeof(IByteMessageBusClient)) == null;
 
 

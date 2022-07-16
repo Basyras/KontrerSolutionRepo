@@ -6,14 +6,14 @@ using OneOf;
 
 namespace Basyc.MessageBus.NetMQ.Shared;
 
-public class NetMQByteSerializer : INetMQByteSerializer
+public class NetMQByteSerializer : INetMQByteMessageSerializer
 {
-	private readonly ISimpleToByteSerailizer byteSerailizer;
+	private readonly IObjectToByteSerailizer objectToByteSerializer;
 	private static readonly string wrapperMessageType = TypedToSimpleConverter.ConvertTypeToSimple<ProtoMessageWrapper>();
 
-	public NetMQByteSerializer(ISimpleToByteSerailizer byteSerailizer)
+	public NetMQByteSerializer(IObjectToByteSerailizer byteSerailizer)
 	{
-		this.byteSerailizer = byteSerailizer;
+		this.objectToByteSerializer = byteSerailizer;
 
 	}
 
@@ -27,7 +27,7 @@ public class NetMQByteSerializer : INetMQByteSerializer
 		}
 		else
 		{
-			var messageDataSeriliazationResult = byteSerailizer.Serialize(messageData, messageType);
+			var messageDataSeriliazationResult = objectToByteSerializer.Serialize(messageData, messageType);
 			messageDataSeriliazationResult.Switch(
 				   bytes => { messageBytes = bytes; },
 				   error => throw new Exception(error.Message));
@@ -37,7 +37,7 @@ public class NetMQByteSerializer : INetMQByteSerializer
 			throw new Exception();
 
 		var wrapperMessageData = new ProtoMessageWrapper(sessionId, messageCase, messageType, messageBytes);
-		var wrapperSerializationResult = byteSerailizer.Serialize(wrapperMessageData, wrapperMessageType);
+		var wrapperSerializationResult = objectToByteSerializer.Serialize(wrapperMessageData, wrapperMessageType);
 		if (wrapperSerializationResult.IsT1)
 			throw new Exception(wrapperSerializationResult.AsT1.Message);
 
@@ -47,53 +47,74 @@ public class NetMQByteSerializer : INetMQByteSerializer
 
 	public OneOf<CheckInMessage, RequestCase, ResponseCase, EventCase, DeserializationFailureCase> Deserialize(byte[] wrapperBytes)
 	{
-		var wrapperDeserializationResult = byteSerailizer.Deserialize(wrapperBytes, wrapperMessageType);
+		var wrapperDeserializationResult = objectToByteSerializer.Deserialize(wrapperBytes, wrapperMessageType);
 		if (wrapperDeserializationResult.IsT1)
 			throw new Exception(wrapperDeserializationResult.AsT1.Message);
 
 		var wrapper = (ProtoMessageWrapper)wrapperDeserializationResult.Value;
-		OneOf<object, SerializationFailure> messageDataSerialiaztionResult;
-		try
-		{
-			messageDataSerialiaztionResult = byteSerailizer.Deserialize(wrapper.MessageData, wrapper.MessageType);
-		}
-		catch (Exception ex)
-		{
-			DeserializationFailureCase failure = new(wrapper.SessionId, wrapper.MessageCase, wrapper.MessageType, ex, $"{ex.Message}");
-			return failure;
-		}
-
-		var message = messageDataSerialiaztionResult.AsT0;
 		Type messageClrType = TypedToSimpleConverter.ConvertSimpleToType(wrapper.MessageType);
+
+		OneOf<object, SerializationFailure> messageDataSerialiaztionResult;
+		object messageData;
 		switch (wrapper.MessageCase)
 		{
 			case MessageCase.CheckIn:
-				var checkIn = (CheckInMessage)message;
+				try
+				{
+					messageDataSerialiaztionResult = objectToByteSerializer.Deserialize(wrapper.MessageData, wrapper.MessageType);
+				}
+				catch (Exception ex)
+				{
+					DeserializationFailureCase failure = new(wrapper.SessionId, wrapper.MessageCase, wrapper.MessageType, ex, $"{ex.Message}");
+					return failure;
+				}
+				messageData = messageDataSerialiaztionResult.AsT0;
+				var checkIn = (CheckInMessage)messageData;
 				return checkIn;
 
 			case MessageCase.Request:
-				if (message is IMessage)
+				try
 				{
-					RequestCase requestCase = new RequestCase(wrapper.SessionId, wrapper.MessageType, message, false, null);
+					messageDataSerialiaztionResult = objectToByteSerializer.Deserialize(wrapper.MessageData, wrapper.MessageType);
+				}
+				catch (Exception ex)
+				{
+					DeserializationFailureCase failure = new(wrapper.SessionId, wrapper.MessageCase, wrapper.MessageType, ex, $"{ex.Message}");
+					return failure;
+				}
+				messageData = messageDataSerialiaztionResult.AsT0;
+				if (messageData is IMessage)
+				{
+					RequestCase requestCase = new RequestCase(wrapper.SessionId, wrapper.MessageType, messageData, false, null);
 					return requestCase;
 				}
 				if (GenericsHelper.IsAssignableToGenericType(messageClrType, typeof(IMessage<>)))
 				{
 					var responseType = GenericsHelper.GetTypeArgumentsFromParent(messageClrType, typeof(IMessage<>))[0];
-					RequestCase requestCase = new RequestCase(wrapper.SessionId, wrapper.MessageType, message, true, responseType);
+					RequestCase requestCase = new RequestCase(wrapper.SessionId, wrapper.MessageType, messageData, true, responseType);
 					return requestCase;
 				}
 				throw new Exception();
 
 			case MessageCase.Response:
-				ResponseCase responseCase = new ResponseCase(wrapper.SessionId, message, message.GetType());
+				ResponseCase responseCase = new ResponseCase(wrapper.SessionId, wrapper.MessageData, wrapper.MessageType);
 				return responseCase;
 
 			case MessageCase.Event:
-				var eventCase = new EventCase(wrapper.SessionId, wrapper.MessageType, message);
+				try
+				{
+					messageDataSerialiaztionResult = objectToByteSerializer.Deserialize(wrapper.MessageData, wrapper.MessageType);
+				}
+				catch (Exception ex)
+				{
+					DeserializationFailureCase failure = new(wrapper.SessionId, wrapper.MessageCase, wrapper.MessageType, ex, $"{ex.Message}");
+					return failure;
+				}
+				messageData = messageDataSerialiaztionResult.AsT0;
+				var eventCase = new EventCase(wrapper.SessionId, wrapper.MessageType, messageData);
 				return eventCase;
+			default:
+				throw new Exception();
 		}
-
-		throw new Exception();
 	}
 }

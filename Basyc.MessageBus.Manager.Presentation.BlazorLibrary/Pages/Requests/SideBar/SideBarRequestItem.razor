@@ -1,0 +1,9 @@
+﻿<requestItem>
+    <RequestTag RequestType="@RequestTagTypeHelper.FromRequestType(RequestViewModel.RequestInfo.RequestType)"/> 
+    @RequestViewModel.RequestInfo.RequestDisplayName
+</requestItem>
+
+@code {
+    [Parameter]
+    public RequestItemViewModel RequestViewModel { get; set; }
+}

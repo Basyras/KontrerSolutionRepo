@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
 {
-	public sealed class TypedFromSimpleMessageBusClient : ITypedMessageBusClient
+	public sealed class TypedFromObjectMessageBusClient : ITypedMessageBusClient
 	{
-		private readonly ISimpleMessageBusClient messageBusClient;
+		private readonly IObjectMessageBusClient messageBusClient;
 
-		public TypedFromSimpleMessageBusClient(ISimpleMessageBusClient messageBusClient)
+		public TypedFromObjectMessageBusClient(IObjectMessageBusClient messageBusClient)
 		{
 			this.messageBusClient = messageBusClient;
 		}

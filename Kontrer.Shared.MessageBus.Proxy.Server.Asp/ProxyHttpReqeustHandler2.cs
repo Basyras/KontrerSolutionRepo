@@ -12,11 +12,11 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
 	public class ProxyHttpReqeustHandler
 	{
 		private readonly IByteMessageBusClient messageBus;
-		private readonly ISimpleToByteSerailizer serializer;
+		private readonly IObjectToByteSerailizer serializer;
 		private static readonly string proxyRequestSimpleDatatype = TypedToSimpleConverter.ConvertTypeToSimple<ProxyRequest>();
 		private static readonly string proxyResponseSimpleDataType = TypedToSimpleConverter.ConvertTypeToSimple<ProxyResponse>();
 
-		public ProxyHttpReqeustHandler(IByteMessageBusClient messageBus, ISimpleToByteSerailizer serializer)
+		public ProxyHttpReqeustHandler(IByteMessageBusClient messageBus, IObjectToByteSerailizer serializer)
 		{
 			this.messageBus = messageBus;
 			this.serializer = serializer;
@@ -35,9 +35,9 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
 				var busRequestResponse = await messageBus.RequestAsync(proxyRequest.MessageType, proxyRequest.MessageData);
 
 				await busRequestResponse.Match(
-					async responseBytes =>
+					async byteResponse =>
 					{
-						var proxyResponse = new ProxyResponse(proxyRequest.MessageType, proxyRequest.HasResponse, responseBytes, "clientHasToDetermine");
+						var proxyResponse = new ProxyResponse(proxyRequest.MessageType, proxyRequest.HasResponse, byteResponse.ResponseBytes, byteResponse.ResposneType);
 						var proxyResponseSerializationResult = serializer.Serialize(proxyResponse, proxyResponseSimpleDataType);
 						await proxyResponseSerializationResult.Match(
 							async proxyResponseBytes =>

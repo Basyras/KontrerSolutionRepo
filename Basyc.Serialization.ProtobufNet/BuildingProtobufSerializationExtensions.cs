@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void SelectProtobufNet(this SelectSerializationStage selectSerializationStage)
         {
             selectSerializationStage.services.AddSingleton<ITypedByteSerializer, ProtobufByteSerializer>();
-            selectSerializationStage.services.AddSingleton<ISimpleToByteSerailizer, SimpleFromTypedByteSerializer>();
+            selectSerializationStage.services.AddSingleton<IObjectToByteSerailizer, ObjectFromTypedByteSerializer>();
         }
     }
 }

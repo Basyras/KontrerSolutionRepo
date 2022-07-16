@@ -1,25 +1,18 @@
 ﻿@import "../../Shared/Colors.scss";
 
-
-
-
-
-/*.domainBorder {
-    display: block;
-    padding: 4rem 4rem 4rem 8rem;
-}*/
-
-/*.requestPanel, ::deep .requestPanel {
-    background-color: black;
-}*/
-
 ::deep .requestPanel {
-    /*background-color: black;*/
-    width: 60vw;
+    /*width: 60vw;*/
 }
 
+sideBar {
+    /*flex: 0;*/
+}
 
+requestPage {
+    flex: 1;
+}
 
-/*.requestPanel > .mud-expand-panel.mud-panel-expanded {
-    margin: 0px;
-}*/
+busManager{   
+    background-color: red;
+    display:flex;
+}

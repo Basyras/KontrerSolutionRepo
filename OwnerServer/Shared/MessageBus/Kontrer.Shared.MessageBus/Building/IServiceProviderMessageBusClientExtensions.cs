@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static Task StartMessageBusClientAsync(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
         {
-            var busClient = serviceProvider.GetRequiredService<ISimpleMessageBusClient>();
+            var busClient = serviceProvider.GetRequiredService<IObjectMessageBusClient>();
             return busClient.StartAsync(cancellationToken);
         }
     }

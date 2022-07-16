@@ -17,7 +17,7 @@ builder.Services.AddBasycMessageBusClient()
 	.WithByteMessages()
 	.NoHandlers()
 	//.AddMassTransitClient();
-	.AddNetMQClient("HttpProxy");
+	.UseNetMQProvider("HttpProxy");
 
 builder.Services.AddMessageBusProxyServer();
 

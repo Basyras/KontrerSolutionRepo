@@ -13,26 +13,26 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.HttpProxy.Client
 {
-	public class ProxyClientSimpleMessageBusClient : ISimpleMessageBusClient
+	public class ProxyClientSimpleMessageBusClient : IObjectMessageBusClient
 	{
 		private readonly HttpClient httpClient;
 		private readonly IOptions<MessageBusHttpProxyClientOptions> options;
-		private readonly ISimpleToByteSerailizer byteSerializer;
+		private readonly IObjectToByteSerailizer objectToByteSerializer;
 		private readonly string wrapperMessageType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(ProxyRequest));
 		private static readonly string proxyResponseSimpleDataType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(ProxyResponse));
 
 
 		public ProxyClientSimpleMessageBusClient(IOptions<MessageBusHttpProxyClientOptions> options,
-			ISimpleToByteSerailizer byteSerializer)
+			IObjectToByteSerailizer byteSerializer)
 		{
 			this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
 			this.options = options;
-			this.byteSerializer = byteSerializer;
+			this.objectToByteSerializer = byteSerializer;
 		}
 
 		private async Task<object> HttpCallToProxyServer(string messageType, object messageData, Type responseType = null, CancellationToken cancellationToken = default)
 		{
-			var seriResult = byteSerializer.Serialize(messageData, messageType);
+			var seriResult = objectToByteSerializer.Serialize(messageData, messageType);
 			if (seriResult.IsT1)
 				return seriResult.AsT1;
 
@@ -40,7 +40,7 @@ namespace Basyc.MessageBus.HttpProxy.Client
 			var hasResponse = responseType != null;
 			var proxyRequest = new ProxyRequest(messageType, hasResponse, seriResult.AsT0, responseTypeString);
 
-			var proxyRequestSerializationResult = byteSerializer.Serialize(proxyRequest, wrapperMessageType);
+			var proxyRequestSerializationResult = objectToByteSerializer.Serialize(proxyRequest, wrapperMessageType);
 
 			if (proxyRequestSerializationResult.IsT1)
 				return proxyRequestSerializationResult.AsT1;
@@ -66,32 +66,17 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
 			cancellationToken.ThrowIfCancellationRequested();
 
-			var proxyResponseSeriResult = byteSerializer.Deserialize(proxyResponseResponseBytes, proxyResponseSimpleDataType);
-			//return proxyResponseSeriResult.Match(
-			//	proxyResponseObject =>
-			//	{
-			//		var proxyResponse = (ProxyResponse)proxyResponseObject;
-			//		var responseSeriResult = byteSerializer.Deserialize(proxyResponse.ResponseBytes, proxyResponse.ResponseType);
-			//		return responseSeriResult.Match(
-			//			responseObject => responseObject,
-			//			responseSeriFailure => throw new Exception(responseSeriFailure.Message));
-			//	},
-			//	proxyResponseSeriFailure => throw new Exception(proxyResponseSeriFailure.Message));
+			var proxyResponseSeriResult = objectToByteSerializer.Deserialize(proxyResponseResponseBytes, proxyResponseSimpleDataType);
 
-			var proxyResponse = (ProxyResponse)proxyResponseSeriResult.AsT0;
-			if (proxyResponse.ResponseType == "clientHasToDetermine")
+			return proxyResponseSeriResult.Match(proxyResponseObject =>
 			{
-				return proxyResponse.ResponseBytes;
-			}
-			else
-			{
-
-			}
-
-			var responseSeriResult = byteSerializer.Deserialize(proxyResponse.ResponseBytes, proxyResponse.ResponseType);
-			return responseSeriResult.Match(
-				responseObject => responseObject,
-				responseSeriFailure => throw new Exception(responseSeriFailure.Message));
+				var proxyResponse = (ProxyResponse)proxyResponseObject;
+				var responseSeriResult = objectToByteSerializer.Deserialize(proxyResponse.ResponseBytes, proxyResponse.ResponseType);
+				return responseSeriResult.Match(
+					responseObject => responseObject,
+					responseSeriFailure => throw new Exception(responseSeriFailure.Message));
+			},
+			error => throw new Exception(error.Message));
 		}
 
 		public void Dispose()
@@ -99,39 +84,39 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
 		}
 
-		Task ISimpleMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
+		Task IObjectMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(eventType, null, null, cancellationToken);
 		}
 
-		Task ISimpleMessageBusClient.PublishAsync(string eventType, object eventData, CancellationToken cancellationToken)
+		Task IObjectMessageBusClient.PublishAsync(string eventType, object eventData, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(eventType, eventData, null, cancellationToken);
 		}
 
-		Task ISimpleMessageBusClient.SendAsync(string commandType, CancellationToken cancellationToken)
+		Task IObjectMessageBusClient.SendAsync(string commandType, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(commandType, null, null, cancellationToken);
 		}
 
-		Task ISimpleMessageBusClient.SendAsync(string commandType, object commandData, CancellationToken cancellationToken)
+		Task IObjectMessageBusClient.SendAsync(string commandType, object commandData, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(commandType, commandData, null, cancellationToken);
 		}
 
-		Task<object> ISimpleMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
+		Task<object> IObjectMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(requestType, null, typeof(UknownResponseType), cancellationToken);
 		}
 
-		async Task<OneOf<object, ErrorMessage>> ISimpleMessageBusClient.RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
+		async Task<OneOf<object, ErrorMessage>> IObjectMessageBusClient.RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
 		{
 			//return (OneOf<object, ErrorMessage>)await HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
 			var result = await HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
 			return result;
 		}
 
-		Task ISimpleMessageBusClient.StartAsync(CancellationToken cancellationToken)
+		Task IObjectMessageBusClient.StartAsync(CancellationToken cancellationToken)
 		{
 			return Task.CompletedTask;
 		}

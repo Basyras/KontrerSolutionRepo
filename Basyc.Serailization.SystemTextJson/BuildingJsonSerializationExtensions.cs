@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void SelectSytemTextJson(this SelectSerializationStage selectSerializationStage)
         {
             selectSerializationStage.services.AddSingleton<ITypedByteSerializer, JsonByteSerializer>();
-            selectSerializationStage.services.AddSingleton<ISimpleToByteSerailizer, SimpleFromTypedByteSerializer>();
+            selectSerializationStage.services.AddSingleton<IObjectToByteSerailizer, ObjectFromTypedByteSerializer>();
         }
     }
 }
