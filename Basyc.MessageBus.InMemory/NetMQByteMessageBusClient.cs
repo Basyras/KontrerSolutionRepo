@@ -1,6 +1,7 @@
 ﻿using Basyc.MessageBus.Client.NetMQ.Sessions;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.Shared;
+using Basyc.Serialization.Abstraction;
 using Basyc.Serializaton.Abstraction;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -18,7 +19,8 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	private readonly IMessageHandlerManager handlerManager;
 	private readonly ILogger<NetMQByteMessageBusClient> logger;
 	private readonly ISessionManager<NetMQSessionResult> sessionManager;
-	private readonly INetMQByteMessageSerializer netMQByteSerializer;
+	private readonly INetMQMessageWrapper netMQMessageWrapper;
+	private readonly IObjectToByteSerailizer objectToByteSerailizer;
 	private readonly NetMQPoller poller = new NetMQPoller();
 	private readonly DealerSocket dealerSocket;
 
@@ -27,14 +29,15 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 		IMessageHandlerManager handlerManager,
 		ILogger<NetMQByteMessageBusClient> logger,
 		ISessionManager<NetMQSessionResult> sessionManager,
-		INetMQByteMessageSerializer netMQByteSerializer)
+		INetMQMessageWrapper netMQByteSerializer,
+		IObjectToByteSerailizer objectToByteSerailizer)
 	{
 		this.options = options;
 		this.handlerManager = handlerManager;
 		this.logger = logger;
 		this.sessionManager = sessionManager;
-		this.netMQByteSerializer = netMQByteSerializer;
-
+		this.netMQMessageWrapper = netMQByteSerializer;
+		this.objectToByteSerailizer = objectToByteSerailizer;
 		dealerSocket = new DealerSocket($"tcp://{options.Value.BrokerServerAddress}:{options.Value.BrokerServerPort}");
 		if (options.Value.WorkerId is null)
 		{
@@ -46,42 +49,41 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 
 		dealerSocket.ReceiveReady += async (s, a) =>
 		{
-			await DealerHandleMessage(CancellationToken.None);
+			await HandleMessage(CancellationToken.None);
 		};
 
 		poller.Add(dealerSocket);
 	}
 
-
-
 	public Task StartAsync(CancellationToken cancellationToken = default)
 	{
 		poller.RunAsync();
 		CheckInMessage checkIn = new CheckInMessage(options.Value.WorkerId!, handlerManager.GetConsumableMessageTypes());
-		var seriMessage = netMQByteSerializer.Serialize(checkIn, TypedToSimpleConverter.ConvertTypeToSimple(typeof(CheckInMessage)), default, MessageCase.CheckIn);
+		byte[] messageWrapperBytes = netMQMessageWrapper.CreateWrapperMessage(checkIn, TypedToSimpleConverter.ConvertTypeToSimple(typeof(CheckInMessage)), default, MessageCase.CheckIn);
 		var messageToServer = new NetMQMessage();
 		messageToServer.AppendEmptyFrame();
-		messageToServer.Append(seriMessage);
+		messageToServer.Append(messageWrapperBytes);
 		logger.LogInformation($"Sending CheckIn message");
 		dealerSocket.SendMultipartMessage(messageToServer);
 		logger.LogInformation($"CheckIn message sent");
 		return Task.CompletedTask;
 	}
 
-	private async Task DealerHandleMessage(CancellationToken cancellationToken)
+	private async Task HandleMessage(CancellationToken cancellationToken)
 	{
 		var messageFrames = dealerSocket.ReceiveMultipartMessage(3);
 		var senderAddressBytes = messageFrames[1].Buffer;
 		var senderAddressString = Encoding.ASCII.GetString(senderAddressBytes);
 		byte[] messageDataBytes = messageFrames[3].Buffer;
 
-		var deserializationResult = netMQByteSerializer.Deserialize(messageDataBytes);
-		deserializationResult.Switch(
+		var wrapperReadResult = netMQMessageWrapper.ReadWrapperMessage(messageDataBytes);
+		wrapperReadResult.Switch(
 			checkIn => logger.LogError("Client is not supposed to receive CheckIn messages"),
 			async requestCase =>
 			{
-				logger.LogDebug($"Request received from {senderAddressString}:{requestCase.SessionId}, data: '{requestCase.RequestData}'");
-				var consumeResult = await handlerManager.ConsumeMessage(requestCase.RequestType, requestCase.RequestData, cancellationToken);
+				logger.LogDebug($"Request received from {senderAddressString}:{requestCase.SessionId}, data: '{requestCase.RequestBytes}'");
+				var deserializedRequest = objectToByteSerailizer.Deserialize(requestCase.RequestBytes, requestCase.RequestType);
+				var consumeResult = await handlerManager.ConsumeMessage(requestCase.RequestType, deserializedRequest, cancellationToken);
 				object connsumerResultData;
 				if (consumeResult.Value is Exception ex)
 				{
@@ -91,10 +93,10 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 				connsumerResultData = consumeResult.AsT0;
 
 				string responseType = TypedToSimpleConverter.ConvertTypeToSimple(connsumerResultData.GetType());
-				byte[] responseBytes = netMQByteSerializer.Serialize(connsumerResultData, responseType, requestCase.SessionId, MessageCase.Response);
+				byte[] wrapperMessageBytes = netMQMessageWrapper.CreateWrapperMessage(connsumerResultData, responseType, requestCase.SessionId, MessageCase.Response);
 				var messageToServer = new NetMQMessage();
 				messageToServer.AppendEmptyFrame();
-				messageToServer.Append(responseBytes);
+				messageToServer.Append(wrapperMessageBytes);
 				messageToServer.AppendEmptyFrame();
 				messageToServer.Append(senderAddressBytes);
 
@@ -110,8 +112,9 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			},
 			async eventCase =>
 			{
-				logger.LogInformation($"Event received from {senderAddressString}:{eventCase.SessionId}, data: '{eventCase.EventData}'");
-				var responseData = await handlerManager.ConsumeMessage(eventCase.EventType, eventCase.EventData, cancellationToken);
+				logger.LogInformation($"Event received from {senderAddressString}:{eventCase.SessionId}, data: '{eventCase.EventBytes}'");
+				var eventRequest = objectToByteSerailizer.Deserialize(eventCase.EventBytes, eventCase.EventType);
+				var responseData = await handlerManager.ConsumeMessage(eventCase.EventType, eventRequest, cancellationToken);
 			},
 			failureCase =>
 			{
@@ -119,7 +122,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 				switch (failureCase.MessageCase)
 				{
 					case MessageCase.Response:
-						CraeteErrorMessageBytes(failureCase.ErrorMessage, out string errorResultType, out byte[] errorResultBytes);
+						CreateErrorMessageBytes(failureCase.ErrorMessage, out string errorResultType, out byte[] errorResultBytes);
 						if (sessionManager.TryCompleteSession(failureCase.SessionId, new NetMQSessionResult(errorResultBytes, errorResultType)) is false)
 							logger.LogCritical($"Session '{failureCase.SessionId}' failed. Session does not exist");
 						break;
@@ -136,7 +139,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			var newSession = sessionManager.CreateSession(eventType);
-			var netMQByteMessage = netMQByteSerializer.Serialize(eventBytes, eventType, newSession.SessionId, MessageCase.Event);
+			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(eventBytes, eventType, newSession.SessionId, MessageCase.Event);
 			var messageToBroker = new NetMQMessage();
 			messageToBroker.AppendEmptyFrame();
 			messageToBroker.Append(netMQByteMessage);
@@ -151,14 +154,14 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			catch (Exception ex)
 			{
 				logger.LogCritical(ex, "Failed to send request");
-				CraeteErrorMessageBytes("Failed to publish", out string errorResultType, out byte[] errorResultBytes);
+				CreateErrorMessageBytes("Failed to publish", out string errorResultType, out byte[] errorResultBytes);
 				sessionManager.TryCompleteSession(newSession.SessionId, new NetMQSessionResult(errorResultBytes, errorResultType));
 			}
 
 			logger.LogInformation($"Published '{eventType}'");
 			var publishResult = "Published";
 			var publisResultType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(string));
-			var publishResultBytes = netMQByteSerializer.Serialize(publishResult, publisResultType, 0, MessageCase.Response);
+			var publishResultBytes = netMQMessageWrapper.CreateWrapperMessage(publishResult, publisResultType, 0, MessageCase.Response);
 			sessionManager.TryCompleteSession(newSession.SessionId, new NetMQSessionResult(publishResultBytes, publisResultType));
 			return newSession.ResponseSource.Task;
 		});
@@ -166,11 +169,11 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 		return task;
 	}
 
-	private void CraeteErrorMessageBytes(string errorMessage, out string errorResultType, out byte[] errorResultBytes)
+	private void CreateErrorMessageBytes(string errorMessage, out string errorResultType, out byte[] errorResultBytes)
 	{
 		var errorResult = new ErrorMessage(errorMessage);
 		errorResultType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage));
-		errorResultBytes = netMQByteSerializer.Serialize(errorResult, errorResultType, 0, MessageCase.Response);
+		errorResultBytes = netMQMessageWrapper.CreateWrapperMessage(errorResult, errorResultType, 0, MessageCase.Response);
 	}
 
 	private Task SendAsync(byte[]? commnadData, string commandType, CancellationToken cancellationToken)
@@ -186,7 +189,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			var newSession = sessionManager.CreateSession(requestType);
-			var netMQByteMessage = netMQByteSerializer.Serialize(requestBytes, requestType, newSession.SessionId, MessageCase.Request);
+			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(requestBytes, requestType, newSession.SessionId, MessageCase.Request);
 			var messageToBroker = new NetMQMessage();
 			messageToBroker.AppendEmptyFrame();
 			messageToBroker.Append(netMQByteMessage);
@@ -201,7 +204,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			catch (Exception ex)
 			{
 				logger.LogCritical(ex, "Failed to send request");
-				CraeteErrorMessageBytes("Failed to send request", out string errorResultType, out byte[] errorResultBytes);
+				CreateErrorMessageBytes("Failed to send request", out string errorResultType, out byte[] errorResultBytes);
 				sessionManager.TryCompleteSession(newSession.SessionId, new NetMQSessionResult(errorResultBytes, errorResultType));
 			}
 

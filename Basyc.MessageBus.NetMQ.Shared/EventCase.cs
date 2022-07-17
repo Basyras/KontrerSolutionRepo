@@ -1,4 +1,4 @@
 ﻿namespace Basyc.MessageBus.NetMQ.Shared
 {
-    public record EventCase(int SessionId, string EventType, object EventData);
+    public record EventCase(int SessionId, string EventType, byte[] EventBytes);
 }

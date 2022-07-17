@@ -1,6 +1,8 @@
 ﻿<requestItem>
     <RequestTag RequestType="@RequestTagTypeHelper.FromRequestType(RequestViewModel.RequestInfo.RequestType)"/> 
-    @RequestViewModel.RequestInfo.RequestDisplayName
+    <requestName>
+        @RequestViewModel.RequestInfo.RequestDisplayName
+    </requestName>
 </requestItem>
 
 @code {

@@ -1,6 +1,8 @@
 ﻿@import "../../../Shared/Colors.scss";
 
 ::deep .requestPanel {
+    display: flex;
+    flex-direction: column;
     /*width: 60vw;*/
 }
 
@@ -16,6 +18,12 @@ domainHeading {
 
 sideMenu {
     background-color: #F2F2F2;
-    /*display: flex;*/
-    display:block;
+    display: block;
+    height: 100%;
+    border: 0px solid #DEDEDE;
+    border-right-width: 1px;
+}
+.itemButton {
+    display: block;
+    width: 100%;
 }

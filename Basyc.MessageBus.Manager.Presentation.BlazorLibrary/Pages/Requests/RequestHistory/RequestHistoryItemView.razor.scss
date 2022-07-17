@@ -1,0 +1,17 @@
+﻿@import "../../../Shared/Colors.scss";
+
+latency {
+    display: inline-block;    
+}
+
+.latency--failed--true {
+    color: $Error-Foreground;
+}
+
+.latency--failed--false {
+    color: $Success-Foreground;
+}
+
+historyItem {
+    display: block;
+}

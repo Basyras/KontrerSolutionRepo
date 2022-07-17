@@ -27,31 +27,24 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
 			MemoryStream httpBodyMemoryStream = new MemoryStream();
 			await context.Request.Body.CopyToAsync(httpBodyMemoryStream);
 			var proxyRequestBytes = httpBodyMemoryStream.ToArray();
-			var proxyRequestResult = serializer.Deserialize(proxyRequestBytes, proxyRequestSimpleDatatype);
-			ProxyRequest proxyRequest = (ProxyRequest)proxyRequestResult.Value;
+			ProxyRequest proxyRequest = (ProxyRequest)serializer.Deserialize(proxyRequestBytes, proxyRequestSimpleDatatype);
 
 			if (proxyRequest.HasResponse)
 			{
-				var busRequestResponse = await messageBus.RequestAsync(proxyRequest.MessageType, proxyRequest.MessageData);
+				var busRequestResponse = await messageBus.RequestAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
 
 				await busRequestResponse.Match(
 					async byteResponse =>
 					{
 						var proxyResponse = new ProxyResponse(proxyRequest.MessageType, proxyRequest.HasResponse, byteResponse.ResponseBytes, byteResponse.ResposneType);
-						var proxyResponseSerializationResult = serializer.Serialize(proxyResponse, proxyResponseSimpleDataType);
-						await proxyResponseSerializationResult.Match(
-							async proxyResponseBytes =>
-							{
-								await context.Response.BodyWriter.WriteAsync(proxyResponseBytes);
-							},
-							proxyResponseSeriFailure => throw new Exception(proxyResponseSeriFailure.Message));
+						var proxyResponseBytes = serializer.Serialize(proxyResponse, proxyResponseSimpleDataType);
+						await context.Response.BodyWriter.WriteAsync(proxyResponseBytes);
 					},
 					busRequestError => throw new Exception(busRequestError.Message));
-
 			}
 			else
 			{
-				await messageBus.SendAsync(proxyRequest.MessageType, proxyRequest.MessageData);
+				await messageBus.SendAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
 			}
 		}
 	}

@@ -10,5 +10,13 @@
   {
     "outputFile": "Pages/Requests/BusManager.razor.css",
     "inputFile": "Pages/Requests/BusManager.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/RequestSideBar/RequestSideBarView.razor.css",
+    "inputFile": "Pages/Requests/RequestSideBar/RequestSideBarView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/RequestHistory/RequestHistoryItemView.razor.css",
+    "inputFile": "Pages/Requests/RequestHistory/RequestHistoryItemView.razor.scss"
   }
 ]

@@ -1,5 +1,4 @@
 ﻿using Basyc.Serializaton.Abstraction;
-using OneOf;
 
 namespace Basyc.Serialization.Abstraction
 {
@@ -12,16 +11,39 @@ namespace Basyc.Serialization.Abstraction
 			this.typedByteSerializer = typedByteSerializer;
 		}
 
-		public OneOf<object, SerializationFailure> Deserialize(byte[] data, string dataType)
+		public object Deserialize(byte[] serializedInput, string dataType)
 		{
-			return typedByteSerializer.Deserialize(data, TypedToSimpleConverter.ConvertSimpleToType(dataType));
+			return typedByteSerializer.Deserialize(serializedInput, TypedToSimpleConverter.ConvertSimpleToType(dataType));
 		}
 
-		public OneOf<byte[], SerializationFailure> Serialize(object data, string dataType)
+		public byte[] Serialize(object? input, string dataType)
 		{
 			var clrType = TypedToSimpleConverter.ConvertSimpleToType(dataType);
-			var seriResult = typedByteSerializer.Serialize(data, clrType);
+			var seriResult = typedByteSerializer.Serialize(input, clrType);
 			return seriResult;
 		}
+
+		public bool TryDeserialize(byte[] serializedInput, string dataType, out object? input, out SerializationFailure? error)
+		{
+			return typedByteSerializer.TryDeserialize(serializedInput, TypedToSimpleConverter.ConvertSimpleToType(dataType), out input, out error);
+		}
+
+		public bool TrySerialize(object? input, string dataType, out byte[]? output, out SerializationFailure? error)
+		{
+			return typedByteSerializer.TrySerialize(input, TypedToSimpleConverter.ConvertSimpleToType(dataType), out output, out error);
+
+		}
+
+		//public OneOf<object, SerializationFailure> Deserialize(byte[] data, string dataType)
+		//{
+		//	return typedByteSerializer.Deserialize(data, TypedToSimpleConverter.ConvertSimpleToType(dataType));
+		//}
+
+		//public OneOf<byte[], SerializationFailure> Serialize(object data, string dataType)
+		//{
+		//	var clrType = TypedToSimpleConverter.ConvertSimpleToType(dataType);
+		//	var seriResult = typedByteSerializer.Serialize(data, clrType);
+		//	return seriResult;
+		//}
 	}
 }

@@ -1,0 +1,18 @@
+﻿@using Basyc.MessageBus.Manager.Application
+
+@if (RequestResults is not null)
+{
+    @foreach (var result in RequestResults)
+    {
+        <RequestHistoryItemView RequestResult="result" />
+    }
+}
+else
+{
+    @:empty history
+}
+
+@code {
+    [Parameter] public List<RequestResult> RequestResults { get; set; }
+
+}

@@ -36,32 +36,21 @@ namespace Basyc.MessageBus.Client
 			var responseTypeString = TypedToSimpleConverter.ConvertTypeToSimple(responseType);
 
 			var requestResponse = await byteMessageBusClient.RequestAsync(requestTypeString, cancellationToken);
-			var responseDeserializationResult = objectToByteSerailizer.Deserialize(requestResponse.ResponseBytes, requestResponse.ResposneType);
-			return responseDeserializationResult.Match(
-				   deserializedResponse => deserializedResponse,
-					 error => throw new Exception(error.Message));
+			return objectToByteSerailizer.Deserialize(requestResponse.ResponseBytes, requestResponse.ResposneType);
 		}
 
-		public Task<object> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default)
+		public async Task<object> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default)
 		{
 			var requestTypeString = TypedToSimpleConverter.ConvertTypeToSimple(requestType);
 			var responseTypeString = TypedToSimpleConverter.ConvertTypeToSimple(responseType);
 
-			var requestByteSerializationResult = objectToByteSerailizer.Serialize(requestData, requestTypeString);
-			return requestByteSerializationResult.Match(async requestBytes =>
+			var requestBytes = objectToByteSerailizer.Serialize(requestData, requestTypeString);
+			var requestResponseResult = await byteMessageBusClient.RequestAsync(requestTypeString, requestBytes, cancellationToken);
+			return requestResponseResult.Match(byteResponse =>
 			{
-				var requestResponseResult = await byteMessageBusClient.RequestAsync(requestTypeString, requestBytes, cancellationToken);
-				return requestResponseResult.Match(byteResponse =>
-				{
-					var responseDeserializationResult = objectToByteSerailizer.Deserialize(byteResponse.ResponseBytes, byteResponse.ResposneType);
-					return responseDeserializationResult.Match(
-						   deserializedResponse => deserializedResponse,
-							 error => throw new Exception(error.Message));
-				},
-				error => throw new Exception(error.Message));
-
+				return objectToByteSerailizer.Deserialize(byteResponse.ResponseBytes, byteResponse.ResposneType);
 			},
-			failure => throw new Exception(failure.Message));
+			error => throw new Exception(error.Message));
 		}
 
 		public Task SendAsync<TCommand>(TCommand commandData, CancellationToken cancellationToken = default) where TCommand : notnull, IMessage
@@ -73,13 +62,8 @@ namespace Basyc.MessageBus.Client
 		public Task SendAsync(Type commandType, object commandData, CancellationToken cancellationToken = default)
 		{
 			var commandTypeString = TypedToSimpleConverter.ConvertTypeToSimple(commandType);
-			var commandByteSerializationResult = objectToByteSerailizer.Serialize(commandData, commandTypeString);
-			return commandByteSerializationResult.Match(requestBytes =>
-			{
-				return byteMessageBusClient.SendAsync(commandTypeString, requestBytes, cancellationToken);
-
-			},
-			failure => throw new Exception(failure.Message));
+			var requestBytes = objectToByteSerailizer.Serialize(commandData, commandTypeString);
+			return byteMessageBusClient.SendAsync(commandTypeString, requestBytes, cancellationToken);
 		}
 
 		public Task SendAsync(Type commandType, CancellationToken cancellationToken = default)

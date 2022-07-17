@@ -15,13 +15,13 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 	private readonly IWorkerRegistry workerRegistry;
 	private readonly NetMQPoller poller = new NetMQPoller();
 	private readonly ILogger<NetMQMessageBrokerServer> logger;
-	private readonly INetMQByteMessageSerializer messageToByteSerializer;
+	private readonly INetMQMessageWrapper messageToByteSerializer;
 	private readonly RouterSocket brokerSocket;
 
 	public NetMQMessageBrokerServer(IOptions<NetMQMessageBrokerServerOptions> options,
 		IWorkerRegistry workerRegistry,
 		ILogger<NetMQMessageBrokerServer> logger,
-		INetMQByteMessageSerializer messageToByteSerializer
+		INetMQMessageWrapper messageToByteSerializer
 		)
 	{
 		this.options = options;
@@ -37,7 +37,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 
 			var senderAddressFrame = recievedMessageFrame[0];
 			var senderAddressString = senderAddressFrame.ConvertToString();
-			var deserializationResult = messageToByteSerializer.Deserialize(recievedMessageFrame[2].Buffer);
+			var deserializationResult = messageToByteSerializer.ReadWrapperMessage(recievedMessageFrame[2].Buffer);
 			deserializationResult.Switch(
 				checkIn =>
 				{
@@ -47,7 +47,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 				},
 				request =>
 				{
-					logger.LogInformation($"Recieved request: '{request.RequestData}' from {senderAddressString}:{request.SessionId}");
+					logger.LogInformation($"Recieved request: '{request.RequestBytes}' from {senderAddressString}:{request.SessionId}");
 					if (workerRegistry.TryGetWorkerFor(request.RequestType, out string? workerAddressString))
 					{
 						byte[] requestBytes = recievedMessageFrame[2].Buffer;
@@ -57,7 +57,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 						messageToProducer.Append(senderAddressFrame);
 						messageToProducer.AppendEmptyFrame();
 						messageToProducer.Append(requestBytes);
-						logger.LogDebug($"Sending request: '{request.RequestData}' to {workerAddressString}:{request.SessionId}");
+						logger.LogDebug($"Sending request: '{request.RequestBytes}' to {workerAddressString}:{request.SessionId}");
 						brokerSocket.SendMultipartMessage(messageToProducer);
 						logger.LogDebug($"Request sent to {workerAddressString}");
 					}
@@ -69,7 +69,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 						messageToProducer.AppendEmptyFrame();
 						messageToProducer.AppendEmptyFrame();
 						messageToProducer.AppendEmptyFrame();
-						messageToProducer.Append(messageToByteSerializer.Serialize(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, MessageCase.Response));
+						messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, MessageCase.Response));
 						logger.LogError($"Sending failure: '{failure}' to {senderAddressString}");
 						brokerSocket.SendMultipartMessage(messageToProducer);
 						logger.LogError($"Failure sent to {senderAddressFrame}");
@@ -105,7 +105,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 							messageToProducer.Append(senderAddressFrame);
 							messageToProducer.AppendEmptyFrame();
 							messageToProducer.Append(eventData);
-							logger.LogDebug($"Sending event: '{@event.EventData}' to {worker}:{@event.SessionId}");
+							logger.LogDebug($"Sending event: '{@event.EventBytes}' to {worker}:{@event.SessionId}");
 							brokerSocket.SendMultipartMessage(messageToProducer);
 							logger.LogDebug($"Event sent to {worker}");
 						}
@@ -126,7 +126,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 					messageToProducer.AppendEmptyFrame();
 					messageToProducer.AppendEmptyFrame();
 					messageToProducer.AppendEmptyFrame();
-					messageToProducer.Append(messageToByteSerializer.Serialize(failResult, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), failure.SessionId, MessageCase.Response));
+					messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failResult, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), failure.SessionId, MessageCase.Response));
 					logger.LogDebug($"Sending failure: '{failure}' to {sendFailToAddressString}");
 					brokerSocket.SendMultipartMessage(messageToProducer);
 					logger.LogDebug($"Failure sent to {sendFailToAddressString}");

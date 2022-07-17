@@ -1,4 +1,6 @@
-﻿@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.SideBar
+﻿@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.RequestHistory
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.SideBar
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.RequestSideBar
 
 <HeadContent>
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
@@ -10,19 +12,27 @@
     <MudSnackbarProvider />
 
     <sideBar>
-        <RequestsSideMenu DomainInfoViewModel="DomainInfoViewModel"/>    
+        <RequestsSideMenu DomainInfoViewModel="DomainInfoViewModel" RequestSelected="newSelected=>SelectedRequestViewModel = newSelected" />
     </sideBar>
-    <requestPage>
-       <MudExpansionPanels Class="requestPanel" DisableBorders="true" Elevation="0" MultiExpansion="true">
-        @foreach (var domainViewModel in DomainInfoViewModel)
+    <requestFormPage>
+        @if (SelectedRequestViewModel is not null)
         {
-            @*<RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (s,a)=> await OnMessageSending(s,a))" />*@
-            <RequestDomainItem DomainItemViewModel="domainViewModel" OnMessageSending="@(async (requestItem)=>await SendMessage(requestItem))" />
+            <RequestSideBarView SelectedRequestViewModel="SelectedRequestViewModel" Requested="@(async (requestItem)=>await SendMessage(requestItem))" />
         }
-    </MudExpansionPanels>
+        else
+        {
+            @:Select request
+        }
+    </requestFormPage>
+    <historyPage>
+        @if (SelectedRequestViewModel is not null)
+        {
+            <RequestHistoryView RequestResults="resultHistory[SelectedRequestViewModel]" />
 
-    @*<script src="_content/MudBlazor/MudBlazor.min.js" suppress-error="BL9992"></script>*@
-    </requestPage>
-
-
+        }
+        else
+        {
+            @:Select request
+        }
+    </historyPage>
 </busManager>

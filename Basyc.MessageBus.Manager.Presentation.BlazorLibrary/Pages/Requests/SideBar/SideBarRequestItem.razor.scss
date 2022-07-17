@@ -1,8 +1,13 @@
 ﻿@import "../../../Shared/Colors.scss";
 
 requestItem {
-    display: block;
-    margin: 2px;
-    padding: 0.35rem 1rem;
-    background-color: white;
+    display: flex;
+    margin: 1px;
+    padding: 0.35rem 1rem 0.35rem 2rem;
+    background-color: #F9F9F9;
+    flex: 1;
+}
+
+requestName{
+    margin-left: 0.35rem;
 }

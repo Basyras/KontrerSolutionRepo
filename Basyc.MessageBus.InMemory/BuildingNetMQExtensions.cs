@@ -52,7 +52,7 @@ public static class BuildingNetMQExtensions
 		services.AddBasycSerialization()
 			.SelectProtobufNet();
 
-		services.AddSingleton<INetMQByteMessageSerializer, NetMQByteSerializer>();
+		services.AddSingleton<INetMQMessageWrapper, NetMQMessageWrapper>();
 		var areMessagesByte = services.FirstOrDefault(x => x.ServiceType == typeof(IByteMessageBusClient)) == null;
 
 

@@ -15,10 +15,10 @@
                             <requestName>@RequestItemViewModel.RequestInfo.ResponseDisplayName </requestName>
                         }
 
-                        @if (RequestItemViewModel.Response != null && RequestItemViewModel.IsLoading is false)
+                        @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false)
                         {
-                            string latencyClass = $"latency--failed--{RequestItemViewModel.Response.Failed.ToString().ToLower()}";
-                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.Response.Latency.TotalMilliseconds) ms</latency>
+                            string latencyClass = $"latency--failed--{RequestItemViewModel.LastResult.Failed.ToString().ToLower()}";
+                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.LastResult.Latency.TotalMilliseconds) ms</latency>
                         }
                         @if (RequestItemViewModel.IsLoading)
                         {
@@ -66,15 +66,15 @@
                         else
                         {
                             <inputContainer>
-                                @if (RequestItemViewModel.Response != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.Response.Failed is false)
+                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.LastResult.Failed is false)
                                 {
                                     //https://www.jqueryscript.net/other/Beautiful-JSON-Viewer-Editor.html
-                                    string hasErrorClass = RequestItemViewModel.Response.Failed ? "inputBorder--error" : "";
-                                    <textarea readonly disabled="@RequestItemViewModel.Response.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.Response.Response</textarea>
+                                    string hasErrorClass = RequestItemViewModel.LastResult.Failed ? "inputBorder--error" : "";
+                                    <textarea readonly disabled="@RequestItemViewModel.LastResult.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.LastResult.Response</textarea>
                                 }
-                                @if (RequestItemViewModel.Response != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.Response.Failed)
+                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.LastResult.Failed)
                                 {
-                                    <errorMessage>@RequestItemViewModel.Response.ErrorMessage</errorMessage>
+                                    <errorMessage>@RequestItemViewModel.LastResult.ErrorMessage</errorMessage>
                                 }
                             </inputContainer>
                         }

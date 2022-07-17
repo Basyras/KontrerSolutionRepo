@@ -1,16 +1,1 @@
-﻿::deep .requestPanel {
-  /*width: 60vw;*/
-}
-
-sideBar {
-  /*flex: 0;*/
-}
-
-requestPage {
-  flex: 1;
-}
-
-busManager {
-  background-color: red;
-  display: flex;
-}
+sideBar{width:300px}requestFormPage{width:350px;display:block}busManager{display:flex;align-items:stretch;flex-direction:row;position:absolute;top:0px;bottom:0px;right:0px;left:0px}historyPage{flex:1}

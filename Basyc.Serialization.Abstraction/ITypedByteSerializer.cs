@@ -1,19 +1,41 @@
-﻿using OneOf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Basyc.Serialization.Abstraction
+﻿namespace Basyc.Serialization.Abstraction
 {
-    public interface ITypedByteSerializer
-    {
-        OneOf<byte[], SerializationFailure> Serialize(object objectData, Type objectType);
-        OneOf<byte[], SerializationFailure> SerializeT<T>(T objectData) where T : notnull;
+	public interface ITypedByteSerializer : ISerializer<object?, byte[], Type>
+	{
+		public new byte[] Serialize(object? deserializedObject, Type dataType);
+		public new object? Deserialize(byte[] serializedObject, Type dataType);
 
-        OneOf<object, SerializationFailure> Deserialize(byte[] objectData, Type objectType);
-        OneOf<T, SerializationFailure> DeserializeT<T>(byte[] objectData);
+		public bool TrySerialize<T>(T deserializedObject, out byte[]? serializedObject, out SerializationFailure? error)
+		{
+			try
+			{
+				serializedObject = Serialize(deserializedObject, typeof(T));
+				error = null;
+				return true;
+			}
+			catch (Exception ex)
+			{
+				serializedObject = default;
+				error = new SerializationFailure(ex);
+				return false;
+			}
+		}
+		bool TryDeserialize<T>(byte[] serializedObject, out T? deserializedObject, out SerializationFailure? error)
+		{
+			try
+			{
+				deserializedObject = (T?)Deserialize(serializedObject, typeof(T));
+				error = null;
+				return true;
+			}
+			catch (Exception ex)
+			{
+				deserializedObject = default;
+				error = new SerializationFailure(ex);
+				return false;
+			}
+		}
 
-    }
+
+	}
 }

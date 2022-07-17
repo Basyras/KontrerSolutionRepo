@@ -11,10 +11,10 @@ namespace Basyc.MessageBus.HttpProxy.Shared
 
 		}
 
-		public ProxyRequest(string requestType, bool hasResponse, byte[] requestData = null, string responseType = null)
+		public ProxyRequest(string requestType, bool hasResponse, byte[] requestBytes = null, string responseType = null)
 		{
 			MessageType = requestType;
-			MessageData = requestData ?? Array.Empty<byte>();
+			MessageBytes = requestBytes ?? Array.Empty<byte>();
 			ResponseAssemblyQualifiedTypeName = responseType;
 			HasResponse = hasResponse;
 		}
@@ -22,7 +22,7 @@ namespace Basyc.MessageBus.HttpProxy.Shared
 		[ProtoMember(1)]
 		public string MessageType { get; set; }
 		[ProtoMember(2)]
-		public byte[] MessageData { get; set; }
+		public byte[] MessageBytes { get; set; }
 		[ProtoMember(3)]
 		public string ResponseAssemblyQualifiedTypeName { get; set; }
 		[ProtoMember(4)]

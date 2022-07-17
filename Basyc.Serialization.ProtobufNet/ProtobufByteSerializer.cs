@@ -1,186 +1,88 @@
 ﻿using Basyc.Serialization.Abstraction;
-using OneOf;
+using Basyc.Shared.Helpers;
 using ProtoBuf;
 using ProtoBuf.Meta;
-using Basyc.Shared.Helpers;
 
 namespace Basyc.Serialization.ProtobufNet
 {
-    public class ProtobufByteSerializer : ITypedByteSerializer
-    {
-        public static ProtobufByteSerializer Singlenton = new ProtobufByteSerializer();
+	public class ProtobufByteSerializer : ITypedByteSerializer
+	{
+		public static ProtobufByteSerializer Singlenton = new ProtobufByteSerializer();
+		private readonly static Dictionary<Type, PreparedTypeMetadata> knownTypes = new Dictionary<Type, PreparedTypeMetadata>();
+		private static PreparedTypeMetadata PrepareSerializer(Type typeToPrepare)
+		{
+			if (knownTypes.TryGetValue(typeToPrepare, out var metadata))
+				return metadata;
 
-        public OneOf<object, SerializationFailure> Deserialize(byte[] objectData, Type dataType)
-        {
-            PrepareSerializer(dataType);
+			if (RuntimeTypeModel.Default.CanSerialize(typeToPrepare) is false)
+			{
+				foreach (var property in typeToPrepare.GetProperties())
+				{
+					PrepareSerializer(property.PropertyType);
+				}
 
-            if (objectData == null)
-                return dataType.GetDefaultValue();
+				if (RuntimeTypeModel.Default.CanSerialize(typeToPrepare) is false)
+				{
+					var serializationMetadata = RuntimeTypeModel.Default.Add(typeToPrepare);
+					serializationMetadata.UseConstructor = false;
+					foreach (var property in typeToPrepare.GetProperties())
+					{
+						serializationMetadata.Add(property.Name);
+					}
+				}
+			}
+			var hasZeroProperties = typeToPrepare.GetProperties().Length == 0;
+			var newMetadata = new PreparedTypeMetadata(hasZeroProperties);
+			knownTypes.Add(typeToPrepare, newMetadata);
+			return newMetadata;
+		}
 
-            var stream = new MemoryStream(objectData);
-            //stream.Position = 0;
-            stream.Write(objectData, 0, objectData.Length);
-            stream.Seek(0, SeekOrigin.Begin);
+		public byte[] Serialize(object? input, Type dataType)
+		{
+			var typeMetadata = PrepareSerializer(dataType);
 
-            object result = Serializer.Deserialize(dataType, stream);
-            var opt = new SchemaGenerationOptions();
-            opt.Types.Add(dataType);
-            return result;
-        }
+			if (input == null)
+				return new byte[0];
 
-        public OneOf<T, SerializationFailure> DeserializeT<T>(byte[] objectData)
-        {
-            var result = Deserialize(objectData, typeof(T));
-            if (result.Value is SerializationFailure)
-                return result.AsT1;
+			if (typeMetadata.HasZeroProperties)
+				return new byte[0];
 
-            return (T)result.Value;
-        }
+			using var stream = new MemoryStream();
+			Serializer.Serialize(stream, input);
+			return stream.ToArray();
+		}
 
-        public OneOf<byte[], SerializationFailure> Serialize(object objectData, Type objectType)
-        {
-            if (objectData == null)
-                return new byte[0];
+		public object? Deserialize(byte[] input, Type dataType)
+		{
+			PrepareSerializer(dataType);
 
-            if (objectData.GetType().GetProperties().Length == 0)
-                return new byte[0];
+			if (input == null)
+				return dataType.GetDefaultValue();
 
-            using var stream = new MemoryStream();
-            PrepareSerializer(objectType);
-            Serializer.Serialize(stream, objectData);
-            return stream.ToArray();
-        }
+			var stream = new MemoryStream(input);
+			//stream.Position = 0;
+			stream.Write(input, 0, input.Length);
+			stream.Seek(0, SeekOrigin.Begin);
 
-        public OneOf<byte[], SerializationFailure> SerializeT<T>(T objectData) where T : notnull
-        {
-            return Serialize(objectData, typeof(T));
-        }
+			object result = Serializer.Deserialize(dataType, stream);
+			//var options = new SchemaGenerationOptions();
+			//options.Types.Add(dataType);
+			return result;
+		}
 
-        //private static void PrepareSerializer(Type type)
-        //{
-        //    if (RuntimeTypeModel.Default.CanSerialize(type) is false)
-        //    {
-        //        var serializationMetadata = RuntimeTypeModel.Default.Add(type,false);
-        //        serializationMetadata.UseConstructor = false;
+		public bool TrySerialize<T>(T input, out byte[]? output, out SerializationFailure? error)
+		{
+			var thisCasted = (ITypedByteSerializer)this;
+			return thisCasted.TrySerialize(input, typeof(T), out output, out error);
+		}
 
-        //        foreach(var property in type.GetProperties())
-        //        {
-        //            //var met = serializationMetadata[property.GetGetMethod()];
-        //            //if(met == null)
-        //            //{
-        //            //    PrepareSerializer(property.PropertyType);
-        //            //    serializationMetadata.Add(property.Name);
-        //            //}
-        //            PrepareSerializer(property.PropertyType);
-        //            serializationMetadata.Add(property.Name);
-        //        }
+		public bool TryDeserialize<T>(byte[] serializedInput, out T? input, out SerializationFailure? error)
+		{
+			var thisCasted = (ITypedByteSerializer)this;
+			var wasSuccesful = thisCasted.TryDeserialize(serializedInput, typeof(T), out var inputObject, out error);
+			input = (T?)inputObject;
+			return wasSuccesful;
 
-
-
-        //        //var parameters = type.GetConstructors()
-        //        //    .OrderByDescending(x=>x.GetParameters().Length)
-        //        //    .First()
-        //        //    .GetParameters();
-
-        //        //foreach (var parameter in parameters)
-        //        //{
-        //        //    PrepareSerializer(parameter.ParameterType);
-        //        //}
-        //    }
-
-        //}
-
-        /// <summary>
-        /// Returns if serailizer was prepared
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        //private static bool PrepareSerializer(Type type)
-        //{
-        //    if (RuntimeTypeModel.Default.CanSerialize(type))
-        //    {
-        //        return true;
-        //    }
-
-        //    foreach (var property in type.GetProperties())
-        //    {
-        //        var wasPrepared = PrepareSerializer(property.PropertyType);
-        //    }
-
-        //    var serializationMetadata = RuntimeTypeModel.Default.Add(type);
-        //    //serializationMetadata.UseConstructor = false;
-
-
-
-        //    foreach (var property in type.GetProperties())
-        //    {
-        //        //var wasPrepared = PrepareSerializer(property.PropertyType);
-        //        //serializationMetadata.Add(property.Name);
-        //        //if (wasPrepared is false)
-        //        //{
-        //        //    serializationMetadata.Add(property.Name);
-        //        //}
-        //    }
-
-
-        //    //if (RuntimeTypeModel.Default.CanSerialize(type) is false)
-        //    //{
-        //    //    foreach (var property in type.GetProperties())
-        //    //    {
-        //    //        serializationMetadata.Add(property.Name);
-        //    //    }                    
-        //    //}
-
-
-        //    return false;
-
-
-
-        //}
-
-        ///
-
-        //private static void PrepareSerializer(Type type)
-        //{
-        //    if (RuntimeTypeModel.Default.CanSerialize(type) is false)
-        //    {
-        //        var serializationMetadata = RuntimeTypeModel.Default.Add(type);
-        //        //serializationMetadata.UseConstructor = false;
-
-        //        System.Reflection.PropertyInfo[] properties = type.GetProperties();
-        //        for (int propertyIndex = 0; propertyIndex < properties.Length; propertyIndex++)
-        //        {
-        //            System.Reflection.PropertyInfo? property = properties[propertyIndex];
-        //            if (RuntimeTypeModel.Default.CanSerialize(type) is false)
-        //            {
-        //                PrepareSerializer(property.PropertyType);
-        //                serializationMetadata.AddSubType(propertyIndex, property.PropertyType);
-        //            }
-        //        }
-        //    }
-
-        //}
-
-        private static void PrepareSerializer(Type type)
-        {
-            if (RuntimeTypeModel.Default.CanSerialize(type) is false)
-            {
-                foreach (var property in type.GetProperties())
-                {
-                    PrepareSerializer(property.PropertyType);
-                }
-
-                if (RuntimeTypeModel.Default.CanSerialize(type) is false)
-                {
-                    var serializationMetadata = RuntimeTypeModel.Default.Add(type);
-                    serializationMetadata.UseConstructor = false;
-                    foreach (var property in type.GetProperties())
-                    {
-                        serializationMetadata.Add(property.Name);
-                    }
-                }
-            }
-
-        }
-    }
+		}
+	}
 }

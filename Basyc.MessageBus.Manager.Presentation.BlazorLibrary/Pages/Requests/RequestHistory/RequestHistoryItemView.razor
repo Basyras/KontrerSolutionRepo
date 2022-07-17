@@ -1,0 +1,18 @@
+﻿@using Basyc.MessageBus.Manager.Application
+
+<historyItem>
+    @if (RequestResult is not null)
+    {
+        string latencyClass = $"latency--failed--{RequestResult.Failed.ToString().ToLower()}";
+        <latency class="@latencyClass">@Math.Ceiling(RequestResult.Latency.TotalMilliseconds) ms</latency>
+    }
+    else
+    {
+        @:null
+    }
+</historyItem>
+
+
+@code {
+    [Parameter] public RequestResult RequestResult { get; set; }
+}

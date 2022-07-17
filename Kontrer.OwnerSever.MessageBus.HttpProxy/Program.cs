@@ -1,4 +1,3 @@
-using Kontrer.OwnerServer.CustomerService.Domain;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var domains = new Assembly[]
 {
-	typeof(CustomerServiceDomainAssemblyMarker).Assembly,
+	//typeof(CustomerServiceDomainAssemblyMarker).Assembly,
     //typeof(OrderServiceDomainAssemblyMarker).Assembly,
     //typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
 };

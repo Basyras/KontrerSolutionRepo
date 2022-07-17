@@ -32,20 +32,19 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
 		private async Task<object> HttpCallToProxyServer(string messageType, object messageData, Type responseType = null, CancellationToken cancellationToken = default)
 		{
-			var seriResult = objectToByteSerializer.Serialize(messageData, messageType);
-			if (seriResult.IsT1)
-				return seriResult.AsT1;
+			if (objectToByteSerializer.TrySerialize(messageData, messageType, out var requestBytes, out var seriError) is false)
+			{
+				return seriError;
+			}
 
 			var responseTypeString = responseType?.AssemblyQualifiedName;
 			var hasResponse = responseType != null;
-			var proxyRequest = new ProxyRequest(messageType, hasResponse, seriResult.AsT0, responseTypeString);
+			var proxyRequest = new ProxyRequest(messageType, hasResponse, requestBytes, responseTypeString);
 
-			var proxyRequestSerializationResult = objectToByteSerializer.Serialize(proxyRequest, wrapperMessageType);
-
-			if (proxyRequestSerializationResult.IsT1)
-				return proxyRequestSerializationResult.AsT1;
-
-			var proxyRequestBytes = proxyRequestSerializationResult.AsT0;
+			if (objectToByteSerializer.TrySerialize(proxyRequest, wrapperMessageType, out var proxyRequestBytes, out var error) is false)
+			{
+				return error;
+			}
 			var httpContent = new ByteArrayContent(proxyRequestBytes);
 			var httpResult = await httpClient.PostAsync("", httpContent);
 
@@ -66,17 +65,8 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
 			cancellationToken.ThrowIfCancellationRequested();
 
-			var proxyResponseSeriResult = objectToByteSerializer.Deserialize(proxyResponseResponseBytes, proxyResponseSimpleDataType);
-
-			return proxyResponseSeriResult.Match(proxyResponseObject =>
-			{
-				var proxyResponse = (ProxyResponse)proxyResponseObject;
-				var responseSeriResult = objectToByteSerializer.Deserialize(proxyResponse.ResponseBytes, proxyResponse.ResponseType);
-				return responseSeriResult.Match(
-					responseObject => responseObject,
-					responseSeriFailure => throw new Exception(responseSeriFailure.Message));
-			},
-			error => throw new Exception(error.Message));
+			var proxyResponse = (ProxyResponse)objectToByteSerializer.Deserialize(proxyResponseResponseBytes, proxyResponseSimpleDataType);
+			return objectToByteSerializer.Deserialize(proxyResponse.ResponseBytes, proxyResponse.ResponseType);
 		}
 
 		public void Dispose()
