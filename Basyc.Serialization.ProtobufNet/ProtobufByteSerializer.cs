@@ -60,13 +60,10 @@ namespace Basyc.Serialization.ProtobufNet
 				return dataType.GetDefaultValue();
 
 			var stream = new MemoryStream(input);
-			//stream.Position = 0;
 			stream.Write(input, 0, input.Length);
 			stream.Seek(0, SeekOrigin.Begin);
 
 			object result = Serializer.Deserialize(dataType, stream);
-			//var options = new SchemaGenerationOptions();
-			//options.Types.Add(dataType);
 			return result;
 		}
 

@@ -1,1 +1,1 @@
-﻿latency{display:inline-block;}.latency--failed--true{color:#d66a6a;}.latency--failed--false{color:#5eab5e;}historyItem{display:block;}
+﻿latency{display:inline-block;flex:10;}inputs{display:block;flex:40;}responseValue{display:block;flex:40;}.latency--failed--true{color:#d66a6a;}.latency--failed--false{color:#5eab5e;}historyItem{padding:.5rem 1rem;display:flex;align-items:center;height:2rem;overflow:hidden;background-color:#808080;}

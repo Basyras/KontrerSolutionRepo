@@ -1,10 +1,26 @@
 ﻿@using Basyc.MessageBus.Manager.Application
+@using System.Text
 
 <historyItem>
     @if (RequestResult is not null)
     {
-        string latencyClass = $"latency--failed--{RequestResult.Failed.ToString().ToLower()}";
-        <latency class="@latencyClass">@Math.Ceiling(RequestResult.Latency.TotalMilliseconds) ms</latency>
+        string latencyClass = $"latency--failed--{RequestResult.HasError.ToString().ToLower()}";
+        <latency class="@latencyClass">@Math.Ceiling(RequestResult.Duration.TotalMilliseconds) ms</latency>
+        <inputs>
+            @CreateInputOverview(RequestResult.Request.Parameters)
+        </inputs>
+        <responseValue>
+            @if (RequestResult.HasResponse)
+            {
+                @RequestResult.Response
+            }
+            @if (RequestResult.HasError)
+            {
+                @RequestResult.ErrorMessage
+            }
+        </responseValue>
+
+        @RequestResult.RequestTime
     }
     else
     {
@@ -15,4 +31,24 @@
 
 @code {
     [Parameter] public RequestResult RequestResult { get; set; }
+    private static string CreateInputOverview(IEnumerable<Parameter> parameters)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.Append("{");
+        foreach (var parameter in parameters)
+        {
+            stringBuilder.Append("\"");
+            stringBuilder.Append(parameter.ParameterInfo.ParameterDisplayName);
+            stringBuilder.Append("\"");
+            stringBuilder.Append(":");
+            stringBuilder.Append("\"");
+            stringBuilder.Append(parameter.Value.ToString());
+            stringBuilder.Append("\"");
+            stringBuilder.Append(",");
+
+        }
+        stringBuilder.Remove(stringBuilder.Length - 1, 1);
+        stringBuilder.Append("}");
+        return stringBuilder.ToString();
+    }
 }

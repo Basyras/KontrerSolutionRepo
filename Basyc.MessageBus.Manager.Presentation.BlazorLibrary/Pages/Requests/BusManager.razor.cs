@@ -94,8 +94,8 @@ public partial class BusManager
 				var castedParamValue = ParseParamInputValue(paramStringValue, paramInfo);
 				parameters.Add(new Parameter(paramInfo, castedParamValue));
 			}
-
-			var requestResult = await RequestClient.TrySendRequest(new Request(requestInfo, parameters));
+			Request request = new Request(requestInfo, parameters);
+			var requestResult = await RequestClient.TrySendRequest(request);
 			requestItem.LastResult = requestResult;
 			resultHistory.TryAdd(requestItem, new List<RequestResult>());
 			var requestHistory = resultHistory[requestItem];
@@ -103,7 +103,7 @@ public partial class BusManager
 		}
 		catch (Exception ex)
 		{
-			requestItem.LastResult = new RequestResult(true, ex.Message, default);
+			requestItem.LastResult = new RequestResult(null, true, ex.Message, default, default);
 		}
 	}
 

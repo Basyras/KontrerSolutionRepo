@@ -2,6 +2,17 @@
 
 latency {
     display: inline-block;    
+    flex: 10;
+}
+
+inputs {
+    display:block;
+    flex: 40;
+}
+
+responseValue {
+    display: block;
+    flex: 40;
 }
 
 .latency--failed--true {
@@ -13,5 +24,10 @@ latency {
 }
 
 historyItem {
-    display: block;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    overflow: hidden;
+    background-color: gray;
 }

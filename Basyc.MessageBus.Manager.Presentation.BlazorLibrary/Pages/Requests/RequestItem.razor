@@ -17,8 +17,8 @@
 
                         @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false)
                         {
-                            string latencyClass = $"latency--failed--{RequestItemViewModel.LastResult.Failed.ToString().ToLower()}";
-                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.LastResult.Latency.TotalMilliseconds) ms</latency>
+                            string latencyClass = $"latency--failed--{RequestItemViewModel.LastResult.HasError.ToString().ToLower()}";
+                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.LastResult.Duration.TotalMilliseconds) ms</latency>
                         }
                         @if (RequestItemViewModel.IsLoading)
                         {
@@ -66,13 +66,13 @@
                         else
                         {
                             <inputContainer>
-                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.LastResult.Failed is false)
+                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.LastResult.HasError is false)
                                 {
                                     //https://www.jqueryscript.net/other/Beautiful-JSON-Viewer-Editor.html
-                                    string hasErrorClass = RequestItemViewModel.LastResult.Failed ? "inputBorder--error" : "";
-                                    <textarea readonly disabled="@RequestItemViewModel.LastResult.Failed" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.LastResult.Response</textarea>
+                                    string hasErrorClass = RequestItemViewModel.LastResult.HasError ? "inputBorder--error" : "";
+                                    <textarea readonly disabled="@RequestItemViewModel.LastResult.HasError" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.LastResult.Response</textarea>
                                 }
-                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.LastResult.Failed)
+                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.LastResult.HasError)
                                 {
                                     <errorMessage>@RequestItemViewModel.LastResult.ErrorMessage</errorMessage>
                                 }

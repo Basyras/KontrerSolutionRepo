@@ -2,7 +2,7 @@
 
 @if (RequestResults is not null)
 {
-    @foreach (var result in RequestResults)
+    @foreach (var result in RequestResults.AsEnumerable().Reverse())
     {
         <RequestHistoryItemView RequestResult="result" />
     }
