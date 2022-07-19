@@ -42,7 +42,8 @@
             stringBuilder.Append("\"");
             stringBuilder.Append(":");
             stringBuilder.Append("\"");
-            stringBuilder.Append(parameter.Value.ToString());
+            var paramterValueString = parameter.Value is null ? "null" : parameter.Value.ToString();
+            stringBuilder.Append(paramterValueString);
             stringBuilder.Append("\"");
             stringBuilder.Append(",");
 

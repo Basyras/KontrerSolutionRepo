@@ -21,4 +21,5 @@ public class RequestItemViewModel
 	public RequestInfo RequestInfo { get; init; }
 	public ObservableCollection<string> ParameterValues { get; init; }
 	public bool IsLoading { get; set; }
+	public bool IsSelected { get; set; }
 }

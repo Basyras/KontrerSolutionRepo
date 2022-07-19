@@ -35,11 +35,16 @@ public partial class BusManager
 		get => selectedRequestViewModel;
 		private set
 		{
+			if (selectedRequestViewModel is not null)
+			{
+				selectedRequestViewModel.IsSelected = false;
+			}
 			selectedRequestViewModel = value;
 			if (value is null)
 			{
 				return;
 			}
+			selectedRequestViewModel.IsSelected = true;
 			resultHistory.TryAdd(value, new List<RequestResult>());
 		}
 	}
