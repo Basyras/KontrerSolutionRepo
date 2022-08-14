@@ -18,5 +18,17 @@
   {
     "outputFile": "Pages/Requests/RequestHistory/RequestHistoryItemView.razor.css",
     "inputFile": "Pages/Requests/RequestHistory/RequestHistoryItemView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/ResultDetail/ResultDetailView.razor.css",
+    "inputFile": "Pages/Requests/ResultDetail/ResultDetailView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/ResultHistory/ResultHistoryView.razor.css",
+    "inputFile": "Pages/Requests/ResultHistory/ResultHistoryView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/ResultHistory/ResultHistoryItemView.razor.css",
+    "inputFile": "Pages/Requests/ResultHistory/ResultHistoryItemView.razor.scss"
   }
 ]

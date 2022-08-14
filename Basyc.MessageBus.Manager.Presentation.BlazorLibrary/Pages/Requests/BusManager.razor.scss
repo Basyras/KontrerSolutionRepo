@@ -1,17 +1,5 @@
 ﻿@import "../../Shared/Colors.scss";
 
-::deep .requestPanel {
-}
-
-sideBar {
-    width: 300px;
-}
-
-requestFormPage {
-    width: 350px;
-    display: block;
-}
-
 busManager {
     display: flex;
     align-items: stretch;
@@ -23,6 +11,27 @@ busManager {
     left: 0px;
 }
 
-historyPage{
-    flex: 1;
+sideBar {
+    flex-shrink: 0;
+}
+
+requestFormPage {
+    /*min-width: 300px;*/
+    flex-shrink: 0;
+    display: block;
+    /*flex: 1;*/
+    width: 300px;
+    /*display: block;*/
+}
+
+historyPage {
+    overflow: scroll;
+    flex: 70;
+    padding: 2rem 4rem;
+}
+
+requestDetail {
+    /*flex: 1;*/
+    overflow: hidden;
+    flex: 30;
 }

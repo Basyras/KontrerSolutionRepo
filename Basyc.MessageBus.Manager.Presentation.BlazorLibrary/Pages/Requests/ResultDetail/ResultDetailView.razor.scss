@@ -1,0 +1,73 @@
+﻿@import "../../../Shared/Colors.scss";
+
+parameterRow {
+    display: block;
+}
+
+requestDetailView {
+    background-color: $Information-Background;
+    display: block;
+    height: 100%;
+    padding: 1.5rem 2rem;
+}
+
+ghostLabel {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #628E8E;
+    opacity: 0.75;
+}
+
+inputOutputBase {
+    display: block;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+inputs {
+    @extend inputOutputBase;
+    border: 2.5px solid $Information-Background;
+}
+
+outputs {
+    @extend inputOutputBase;
+    background-color: $Information-Background;
+    word-break: break-all;
+    word-wrap: anywhere;
+}
+
+parameterName {
+    color: #979797;
+}
+parameterValue{
+    font-size: 1.1rem;
+}
+
+label {
+    color: #628e8e;
+    text-indent: 0.8rem;
+    margin-bottom: 0.3rem;
+}
+
+requestName {
+    margin-left: 0.35rem;
+}
+
+heading{
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.requestDetailViewClass--state--Started{
+
+}
+
+.requestDetailViewClass--state--Completed {
+    background-color: $Success-Background;
+}
+
+.requestDetailViewClass--state--Failed {
+    background-color: $Error-Background;
+}

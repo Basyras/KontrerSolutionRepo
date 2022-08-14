@@ -1,4 +1,5 @@
-﻿@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.RequestHistory
+﻿@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.ResultDetail
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.ResultHistory
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.SideBar
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.RequestSideBar
 
@@ -15,23 +16,19 @@
         <RequestsSideMenu DomainInfoViewModel="DomainInfoViewModel" RequestSelected="newSelected=>SelectedRequestViewModel = newSelected" />
     </sideBar>
     <requestFormPage>
-        @if (SelectedRequestViewModel is not null)
-        {
-            <RequestSideBarView SelectedRequestViewModel="SelectedRequestViewModel" Requested="@(async (requestItem)=>await SendMessage(requestItem))" />
-        }
-        else
-        {
-            @:Select request
-        }
+        <RequestSideBarView SelectedRequestViewModel="SelectedRequestViewModel" Requested="@(async (requestItem)=>await SendMessage(requestItem))" />
     </requestFormPage>
     <historyPage>
         @if (SelectedRequestViewModel is not null)
         {
-            <RequestHistoryView RequestResults="resultHistory[SelectedRequestViewModel]" />
+            <ResultHistoryView RequestResults="resultHistory[SelectedRequestViewModel]" @bind-SelectedRequestResults=selectedResult />
         }
         else
         {
             @:Select request
         }
     </historyPage>
+    <requestDetail>
+        <ResultDetailView RequestResult="selectedResult" />
+    </requestDetail>
 </busManager>

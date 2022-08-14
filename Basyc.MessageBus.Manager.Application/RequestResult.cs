@@ -4,33 +4,69 @@ namespace Basyc.MessageBus.Manager.Application
 {
 	public class RequestResult
 	{
-		public RequestResult(Request request, bool failed, string errorMessage, DateTime requestTime, TimeSpan duration)
-			: this(request, failed, null, errorMessage, requestTime, duration, false)
-		{
-		}
+		//public RequestResult(Request request, bool failed, string errorMessage, DateTime requestTime, TimeSpan duration)
+		//	: this(request, failed, null, errorMessage, requestTime, duration, false)
+		//{
+		//}
 
-		public RequestResult(Request request, bool failed, string response, string errorMessage, DateTime requestTime, TimeSpan duration)
-			: this(request, failed, response, errorMessage, requestTime, duration, true)
-		{
+		//public RequestResult(Request request, bool failed, string response, string errorMessage, DateTime requestTime, TimeSpan duration)
+		//	: this(request, failed, response, errorMessage, requestTime, duration, true)
+		//{
 
-		}
-		private RequestResult(Request request, bool failed, string response, string errorMessage, DateTime requestTime, TimeSpan duration, bool hasResponse)
+		//}
+		//private RequestResult(Request request, bool failed, string response, string errorMessage, DateTime requestTime, TimeSpan duration, bool hasResponse)
+		//{
+		//	Request = request;
+		//	HasError = failed;
+		//	HasResponse = hasResponse;
+		//	Response = response;
+		//	ErrorMessage = errorMessage;
+		//	RequestTime = requestTime;
+		//	Duration = duration;
+		//}
+
+		public RequestResult(Request request, DateTime requestStartTime, int id)
 		{
 			Request = request;
-			HasError = failed;
-			HasResponse = true;
-			Response = response;
-			ErrorMessage = errorMessage;
-			RequestTime = requestTime;
-			Duration = duration;
+			RequestStartTime = requestStartTime;
+			Id = id;
+			State = RequestResultState.Started;
 		}
 
 		public Request Request { get; init; }
-		public bool HasResponse { get; init; }
-		public string Response { get; init; }
-		public bool HasError { get; init; }
-		public string ErrorMessage { get; init; }
-		public DateTime RequestTime { get; init; }
-		public TimeSpan Duration { get; init; }
+		public DateTime RequestStartTime { get; init; }
+		public int Id { get; init; }
+		public RequestResultState State { get; private set; }
+		public string? Response { get; private set; }
+		public string? ErrorMessage { get; private set; }
+		public TimeSpan? Duration { get; private set; }
+
+		public void Complete(TimeSpan duration, string response)
+		{
+			State = RequestResultState.Completed;
+			Response = response;
+			Duration = duration;
+			OnStateChanged();
+		}
+		public void Complete(TimeSpan duration)
+		{
+			State = RequestResultState.Completed;
+			Duration = duration;
+			OnStateChanged();
+		}
+
+		public void Fail(TimeSpan duration, string errorMessage)
+		{
+			State = RequestResultState.Failed;
+			ErrorMessage = errorMessage;
+			Duration = duration;
+			OnStateChanged();
+		}
+
+		public event EventHandler? StateChanged;
+		private void OnStateChanged()
+		{
+			StateChanged?.Invoke(this, EventArgs.Empty);
+		}
 	}
 }

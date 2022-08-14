@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Infrastructure.MassTransit;
 
-public class MassTransitBusClient : TypedManagerMessageBusClient, IManagerMessageBusClient
+public class MassTransitBusClient : TypedRequester, IRequester
 {
     public MassTransitBusClient(ITypedMessageBusClient messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
         : base(messageBusManager, requestInfoTypeStorage, responseFormatter)

@@ -17,9 +17,9 @@ public class RequestItemViewModel
 		ParameterValues = new ObservableCollection<string>(Enumerable.Range(0, RequestInfo.Parameters.Count).Select(x => string.Empty).ToList());
 	}
 
-	public RequestResult? LastResult { get; set; }
+	public RequestResult LastResult { get; set; }
 	public RequestInfo RequestInfo { get; init; }
 	public ObservableCollection<string> ParameterValues { get; init; }
-	public bool IsLoading { get; set; }
+	public bool IsLoading => LastResult.State == RequestResultState.Started;
 	public bool IsSelected { get; set; }
 }

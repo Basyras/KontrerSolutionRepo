@@ -1,1 +1,1 @@
-﻿sideBar{width:300px;}requestFormPage{width:350px;display:block;}busManager{display:flex;align-items:stretch;flex-direction:row;position:absolute;top:0;bottom:0;right:0;left:0;}historyPage{flex:1;}
+﻿busManager{display:flex;align-items:stretch;flex-direction:row;position:absolute;top:0;bottom:0;right:0;left:0;}sideBar{flex-shrink:0;}requestFormPage{flex-shrink:0;display:block;width:300px;}historyPage{overflow:scroll;flex:70;padding:2rem 4rem;}requestDetail{overflow:hidden;flex:30;}

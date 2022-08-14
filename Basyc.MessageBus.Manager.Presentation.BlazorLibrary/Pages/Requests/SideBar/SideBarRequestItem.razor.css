@@ -1,4 +1,5 @@
-﻿requestItem {
+﻿/*$Error-Background: #FFFBFB;*/
+requestItem {
   display: flex;
   margin: 1px;
   padding: 0.35rem 1rem 0.35rem 2rem;
@@ -6,10 +7,10 @@
   flex: 1;
 }
 
-requestName {
-  margin-left: 0.35rem;
-}
-
 .selected--True {
   background-color: lightblue;
+}
+
+tag {
+  margin-left: 0.35rem;
 }

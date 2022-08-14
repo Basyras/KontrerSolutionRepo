@@ -13,23 +13,18 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests;
 public partial class BusManager
 {
 	[Inject]
-	public IBusManager busManager { get; private set; }
-
+	public IBusManagerApplication busManager { get; private set; }
 	[Inject]
 	public ITypedMessageBusClient MessageBusManager { get; private set; }
-
 	[Inject]
 	public IDialogService DialogService { get; private set; }
-
 	[Inject]
-	public IManagerMessageBusClient RequestClient { get; private set; }
-
+	public IRequester RequestClient { get; private set; }
 	[Inject]
 	public BusManagerJSInterop BusManagerJSInterop { get; private set; }
 
 	public List<DomainItemViewModel> DomainInfoViewModel { get; private set; } = new List<DomainItemViewModel>();
 
-	private RequestItemViewModel selectedRequestViewModel;
 	public RequestItemViewModel SelectedRequestViewModel
 	{
 		get => selectedRequestViewModel;
@@ -46,9 +41,12 @@ public partial class BusManager
 			}
 			selectedRequestViewModel.IsSelected = true;
 			resultHistory.TryAdd(value, new List<RequestResult>());
+			selectedResult = null;
 		}
 	}
 
+	private RequestItemViewModel selectedRequestViewModel;
+	private RequestResult selectedResult;
 	private readonly Dictionary<RequestItemViewModel, List<RequestResult>> resultHistory = new Dictionary<RequestItemViewModel, List<RequestResult>>();
 
 	protected override void OnInitialized()
@@ -88,28 +86,22 @@ public partial class BusManager
 
 	public async Task SendMessage(RequestItemViewModel requestItem)
 	{
-		try
+		var requestInfo = requestItem.RequestInfo;
+		List<Parameter> parameters = new List<Parameter>(requestInfo.Parameters.Count);
+		for (int i = 0; i < requestInfo.Parameters.Count; i++)
 		{
-			var requestInfo = requestItem.RequestInfo;
-			List<Parameter> parameters = new List<Parameter>(requestInfo.Parameters.Count);
-			for (int i = 0; i < requestInfo.Parameters.Count; i++)
-			{
-				var paramInfo = requestInfo.Parameters[i];
-				var paramStringValue = requestItem.ParameterValues[i];
-				var castedParamValue = ParseParamInputValue(paramStringValue, paramInfo);
-				parameters.Add(new Parameter(paramInfo, castedParamValue));
-			}
-			Request request = new Request(requestInfo, parameters);
-			var requestResult = await RequestClient.TrySendRequest(request);
-			requestItem.LastResult = requestResult;
-			resultHistory.TryAdd(requestItem, new List<RequestResult>());
-			var requestHistory = resultHistory[requestItem];
-			requestHistory.Add(requestResult);
+			var paramInfo = requestInfo.Parameters[i];
+			var paramStringValue = requestItem.ParameterValues[i];
+			var castedParamValue = ParseParamInputValue(paramStringValue, paramInfo);
+			parameters.Add(new Parameter(paramInfo, castedParamValue));
 		}
-		catch (Exception ex)
-		{
-			requestItem.LastResult = new RequestResult(null, true, ex.Message, default, default);
-		}
+		Request request = new Request(requestInfo, parameters);
+		var requestResult = RequestClient.StartRequest(request);
+		requestItem.LastResult = requestResult;
+		resultHistory.TryAdd(requestItem, new List<RequestResult>());
+		var requestHistory = resultHistory[requestItem];
+		requestHistory.Add(requestResult);
+
 	}
 
 	private static object ParseParamInputValue(string paramStringValue, ParameterInfo parameterInfo)
@@ -151,6 +143,7 @@ public partial class BusManager
 		}
 		catch
 		{
+			//Try change type, if fails, use json Deserialize
 		}
 
 		castedParam = JsonSerializer.Deserialize(paramStringValue, parameterInfo.Type);

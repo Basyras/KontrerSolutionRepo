@@ -1,24 +1,25 @@
-﻿<div>
+﻿@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.RequestTag
+<div>
     <requestItemComponent class="@borderClass">
         <MudExpansionPanel Class="@backgroundClass" Dense="true" DisableGutters="true" HideIcon="true">
             <TitleContent>
                 <requestHeading>
                     <headingSection>
-                        <RequestTag RequestType="@RequestTagTypeHelper.FromRequestType(RequestItemViewModel.RequestInfo.RequestType)" />
+                        <RequestTagView RequestType="@RequestTagTypeHelper.FromRequestType(RequestItemViewModel.RequestInfo.RequestType)" />
                         <requestName>@RequestItemViewModel.RequestInfo.RequestDisplayName </requestName>
                     </headingSection>
                     <MudDivider Vertical="true" FlexItem="true" />
                     <headingSection>
                         @if (RequestItemViewModel.RequestInfo.HasResponse)
                         {
-                            <RequestTag RequestType="RequestTagType.Response" />
+                            <RequestTagView RequestType="RequestTagType.Response" />
                             <requestName>@RequestItemViewModel.RequestInfo.ResponseDisplayName </requestName>
                         }
 
                         @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false)
                         {
-                            string latencyClass = $"latency--failed--{RequestItemViewModel.LastResult.HasError.ToString().ToLower()}";
-                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.LastResult.Duration.TotalMilliseconds) ms</latency>
+                            string latencyClass = $"latency--status--{RequestItemViewModel.LastResult.State.ToString()}";
+                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.LastResult.Duration.Value.TotalMilliseconds) ms</latency>
                         }
                         @if (RequestItemViewModel.IsLoading)
                         {
@@ -65,14 +66,16 @@
                         }
                         else
                         {
+                            var hasError = RequestItemViewModel.LastResult.State == Application.RequestResultState.Failed;
                             <inputContainer>
-                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.RequestInfo.HasResponse && RequestItemViewModel.LastResult.HasError is false)
+
+                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.RequestInfo.HasResponse && hasError is false)
                                 {
                                     //https://www.jqueryscript.net/other/Beautiful-JSON-Viewer-Editor.html
-                                    string hasErrorClass = RequestItemViewModel.LastResult.HasError ? "inputBorder--error" : "";
-                                    <textarea readonly disabled="@RequestItemViewModel.LastResult.HasError" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.LastResult.Response</textarea>
+                                    string hasErrorClass = hasError ? "inputBorder--error" : "";
+                                    <textarea readonly disabled="@hasError" class="responseText inputBorder @hasErrorClass">@RequestItemViewModel.LastResult.Response</textarea>
                                 }
-                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false && RequestItemViewModel.LastResult.HasError)
+                                @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false && hasError)
                                 {
                                     <errorMessage>@RequestItemViewModel.LastResult.ErrorMessage</errorMessage>
                                 }

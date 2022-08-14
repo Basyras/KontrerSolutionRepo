@@ -1,0 +1,85 @@
+﻿/*$Error-Background: #FFFBFB;*/
+latency {
+  display: inline-block;
+  flex: 0 0 3rem;
+  flex: 8;
+  text-align: right;
+}
+
+inputOutputBorderBase, outputBorder, inputBorder {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 100%;
+  border-radius: 4px;
+  flex: 40;
+  overflow: hidden;
+  word-wrap: anywhere;
+  word-break: break-all;
+  white-space: nowrap;
+}
+
+inputBorder {
+  border: 2.5px solid #2626260e;
+  padding: 0 0.5rem;
+}
+
+outputBorder {
+  background-color: #2626260e;
+}
+
+responseValue {
+  display: block;
+  padding: 0 0.5rem;
+}
+
+.latency--state--Completed {
+  color: #5EAB5E;
+}
+
+.latency--state--Failed {
+  color: #D66A6A;
+}
+
+.historyItem--state--Completed {
+  background-color: #EBF2ED;
+}
+
+.historyItem--state--Failed {
+  background-color: #F9EFF5;
+}
+
+historyItem {
+  height: 3rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  overflow: hidden;
+  color: #628E8E;
+  background-color: #EFF5F9;
+}
+
+id {
+  flex: 0 0 2.5rem;
+  overflow: hidden;
+  text-align: left;
+}
+
+spinner {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  float: right;
+}
+
+ghostLabel {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: #628E8E;
+  opacity: 0.75;
+  flex-shrink: 0;
+  overflow: hidden;
+}

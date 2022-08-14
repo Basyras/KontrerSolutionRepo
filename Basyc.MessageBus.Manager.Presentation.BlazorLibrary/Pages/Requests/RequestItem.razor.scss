@@ -206,11 +206,11 @@ latency {
     text-align: right;
 }
 
-.latency--failed--true {
+.latency--status--Failed {
     color: $Error-Foreground;
 }
 
-.latency--failed--false {
+.latency--status--Completed {
     color: $Success-Foreground;
 }
 

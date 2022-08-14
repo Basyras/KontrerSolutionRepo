@@ -1,9 +1,12 @@
-﻿<requestItem class="selected--@RequestViewModel.IsSelected">
-    <RequestTag RequestType="@RequestTagTypeHelper.FromRequestType(RequestViewModel.RequestInfo.RequestType)"/> 
+﻿@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.RequestTag
 
+<requestItem class="selected--@RequestViewModel.IsSelected">
     <requestName>
         @RequestViewModel.RequestInfo.RequestDisplayName
     </requestName>
+    <tag>
+        <RequestTagView RequestType="@RequestTagTypeHelper.FromRequestType(RequestViewModel.RequestInfo.RequestType)" TagStyle="TagStyle.Icon"/> 
+    </tag>
 </requestItem>
 
 @code {

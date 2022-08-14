@@ -1,0 +1,10 @@
+﻿.resultHistoryItemViewButton {
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+historyView {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+}

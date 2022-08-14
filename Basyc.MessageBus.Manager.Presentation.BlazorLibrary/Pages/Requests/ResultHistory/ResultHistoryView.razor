@@ -1,0 +1,38 @@
+﻿@using Basyc.MessageBus.Manager.Application
+
+<historyView>
+    @if (RequestResults is not null)
+    {
+        @foreach (var result in RequestResults.AsEnumerable().Reverse())
+        {
+            <button @onclick="() => SelectedRequestResults = result" class="resultHistoryItemViewButton">
+                <ResultHistoryItemView RequestResult="result" />
+            </button>
+        }
+    }
+    else
+    {
+        @:empty history
+    }
+</historyView>
+
+@code {
+    [Parameter] public List<RequestResult> RequestResults { get; set; }
+    private RequestResult selectedRequestResults;
+
+    [Parameter] 
+    public RequestResult SelectedRequestResults
+    {
+        get => selectedRequestResults;
+        set
+        {
+            if (value == selectedRequestResults) return;
+            selectedRequestResults = value;
+            SelectedRequestResultsChanged.InvokeAsync(value);
+        }
+    }
+
+    [Parameter]
+    public EventCallback<RequestResult> SelectedRequestResultsChanged { get; set; }
+
+}

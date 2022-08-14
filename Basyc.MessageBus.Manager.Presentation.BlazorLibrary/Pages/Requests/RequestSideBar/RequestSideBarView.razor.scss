@@ -1,12 +1,12 @@
 ﻿.paramTable {
     border-collapse: separate;
     width: 100%;
-    padding-top: 1rem;
+    /*padding-top: 1rem;*/
 }
 
 .paddingContainer {
-    padding-left: 2rem;
-    padding-right: 2rem;
+/*    padding-left: 2rem;
+    padding-right: 2rem;*/
 }
 
 paramLabel {    
@@ -70,6 +70,7 @@ reqeustSideBarView {
     width: 100%;
     flex: 1;
     height: 100%;
+    padding: 1.5rem 2rem;
     flex-direction: column;
 }
 
@@ -104,4 +105,13 @@ headingText {
 }
 paramInput{
     padding: 0.35rem;
+}
+
+ghostLabel {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: #979797;
+    opacity: 0.75;
+    /*padding: 0.80rem;*/
 }

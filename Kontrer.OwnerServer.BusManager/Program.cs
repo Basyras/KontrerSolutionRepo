@@ -28,7 +28,7 @@ var domains = new Assembly[]
 };
 
 builder.Services.AddBlazorMessageBus()
-    .AddBusClient<TypedManagerMessageBusClient>()
+    .AddBusClient<TypedRequester>()
     .AddInterfacedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
     .SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
 

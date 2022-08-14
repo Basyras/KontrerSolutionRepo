@@ -30,7 +30,7 @@ namespace Basyc.MessageBus.Client
 			return byteMessageBusClient.PublishAsync(TypedToSimpleConverter.ConvertTypeToSimple(typeof(TEvent)), cancellationToken);
 		}
 
-		public async Task<object> RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken = default)
+		public async Task<OneOf<object, ErrorMessage>> RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken = default)
 		{
 			var requestTypeString = TypedToSimpleConverter.ConvertTypeToSimple(requestType);
 			var responseTypeString = TypedToSimpleConverter.ConvertTypeToSimple(responseType);
@@ -39,7 +39,7 @@ namespace Basyc.MessageBus.Client
 			return objectToByteSerailizer.Deserialize(requestResponse.ResponseBytes, requestResponse.ResposneType);
 		}
 
-		public async Task<object> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default)
+		public async Task<OneOf<object, ErrorMessage>> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default)
 		{
 			var requestTypeString = TypedToSimpleConverter.ConvertTypeToSimple(requestType);
 			var responseTypeString = TypedToSimpleConverter.ConvertTypeToSimple(responseType);
@@ -84,15 +84,16 @@ namespace Basyc.MessageBus.Client
 
 		}
 
-		async Task<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
+		async Task<OneOf<TResponse, ErrorMessage>> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
 		{
-			return (TResponse)(await RequestAsync(typeof(TRequest), typeof(TResponse), cancellationToken));
+			return (await RequestAsync(typeof(TRequest), typeof(TResponse), cancellationToken)).MapT0(x => (TResponse)x);
 
 		}
 
 		async Task<OneOf<TResponse, ErrorMessage>> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest requestData, CancellationToken cancellationToken)
 		{
-			return (TResponse)(await RequestAsync(typeof(TRequest), requestData, typeof(TResponse), cancellationToken));
+			var response = await RequestAsync(typeof(TRequest), requestData, typeof(TResponse), cancellationToken);
+			return response.MapT0(x => (TResponse)x);
 		}
 
 		Task ITypedMessageBusClient.SendAsync<TCommand>(CancellationToken cancellationToken)
