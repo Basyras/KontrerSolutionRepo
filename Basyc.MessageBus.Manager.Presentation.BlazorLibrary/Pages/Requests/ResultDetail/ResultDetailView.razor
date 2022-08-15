@@ -27,6 +27,9 @@
                 <id>
                     #@RequestResult.Id
                 </id>
+                <status>
+                    <LatencyView RequestResult="RequestResult" />
+                </status>
             </heading>
 
             <br />
@@ -54,6 +57,10 @@
                 Output
             </label>
             <outputs>
+                @if (RequestResult.State == RequestResultState.Started)
+                {
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" />
+                }
                 @if (RequestResult.State == RequestResultState.Completed)
                 {
                     @if (RequestResult.Request.RequestInfo.HasResponse)
@@ -62,9 +69,12 @@
                     }
                     else
                     {
-                        <ghostLabel>
+                        <MudContainer Hori>
+
+                        </MudContainer>
+                        <outputGhostLabel>
                             Result does not have an output
-                        </ghostLabel>
+                        </outputGhostLabel>
                     }
                 }
                 @if (RequestResult.State == RequestResultState.Failed)
@@ -79,6 +89,27 @@
 </requestDetailView>
 
 @code {
-    [Parameter] public RequestResult RequestResult { get; set; }
+    //[Parameter] public RequestResult RequestResult { get; set; }
 
+    private RequestResult requestResult;
+
+    [Parameter]
+    public RequestResult RequestResult
+    {
+        get => requestResult;
+        set
+        {
+            if (requestResult is not null)
+            {
+                requestResult.StateChanged -= ResultStateChanged;
+            }
+            requestResult = value;
+            requestResult.StateChanged += ResultStateChanged;
+        }
+    }
+
+    private void ResultStateChanged(object sender, EventArgs eventArgs)
+    {
+        this.StateHasChanged();
+    }
 }

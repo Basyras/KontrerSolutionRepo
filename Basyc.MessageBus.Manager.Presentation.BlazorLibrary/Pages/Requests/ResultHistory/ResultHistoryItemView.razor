@@ -3,12 +3,13 @@
 
 @{
     string historyItemClass = $"historyItem--state--{RequestResult.State.ToString()}";
+    string historyItemIsSelectedClass = $"historyItem--isSelected--{IsSelected.ToString()}";
 }
 
-<historyItem class="@historyItemClass">
+<historyItem class="@historyItemClass @historyItemIsSelectedClass">
     @if (RequestResult is not null)
     {
-        string latencyClass = $"latency--state--{RequestResult.State.ToString()}";
+        @*string latencyClass = $"latency--state--{RequestResult.State.ToString()}";*@
         <id>
             #@RequestResult.Id
         </id>
@@ -18,7 +19,7 @@
         <outputBorder>
             @if (RequestResult.State == RequestResultState.Started)
             {
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="100%" />
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%"  />
             }
             else
             {
@@ -43,26 +44,9 @@
                 </responseValue>
             }
         </outputBorder>
-        <latency class="@latencyClass">
-            @if (RequestResult.State == RequestResultState.Started)
-            {
-                <spinner>
-                    <MudProgressCircular Color="Color.Default" Indeterminate="true" Size="Size.Small" />
-                </spinner>
-            }
-            else
-            {
-                @if (RequestResult.Duration.HasValue)
-                {
-                    @Math.Ceiling(RequestResult.Duration.Value.TotalMilliseconds)
-                }
-                else
-                {
-                    @:--
-                }
-                @:ms
-            }
-        </latency>
+        <status>
+            <LatencyView RequestResult="RequestResult" />
+        </status>
     }
     else
     {
@@ -88,6 +72,15 @@
             requestResult.StateChanged += ResultStateChanged;
         }
     }
+
+    [Parameter]
+    public bool IsSelected
+    {
+        get;
+        set;
+    }
+
+
 
     private void ResultStateChanged(object sender, EventArgs eventArgs)
     {

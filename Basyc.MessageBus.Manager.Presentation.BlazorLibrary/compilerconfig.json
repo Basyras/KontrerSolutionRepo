@@ -30,5 +30,9 @@
   {
     "outputFile": "Pages/Requests/ResultHistory/ResultHistoryItemView.razor.css",
     "inputFile": "Pages/Requests/ResultHistory/ResultHistoryItemView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/LatencyView.razor.css",
+    "inputFile": "Pages/Requests/LatencyView.razor.scss"
   }
 ]

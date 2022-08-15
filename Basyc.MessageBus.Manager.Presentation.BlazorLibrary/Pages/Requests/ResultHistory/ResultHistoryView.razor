@@ -6,7 +6,7 @@
         @foreach (var result in RequestResults.AsEnumerable().Reverse())
         {
             <button @onclick="() => SelectedRequestResults = result" class="resultHistoryItemViewButton">
-                <ResultHistoryItemView RequestResult="result" />
+                <ResultHistoryItemView RequestResult="result" IsSelected="result == SelectedRequestResults" />
             </button>
         }
     }

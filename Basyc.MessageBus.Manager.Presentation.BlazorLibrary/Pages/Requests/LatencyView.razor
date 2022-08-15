@@ -1,0 +1,31 @@
+﻿@using Basyc.MessageBus.Manager.Application
+
+@{
+    string latencyClass = $"latency--state--{RequestResult.State.ToString()}";
+}
+
+<latency class="@latencyClass">
+    @if (RequestResult.State == RequestResultState.Started)
+    {
+        <spinner>
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" Size="Size.Small" />
+        </spinner>
+    }
+    else
+    {
+        @if (RequestResult.Duration.HasValue)
+        {
+            @Math.Ceiling(RequestResult.Duration.Value.TotalMilliseconds)
+        }
+        else
+        {
+            @:--
+        }
+        @:ms
+    }
+</latency>
+
+@code {
+    [Parameter]
+    public RequestResult RequestResult { get; set; }
+}

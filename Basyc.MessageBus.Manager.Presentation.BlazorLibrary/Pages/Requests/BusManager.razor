@@ -28,7 +28,11 @@
             @:Select request
         }
     </historyPage>
-    <requestDetail>
-        <ResultDetailView RequestResult="selectedResult" />
-    </requestDetail>
+    @if (selectedResult is not null)
+    {
+        <requestDetail>
+            <ResultDetailView RequestResult="selectedResult" />
+        </requestDetail>
+    }
+
 </busManager>
