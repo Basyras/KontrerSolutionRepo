@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.HttpProxy.Server.Asp
 {
-	public class ProxyHttpReqeustHandler
+	public class ProxyHttpRequestHandler
 	{
 		private readonly IByteMessageBusClient messageBus;
 		private readonly IObjectToByteSerailizer serializer;
 		private static readonly string proxyRequestSimpleDatatype = TypedToSimpleConverter.ConvertTypeToSimple<ProxyRequest>();
 		private static readonly string proxyResponseSimpleDataType = TypedToSimpleConverter.ConvertTypeToSimple<ProxyResponse>();
 
-		public ProxyHttpReqeustHandler(IByteMessageBusClient messageBus, IObjectToByteSerailizer serializer)
+		public ProxyHttpRequestHandler(IByteMessageBusClient messageBus, IObjectToByteSerailizer serializer)
 		{
 			this.messageBus = messageBus;
 			this.serializer = serializer;

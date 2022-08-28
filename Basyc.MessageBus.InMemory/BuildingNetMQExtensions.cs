@@ -12,30 +12,17 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class BuildingNetMQExtensions
 {
-	public static BusClientSelectClientProviderStage AddNetMQClient(this BusClientSelectClientProviderStage builder,
-	   int? brokerServerPort) =>
-		AddNetMQClient(builder, brokerServerPort);
+	private const int defaultBrokerServerPort = 5367;
+	private const string defaultBrokerServerAddress = "localhost";
 
-	public static BusClientSelectClientProviderStage UseNetMQProvider(this BusClientSelectClientProviderStage builder,
-		string? clientId = null, int brokerServerPort = 5367, string brokerServerAddress = "localhost")
+	public static BusClientSetupProviderStage SelectNetMQProvider(this BusClientSetupProviderStage builder,
+	   int? brokerServerPort) =>
+		SelectNetMQProvider(builder, null, defaultBrokerServerPort, defaultBrokerServerAddress);
+
+	public static BusClientSetupProviderStage SelectNetMQProvider(this BusClientSetupProviderStage builder,
+		string? clientId = null, int brokerServerPort = defaultBrokerServerPort, string brokerServerAddress = defaultBrokerServerAddress)
 	{
 		var services = builder.services;
-		//switch (builder.MessageType)
-		//{
-		//	case MessageTypeOptions.Typed:
-		//		services.AddSingleton<IByteMessageBusClient, NetMQObjectMessageBusClient>();
-		//		services.AddSingleton<ITypedMessageBusClient, TypedFromByteMessageBusClient>();
-		//		//services.AddSingleton<IObjectMessageBusClient, ObjectFromByteMessageBusClient>();
-		//		break;
-		//	case MessageTypeOptions.Object:
-		//		throw new NotSupportedException();
-		//	case MessageTypeOptions.Byte:
-		//		services.AddSingleton<IByteMessageBusClient, NetMQObjectMessageBusClient>();
-		//		services.AddSingleton<ITypedMessageBusClient, TypedFromByteMessageBusClient>();
-		//		//services.AddSingleton<IObjectMessageBusClient, ObjectFromByteMessageBusClient>();
-		//		break;
-		//}
-
 		services.AddSingleton<IByteMessageBusClient, NetMQByteMessageBusClient>();
 		services.AddSingleton<ITypedMessageBusClient, TypedFromByteMessageBusClient>();
 		services.AddSingleton<IObjectMessageBusClient, ObjectFromByteMessageBusClient>();

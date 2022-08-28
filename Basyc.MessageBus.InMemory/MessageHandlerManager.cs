@@ -15,7 +15,6 @@ namespace Basyc.MessageBus.Client.NetMQ
 		{
 			this.serviceProvider = serviceProvider;
 
-
 			foreach (var handler in options.Value.Handlers)
 			{
 				handlerStorage.Add(TypedToSimpleConverter.ConvertTypeToSimple(handler.MessageType), handler);
@@ -28,9 +27,8 @@ namespace Basyc.MessageBus.Client.NetMQ
 			{
 				if (handlerInfo.HasResponse)
 				{
-					Type consumerType = typeof(IMessageHandler<,>).MakeGenericType(handlerInfo.MessageType, handlerInfo.ResponseType!);
-
-					object handlerInstace = serviceProvider.GetRequiredService(consumerType)!;
+					Type handlerType = typeof(IMessageHandler<,>).MakeGenericType(handlerInfo.MessageType, handlerInfo.ResponseType!);
+					object handlerInstace = serviceProvider.GetRequiredService(handlerType)!;
 					Task handlerResult = (Task)handlerInfo.HandleMethodInfo.Invoke(handlerInstace, new object[] { messageData!, cancellationToken })!;
 					await handlerResult;
 					try
@@ -42,12 +40,11 @@ namespace Basyc.MessageBus.Client.NetMQ
 					{
 						return ex;
 					}
-
 				}
 				else
 				{
-					Type consumerType = typeof(IMessageHandler<>).MakeGenericType(handlerInfo.MessageType);
-					object handlerInstace = serviceProvider.GetRequiredService(consumerType)!;
+					Type handlerType = typeof(IMessageHandler<>).MakeGenericType(handlerInfo.MessageType);
+					object handlerInstace = serviceProvider.GetRequiredService(handlerType)!;
 					Task handlerResult = (Task)handlerInfo.HandleMethodInfo.Invoke(handlerInstace, new object[] { messageData!, cancellationToken })!;
 					try
 					{
@@ -62,7 +59,6 @@ namespace Basyc.MessageBus.Client.NetMQ
 			}
 
 			throw new InvalidOperationException("Handler for this message not found");
-
 		}
 
 		public string[] GetConsumableMessageTypes()

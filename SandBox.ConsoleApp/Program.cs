@@ -4,21 +4,6 @@ using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-//var protobufSerializer = new ProtobufByteSerializer();
-
-//var childResponse = new  ChildResponse("Jan2");
-//var seriResultC = protobufSerializer.Serialize(childResponse, childResponse.GetType());
-//var deseriResultC = protobufSerializer.Deserialize(seriResultC.AsT0, childResponse.GetType());
-
-//var testResponse = new ParentResponse(new ChildResponse("Jan"));
-//var seriResult = protobufSerializer.Serialize(testResponse, testResponse.GetType());
-//var deseriResult = protobufSerializer.Deserialize(seriResult.AsT0, testResponse.GetType());
-
-//var testResponse2 = new ParentResponse2(new ChildResponse("Jan2"));
-//var seriResult2 = protobufSerializer.Serialize(testResponse2, testResponse2.GetType());
-//var deseriResult2 = protobufSerializer.Deserialize(seriResult2.AsT0, testResponse2.GetType());
-
-
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
 {
@@ -30,9 +15,9 @@ clientServices.AddLogging(x =>
 
 clientServices
 	.AddBasycMessageBusClient()
-	.WithTypedMessages()
+	.NoProxy()
 	.RegisterBasycTypedHandlers<Program>()
-	.UseNetMQProvider("Console1");
+	.SelectNetMQProvider("Console1");
 
 var services = clientServices.BuildServiceProvider();
 using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();

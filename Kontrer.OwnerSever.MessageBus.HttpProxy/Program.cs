@@ -1,24 +1,12 @@
-using System.Reflection;
-
 var builder = WebApplication.CreateBuilder(args);
 
-
-//builder.Services.AddRazorPages();
-
-var domains = new Assembly[]
-{
-	//typeof(CustomerServiceDomainAssemblyMarker).Assembly,
-    //typeof(OrderServiceDomainAssemblyMarker).Assembly,
-    //typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
-};
-
 builder.Services.AddBasycMessageBusClient()
-	.WithByteMessages()
+	.NoProxy()
 	.NoHandlers()
 	//.AddMassTransitClient();
-	.UseNetMQProvider("HttpProxy");
+	.SelectNetMQProvider("HttpProxy");
 
-builder.Services.AddMessageBusProxyServer();
+builder.Services.AddMessageBusProxy();
 
 builder.Services.AddCors(policy =>
 {
@@ -41,16 +29,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-//app.UseStaticFiles();
-//app.UseRouting();
-//app.UseAuthorization();
-//app.MapRazorPages();
-
-app.MapBusManagerProxy();
+app.MapMessageBusProxy();
 app.Services.StartMessageBusClientAsync();
-
 app.UseCors("*");
-
-
-
 app.Run();

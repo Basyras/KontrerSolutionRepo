@@ -18,7 +18,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
 	public class ProxyHttpReqeustHandlerTests
 	{
 		private readonly Mock<IByteMessageBusClient> messageBusMock;
-		private readonly ProxyHttpReqeustHandler handler;
+		private readonly ProxyHttpRequestHandler handler;
 		private readonly Mock<HttpContext> httpContextMock;
 		private readonly IObjectToByteSerailizer serializer;
 
@@ -26,7 +26,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Tests
 		{
 			messageBusMock = new Mock<IByteMessageBusClient>();
 			var serializer = new ObjectFromTypedByteSerializer(new JsonByteSerializer());
-			handler = new ProxyHttpReqeustHandler(messageBusMock.Object, serializer);
+			handler = new ProxyHttpRequestHandler(messageBusMock.Object, serializer);
 			httpContextMock = new Mock<HttpContext>();
 		}
 

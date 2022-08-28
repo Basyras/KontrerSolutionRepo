@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.HttpProxy.Client
 {
-    public class MessageBusHttpProxyClientOptions
+    public class ProxyObjectMessageBusClientOptions
     {
-        public MessageBusHttpProxyClientOptions()
+        public ProxyObjectMessageBusClientOptions()
         {
         }
 

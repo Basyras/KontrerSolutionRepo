@@ -6,13 +6,12 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionMessageBusServerExtensions
 	{
-		public static IServiceCollection AddMessageBusProxyServer(this IServiceCollection services)
+		public static IServiceCollection AddMessageBusProxy(this IServiceCollection services)
 		{
 			//services.AddSingleton<IRequestSerializer, JsonRequestSerializer>();
 			services.AddSingleton<ITypedByteSerializer, ProtobufByteSerializer>();
 			services.AddSingleton<IObjectToByteSerailizer, ObjectFromTypedByteSerializer>();
-
-			services.AddSingleton<ProxyHttpReqeustHandler>();
+			services.AddSingleton<ProxyHttpRequestHandler>();
 			return services;
 		}
 	}

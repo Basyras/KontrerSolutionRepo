@@ -8,7 +8,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
     {
         public static readonly RequestDelegate ProxyHandler = async (HttpContext context) =>
         {
-            var httpHandler = context.RequestServices.GetRequiredService<ProxyHttpReqeustHandler>();
+            var httpHandler = context.RequestServices.GetRequiredService<ProxyHttpRequestHandler>();
             try
             {
                 await httpHandler.Handle(context);

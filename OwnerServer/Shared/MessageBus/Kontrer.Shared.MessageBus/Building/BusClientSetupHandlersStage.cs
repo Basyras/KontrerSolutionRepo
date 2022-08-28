@@ -7,26 +7,23 @@ using System.Reflection;
 
 namespace Basyc.MessageBus.Client.Building
 {
-	public class BusClientSetupTypedHandlersStage : BuilderStageBase
+	public class BusClientSetupHandlersStage : BuilderStageBase
 	{
-		public BusClientSetupTypedHandlersStage(IServiceCollection services, MessageTypeOptions messageTypeOptions) : base(services)
+		public BusClientSetupHandlersStage(IServiceCollection services) : base(services)
 		{
-			MessageTypeOptions = messageTypeOptions;
 		}
 
-		public MessageTypeOptions MessageTypeOptions { get; }
-
-		public BusClientSelectClientProviderStage NoHandlers()
+		public BusClientSetupProviderStage NoHandlers()
 		{
-			return new BusClientSelectClientProviderStage(services, MessageTypeOptions);
+			return new BusClientSetupProviderStage(services);
 		}
 
-		public BusClientSelectClientProviderStage RegisterBasycTypedHandlers<THandlerAssemblyMarker>()
+		public BusClientSetupProviderStage RegisterBasycTypedHandlers<THandlerAssemblyMarker>()
 		{
 			return RegisterBasycTypedHandlers(typeof(THandlerAssemblyMarker).Assembly);
 		}
 
-		public BusClientSelectClientProviderStage RegisterBasycTypedHandlers(params Assembly[] assembliesToScan)
+		public BusClientSetupProviderStage RegisterBasycTypedHandlers(params Assembly[] assembliesToScan)
 		{
 			services.Scan(scan =>
 			scan.FromAssemblies(assembliesToScan)
@@ -44,7 +41,7 @@ namespace Basyc.MessageBus.Client.Building
 			})
 			.WithScopedLifetime());
 
-			return new BusClientSelectClientProviderStage(services, MessageTypeOptions);
+			return new BusClientSetupProviderStage(services);
 		}
 
 

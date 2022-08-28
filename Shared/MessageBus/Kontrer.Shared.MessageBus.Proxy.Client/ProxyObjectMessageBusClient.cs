@@ -13,16 +13,17 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.HttpProxy.Client
 {
-	public class ProxyClientSimpleMessageBusClient : IObjectMessageBusClient
+	public class ProxyObjectMessageBusClient : IObjectMessageBusClient
 	{
-		private readonly HttpClient httpClient;
-		private readonly IOptions<MessageBusHttpProxyClientOptions> options;
-		private readonly IObjectToByteSerailizer objectToByteSerializer;
-		private readonly string wrapperMessageType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(ProxyRequest));
 		private static readonly string proxyResponseSimpleDataType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(ProxyResponse));
 
+		private readonly HttpClient httpClient;
+		private readonly IOptions<ProxyObjectMessageBusClientOptions> options;
+		private readonly IObjectToByteSerailizer objectToByteSerializer;
+		private readonly string wrapperMessageType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(ProxyRequest));
 
-		public ProxyClientSimpleMessageBusClient(IOptions<MessageBusHttpProxyClientOptions> options,
+
+		public ProxyObjectMessageBusClient(IOptions<ProxyObjectMessageBusClientOptions> options,
 			IObjectToByteSerailizer byteSerializer)
 		{
 			this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
@@ -101,7 +102,6 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
 		async Task<OneOf<object, ErrorMessage>> IObjectMessageBusClient.RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
 		{
-			//return (OneOf<object, ErrorMessage>)await HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
 			var result = await HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
 			return result;
 		}

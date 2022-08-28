@@ -13,7 +13,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Tests
 {
     public class HttpProxyClientMessageBusManagerTests
     {
-        private readonly ProxyClientSimpleMessageBusClient manager;
+        private readonly ProxyObjectMessageBusClient manager;
         private readonly Mock<HttpMessageHandler> httpHandlerMock;
 
         public HttpProxyClientMessageBusManagerTests()
@@ -21,7 +21,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Tests
             httpHandlerMock = new Mock<HttpMessageHandler>();
             var client = httpHandlerMock.CreateClient();
             var serilizer = new JsonRequestSerializer();
-            var options = Options.Create(new MessageBusHttpProxyClientOptions() { ProxyHostUri = new Uri("https://localhost:6969/") });
+            var options = Options.Create(new ProxyObjectMessageBusClientOptions() { ProxyHostUri = new Uri("https://localhost:6969/") });
             manager = new HttpProxyClientMessageBusManager(options, client, serilizer);
         }
 

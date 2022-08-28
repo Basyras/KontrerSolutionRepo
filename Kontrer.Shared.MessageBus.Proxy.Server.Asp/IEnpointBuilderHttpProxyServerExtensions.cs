@@ -22,7 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             endpoints.MapPost("", async (HttpContext context) =>
             {
-                var httpHandler = context.RequestServices.GetRequiredService<ProxyHttpReqeustHandler>();
+                var httpHandler = context.RequestServices.GetRequiredService<ProxyHttpRequestHandler>();
                 try
                 {
                     await httpHandler.Handle(context);
