@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Basyc.MessageBus.Client.Diagnostics;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -9,8 +10,11 @@ namespace Microsoft.Extensions.DependencyInjection
 		{
 			services.AddLogging(loggingBuilder =>
 			{
-				loggingBuilder.Services.AddSingleton<IBusHandlerTemporaryLogStorage>();
-				loggingBuilder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, BusHandlerLoggerProvider>());
+				loggingBuilder.Services.AddSingleton<ITemporaryLogStorage>();
+				loggingBuilder.Services.RemoveAll(typeof(ILogger<>));
+				services.Add(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(BusHandlerLoggerT<>)));
+
+				//loggingBuilder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, BusHandlerLoggerProvider>());
 			});
 		}
 

@@ -1,17 +1,19 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace Microsoft.Extensions.DependencyInjection
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
-	public class BusHandlerLoggerProvider : ILoggerProvider
-	{
-		public ILogger CreateLogger(string categoryName)
-		{
-			throw new System.NotImplementedException();
-		}
+	//public class BusHandlerLoggerProvider : ILoggerProvider
+	//{
+	//	public BusHandlerLoggerProvider()
+	//	{
 
-		public void Dispose()
-		{
-			throw new System.NotImplementedException();
-		}
-	}
+	//	}
+
+	//	public ILogger CreateLogger(string categoryName)
+	//	{
+	//		return new BusHandlerLogger();
+	//	}
+
+	//	public void Dispose()
+	//	{
+	//	}
+	//}
 }

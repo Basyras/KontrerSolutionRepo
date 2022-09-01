@@ -2,21 +2,8 @@
 {
 	public class BusHandlerLoggingManager
 	{
-		private readonly BusHandlerLogger busHandlerLogger;
-
-		public BusHandlerLoggingManager(BusHandlerLogger busHandlerLogger)
+		public BusHandlerLoggingManager()
 		{
-			this.busHandlerLogger = busHandlerLogger;
-		}
-
-		public void StartSession()
-		{
-
-		}
-
-		public void EndSession()
-		{
-
 		}
 	}
 }
