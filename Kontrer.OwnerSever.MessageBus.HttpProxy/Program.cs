@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBasycMessageBusClient()
+builder.Services.AddBasycBusClient()
 	.NoProxy()
 	.NoHandlers()
 	//.AddMassTransitClient();
@@ -27,6 +27,11 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 
 }
+
+app.MapGet("/", async (h) =>
+{
+	await h.Response.WriteAsync("http proxy");
+});
 
 app.UseHttpsRedirection();
 app.MapMessageBusProxy();

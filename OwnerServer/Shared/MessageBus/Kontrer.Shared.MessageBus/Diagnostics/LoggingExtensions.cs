@@ -6,11 +6,11 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class LoggingExtensions
 	{
-		public static void AddDiagnostics(this IServiceCollection services)
+		public static void AddBasycBusDiagnostics(this IServiceCollection services)
 		{
 			services.AddLogging(loggingBuilder =>
 			{
-				loggingBuilder.Services.AddSingleton<ITemporaryLogStorage>();
+				loggingBuilder.Services.AddSingleton<ITemporaryLogStorage, InMemoryTemporaryLogStorage>();
 				loggingBuilder.Services.RemoveAll(typeof(ILogger<>));
 				services.Add(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(BusHandlerLoggerT<>)));
 

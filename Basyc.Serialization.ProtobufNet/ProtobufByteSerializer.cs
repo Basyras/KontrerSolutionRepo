@@ -14,7 +14,18 @@ namespace Basyc.Serialization.ProtobufNet
 			if (knownTypes.TryGetValue(typeToPrepare, out var metadata))
 				return metadata;
 
-			if (RuntimeTypeModel.Default.CanSerialize(typeToPrepare) is false)
+
+			bool canSeri = false;
+			try
+			{
+				canSeri = RuntimeTypeModel.Default.CanSerialize(typeToPrepare);
+			}
+			catch (InvalidOperationException)
+			{
+				//workaround when record type with nested type fails when checking it can serialize ...
+			}
+
+			if (canSeri is false)
 			{
 				foreach (var property in typeToPrepare.GetProperties())
 				{

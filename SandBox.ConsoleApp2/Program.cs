@@ -14,7 +14,7 @@ clientServices.AddLogging(x =>
 });
 
 clientServices
-	.AddBasycMessageBusClient()
+	.AddBasycBusClient()
 	.NoProxy()
 	.RegisterBasycTypedHandlers<Program>()
 	.SelectNetMQProvider("Console2");

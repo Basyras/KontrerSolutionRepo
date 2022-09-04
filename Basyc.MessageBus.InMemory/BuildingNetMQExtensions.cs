@@ -5,6 +5,7 @@ using Basyc.MessageBus.Client.NetMQ.Sessions;
 using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.Shared;
+using Basyc.Serializaton.Abstraction;
 using Basyc.Shared.Helpers;
 using System.Reflection;
 
@@ -23,10 +24,7 @@ public static class BuildingNetMQExtensions
 		string? clientId = null, int brokerServerPort = defaultBrokerServerPort, string brokerServerAddress = defaultBrokerServerAddress)
 	{
 		var services = builder.services;
-		services.AddSingleton<IByteMessageBusClient, NetMQByteMessageBusClient>();
-		services.AddSingleton<ITypedMessageBusClient, TypedFromByteMessageBusClient>();
-		services.AddSingleton<IObjectMessageBusClient, ObjectFromByteMessageBusClient>();
-
+		AddClients(services);
 
 		services.AddSingleton<ISessionManager<NetMQSessionResult>, InMemorySessionManager<NetMQSessionResult>>();
 		services.Configure<NetMQMessageBusClientOptions>(x =>
@@ -42,11 +40,16 @@ public static class BuildingNetMQExtensions
 		services.AddSingleton<INetMQMessageWrapper, NetMQMessageWrapper>();
 		var areMessagesByte = services.FirstOrDefault(x => x.ServiceType == typeof(IByteMessageBusClient)) == null;
 
+		AddMessageHandlerManager(services);
+		return builder;
+	}
 
+	private static void AddMessageHandlerManager(IServiceCollection services)
+	{
 		services.AddSingleton<IMessageHandlerManager, MessageHandlerManager>();
 		services.Configure<MessageHandlerManagerOptions>(x =>
 		{
-			var messageHandlerTypes = builder.services
+			var messageHandlerTypes = services
 				.Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, typeof(IMessageHandler<>)));
 
 			foreach (var messageHandlerService in messageHandlerTypes)
@@ -54,10 +57,10 @@ public static class BuildingNetMQExtensions
 				Type handlerType = messageHandlerService.ImplementationType!;
 				Type messageType = GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<>))[0];
 				MethodInfo handleMethodInfo = typeof(IMessageHandler<>).MakeGenericType(messageType).GetMethod(nameof(IMessageHandler<IMessage>.Handle))!;
-				x.Handlers.Add(new MessageHandlerInfo(handlerType, messageType, handleMethodInfo));
+				x.HandlerInfos.Add(new NetMQMessageHandlerInfo(TypedToSimpleConverter.ConvertTypeToSimple(messageType), handlerType, messageType, handleMethodInfo));
 			}
 
-			var messagesWithResponse = builder.services
+			var messagesWithResponse = services
 				.Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, typeof(IMessageHandler<,>)));
 
 			foreach (var messageHandlerServiceWithResponse in messagesWithResponse)
@@ -69,11 +72,15 @@ public static class BuildingNetMQExtensions
 				MethodInfo handleWithResponseMethodInfo = typeof(IMessageHandler<,>)
 				.MakeGenericType(messageType, responseType)
 				.GetMethod(nameof(IMessageHandler<IMessage<object>, object>.Handle))!;
-				x.Handlers.Add(new MessageHandlerInfo(handlerType, messageType, responseType, handleWithResponseMethodInfo));
+				x.HandlerInfos.Add(new NetMQMessageHandlerInfo(TypedToSimpleConverter.ConvertTypeToSimple(messageType), handlerType, messageType, responseType, handleWithResponseMethodInfo));
 			}
 		});
-		return builder;
 	}
 
-
+	private static void AddClients(IServiceCollection services)
+	{
+		services.AddSingleton<IByteMessageBusClient, NetMQByteMessageBusClient>();
+		services.AddSingleton<ITypedMessageBusClient, TypedFromByteMessageBusClient>();
+		services.AddSingleton<IObjectMessageBusClient, ObjectFromByteMessageBusClient>();
+	}
 }

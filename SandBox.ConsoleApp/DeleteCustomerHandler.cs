@@ -12,12 +12,11 @@ namespace SandBox.ConsoleApp
 		{
 			this.logger = logger;
 		}
-		public async Task Handle(DeleteCustomerCommand message, CancellationToken cancellationToken = default)
+		public Task Handle(DeleteCustomerCommand message, CancellationToken cancellationToken = default)
 		{
-			await Task.Delay(100000);
 			logger.LogInformation($"Handeling message {message.GetType().FullName}");
 			logger.LogInformation($"Handeled message {message.GetType().FullName}");
-			return;
+			return Task.CompletedTask;
 		}
 	}
 }

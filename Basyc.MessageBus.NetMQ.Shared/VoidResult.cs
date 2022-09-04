@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Basyc.MessageBus.NetMQ.Shared
+﻿namespace Basyc.MessageBus.NetMQ.Shared
 {
-    public record VoidResult();
+	/// <summary>
+	/// TODO: This could be potentially struct?
+	/// </summary>
+	public record VoidResult();
 }

@@ -20,7 +20,7 @@ namespace SandBox.BlazorWasm
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddBasycMessageBusClient()
+            builder.Services.AddBasycBusClient()
                 .SelectHttpProxy()
                 .SetProxyServerUri(new Uri("https://localhost:44371/"));
 
