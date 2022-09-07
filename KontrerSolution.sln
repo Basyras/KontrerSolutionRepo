@@ -248,6 +248,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Http", "Http", "{028D6D0E-B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessageBus", "MessageBus", "{96550694-5665-491A-82EF-4AAF9C89364C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageLogReceiver.AspApi", "MessageLogReceiver.AspApi\MessageLogReceiver.AspApi.csproj", "{6EE9528C-7569-42AD-BD76-957DFD52FD3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -586,6 +588,10 @@ Global
 		{786E5B92-A672-4269-8239-BF6E5CCDD8C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{786E5B92-A672-4269-8239-BF6E5CCDD8C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{786E5B92-A672-4269-8239-BF6E5CCDD8C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EE9528C-7569-42AD-BD76-957DFD52FD3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EE9528C-7569-42AD-BD76-957DFD52FD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EE9528C-7569-42AD-BD76-957DFD52FD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EE9528C-7569-42AD-BD76-957DFD52FD3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -708,6 +714,7 @@ Global
 		{786E5B92-A672-4269-8239-BF6E5CCDD8C9} = {F3C29492-CD5D-46BA-85F9-DF2AA4D20352}
 		{028D6D0E-BD98-439F-8867-7E1AB7612304} = {6594F570-14ED-4420-9942-00D4669ADD25}
 		{96550694-5665-491A-82EF-4AAF9C89364C} = {4F31B45E-F786-4BC6-9F17-B2ED65239D24}
+		{6EE9528C-7569-42AD-BD76-957DFD52FD3A} = {96550694-5665-491A-82EF-4AAF9C89364C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

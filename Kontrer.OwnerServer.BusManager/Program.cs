@@ -24,14 +24,16 @@ var domains = new Assembly[]
 	typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
 };
 
-builder.Services.AddBlazorMessageBus()
-	.AddBusClient<TypedRequester>()
-	.AddInterfacedCQRSProvider(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
-	.SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
-
 builder.Services.AddBasycBusClient()
 	.SelectHttpProxy()
 	.SetProxyServerUri(new Uri("https://localhost:44310/"));
+
+builder.Services.AddBlazorMessageBus()
+	.SelectRequester<TypedRequester>()
+	.RegisterCQRSMessages(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
+	.SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
+
+
 
 
 

@@ -3,5 +3,5 @@ using System;
 
 namespace Basyc.MessageBus.Client.Diagnostics
 {
-	public record struct LogStorageKey(Type HandlerType, EventId? EventId);
+	public record struct LogStorageKey(string HandlerDisplayName, EventId? EventId);
 }

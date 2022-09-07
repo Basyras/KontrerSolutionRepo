@@ -42,33 +42,5 @@ namespace Basyc.MessageBus.Client.Building
 
 			return new BusClientSetupProviderStage(services);
 		}
-
-		//public BusClientSetupProviderStage RegisterBasycTypedHandlers(params Assembly[] assembliesToScan)
-		//{
-
-
-		//	foreach (var assembly in assembliesToScan)
-		//	{
-		//		Type[] typesInAssembly = assembly.GetTypes();
-		//		var handlerTypesInAssembly = typesInAssembly.Where(x => x.IsAssignableTo(typeof(IMessageHandler<>)));
-		//		foreach (var handlerType in handlerTypesInAssembly)
-		//		{
-		//			var serviceType = typeof(IMessageHandler<>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<>)));
-		//			services.AddScoped(serviceType, handlerType, serviceCollection =>,);
-		//		}
-
-		//		var handlerTypesInAssembly2 = typesInAssembly.Where(x => x.IsAssignableTo(typeof(IMessageHandler<,>)));
-		//		foreach (var handlerType in handlerTypesInAssembly2)
-		//		{
-		//			var serviceType = typeof(IMessageHandler<,>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<,>)));
-		//			services.AddScoped(serviceType, handlerType);
-		//		}
-
-		//	}
-
-		//	return new BusClientSetupProviderStage(services);
-		//}
-
-
 	}
 }
