@@ -4,7 +4,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionMessageBusExtensions
 	{
-		public static BusClientSetupProxyStage AddBasycBusClient(this IServiceCollection services)
+		public static BusClientSetupProxyStage AddBasycBus(this IServiceCollection services)
 		{
 			return new BusClientSetupProxyStage(services);
 		}

@@ -19,7 +19,7 @@ public partial class BusManager
 	[Inject]
 	public IDialogService DialogService { get; private set; }
 	[Inject]
-	public IRequester RequestClient { get; private set; }
+	public IRequestManager RequestClient { get; private set; }
 	[Inject]
 	public BusManagerJSInterop BusManagerJSInterop { get; private set; }
 

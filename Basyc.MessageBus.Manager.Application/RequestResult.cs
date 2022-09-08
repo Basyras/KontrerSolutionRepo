@@ -4,27 +4,6 @@ namespace Basyc.MessageBus.Manager.Application
 {
 	public class RequestResult
 	{
-		//public RequestResult(Request request, bool failed, string errorMessage, DateTime requestTime, TimeSpan duration)
-		//	: this(request, failed, null, errorMessage, requestTime, duration, false)
-		//{
-		//}
-
-		//public RequestResult(Request request, bool failed, string response, string errorMessage, DateTime requestTime, TimeSpan duration)
-		//	: this(request, failed, response, errorMessage, requestTime, duration, true)
-		//{
-
-		//}
-		//private RequestResult(Request request, bool failed, string response, string errorMessage, DateTime requestTime, TimeSpan duration, bool hasResponse)
-		//{
-		//	Request = request;
-		//	HasError = failed;
-		//	HasResponse = hasResponse;
-		//	Response = response;
-		//	ErrorMessage = errorMessage;
-		//	RequestTime = requestTime;
-		//	Duration = duration;
-		//}
-
 		public RequestResult(Request request, DateTime requestStartTime, int id)
 		{
 			Request = request;

@@ -29,7 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public BusClientSelectMessageTypeStage AddMessageBus()
         {
-            return services.AddBasycBusClient();
+            return services.AddBasycBus();
         }
     }
 }

@@ -154,7 +154,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox.AspApiApp", "SandBo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.HttpProxy.Client", "Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Client\Basyc.MessageBus.HttpProxy.Client.csproj", "{4BA810C6-302F-4B3E-8C92-696E800C2E41}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proxy", "Proxy", "{6594F570-14ED-4420-9942-00D4669ADD25}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.MessageBus.Proxy", "Basyc.MessageBus.Proxy", "{6594F570-14ED-4420-9942-00D4669ADD25}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.HttpProxy.Shared", "Shared\MessageBus\Kontrer.Shared.MessageBus.Proxy.Shared\Basyc.MessageBus.HttpProxy.Shared.csproj", "{AAB4B617-0454-437A-A871-5902E701DA60}"
 EndProject
@@ -182,7 +182,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc", "Basyc", "{535823BC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kontrer", "Kontrer", "{5244715E-13CF-45C5-A87D-6F96F5FB8C80}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Manager", "Manager", "{AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.MessageBus.Manager", "Basyc.MessageBus.Manager", "{AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Manager.Application", "Basyc.MessageBus.Manager.Application\Basyc.MessageBus.Manager.Application.csproj", "{7ADCADA5-F572-4F47-A877-F3A1D9C59B93}"
 EndProject
@@ -214,7 +214,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Client.Net
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Client.NetMQ.Tests", "Basyc.MessageBus.InMemory.Tests\Basyc.MessageBus.Client.NetMQ.Tests.csproj", "{91CA8C53-EC57-4CA5-958B-1BAB2DCFE8D3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{E264017C-961C-4734-9367-A090858A5C3B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.MessageBus.Providers", "Basyc.MessageBus.Providers", "{E264017C-961C-4734-9367-A090858A5C3B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Masstransit", "Masstransit", "{C303F51A-281C-4E75-8594-470F5A01C12C}"
 EndProject
@@ -248,7 +248,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Http", "Http", "{028D6D0E-B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessageBus", "MessageBus", "{96550694-5665-491A-82EF-4AAF9C89364C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageLogReceiver.AspApi", "MessageLogReceiver.AspApi\MessageLogReceiver.AspApi.csproj", "{6EE9528C-7569-42AD-BD76-957DFD52FD3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageLogReceiver.AspApi", "MessageLogReceiver.AspApi\MessageLogReceiver.AspApi.csproj", "{6EE9528C-7569-42AD-BD76-957DFD52FD3A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{5AD1ECE4-BCCA-41AA-BBFA-614166FD324A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{0916DB22-295A-4DAC-BA82-5165B99CB2DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.Manager.Infrastructure.Asp", "Basyc.MessageBus.Manager.Infrastructure.Asp\Basyc.MessageBus.Manager.Infrastructure.Asp.csproj", "{4B65059E-6E96-4C26-9D65-114887712F3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -592,6 +598,10 @@ Global
 		{6EE9528C-7569-42AD-BD76-957DFD52FD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EE9528C-7569-42AD-BD76-957DFD52FD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EE9528C-7569-42AD-BD76-957DFD52FD3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B65059E-6E96-4C26-9D65-114887712F3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B65059E-6E96-4C26-9D65-114887712F3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B65059E-6E96-4C26-9D65-114887712F3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B65059E-6E96-4C26-9D65-114887712F3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -715,6 +725,9 @@ Global
 		{028D6D0E-BD98-439F-8867-7E1AB7612304} = {6594F570-14ED-4420-9942-00D4669ADD25}
 		{96550694-5665-491A-82EF-4AAF9C89364C} = {4F31B45E-F786-4BC6-9F17-B2ED65239D24}
 		{6EE9528C-7569-42AD-BD76-957DFD52FD3A} = {96550694-5665-491A-82EF-4AAF9C89364C}
+		{5AD1ECE4-BCCA-41AA-BBFA-614166FD324A} = {AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4}
+		{0916DB22-295A-4DAC-BA82-5165B99CB2DD} = {AB4F527A-CA65-4A5A-AAF7-DCD1CE3993B4}
+		{4B65059E-6E96-4C26-9D65-114887712F3A} = {0916DB22-295A-4DAC-BA82-5165B99CB2DD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50775A8F-4DA5-415A-83C4-B637225479F5}

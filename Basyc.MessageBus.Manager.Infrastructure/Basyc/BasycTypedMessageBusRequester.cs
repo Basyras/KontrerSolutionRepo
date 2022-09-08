@@ -1,45 +1,39 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Manager.Application;
-using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.Formatters;
 using Basyc.MessageBus.Shared;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager
 {
-	public class TypedRequester : IRequester
+	public class BasycTypedMessageBusRequester : IRequester
 	{
+		public const string BasycTypedMessageBusRequesterUniqueName = nameof(BasycTypedMessageBusRequester);
+
+
 		private readonly IRequestInfoTypeStorage requestInfoTypeStorage;
 		private readonly IResponseFormatter responseFormatter;
+		private readonly ITypedMessageBusClient typedMessageBusClient;
 
-		public TypedRequester(ITypedMessageBusClient messageBusManager, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
+		public BasycTypedMessageBusRequester(ITypedMessageBusClient typedMessageBusClient, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
 		{
-			MessageBusManager = messageBusManager;
+			this.typedMessageBusClient = typedMessageBusClient;
 			this.requestInfoTypeStorage = requestInfoTypeStorage;
 			this.responseFormatter = responseFormatter;
 		}
 
-		public ITypedMessageBusClient MessageBusManager { get; }
 
-		public Dictionary<RequestInfo, List<RequestResult>> Results { get; } = new Dictionary<RequestInfo, List<RequestResult>>();
+		public string UniqueName => BasycTypedMessageBusRequesterUniqueName;
 
-		public RequestResult StartRequest(Request request)
+		public void StartRequest(RequestResult result)
 		{
-			var requestType = requestInfoTypeStorage.GetRequestType(request.RequestInfo);
-			var paramValues = request.Parameters.Select(x => x.Value).ToArray();
+			var requestType = requestInfoTypeStorage.GetRequestType(result.Request.RequestInfo);
+			var paramValues = result.Request.Parameters.Select(x => x.Value).ToArray();
 			var requestObject = Activator.CreateInstance(requestType, paramValues);
-			if (Results.TryGetValue(request.RequestInfo, out var results) is false)
-			{
-				results = new List<RequestResult>();
-				Results.Add(request.RequestInfo, results);
-			}
-			var result = new RequestResult(request, DateTime.Now, results.Count);
-			results.Add(result);
 
 			Task.Run(async () =>
 			{
@@ -47,9 +41,9 @@ namespace Basyc.MessageBus.Manager
 				try
 				{
 					stopWatch.Start();
-					if (request.RequestInfo.HasResponse)
+					if (result.Request.RequestInfo.HasResponse)
 					{
-						var response = await MessageBusManager.RequestAsync(requestType, requestObject, request.RequestInfo.ResponseType);
+						var response = await typedMessageBusClient.RequestAsync(requestType, requestObject, result.Request.RequestInfo.ResponseType);
 						stopWatch.Stop();
 
 						if (response.Value is ErrorMessage error)
@@ -64,7 +58,7 @@ namespace Basyc.MessageBus.Manager
 					}
 					else
 					{
-						await MessageBusManager.SendAsync(requestType, requestObject)
+						await typedMessageBusClient.SendAsync(requestType, requestObject)
 						.ContinueWith(x =>
 						{
 							stopWatch.Stop();
@@ -91,7 +85,6 @@ namespace Basyc.MessageBus.Manager
 					result.Fail(stopWatch.Elapsed, ex.Message);
 				}
 			});
-			return result;
 		}
 	}
 }

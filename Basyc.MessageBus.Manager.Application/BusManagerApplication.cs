@@ -1,23 +1,24 @@
 ﻿using Basyc.MessageBus.Manager.Application.Initialization;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Basyc.MessageBus.Manager.Application
 {
 	public class BusManagerApplication : IBusManagerApplication
 	{
-		private readonly IDomainInfoProvider messageDomainLoader;
-		public IReadOnlyList<DomainInfo> DomainInfos { get; private set; }
+		private readonly IDomainInfoProvider[] messageDomainLoaders;
+		public IReadOnlyList<DomainInfo>? DomainInfos { get; private set; }
 
 		public bool Loaded { get; private set; }
 
-		public BusManagerApplication(IDomainInfoProvider messageDomainLoader)
+		public BusManagerApplication(IEnumerable<IDomainInfoProvider> messageDomainLoaders)
 		{
-			this.messageDomainLoader = messageDomainLoader;
+			this.messageDomainLoaders = messageDomainLoaders.ToArray();
 		}
 
 		public void Load()
 		{
-			DomainInfos = messageDomainLoader.GetDomainInfos();
+			DomainInfos = messageDomainLoaders.SelectMany(x => x.GenerateDomainInfos()).ToList();
 			Loaded = true;
 		}
 	}

@@ -1,12 +1,8 @@
-﻿using Basyc.MessageBus.Manager.Application.Initialization;
-using System.Collections.Generic;
-
-namespace Basyc.MessageBus.Manager.Application
+﻿namespace Basyc.MessageBus.Manager.Application
 {
 	public interface IRequester
 	{
-		public RequestResult StartRequest(Request request);
-		Dictionary<RequestInfo, List<RequestResult>> Results { get; }
-
+		string UniqueName { get; }
+		void StartRequest(RequestResult requestResult);
 	}
 }

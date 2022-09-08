@@ -9,7 +9,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
 {
     public static class TypedProviderHelper
     {
-        public static List<Application.Initialization.ParameterInfo> HarversParameterInfos(Type requestType, ITypedParameterNameFormatter parameterNameFormatter)
+        public static List<Application.Initialization.ParameterInfo> HarvestParameterInfos(Type requestType, ITypedParameterNameFormatter parameterNameFormatter)
         {
             return requestType.GetConstructors()
                 .First()

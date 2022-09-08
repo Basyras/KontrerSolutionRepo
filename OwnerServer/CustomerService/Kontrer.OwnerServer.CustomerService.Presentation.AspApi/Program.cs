@@ -15,7 +15,7 @@ namespace Kontrer.OwnerServer.CustomerService.Presentation.AspApi
 		{
 			var builder = MicroserviceBootstrapper.CreateBuilder<Startup>(args);
 
-			builder.services.AddBasycBusClient()
+			builder.services.AddBasycBus()
 				.NoProxy()
 				.RegisterBasycTypedHandlers<CustomerServiceApplicationAssemblyMarker>()
 				.SelectNetMQProvider("CustomerService")

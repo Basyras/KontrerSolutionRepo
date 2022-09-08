@@ -17,23 +17,45 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var domains = new Assembly[]
+var assembliesToScan = new Assembly[]
 {
 	typeof(CustomerServiceDomainAssemblyMarker).Assembly,
 	typeof(OrderServiceDomainAssemblyMarker).Assembly,
 	typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
 };
 
-builder.Services.AddBasycBusClient()
+builder.Services.AddBasycBus()
 	.SelectHttpProxy()
 	.SetProxyServerUri(new Uri("https://localhost:44310/"));
 
-builder.Services.AddBlazorMessageBus()
-	.SelectRequester<TypedRequester>()
-	.RegisterCQRSMessages(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
-	.SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
+//builder.Services.AddBasycBusBlazorUI()
+//	.SelectRequester<TypedRequester>()
+//	.RegisterCQRSMessages(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>), domains)
+//	.SetDomainNameFormatter<TypedDDDDomainNameFormatter>();
 
+var busUIBuilder = builder.Services.AddBasycBusBlazorUI();
 
+busUIBuilder.RegisterMessagesViaFluentApi()
+				.AddDomain("CustomerDomain")
+					.AddMessage("CreateCustomerMessage")
+						.WithParameter<int>("CustomerID")
+						.WithParameter<string>("FirstName")
+						.Returns<string>("CreateCustomerMessageResponse")
+						.HandeledBy(requestResult => requestResult.Complete(TimeSpan.FromSeconds(5), "Customer created"))
+					.AddMessage("DummyClassMessage")
+						.WithParameters<DummyClass>()
+						.Returns<string>("CreateCustomerMessageResponse")
+						.HandeledBy((message, requestResult) => requestResult.Complete(TimeSpan.FromSeconds(5), message.Age.ToString()))
+				.AddDomain("OrderDomain")
+					.AddMessage("CreateOrderMessage")
+						.WithParameter<int>("OrderID")
+						.WithParameter<string>("OrderName")
+						.HandeledBy(requestResult => requestResult.Complete(TimeSpan.FromSeconds(5), "Order created"));
+
+busUIBuilder.RegisterMessagesFromAssembly(assembliesToScan)
+	.RegisterMessagesAsCQRS(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>))
+	.SelectTypedRequester()
+	.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
 
 
 
@@ -42,3 +64,5 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 var app = builder.Build();
 
 await app.RunAsync();
+
+public record DummyClass(string Name, int Age);

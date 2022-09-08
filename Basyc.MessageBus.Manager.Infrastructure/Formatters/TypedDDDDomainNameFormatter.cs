@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager
 {
-    public class TypedDDDDomainNameFormatter : ITypedDomainNameFormatter
+    public class TypedDddDomainNameFormatter : ITypedDomainNameFormatter
     {
         public string GetFormattedName(Assembly assembly)
         {

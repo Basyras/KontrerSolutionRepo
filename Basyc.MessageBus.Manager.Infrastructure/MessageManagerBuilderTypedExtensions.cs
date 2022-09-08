@@ -1,18 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration;
+using Basyc.MessageBus.Manager.Application.Initialization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Basyc.MessageBus.Manager.Infrastructure
 {
-    public static class MessageManagerBuilderTypedExtensions
-    {
-        public static TypedProviderBuilder UseTypedProvider(this BusManagerBuilder managerBuilder)
-        {
-            managerBuilder.AddProvider<TypedDomainProvider>();
-            return new TypedProviderBuilder(managerBuilder.services);
-        }
-    }
+	public static class MessageManagerBuilderTypedExtensions
+	{
+		public static TypedProviderBuilder UseTypedProvider(this SelectMessageRegistrationMethodStage managerBuilder)
+		{
+			managerBuilder.services.AddSingleton<IDomainInfoProvider, TypedDomainProvider>();
+
+			return new TypedProviderBuilder(managerBuilder.services);
+		}
+	}
 }
