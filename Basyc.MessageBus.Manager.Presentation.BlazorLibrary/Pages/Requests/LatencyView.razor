@@ -13,9 +13,9 @@
     }
     else
     {
-        @if (RequestResult.Duration.HasValue)
+        @if (RequestResult.DurationMap is not null)
         {
-            @Math.Ceiling(RequestResult.Duration.Value.TotalMilliseconds)
+            @Math.Ceiling(RequestResult.DurationMap.TotalDuration.TotalMilliseconds)
         }
         else
         {

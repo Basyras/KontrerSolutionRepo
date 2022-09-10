@@ -2,15 +2,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace Basyc.MessageBus.Manager.Application.Building
+namespace Basyc.MessageBus.Manager.Application.Requesting
 {
-	public class InMemoryDelegateRequesterOptions 
+	public class InMemoryDelegateRequesterOptions
 	{
-		Dictionary<RequestInfo, Action<RequestResult>> handlerMap = new();
+		private readonly Dictionary<RequestInfo, Action<RequestResult>> handlerMap = new();
 
 		public void AddDelegateHandler(RequestInfo requestInfo, Action<RequestResult> handler)
 		{
-			handlerMap.Add(requestInfo,handler);
+			handlerMap.Add(requestInfo, handler);
 		}
 
 		public Dictionary<RequestInfo, Action<RequestResult>> ResolveHandlers()

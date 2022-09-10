@@ -1,6 +1,7 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Application.Initialization;
+using Basyc.MessageBus.Manager.Application.Requesting;
 using Basyc.Shared.Helpers;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -13,7 +14,7 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests;
 public partial class BusManager
 {
 	[Inject]
-	public IBusManagerApplication busManager { get; private set; }
+	public IDomainInfoProviderManager busManager { get; private set; }
 	[Inject]
 	public ITypedMessageBusClient MessageBusManager { get; private set; }
 	[Inject]
@@ -51,12 +52,7 @@ public partial class BusManager
 
 	protected override void OnInitialized()
 	{
-		if (busManager.Loaded is false)
-		{
-			busManager.Load();
-		}
-
-		DomainInfoViewModel = busManager.DomainInfos
+		DomainInfoViewModel = busManager.GetDomainInfos()
 			.Select(domainInfo => new DomainItemViewModel(domainInfo, domainInfo.Requests
 				.Select(requestInfo => new RequestItemViewModel(requestInfo))
 				.OrderBy(x => x.RequestInfo.RequestType)))

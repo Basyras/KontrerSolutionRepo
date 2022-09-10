@@ -1,6 +1,6 @@
 ﻿using Basyc.MessageBus.Manager.Application.Initialization;
 
-namespace Basyc.MessageBus.Manager.Application
+namespace Basyc.MessageBus.Manager.Application.Requesting
 {
 	public interface IRequesterSelector
 	{

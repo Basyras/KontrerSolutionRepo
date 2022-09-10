@@ -12,13 +12,13 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 			this.inProgressDomain = inProgressDomain;
 		}
 
-		public FluentSetupMessageParemeterStage AddMessage(string messageDisplayName, RequestType messageType = RequestType.Generic)
+		public FluentSetupMessageStage AddMessage(string messageDisplayName, RequestType messageType = RequestType.Generic)
 		{
 			var newMessage = new InProgressMessageRegistration();
 			newMessage.MessagDisplayName = messageDisplayName;
 			newMessage.MessageType = messageType;
 			inProgressDomain.InProgressMessages.Add(newMessage);
-			return new FluentSetupMessageParemeterStage(services, newMessage, inProgressDomain);
+			return new FluentSetupMessageStage(services, newMessage, inProgressDomain);
 		}
 
 	}

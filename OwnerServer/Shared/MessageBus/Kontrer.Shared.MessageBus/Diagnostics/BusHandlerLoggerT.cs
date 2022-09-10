@@ -15,9 +15,7 @@ namespace Basyc.MessageBus.Client.Diagnostics
 		public BusHandlerLoggerT(ILogSink logSinks, ILoggerFactory factory)
 		{
 			logger = new Logger<TCategory>(factory);
-			//this.logSinks = logSinks.ToArray();
 			this.logSinks = new ILogSink[] { logSinks };
-			//shouldLogInLogStorage = typeof(TCategory).IsAssignableTo(typeof(IMessageHandler<>)) || typeof(TCategory).IsAssignableTo(typeof(IMessageHandler<,>));
 			shouldLogInLogStorage = GenericsHelper.IsAssignableToGenericType<TCategory>(typeof(IMessageHandler<>))
 				|| GenericsHelper.IsAssignableToGenericType<TCategory>(typeof(IMessageHandler<,>));
 		}

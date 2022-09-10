@@ -17,7 +17,7 @@ namespace SandBox.ConsoleApp
 		}
 		public async Task<CreateCustomerCommandResponse> Handle(CreateCustomerCommand message, CancellationToken cancellationToken = default)
 		{
-			logger.LogDebug($"Handeling message {message.GetType().FullName}");
+			logger.LogInformation($"Handeling message {message.GetType().FullName}");
 			CustomerEntity? newCustomer = new CustomerEntity()
 			{
 				Email = message.Email,
@@ -25,12 +25,10 @@ namespace SandBox.ConsoleApp
 				SecondName = message.LastName,
 				Id = new Random().Next()
 			};
-			logger.LogDebug($"Handeled message {message.GetType().FullName}");
-
-			var publishTask = busClient.PublishAsync(new CustomerCreatedEvent(newCustomer));
-			//publishTask.Start();
-			//await Task.Delay(1000);
-			await publishTask;
+			logger.LogInformation($"Handeled message {message.GetType().FullName}");
+			logger.LogInformation($"Publising {nameof(CustomerCreatedEvent)} event");
+			await busClient.PublishAsync(new CustomerCreatedEvent(newCustomer));
+			logger.LogInformation($"{nameof(CustomerCreatedEvent)} event published");
 			return new CreateCustomerCommandResponse(newCustomer);
 
 		}

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace Basyc.MessageBus.Manager.Application
 {
-	public interface IBusManagerApplication
+	public interface IDomainInfoProviderManager
 	{
-		IReadOnlyList<DomainInfo> DomainInfos { get; }
-		bool Loaded { get; }
-		void Load();
+		IReadOnlyList<DomainInfo> GetDomainInfos();
 	}
 }

@@ -19,7 +19,7 @@
                         @if (RequestItemViewModel.LastResult != null && RequestItemViewModel.IsLoading is false)
                         {
                             string latencyClass = $"latency--status--{RequestItemViewModel.LastResult.State.ToString()}";
-                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.LastResult.Duration.Value.TotalMilliseconds) ms</latency>
+                            <latency class="@latencyClass">@Math.Ceiling(RequestItemViewModel.LastResult.DurationMap.TotalDuration.TotalMilliseconds) ms</latency>
                         }
                         @if (RequestItemViewModel.IsLoading)
                         {

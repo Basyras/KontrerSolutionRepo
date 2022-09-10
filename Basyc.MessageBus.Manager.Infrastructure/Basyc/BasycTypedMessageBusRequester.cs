@@ -1,5 +1,6 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Manager.Application;
+using Basyc.MessageBus.Manager.Application.Requesting;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.Formatters;
 using Basyc.MessageBus.Shared;
@@ -29,10 +30,11 @@ namespace Basyc.MessageBus.Manager
 
 		public string UniqueName => BasycTypedMessageBusRequesterUniqueName;
 
-		public void StartRequest(RequestResult result)
+		public void StartRequest(RequestResult requestResult)
 		{
-			var requestType = requestInfoTypeStorage.GetRequestType(result.Request.RequestInfo);
-			var paramValues = result.Request.Parameters.Select(x => x.Value).ToArray();
+			var requestStartedSegment = requestResult.StartNewSegment("Requester started");
+			var requestType = requestInfoTypeStorage.GetRequestType(requestResult.Request.RequestInfo);
+			var paramValues = requestResult.Request.Parameters.Select(x => x.Value).ToArray();
 			var requestObject = Activator.CreateInstance(requestType, paramValues);
 
 			Task.Run(async () =>
@@ -40,28 +42,29 @@ namespace Basyc.MessageBus.Manager
 				var stopWatch = new Stopwatch();
 				try
 				{
-					stopWatch.Start();
-					if (result.Request.RequestInfo.HasResponse)
-					{
-						var response = await typedMessageBusClient.RequestAsync(requestType, requestObject, result.Request.RequestInfo.ResponseType);
-						stopWatch.Stop();
 
+					if (requestResult.Request.RequestInfo.HasResponse)
+					{
+						var waitingForBusSegment = requestResult.StartNewSegment("Waiting for message bus");
+						var response = await typedMessageBusClient.RequestAsync(requestType, requestObject, requestResult.Request.RequestInfo.ResponseType);
+						waitingForBusSegment.End();
 						if (response.Value is ErrorMessage error)
 						{
-							result.Fail(stopWatch.Elapsed, error.Message);
+							requestResult.Fail(error.Message);
 						}
 						else
 						{
 							var resultObject = response.AsT0;
-							result.Complete(stopWatch.Elapsed, responseFormatter.Format(resultObject));
+							requestResult.Complete(responseFormatter.Format(resultObject));
 						}
 					}
 					else
 					{
+						var waitingForBusSegment = requestResult.StartNewSegment("Waiting for message bus");
 						await typedMessageBusClient.SendAsync(requestType, requestObject)
 						.ContinueWith(x =>
 						{
-							stopWatch.Stop();
+							waitingForBusSegment.End();
 							string errorMessage = string.Empty;
 							if (x.IsFaulted)
 							{
@@ -73,16 +76,16 @@ namespace Basyc.MessageBus.Manager
 								{
 									errorMessage = x.Exception != null ? x.Exception.Message : string.Empty;
 								}
-								result.Fail(stopWatch.Elapsed, errorMessage);
+								requestResult.Fail(errorMessage);
 							}
-							result.Complete(stopWatch.Elapsed);
+							requestResult.Complete();
+
 						});
 					}
 				}
 				catch (Exception ex)
 				{
-					stopWatch.Stop();
-					result.Fail(stopWatch.Elapsed, ex.Message);
+					requestResult.Fail(ex.Message);
 				}
 			});
 		}

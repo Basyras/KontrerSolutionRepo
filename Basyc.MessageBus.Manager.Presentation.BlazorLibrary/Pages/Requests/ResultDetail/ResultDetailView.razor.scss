@@ -39,6 +39,10 @@ outputs {
     word-wrap: anywhere;
 }
 
+durationMap {
+    @extend inputOutputBase;
+}
+
 parameterName {
     color: #979797;
 }

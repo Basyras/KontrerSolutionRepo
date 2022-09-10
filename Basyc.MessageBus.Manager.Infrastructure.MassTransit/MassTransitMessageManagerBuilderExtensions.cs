@@ -1,5 +1,5 @@
-﻿using Basyc.MessageBus.Manager.Application;
-using Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration;
+﻿using Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration;
+using Basyc.MessageBus.Manager.Application.Requesting;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.MassTransit;
 //using MassTransit;

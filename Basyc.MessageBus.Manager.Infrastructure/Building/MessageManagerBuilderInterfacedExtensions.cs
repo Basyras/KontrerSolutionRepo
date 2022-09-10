@@ -9,32 +9,6 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class MessageManagerBuilderInterfacedExtensions
 	{
-		//public static TypedFormatterBuilder RegisterCQRSMessages(this SelectMessageRegistrationMethodStage managerBuilder, Type iQueryType, Type iCommandType, Type iCommandWithResponseType, params Assembly[] assembliesToScan)
-		//{
-		//	managerBuilder.services.Configure<InterfacedDomainProviderOptions>(options =>
-		//	{
-		//		options.IQueryType = iQueryType;
-		//		options.ICommandType = iCommandType;
-		//		options.ICommandWithResponseType = iCommandWithResponseType;
-		//		options.AssembliesToScan = assembliesToScan;
-		//	});
-		//	managerBuilder.AddProvider<InterfacedDomainProvider>();
-		//	return new TypedFormatterBuilder(managerBuilder.services);
-		//}
-
-		//public static TypedFormatterBuilder AddInterfacedProvider(this SelectMessageRegistrationMethodStage managerBuilder, Type iMessageType, Type iMessageWithResponseType, params Assembly[] assemblies)
-		//{
-		//	managerBuilder.services.Configure<InterfacedDomainProviderOptions>(options =>
-		//	{
-		//		options.IMessageType = iMessageType;
-		//		options.IMessageWithResponseType = iMessageWithResponseType;
-		//		options.AssembliesToScan = assemblies;
-		//	});
-		//	managerBuilder.AddProvider<InterfacedDomainProvider>();
-		//	return new TypedFormatterBuilder(managerBuilder.services);
-		//}
-
-
 		public static SetupRequesterStage RegisterMessagesAsCQRS(this RegisterMessagesFromAssemblyStage fromAssemblyStage, Type iQueryType, Type iCommandType, Type iCommandWithResponseType)
 		{
 			fromAssemblyStage.services.Configure<InterfacedDomainProviderOptions>(options =>
@@ -45,8 +19,6 @@ namespace Microsoft.Extensions.DependencyInjection
 				options.AssembliesToScan = fromAssemblyStage.assembliesToScan;
 			});
 			fromAssemblyStage.services.AddSingleton<IDomainInfoProvider, InterfacedDomainProvider>();
-
-
 			return new SetupRequesterStage(fromAssemblyStage.services);
 
 		}
@@ -60,7 +32,6 @@ namespace Microsoft.Extensions.DependencyInjection
 				options.AssembliesToScan = assemblies;
 			});
 			fromAssemblyStage.services.AddSingleton<IDomainInfoProvider, InterfacedDomainProvider>();
-
 			return new SetupTypeFormattingStage(fromAssemblyStage.services);
 		}
 	}

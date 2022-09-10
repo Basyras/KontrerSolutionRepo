@@ -1,7 +1,7 @@
 ﻿using Basyc.MessageBus.Manager.Application.Initialization;
 using System.Collections.Generic;
 
-namespace Basyc.MessageBus.Manager.Application
+namespace Basyc.MessageBus.Manager.Application.Requesting
 {
 	public class RequesterSelectorOptions
 	{

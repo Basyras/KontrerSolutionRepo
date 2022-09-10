@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Basyc.MessageBus.Manager.Application
+namespace Basyc.MessageBus.Manager.Application.Requesting
 {
 	public class RequesterSelector : IRequesterSelector
 	{
@@ -13,7 +13,7 @@ namespace Basyc.MessageBus.Manager.Application
 
 		public RequesterSelector(IEnumerable<IRequester> requesters, IOptions<RequesterSelectorOptions> options)
 		{
-			this.requesterToChoose = requesters.ToDictionary(x => x.UniqueName, x => x);
+			requesterToChoose = requesters.ToDictionary(x => x.UniqueName, x => x);
 			this.options = options;
 			infoToRequesterNameMap = options.Value.ResolveRequesterMap();
 		}

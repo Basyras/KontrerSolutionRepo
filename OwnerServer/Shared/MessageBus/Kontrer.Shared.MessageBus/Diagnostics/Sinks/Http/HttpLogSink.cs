@@ -29,6 +29,11 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.Http
 			messageMap.TryAdd(logKey, new List<string>());
 			messageMap[logKey].Add(message);
 			var logMessageDTO = new LogMessageDTO(logLevel, eventId, message);
+			SendViaHttp(logMessageDTO);
+		}
+
+		private void SendViaHttp(LogMessageDTO logMessageDTO)
+		{
 			var request = new RestRequest("", Method.Post).AddJsonBody(logMessageDTO);
 			var sendResult = httpClient.Execute(request);
 			if (sendResult.IsSuccessful is false)

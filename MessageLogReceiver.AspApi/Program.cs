@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "logListener");
 app.MapPost("/log", (ILogger<Program> logger, [FromBody] LogMessageDTO data) =>
 {
 	logger.LogInformation(data.Message);

@@ -12,22 +12,14 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 			this.inProgressDomain = inProgressDomain;
 		}
 
-
-		public FluentSetupMessageParemeterStage AddMessage(string messageDisplayName, RequestType messageType = RequestType.Generic)
+		public FluentSetupMessageStage AddMessage(string messageDisplayName, RequestType messageType = RequestType.Generic)
 		{
-			var newMessage = new InProgressMessageRegistration();
-			newMessage.MessagDisplayName = messageDisplayName;
-			newMessage.MessageType = messageType;
-			inProgressDomain.InProgressMessages.Add(newMessage);
-			return new FluentSetupMessageParemeterStage(services, newMessage, inProgressDomain);
+			return new FluentSetupDomainStage(services, inProgressDomain).AddMessage(messageDisplayName, messageType);
 		}
 
 		public FluentSetupDomainStage AddDomain(string domainName)
 		{
-			InProgressDomainRegistration newDomain = new InProgressDomainRegistration();
-			newDomain.DomainName = domainName;
-			services.Configure<FluentApiDomainInfoProviderOptions>(x => x.DomainRegistrations.Add(newDomain));
-			return new FluentSetupDomainStage(services, newDomain);
+			return new RegisterMessagesFromFluentApiStage(services).AddDomain(domainName);
 		}
 	}
 }
