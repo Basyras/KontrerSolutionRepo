@@ -1,0 +1,66 @@
+﻿@using Basyc.MessageBus.Manager.Application.Durations
+<durationBoxContainer>
+
+    @{
+        string durationBoxStyle = "";
+        var minHeight = GetDurationAsRem(DurationSegment.Duration);
+        if (minHeight < 1)
+        {
+            minHeight = 1;
+        }
+        durationBoxStyle = $"min-height: {minHeight}rem;";
+
+        DurationSegment previousSegment = null;
+    }
+
+    <durationBox Style="@durationBoxStyle">
+        @if (DurationSegment.Duration.TotalMilliseconds > 50)
+        {
+            <boxDuration>
+                @(DurationSegment.Duration.TotalMilliseconds)ms
+            </boxDuration>
+        }
+        <span class="tooltiptext">
+            @DurationSegment.Name
+            <br />
+            @(DurationSegment.Duration.TotalMilliseconds)ms
+        </span>
+    </durationBox>
+    <nestedContent>
+        <segmentName>
+            @DurationSegment.Name
+        </segmentName>
+        @foreach (var nestedSegment in DurationSegment.NestedSegments)
+        {
+            string borderMergerStyle = "";
+            if (previousSegment is not null && previousSegment.EndTime != nestedSegment.StartTime)
+            {
+                <unknownSpace style="height: @(GetDurationAsRem(nestedSegment.StartTime - previousSegment.EndTime))rem;" >
+                    <span class="tooltiptext">
+                        Unknown duration
+                        <br />
+                        @((nestedSegment.StartTime - previousSegment.EndTime).TotalMilliseconds)ms
+                    </span>
+                </unknownSpace>
+            }
+            else
+            {
+                borderMergerStyle = "display:block; margin-top: -2px;";
+            }
+
+            <borderMerger style="@borderMergerStyle">
+                <DurationBoxView DurationSegment="nestedSegment" />
+            </borderMerger>
+            previousSegment = nestedSegment;
+        }
+    </nestedContent>
+</durationBoxContainer>
+
+
+@code {
+    [Parameter] public DurationSegment DurationSegment { get; set; }
+    public double GetDurationAsRem(TimeSpan duration)
+    {
+        return Math.Round(duration.TotalMilliseconds / 20);
+    }
+}

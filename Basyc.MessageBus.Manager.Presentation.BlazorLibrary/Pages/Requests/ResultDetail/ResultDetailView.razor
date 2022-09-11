@@ -1,5 +1,6 @@
 ﻿@using Basyc.MessageBus.Manager.Application
 @using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.DurationMap
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.Requests.RequestTag
 
 @{
@@ -72,7 +73,7 @@
                     }
                     else
                     {
-                        <MudContainer Hori>
+                        <MudContainer>
 
                         </MudContainer>
                         <outputGhostLabel>
@@ -92,24 +93,19 @@
                 Duration Map
             </label>
             <durationMap>
-                @foreach (var segment in RequestResult.DurationMap.Segments)
-                {
-                    <div>
-                        @segment.StartTime.ToString("HH:mm:ss") @segment.Duration.TotalMilliseconds ms -  @segment.Name
-                    </div>
-                }
+                <DurationMapView DurationMap="RequestResult.DurationMap" />
             </durationMap>
 
             <label>
                 Log
             </label>
-            <durationMap>
+            <div>
                 @foreach (var logEntry in @loggingContext.LogEntries)
                 {
                     @logEntry.Time.ToString("HH:mm:ss") @logEntry.LogLevel @logEntry.Message
                     <br />
                 }
-            </durationMap>
+            </div>
         </requestDetailNotEmpty>
 
     }

@@ -9,6 +9,7 @@ requestDetailView {
     display: block;
     height: 100%;
     padding: 1.5rem 2rem;
+    overflow-x: scroll;
 }
 
 ghostLabel {
@@ -41,6 +42,7 @@ outputs {
 
 durationMap {
     @extend inputOutputBase;
+    background-color: $Information-Background;
 }
 
 parameterName {
@@ -52,7 +54,7 @@ parameterValue{
 
 label {
     color: #628e8e;
-    text-indent: 0.8rem;
+    text-indent: 0.6rem;
     margin-bottom: 0.3rem;
 }
 

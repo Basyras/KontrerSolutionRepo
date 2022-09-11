@@ -18,7 +18,7 @@ namespace Basyc.MessageBus.Manager.Application.Durations
 		public DateTimeOffset Start()
 		{
 			StartTime = DateTimeOffset.UtcNow;
-			rootSegmentBuilder = new DurationSegmentBuilder("root", StartTime);
+			rootSegmentBuilder = new DurationSegmentBuilder("root", StartTime, () => rootSegmentBuilder!);
 			HasStartedCounting = true;
 			return StartTime;
 		}

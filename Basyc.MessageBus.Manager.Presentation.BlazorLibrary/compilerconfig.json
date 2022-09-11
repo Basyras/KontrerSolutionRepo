@@ -34,5 +34,17 @@
   {
     "outputFile": "Pages/Requests/LatencyView.razor.css",
     "inputFile": "Pages/Requests/LatencyView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/DurationMapView.razor.css",
+    "inputFile": "Pages/Requests/DurationMapView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/DurationMap/DurationBoxView.razor.css",
+    "inputFile": "Pages/Requests/DurationMap/DurationBoxView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Requests/DurationMap/DurationMapView.razor.css",
+    "inputFile": "Pages/Requests/DurationMap/DurationMapView.razor.scss"
   }
 ]

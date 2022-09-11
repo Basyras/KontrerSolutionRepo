@@ -38,9 +38,22 @@ busUIBuilder.RegisterMessagesViaFluentApi()
 						.NoReturn()
 						.HandeledBy((RequestResult requestResult) =>
 						{
-							requestResult.Start();
-							var segment = requestResult.StartNewSegment("1st");
-							segment.StartNewNestedSegment("asd");
+							//requestResult.Start();
+							var rootSegment = requestResult.StartNewSegment("R dur 450");
+							var nestedA = rootSegment.StartNewNestedSegment("R.A: +-0 before duration 50");
+							Thread.Sleep(50);
+							var nestedB = nestedA.EndAndStartNewFollowingSegment("R.B: 0 before, duration 200");
+							var nestedBA = nestedB.StartNewNestedSegment("R.B.A: +-0 before duration 150");
+							Thread.Sleep(150);
+							nestedBA.End();
+							Thread.Sleep(50);
+							var nestedBB = nestedB.StartNewNestedSegment("R.B.B  50 before, duration +-0");
+							nestedBB.End();
+							var nestedBC = nestedB.StartNewNestedSegment("R.B.C  +-0 before, duration +-0");
+							nestedBC.End();
+							Thread.Sleep(100);
+							var nestedBD = nestedB.StartNewNestedSegment("R.B.D  100 before, duration 100");
+							Thread.Sleep(100);
 							requestResult.Complete();
 						})
 					.AddMessage("Params:Manual_Return:No_HandeledBy:Request")
@@ -48,10 +61,22 @@ busUIBuilder.RegisterMessagesViaFluentApi()
 						.NoReturn()
 						.HandeledBy((Request request) => { })
 					//ReturnTypeOf
-					.AddMessage("Params:Manual_Return:TypeOf_HandeledBy:RequestResult")
+					.AddMessage("<TEST> Params:Manual_Return:TypeOf_HandeledBy:RequestResult")
 						.WithParameter<string>("Name")
 						.Returns(typeof(string), "ResponseTypeDisplayName")
-						.HandeledBy((RequestResult requestResult) => requestResult.Complete("returnString"))
+						.HandeledBy((RequestResult requestResult) =>
+						{
+							var rootSegment = requestResult.StartNewSegment("R duration 200");
+							var ra = rootSegment.StartNewNestedSegment("R.A 50");
+							Thread.Sleep(50);
+							var rb = ra.EndAndStartNewFollowingSegment("R.B 50");
+							Thread.Sleep(50);
+							var rc = rb.EndAndStartNewFollowingSegment("R.C 50");
+							Thread.Sleep(50);
+							var rd = rc.EndAndStartNewFollowingSegment("R.D 50");
+							Thread.Sleep(50);
+							requestResult.Complete("returnString");
+						})
 					.AddMessage("ParamsManual_ReturnTypeof_HandeledByRequest")
 						.WithParameter<string>("Name")
 						.Returns(typeof(string), "text")

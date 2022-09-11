@@ -6,9 +6,14 @@ namespace Basyc.MessageBus.Manager.Application.Durations
 	public class DurationSegmentBuilder : IDisposable
 	{
 		private readonly List<DurationSegmentBuilder> nestedSegmentBuilders = new List<DurationSegmentBuilder>();
+		private readonly Func<DurationSegmentBuilder>? parentSegmentGetter;
+		private readonly bool hasParent;
+
+		public DateTimeOffset EndTime { get; private set; }
 		public DateTimeOffset StartTime { get; init; }
-		private DateTimeOffset endTime;
-		public bool SegmentFinished { get; private set; }
+		public bool SegmentEnded { get; private set; }
+		public string Name { get; init; }
+
 
 		public DurationSegmentBuilder(string name, DateTimeOffset segmentStart)
 		{
@@ -16,29 +21,40 @@ namespace Basyc.MessageBus.Manager.Application.Durations
 			StartTime = segmentStart;
 		}
 
-		public string Name { get; init; }
+		public DurationSegmentBuilder(string name, DateTimeOffset segmentStart, DurationSegmentBuilder parentSegment)
+			: this(name, segmentStart, () => parentSegment)
+		{
+		}
+
+		public DurationSegmentBuilder(string name, DateTimeOffset segmentStart, Func<DurationSegmentBuilder> parentSegmentGetter)
+			: this(name, segmentStart)
+		{
+			this.parentSegmentGetter = parentSegmentGetter;
+			hasParent = true;
+		}
+
 
 		/// <summary>
 		/// Ensures that <see cref="End"/> was called and produce <see cref="DurationSegment"/> with processed timestamps
 		/// </summary>
 		public DurationSegment Build()
 		{
-			if (SegmentFinished is false)
+			if (SegmentEnded is false)
 			{
 				End();
 			}
 
-			return Build(endTime);
+			return Build(EndTime);
 		}
 
 		/// <summary>
 		/// Ensures that <see cref="End"/> was called and produce <see cref="DurationSegment"/> with processed timestamps
 		/// </summary>
-		public DurationSegment Build(DateTimeOffset endTimeToUseWhenNotYetEnded)
+		public DurationSegment Build(DateTimeOffset finalEndTime)
 		{
-			if (SegmentFinished is false)
+			if (SegmentEnded is false)
 			{
-				End(endTimeToUseWhenNotYetEnded);
+				End(finalEndTime);
 			}
 
 			return BuildNestedSegments();
@@ -50,56 +66,63 @@ namespace Basyc.MessageBus.Manager.Application.Durations
 			for (int nestedSegmentIndex = 0; nestedSegmentIndex < nestedSegmentBuilders.Count; nestedSegmentIndex++)
 			{
 				DurationSegmentBuilder? nestedSegmentBuilder = nestedSegmentBuilders[nestedSegmentIndex];
-				var nestedSegment = nestedSegmentBuilder.Build(endTime);
+				var nestedSegment = nestedSegmentBuilder.Build(EndTime);
 				nestedSegments[nestedSegmentIndex] = nestedSegment;
 			}
-			return new DurationSegment(Name, StartTime, endTime, endTime - StartTime, nestedSegments);
+			return new DurationSegment(Name, StartTime, EndTime, EndTime - StartTime, nestedSegments);
 		}
 
 		public DateTimeOffset End()
 		{
 			End(DateTimeOffset.UtcNow);
-			return endTime;
+			return EndTime;
 		}
 
-		private void End(DateTimeOffset parentEnd)
+		public void End(DateTimeOffset finalEndTime)
 		{
-			if (SegmentFinished)
+			if (SegmentEnded)
 			{
 				throw new InvalidOperationException($"{nameof(End)} was called twice");
 			}
 
-			endTime = parentEnd;
+			EndTime = finalEndTime;
 
 			foreach (var nestedSegment in nestedSegmentBuilders)
 			{
-				if (nestedSegment.SegmentFinished is false)
+				if (nestedSegment.SegmentEnded is false)
 				{
-					nestedSegment.End(parentEnd);
+					nestedSegment.End(finalEndTime);
 				}
 			}
 
-			SegmentFinished = true;
+			SegmentEnded = true;
 		}
 
 		/// <summary>
-		/// Adds and starts nested segment.
+		/// End current segment and craetes following segment (Not nested segment). 
+		/// This ensures that there is not a gap between end and start of the new following segment
+		/// Call only when segment has a parent!
 		/// </summary>
 		/// <param name="segmentName"></param>
 		/// <returns></returns>
+		public DurationSegmentBuilder EndAndStartNewFollowingSegment(string segmentName)
+		{
+			var endTime = DateTimeOffset.UtcNow;
+			End(endTime);
+			if (hasParent is false)
+			{
+				throw new InvalidOperationException("Cannot create following segment because this segment deos not have a parent");
+			}
+			return parentSegmentGetter!.Invoke().StartNewNestedSegment(segmentName, endTime);
+		}
+
 		public DurationSegmentBuilder StartNewNestedSegment(string segmentName, DateTimeOffset start)
 		{
-
-			var nestedSegment = new DurationSegmentBuilder(segmentName, start);
+			var nestedSegment = new DurationSegmentBuilder(segmentName, start, this);
 			nestedSegmentBuilders.Add(nestedSegment);
 			return nestedSegment;
 		}
 
-		/// <summary>
-		/// Adds and starts nested segment.
-		/// </summary>
-		/// <param name="segmentName"></param>
-		/// <returns></returns>
 		public DurationSegmentBuilder StartNewNestedSegment(string segmentName)
 		{
 			return StartNewNestedSegment(segmentName, DateTimeOffset.UtcNow);

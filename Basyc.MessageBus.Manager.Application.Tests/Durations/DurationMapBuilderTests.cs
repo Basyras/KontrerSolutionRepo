@@ -93,7 +93,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[InlineData(0, new int[] { })]
 		[InlineData(2, new int[] { 100, 150 })]
 		[InlineData(4, new int[] { 100, 150, 50, 150 })]
-		public async Task When_AddingSegments_Should_TotalDurationBeSumOfAll(int numberOfSegments, int[] durationsMs)
+		public void When_AddingSegments_Should_TotalDurationBeSumOfAll(int numberOfSegments, int[] durationsMs)
 		{
 			durationsMs.Length.Should().Be(numberOfSegments);
 
@@ -103,12 +103,14 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 			{
 				var segmentDuration = durationsMs[segmentIndex];
 				var segment = mapBuilder.StartNewSegment("segmentName");
-				await Task.Delay(segmentDuration);
+				//await Task.Delay(segmentDuration); //Not accurate
+				Thread.Sleep(segmentDuration);
 				segment.End();
 			}
 
 			var durationMap = mapBuilder.Build();
 			durationMap.Segments.Length.Should().Be(numberOfSegments);
+			durationMap.Segments.All(x => x.NestedSegments.Length == 0).Should().BeTrue();
 			TimeSpan totalSegmentsDuration = TimeSpan.FromMilliseconds(durationsMs.Sum());
 
 			//https://stackoverflow.com/questions/31742521/accuracy-of-task-delay

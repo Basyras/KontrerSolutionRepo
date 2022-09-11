@@ -25,13 +25,13 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 
 		public void StartRequest(RequestResult requestResult)
 		{
-			var requesterStarted = requestResult.StartNewSegment("Requester started");
+			//var requesterStarted = requestResult.StartNewSegment("Requester started");
 
 			inMemoryLogSource.PushLog(requestResult.Id, LogLevel.Information, "Starting invoking in-memory delegate");
 			var handler = handlersMap[requestResult.Request.RequestInfo];
 			try
 			{
-				var invokingSement = requestResult.StartNewSegment("Invkoking in-Memory delegate");
+				//var invokingSement = requestResult.StartNewSegment("Invkoking in-Memory delegate");
 				handler.Invoke(requestResult);
 				inMemoryLogSource.PushLog(requestResult.Id, LogLevel.Information, "In-memory delegate completed");
 
