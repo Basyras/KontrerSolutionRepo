@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Application.Requesting
 {
@@ -25,15 +26,15 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 
 		public void StartRequest(RequestResult requestResult)
 		{
-			//var requesterStarted = requestResult.StartNewSegment("Requester started");
-
 			inMemoryLogSource.PushLog(requestResult.Id, LogLevel.Information, "Starting invoking in-memory delegate");
 			var handler = handlersMap[requestResult.Request.RequestInfo];
 			try
 			{
-				//var invokingSement = requestResult.StartNewSegment("Invkoking in-Memory delegate");
-				handler.Invoke(requestResult);
-				inMemoryLogSource.PushLog(requestResult.Id, LogLevel.Information, "In-memory delegate completed");
+				Task.Run(() =>
+				{
+					handler.Invoke(requestResult);
+					inMemoryLogSource.PushLog(requestResult.Id, LogLevel.Information, "In-memory delegate completed");
+				});
 
 			}
 			catch (Exception ex)

@@ -41,8 +41,6 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 			loggingContext.AddLog(DateTimeOffset.UtcNow, Microsoft.Extensions.Logging.LogLevel.Information, "Request started");
 
 
-
-
 			return requestResult;
 		}
 	}

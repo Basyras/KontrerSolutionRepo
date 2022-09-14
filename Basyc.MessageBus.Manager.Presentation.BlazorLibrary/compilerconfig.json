@@ -46,5 +46,21 @@
   {
     "outputFile": "Pages/Requests/DurationMap/DurationMapView.razor.css",
     "inputFile": "Pages/Requests/DurationMap/DurationMapView.razor.scss"
+  },
+  {
+    "outputFile": "Components/LogWindow/LogEntryView.razor.css",
+    "inputFile": "Components/LogWindow/LogEntryView.razor.scss"
+  },
+  {
+    "outputFile": "Components/LogWindow/LogWindowView.razor.css",
+    "inputFile": "Components/LogWindow/LogWindowView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/ResultDetail/ResultDetailView.razor.css",
+    "inputFile": "Pages/ResultDetail/ResultDetailView.razor.scss"
+  },
+  {
+    "outputFile": "Components/DurationMap/DurationBoxView.razor.css",
+    "inputFile": "Components/DurationMap/DurationBoxView.razor.scss"
   }
 ]

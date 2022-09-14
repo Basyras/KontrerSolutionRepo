@@ -12,7 +12,7 @@ namespace Basyc.MessageBus.HttpProxy.Client
 
 		public ClientProxySetupStage SetProxyServerUri(Uri hostUri)
 		{
-			services.Configure<ProxyObjectMessageBusClientOptions>(x => x.ProxyHostUri = hostUri);
+			services.Configure<HttpProxyObjectMessageBusClientOptions>(x => x.ProxyHostUri = hostUri);
 			return this;
 		}
 	}

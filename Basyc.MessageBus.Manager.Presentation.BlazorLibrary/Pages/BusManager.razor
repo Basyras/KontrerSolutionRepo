@@ -1,0 +1,38 @@
+﻿@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.ResultDetail
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.ResultHistory
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.SideBar
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages.RequestSideBar
+
+<HeadContent>
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+</HeadContent>
+
+<busManager>
+    <MudThemeProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
+    <sideBar>
+        <RequestsSideMenu DomainInfoViewModel="DomainInfoViewModel" RequestSelected="newSelected=>SelectedRequestViewModel = newSelected" />
+    </sideBar>
+    <requestFormPage>
+        <RequestSideBarView SelectedRequestViewModel="SelectedRequestViewModel" Requested="@(async (requestItem)=>await SendMessage(requestItem))" />
+    </requestFormPage>
+    <historyPage>
+        @if (SelectedRequestViewModel is not null)
+        {
+            <ResultHistoryView RequestResults="resultHistory[SelectedRequestViewModel]" @bind-SelectedRequestResults=selectedResult />
+        }
+        else
+        {
+            @:Select request
+        }
+    </historyPage>
+    @if (selectedResult is not null)
+    {
+        <requestDetail>
+            <ResultDetailView RequestResult="selectedResult" />
+        </requestDetail>
+    }
+
+</busManager>

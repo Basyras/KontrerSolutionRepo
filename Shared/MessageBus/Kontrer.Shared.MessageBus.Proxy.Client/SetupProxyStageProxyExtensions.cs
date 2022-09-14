@@ -12,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
 			builder.services.AddBasycSerialization()
 				.SelectProtobufNet();
 			builder.services.AddSingleton(new HttpClient());
-			builder.services.AddSingleton<IObjectMessageBusClient, ProxyObjectMessageBusClient>();
+			builder.services.AddSingleton<IObjectMessageBusClient, HttpProxyObjectMessageBusClient>();
 			builder.services.AddSingleton<ITypedMessageBusClient, TypedFromObjectMessageBusClient>();
 
 			return new ClientProxySetupStage(builder.services);

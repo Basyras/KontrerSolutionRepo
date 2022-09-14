@@ -45,7 +45,7 @@ namespace Basyc.MessageBus.Manager
 
 					if (requestResult.Request.RequestInfo.HasResponse)
 					{
-						var waitingForBusSegment = requestResult.StartNewSegment("Waiting for message bus");
+						var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
 						var response = await typedMessageBusClient.RequestAsync(requestType, requestObject, requestResult.Request.RequestInfo.ResponseType);
 						waitingForBusSegment.End();
 						if (response.Value is ErrorMessage error)
@@ -60,7 +60,7 @@ namespace Basyc.MessageBus.Manager
 					}
 					else
 					{
-						var waitingForBusSegment = requestResult.StartNewSegment("Waiting for message bus");
+						var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
 						await typedMessageBusClient.SendAsync(requestType, requestObject)
 						.ContinueWith(x =>
 						{

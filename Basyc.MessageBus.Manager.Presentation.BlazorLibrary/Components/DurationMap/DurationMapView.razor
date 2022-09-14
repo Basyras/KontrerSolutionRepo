@@ -1,0 +1,29 @@
+﻿@using Basyc.MessageBus.Manager.Application.Durations
+<durationMapView>
+
+    @if (DurationMap is null || DurationMap.Segments.Length == 0)
+    {
+        @:Nothing to show
+    }
+    else
+    {
+        DurationSegment previousSegment = null;
+        foreach (var segment in DurationMap.Segments)
+        {
+            if (previousSegment is not null && previousSegment.EndTime != segment.StartTime)
+            {
+                @:|
+            }
+            <DurationBoxView DurationSegment="segment" />
+            previousSegment = segment;
+        }
+    }
+
+
+</durationMapView>
+
+
+
+@code {
+    [Parameter] public DurationMap DurationMap { get; set; }
+}
