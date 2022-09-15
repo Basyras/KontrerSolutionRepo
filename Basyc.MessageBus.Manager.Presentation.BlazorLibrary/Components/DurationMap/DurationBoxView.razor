@@ -1,36 +1,30 @@
-﻿@using Basyc.MessageBus.Manager.Application.Durations
+﻿@using Basyc.Diagnostics.Shared.Durations
 <durationBoxContainer>
 
     @{
-        string durationBoxStyle = "";
         var minHeight = GetDurationAsRem(DurationSegment.Duration);
-        if (minHeight < 1)
-        {
-            minHeight = 1;
-        }
-        if(minHeight > 25)
-        {
-            minHeight = 25;
-        }
-        durationBoxStyle = $"min-height: {minHeight}rem;";
-
-        DurationSegment previousSegment = null;
+        string durationBoxStyle = $"min-height: {minHeight}rem;";
+        var showDurationInBox = minHeight > 2.5;
         //-0.5 to compensate margings and line heights.
         //if line height is 1rem and margings and paddings are 0 this is not needed
-        int segmentNameNumberOfLines = (int)Math.Floor(minHeight-0.5); 
+        int segmentNameNumberOfLines = (int)Math.Floor(minHeight - 0.5);
+        if (segmentNameNumberOfLines == 0)
+        {
+            segmentNameNumberOfLines = 1;
+        }
         string segmentNameStyle = $"-webkit-line-clamp: {segmentNameNumberOfLines}; line-clamp: {segmentNameNumberOfLines};";
+        DurationSegment previousSegment = null;
     }
 
     <durationBox Style="@durationBoxStyle">
-        @if (DurationSegment.Duration.TotalMilliseconds > 50)
+        @if (showDurationInBox)
         {
             <durationBoxDuration>
                 @(DurationSegment.Duration.TotalMilliseconds)ms
             </durationBoxDuration>
-
         }
         <div class="tooltiptext">
-            <toolTipDurationName >
+            <toolTipDurationName>
                 @DurationSegment.Name
             </toolTipDurationName>
             <toolTipDurationDuration>
@@ -40,10 +34,10 @@
     </durationBox>
     <nestedContent>
         <segmentNameContainer>
-            <segmentName>
+            <segmentName style="@segmentNameStyle">
                 @DurationSegment.Name
             </segmentName>
-            </segmentNameContainer>
+        </segmentNameContainer>
 
         @foreach (var nestedSegment in DurationSegment.NestedSegments)
         {
@@ -76,8 +70,18 @@
 
 @code {
     [Parameter] public DurationSegment DurationSegment { get; set; }
+    [Parameter] public double Scale { get; set; } = 20;
     public double GetDurationAsRem(TimeSpan duration)
     {
-        return Math.Round(duration.TotalMilliseconds / 20);
+        var minHeight = Math.Round(duration.TotalMilliseconds / Scale);
+        if (minHeight < 1)
+        {
+            minHeight = 1;
+        }
+        if (minHeight > 25)
+        {
+            minHeight = 25;
+        }
+        return minHeight;
     }
 }

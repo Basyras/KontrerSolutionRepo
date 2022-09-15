@@ -51,7 +51,6 @@ namespace Basyc.MessageBus.HttpProxy.Client
 			}
 
 			var httpContent = new ByteArrayContent(proxyRequestBytes);
-			//var httpResult = await httpClient.PostAsync("", httpContent);
 			var httpResult = await retryPolicy.ExecuteAsync(async () => await httpClient.PostAsync("", httpContent));
 
 			if (httpResult.IsSuccessStatusCode is false)

@@ -6,7 +6,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
 {
 	public static class MessageManagerBuilderTypedExtensions
 	{
-		public static TypedProviderBuilder UseTypedProvider(this SelectMessageRegistrationMethodStage managerBuilder)
+		public static TypedProviderBuilder UseTypedProvider(this BusManagerApplicationBuilder managerBuilder)
 		{
 			managerBuilder.services.AddSingleton<IDomainInfoProvider, TypedDomainProvider>();
 

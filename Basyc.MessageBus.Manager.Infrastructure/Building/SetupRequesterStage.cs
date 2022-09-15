@@ -10,13 +10,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building
 		{
 		}
 
-		public SetupTypeFormattingStage SelectRequester<TRequester>() where TRequester : class, IRequester
-		{
-			services.AddSingleton<IRequester, TRequester>();
-			return new SetupTypeFormattingStage(services);
-		}
-
-		public SetupTypeFormattingStage SelectTypedRequester()
+		public SetupTypeFormattingStage SelectBasycTypedMessageBusRequester()
 		{
 			services.AddSingleton<IRequester, BasycTypedMessageBusRequester>();
 			return new SetupTypeFormattingStage(services);

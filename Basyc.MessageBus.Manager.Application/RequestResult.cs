@@ -1,4 +1,4 @@
-﻿using Basyc.MessageBus.Manager.Application.Durations;
+﻿using Basyc.Diagnostics.Shared.Durations;
 using System;
 
 namespace Basyc.MessageBus.Manager.Application

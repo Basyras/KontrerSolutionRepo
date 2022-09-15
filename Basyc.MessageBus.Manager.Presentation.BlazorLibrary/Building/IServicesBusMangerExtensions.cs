@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServicesBusMangerExtensions
 	{
-		public static SelectMessageRegistrationMethodStage AddBasycBusBlazorUI(this IServiceCollection services)
+		public static BusManagerApplicationBuilder AddBasycBusBlazorUI(this IServiceCollection services)
 		{
 			services.AddMudServices();
 			services.AddSingleton<BusManagerJSInterop>();

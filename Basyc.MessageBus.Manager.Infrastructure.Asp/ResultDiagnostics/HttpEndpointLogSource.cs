@@ -1,9 +1,8 @@
-﻿using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
+﻿using Basyc.Diagnostics.Receiving.Abstractions;
 
 namespace Basyc.MessageBus.Manager.Infrastructure.Asp.ResultDiagnostics
 {
-	public class HttpEndpointLogSource : ILogSource
+	public class HttpEndpointLogSource : InMemoryLogSource
 	{
-		public event EventHandler<LogsReceivedArgs>? LogsReceived;
 	}
 }

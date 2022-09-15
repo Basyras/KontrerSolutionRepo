@@ -15,6 +15,10 @@ clientServices.AddLogging(x =>
 	x.SetMinimumLevel(LogLevel.Debug);
 });
 
+clientServices
+	.AddBasycDiagnosticsProducing()
+	.AddSignalRLogProducer();
+
 
 clientServices
 	.AddBasycBus()

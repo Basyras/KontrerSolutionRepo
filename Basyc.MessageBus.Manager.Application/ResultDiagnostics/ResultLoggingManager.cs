@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Basyc.Diagnostics.Receiving.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 

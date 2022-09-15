@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Kontrer.OwnerServer.OrderService.Infrastructure": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:59673;http://localhost:59674"
+    }
+  }
+}

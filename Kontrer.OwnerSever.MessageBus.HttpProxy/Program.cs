@@ -18,6 +18,10 @@ builder.Services.AddCors(policy =>
 		);
 });
 
+builder.Services.AddDiagnosicReceiver()
+	.AddSignalRLogSource();
+
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -27,14 +31,13 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 
 }
-
 app.MapGet("/", async (h) =>
 {
 	await h.Response.WriteAsync("http proxy");
 });
-
 app.UseHttpsRedirection();
-app.MapMessageBusProxy();
-app.Services.StartMessageBusClientAsync();
 app.UseCors("*");
+app.MapMessageBusProxy();
+app.MapSignalRLogSource();
+app.Services.StartMessageBusClientAsync();
 app.Run();
