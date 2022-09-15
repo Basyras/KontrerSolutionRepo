@@ -17,7 +17,11 @@ clientServices.AddLogging(x =>
 
 clientServices
 	.AddBasycDiagnosticsProducing()
-	.AddSignalRLogProducer();
+	.AddSignalRProducer()
+	.UseOptions(options =>
+	{
+		options.SignalRServerUri = "https://localhost:7030";
+	});
 
 
 clientServices
@@ -25,7 +29,8 @@ clientServices
 	.NoProxy()
 	.RegisterBasycTypedHandlers<Program>()
 	.SelectNetMQProvider("Console1")
-	.SelectHttpDiagnostics("https://localhost:7115/log");
+	.UseBasycDiagnosticsProducers();
+//.SelectHttpDiagnostics("https://localhost:7115/log");
 
 var services = clientServices.BuildServiceProvider();
 using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();

@@ -18,7 +18,7 @@ builder.Services.AddCors(policy =>
 		);
 });
 
-builder.Services.AddDiagnosicReceiver()
+builder.Services.AddBasycDiagnosticReceiver()
 	.AddSignalRLogSource();
 
 

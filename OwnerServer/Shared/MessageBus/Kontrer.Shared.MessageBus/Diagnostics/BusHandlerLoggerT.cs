@@ -3,6 +3,8 @@ using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.Shared.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Basyc.MessageBus.Client.Diagnostics
 {
@@ -12,10 +14,10 @@ namespace Basyc.MessageBus.Client.Diagnostics
 		private readonly ILogSink[] logSinks;
 		private readonly bool shouldLogInLogStorage;
 
-		public BusHandlerLoggerT(ILogSink logSinks, ILoggerFactory factory)
+		public BusHandlerLoggerT(IEnumerable<ILogSink> logSinks, ILoggerFactory factory)
 		{
 			logger = new Logger<TCategory>(factory);
-			this.logSinks = new ILogSink[] { logSinks };
+			this.logSinks = logSinks.ToArray();
 			shouldLogInLogStorage = GenericsHelper.IsAssignableToGenericType<TCategory>(typeof(IMessageHandler<>))
 				|| GenericsHelper.IsAssignableToGenericType<TCategory>(typeof(IMessageHandler<,>));
 		}

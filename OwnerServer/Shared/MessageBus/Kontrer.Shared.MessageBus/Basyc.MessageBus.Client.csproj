@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Basyc.DependencyInjection\Basyc.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\..\..\Basyc.Diagnostics.Producing.Shared\Basyc.Diagnostics.Producing.Shared.csproj" />
     <ProjectReference Include="..\..\..\..\Basyc.MessageBus.Shared\Basyc.MessageBus.Shared.csproj" />
     <ProjectReference Include="..\..\..\..\Basyc.Serialization.Abstraction\Basyc.Serialization.Abstraction.csproj" />
     <ProjectReference Include="..\..\..\..\Kontrer.Shared\Basyc.Shared.csproj" />

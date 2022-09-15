@@ -9,6 +9,7 @@ public static class SetupSignalRLogSourceStageExtensions
 {
 	public static SetupUriStage AddSignalRLogSource(this SelectReceiverProviderStage parent)
 	{
+		parent.services.AddSignalR();
 		parent.services.TryAddSingleton<ILogSource, InMemoryLogSource>();
 		return new SetupUriStage(parent.services);
 	}

@@ -12,7 +12,7 @@ namespace SandBox.ConsoleApp
 		{
 			this.logger = logger;
 		}
-		public Task Handle(DeleteCustomerCommand message, CancellationToken cancellationToken = default)
+		public Task Handle(DeleteCustomerCommand message, EventId eventId, CancellationToken cancellationToken = default)
 		{
 			logger.LogInformation($"Handeling message {message.GetType().FullName}");
 			logger.LogInformation($"Handeled message {message.GetType().FullName}");

@@ -28,7 +28,7 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.Http
 			var message = formatter.Invoke(state, exception);
 			messageMap.TryAdd(logKey, new List<string>());
 			messageMap[logKey].Add(message);
-			var logMessageDTO = new LogMessageDTO(logLevel, eventId, message);
+			var logMessageDTO = new LogMessageDTO(logLevel, DateTimeOffset.UtcNow, eventId, message);
 			SendViaHttp(logMessageDTO);
 		}
 

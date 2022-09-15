@@ -55,7 +55,6 @@ namespace Basyc.MessageBus.Client.NetMQ
 				if (handlerMetadata.HandlerInfo.HasResponse)
 				{
 					object taskResult = ((dynamic)handlerResultTask).Result!;
-
 					handlerResult = taskResult;
 
 				}

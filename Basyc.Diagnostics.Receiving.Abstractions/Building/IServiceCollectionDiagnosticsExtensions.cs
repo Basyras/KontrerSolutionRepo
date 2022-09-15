@@ -4,7 +4,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionDiagnosticsExtensions
 	{
-		public static SelectReceiverProviderStage AddDiagnosicReceiver(this IServiceCollection services)
+		public static SelectReceiverProviderStage AddBasycDiagnosticReceiver(this IServiceCollection services)
 		{
 			return new SelectReceiverProviderStage(services);
 		}
