@@ -96,7 +96,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			{
 				logger.LogDebug($"Request received from {senderAddressString}:{requestCase.SessionId}, data: '{requestCase.RequestBytes}'");
 				var deserializedRequest = objectToByteSerailizer.Deserialize(requestCase.RequestBytes, requestCase.RequestType);
-				var consumeResult = await handlerManager.ConsumeMessage(requestCase.RequestType, deserializedRequest, cancellationToken);
+				var consumeResult = await handlerManager.ConsumeMessage(requestCase.RequestType, deserializedRequest, cancellationToken, requestCase.SessionId);
 				object connsumerResultData;
 				if (consumeResult.Value is Exception ex)
 				{
@@ -132,7 +132,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			{
 				logger.LogInformation($"Event received from {senderAddressString}:{eventCase.SessionId}, data: '{eventCase.EventBytes}'");
 				var eventRequest = objectToByteSerailizer.Deserialize(eventCase.EventBytes, eventCase.EventType);
-				var responseData = await handlerManager.ConsumeMessage(eventCase.EventType, eventRequest, cancellationToken);
+				var responseData = await handlerManager.ConsumeMessage(eventCase.EventType, eventRequest, cancellationToken, eventCase.SessionId);
 				//var sessionResult = CreateEventPublishedMessageBytes();
 				//if (sessionManager.TryCompleteSession(eventCase.SessionId, sessionResult) is false)
 				//	logger.LogError($"Session '{eventCase.SessionId}' completation failed. Session does not exist");

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Basyc.DependencyInjection\Basyc.DependencyInjection.csproj" />
-    <ProjectReference Include="..\Basyc.Diagnostics.Producing.SignalR.Shared\Basyc.Diagnostics.Producing.SignalR.Shared.csproj" />
     <ProjectReference Include="..\Basyc.Diagnostics.Receiving.Abstractions\Basyc.Diagnostics.Receiving.Abstractions.csproj" />
+    <ProjectReference Include="..\Basyc.Diagnostics.SignalR.Shared\Basyc.Diagnostics.SignalR.Shared.csproj" />
   </ItemGroup>
 
 </Project>

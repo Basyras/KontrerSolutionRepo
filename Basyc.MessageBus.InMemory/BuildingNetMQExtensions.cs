@@ -18,9 +18,9 @@ public static class BuildingNetMQExtensions
 
 	public static BusClientSetupDiagnosticsStage SelectNetMQProvider(this BusClientSetupProviderStage builder,
 	   int? brokerServerPort) =>
-		SelectNetMQProvider(builder, null, defaultBrokerServerPort, defaultBrokerServerAddress);
+		UseNetMQProvider(builder, null, defaultBrokerServerPort, defaultBrokerServerAddress);
 
-	public static BusClientSetupDiagnosticsStage SelectNetMQProvider(this BusClientSetupProviderStage builder,
+	public static BusClientSetupDiagnosticsStage UseNetMQProvider(this BusClientSetupProviderStage builder,
 		string? clientId = null, int brokerServerPort = defaultBrokerServerPort, string brokerServerAddress = defaultBrokerServerAddress)
 	{
 		var services = builder.services;
@@ -47,17 +47,19 @@ public static class BuildingNetMQExtensions
 	private static void AddMessageHandlerManager(IServiceCollection services)
 	{
 		services.AddSingleton<IMessageHandlerManager, MessageHandlerManager>();
-		services.Configure<MessageHandlerManagerOptions>(x =>
+		services.Configure<MessageHandlerManagerOptions>(handlerManagerOptions =>
 		{
+			handlerManagerOptions.IsDiagnosticLoggingEnabled = true;
+
 			var messageHandlerTypes = services
 				.Where(service => GenericsHelper.IsAssignableToGenericType(service.ServiceType, typeof(IMessageHandler<>)));
 
 			foreach (var messageHandlerService in messageHandlerTypes)
 			{
-				Type handlerType = messageHandlerService.ImplementationType!;
-				Type messageType = GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<>))[0];
+				//Type messageType = messageHandlerService.ServiceType!.GetTypeArgumentsFromParent(typeof(IMessageHandler<>))[0];
+				Type messageType = messageHandlerService.ServiceType.GetGenericArguments()[0];
 				MethodInfo handleMethodInfo = typeof(IMessageHandler<>).MakeGenericType(messageType).GetMethod(nameof(IMessageHandler<IMessage>.Handle))!;
-				x.HandlerInfos.Add(new NetMQMessageHandlerInfo(TypedToSimpleConverter.ConvertTypeToSimple(messageType), handlerType, messageType, handleMethodInfo));
+				handlerManagerOptions.HandlerInfos.Add(new NetMQMessageHandlerInfo(TypedToSimpleConverter.ConvertTypeToSimple(messageType), messageType, handleMethodInfo));
 			}
 
 			var messagesWithResponse = services
@@ -65,14 +67,14 @@ public static class BuildingNetMQExtensions
 
 			foreach (var messageHandlerServiceWithResponse in messagesWithResponse)
 			{
-				Type handlerType = messageHandlerServiceWithResponse.ImplementationType!;
-				Type[] typeArguments = GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<,>));
+				//Type[] typeArguments = messageHandlerServiceWithResponse.ServiceType!.GetTypeArgumentsFromParent(typeof(IMessageHandler<,>));
+				Type[] typeArguments = messageHandlerServiceWithResponse.ServiceType!.GetGenericArguments();
 				Type messageType = typeArguments[0];
 				Type responseType = typeArguments[1];
 				MethodInfo handleWithResponseMethodInfo = typeof(IMessageHandler<,>)
 				.MakeGenericType(messageType, responseType)
 				.GetMethod(nameof(IMessageHandler<IMessage<object>, object>.Handle))!;
-				x.HandlerInfos.Add(new NetMQMessageHandlerInfo(TypedToSimpleConverter.ConvertTypeToSimple(messageType), handlerType, messageType, responseType, handleWithResponseMethodInfo));
+				handlerManagerOptions.HandlerInfos.Add(new NetMQMessageHandlerInfo(TypedToSimpleConverter.ConvertTypeToSimple(messageType), messageType, responseType, handleWithResponseMethodInfo));
 			}
 		});
 	}

@@ -1,5 +1,5 @@
-﻿using Basyc.Diagnostics.Receiving.Abstractions;
-using Basyc.MessageBus.Manager.Application.Initialization;
+﻿using Basyc.MessageBus.Manager.Application.Initialization;
+using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;

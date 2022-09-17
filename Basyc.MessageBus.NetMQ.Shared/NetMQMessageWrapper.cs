@@ -16,16 +16,7 @@ public class NetMQMessageWrapper : INetMQMessageWrapper
 	}
 	public byte[] CreateWrapperMessage(object? messageData, string messageType, int sessionId, MessageCase messageCase)
 	{
-		byte[]? messageBytes = null;
-
-		if (messageData is byte[] bytes)
-		{
-			messageBytes = bytes;
-		}
-		else
-		{
-			messageBytes = objectToByteSerializer.Serialize(messageData, messageType);
-		}
+		byte[] messageBytes = messageData is byte[] bytes ? bytes : objectToByteSerializer.Serialize(messageData, messageType);
 
 		if (messageBytes is null)
 			throw new Exception();

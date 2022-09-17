@@ -14,10 +14,10 @@ clientServices.AddLogging(x =>
 });
 
 clientServices
-	.AddBasycBus()
+	.AddBasycMessageBus()
 	.NoProxy()
 	.RegisterBasycTypedHandlers<Program>()
-	.SelectNetMQProvider("Console2");
+	.UseNetMQProvider("Console2");
 
 var services = clientServices.BuildServiceProvider();
 

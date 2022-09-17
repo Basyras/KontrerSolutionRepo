@@ -14,7 +14,7 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages;
 public partial class BusManager
 {
 	[Inject]
-	public IDomainInfoProviderManager busManager { get; private set; }
+	public IDomainInfoProviderManager DomainInfoProviderManager { get; private set; }
 	[Inject]
 	public ITypedMessageBusClient MessageBusManager { get; private set; }
 	[Inject]
@@ -52,7 +52,7 @@ public partial class BusManager
 
 	protected override void OnInitialized()
 	{
-		DomainInfoViewModel = busManager.GetDomainInfos()
+		DomainInfoViewModel = DomainInfoProviderManager.GetDomainInfos()
 			.Select(domainInfo => new DomainItemViewModel(domainInfo, domainInfo.Requests
 				.Select(requestInfo => new RequestItemViewModel(requestInfo))
 				.OrderBy(x => x.RequestInfo.RequestType)))
@@ -80,7 +80,7 @@ public partial class BusManager
 		await base.OnAfterRenderAsync(firstRender);
 	}
 
-	public async Task SendMessage(RequestItemViewModel requestItem)
+	public Task SendMessage(RequestItemViewModel requestItem)
 	{
 		var requestInfo = requestItem.RequestInfo;
 		List<Parameter> parameters = new List<Parameter>(requestInfo.Parameters.Count);
@@ -97,6 +97,7 @@ public partial class BusManager
 		resultHistory.TryAdd(requestItem, new List<RequestResult>());
 		var requestHistory = resultHistory[requestItem];
 		requestHistory.Add(requestResult);
+		return Task.CompletedTask;
 
 	}
 
@@ -168,7 +169,7 @@ public partial class BusManager
 		colours[remainingColours[0]] = flexibleSaturation - randomSaturationToApply;
 
 		StringBuilder stringBuilder = new StringBuilder(6);
-		stringBuilder.Append("#");
+		stringBuilder.Append('#');
 		stringBuilder.Append(colours[0].ToString("X2"));
 		stringBuilder.Append(colours[1].ToString("X2"));
 		stringBuilder.Append(colours[2].ToString("X2"));

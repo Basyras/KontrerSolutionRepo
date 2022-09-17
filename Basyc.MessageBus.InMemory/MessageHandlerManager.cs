@@ -1,7 +1,7 @@
-﻿using Basyc.MessageBus.Client.RequestResponse;
+﻿using Basyc.MessageBus.Client.Diagnostics;
+using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.MessageBus.NetMQ.Shared;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OneOf;
 
@@ -10,11 +10,12 @@ namespace Basyc.MessageBus.Client.NetMQ
 	public class MessageHandlerManager : IMessageHandlerManager
 	{
 		private readonly IServiceProvider serviceProvider;
+		private readonly IOptions<MessageHandlerManagerOptions> options;
 		private readonly Dictionary<string, HandlerMetadata> handlerTypesCacheMap = new();
 		public MessageHandlerManager(IServiceProvider serviceProvider, IOptions<MessageHandlerManagerOptions> options)
 		{
 			this.serviceProvider = serviceProvider;
-
+			this.options = options;
 			foreach (var handlerInfo in options.Value.HandlerInfos)
 			{
 				Type handlerInterfaceType;
@@ -31,16 +32,13 @@ namespace Basyc.MessageBus.Client.NetMQ
 					handlerInterfaceType = typeof(IMessageHandler<>);
 					handlerType = handlerInterfaceType.MakeGenericType(handlerInfo.MessageType);
 				}
-
-				Type handlerLoggerType = typeof(ILogger<>).MakeGenericType(handlerInfo.HandlerType);
-				ILogger handlerLogger = (ILogger)serviceProvider.GetRequiredService(handlerLoggerType);
-				HandlerMetadata newHandlerMetadata = new(handlerInfo, handlerType, handlerLogger);
+				HandlerMetadata newHandlerMetadata = new(handlerInfo, handlerType);
 				handlerTypesCacheMap.Add(handlerInfo.MessageSimpleType, newHandlerMetadata);
 			}
 
 		}
 
-		public async Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken)
+		public async Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken, int sessionId)
 		{
 			if (handlerTypesCacheMap.TryGetValue(messageType, out var handlerMetadata) is false)
 			{
@@ -48,6 +46,7 @@ namespace Basyc.MessageBus.Client.NetMQ
 			}
 
 			object handler = serviceProvider.GetRequiredService(handlerMetadata.HandlerRuntimeType)!;
+			BusHandlerLoggerSessionManager.StartSession(sessionId);
 			Task handlerResultTask = (Task)handlerMetadata.HandlerInfo.HandleMethodInfo.Invoke(handler, new object[] { messageData!, cancellationToken })!;
 			object? handlerResult;
 			try
@@ -66,9 +65,10 @@ namespace Basyc.MessageBus.Client.NetMQ
 			}
 			catch (Exception ex)
 			{
+				BusHandlerLoggerSessionManager.EndSession();
 				return ex;
 			}
-
+			BusHandlerLoggerSessionManager.EndSession();
 			return handlerResult;
 		}
 
@@ -79,7 +79,8 @@ namespace Basyc.MessageBus.Client.NetMQ
 				.ToArray();
 		}
 
-		private record HandlerMetadata(NetMQMessageHandlerInfo HandlerInfo, Type HandlerRuntimeType, ILogger HandlerLogger);
+
+		private record HandlerMetadata(NetMQMessageHandlerInfo HandlerInfo, Type HandlerRuntimeType);
 	}
 }
 

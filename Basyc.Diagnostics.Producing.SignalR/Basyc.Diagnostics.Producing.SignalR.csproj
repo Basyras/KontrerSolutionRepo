@@ -16,8 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Basyc.DependencyInjection\Basyc.DependencyInjection.csproj" />
     <ProjectReference Include="..\Basyc.Diagnostics.Producing.Shared\Basyc.Diagnostics.Producing.Shared.csproj" />
-    <ProjectReference Include="..\Basyc.Diagnostics.Producing.SignalR.Shared\Basyc.Diagnostics.Producing.SignalR.Shared.csproj" />
     <ProjectReference Include="..\Basyc.Diagnostics.Shared\Basyc.Diagnostics.Shared.csproj" />
+    <ProjectReference Include="..\Basyc.Diagnostics.SignalR.Shared\Basyc.Diagnostics.SignalR.Shared.csproj" />
   </ItemGroup>
 
 </Project>

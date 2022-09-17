@@ -25,7 +25,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 		public void AddLog(LogEntry newLogEntry)
 		{
-			if (newLogEntry.RequestId != RequestResult.Id)
+			if (newLogEntry.SessionId != RequestResult.Id)
 				throw new ArgumentException("Request id does not match context reuqest result id", nameof(newLogEntry));
 
 			LogEntries.Add(newLogEntry);

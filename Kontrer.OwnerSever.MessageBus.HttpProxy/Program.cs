@@ -1,10 +1,12 @@
+using Basyc.Diagnostics.Server.Abstractions.Building;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBasycBus()
+builder.Services.AddBasycMessageBus()
 	.NoProxy()
 	.NoHandlers()
 	//.AddMassTransitClient();
-	.SelectNetMQProvider("HttpProxy");
+	.UseNetMQProvider("HttpProxy");
 
 builder.Services.AddMessageBusProxy();
 
@@ -18,8 +20,8 @@ builder.Services.AddCors(policy =>
 		);
 });
 
-builder.Services.AddBasycDiagnosticReceiver()
-	.AddSignalRLogSource();
+builder.Services.AddBasycDiagnosticsServer()
+	.UseSignalR();
 
 
 var app = builder.Build();
@@ -31,13 +33,13 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 
 }
-app.MapGet("/", async (h) =>
+app.MapGet("/", async (httpContext) =>
 {
-	await h.Response.WriteAsync("http proxy");
+	await httpContext.Response.WriteAsync("http proxy");
 });
 app.UseHttpsRedirection();
 app.UseCors("*");
-app.MapMessageBusProxy();
-app.MapSignalRLogSource();
-app.Services.StartMessageBusClientAsync();
+app.MapBasycMessageBusProxy();
+app.MapBasycSignalRDiagnosticsServer();
+app.Services.StartBasycMessageBusAsync();
 app.Run();

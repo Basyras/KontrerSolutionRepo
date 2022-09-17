@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class SetupProxyStageProxyExtensions
 	{
-		public static ClientProxySetupStage SelectHttpProxy(this BusClientSetupProxyStage builder)
+		public static ClientProxySetupStage UseHttpProxy(this BusClientSetupProxyStage builder)
 		{
 			builder.services.AddBasycSerialization()
 				.SelectProtobufNet();

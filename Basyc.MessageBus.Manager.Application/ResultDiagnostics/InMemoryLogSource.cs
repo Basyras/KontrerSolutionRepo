@@ -1,15 +1,16 @@
 ﻿using Basyc.Diagnostics.Shared.Logging;
 using Microsoft.Extensions.Logging;
+using System;
 
-namespace Basyc.Diagnostics.Receiving.Abstractions
+namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
 	public class InMemoryLogSource : ILogSource
 	{
-		public event EventHandler<LogsReceivedArgs>? LogsReceived;
+		public event EventHandler<LogsUpdatedArgs>? LogsReceived;
 
 		private void OnLogsReceived(LogEntry[] logEntries)
 		{
-			LogsReceived?.Invoke(this, new LogsReceivedArgs(logEntries));
+			LogsReceived?.Invoke(this, new LogsUpdatedArgs(logEntries));
 		}
 
 		public void PushLog(int requestId, LogLevel logLevel, string message)
@@ -26,7 +27,5 @@ namespace Basyc.Diagnostics.Receiving.Abstractions
 		{
 			OnLogsReceived(logEntries);
 		}
-
-
 	}
 }

@@ -17,8 +17,8 @@ namespace Kontrer.OwnerClient.Web.Presentation.BlazorWasm
 			builder.RootComponents.Add<App>("#app");
 			builder.Services.AddMudServices();
 			builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-			builder.Services.AddBasycBus()
-				.SelectHttpProxy()
+			builder.Services.AddBasycMessageBus()
+				.UseHttpProxy()
 				.SetProxyServerUri(new Uri("https://localhost:44371/"));
 
 			//builder.Services.AddSingleton<IOrderManager, OrderManager>();

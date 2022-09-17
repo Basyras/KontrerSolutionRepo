@@ -15,7 +15,7 @@ namespace SandBox.ConsoleApp
 			this.busClient = busClient;
 			this.logger = logger;
 		}
-		public async Task<CreateCustomerCommandResponse> Handle(CreateCustomerCommand message, EventId eventId, CancellationToken cancellationToken = default)
+		public async Task<CreateCustomerCommandResponse> Handle(CreateCustomerCommand message, CancellationToken cancellationToken = default)
 		{
 			logger.LogInformation($"Handeling message {message.GetType().FullName}");
 			CustomerEntity? newCustomer = new CustomerEntity()

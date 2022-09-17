@@ -28,7 +28,7 @@ namespace Basyc.MessageBus.HttpProxy.Client
 		public HttpProxyObjectMessageBusClient(IOptions<HttpProxyObjectMessageBusClientOptions> options,
 			IObjectToByteSerailizer byteSerializer)
 		{
-			retryPolicy = Policy.Handle<Exception>().RetryAsync(2).WrapAsync(Policy.TimeoutAsync(2, Polly.Timeout.TimeoutStrategy.Pessimistic));
+			retryPolicy = Policy.Handle<Exception>().RetryAsync(0).WrapAsync(Policy.TimeoutAsync(10, Polly.Timeout.TimeoutStrategy.Pessimistic));
 			this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
 			this.options = options;
 			this.objectToByteSerializer = byteSerializer;

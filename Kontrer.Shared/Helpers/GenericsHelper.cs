@@ -4,7 +4,7 @@ namespace Basyc.Shared.Helpers
 {
 	public static class GenericsHelper
 	{
-		public static bool IsAssignableToGenericType(Type childType, Type parentType)
+		public static bool IsAssignableToGenericType(this Type childType, Type parentType)
 		{
 			var interfaceTypes = childType.GetInterfaces();
 
@@ -44,7 +44,7 @@ namespace Basyc.Shared.Helpers
 		/// <param name="parentType">parent type that should contain generic parameters</param>
 		/// <returns></returns>
 
-		public static Type[] GetTypeArgumentsFromParent(Type childType, Type parentType)
+		public static Type[] GetTypeArgumentsFromParent(this Type childType, Type parentType)
 		{
 			if (parentType.IsInterface)
 			{

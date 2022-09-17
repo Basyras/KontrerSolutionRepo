@@ -3,6 +3,6 @@
 	public class Constants
 	{
 		public const string HubEndpoint = "/logSource";
-		public const string ReceiveLogEntryMessage = "ReceiveLogEntry";
+		public const string ReceiveLogEntriesFromProducerMessage = "ReceiveLogEntriesFromProducer";
 	}
 }

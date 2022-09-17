@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
 		{
 		}
 
-		public void UseOptions(Action<SignalRLogReceiverOptions> optionSetup)
+		public void SetOptions(Action<SignalRLogReceiverOptions> optionSetup)
 		{
 			services.Configure<SignalRLogReceiverOptions>(optionSetup);
 		}

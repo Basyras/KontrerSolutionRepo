@@ -5,6 +5,6 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks
 {
 	public interface ILogSink
 	{
-		public void SendLog<TState>(string handlerDisplayName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter);
+		public void SendLog<TState>(string handlerDisplayName, LogLevel logLevel, int sessionId, TState state, Exception exception, Func<TState, Exception, string> formatter);
 	}
 }

@@ -1,8 +1,13 @@
 ﻿using Basyc.DependencyInjection;
+using Basyc.MessageBus.Client.Diagnostics;
+using Basyc.MessageBus.Client.Diagnostics.Sinks;
 using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.Shared.Helpers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Basyc.MessageBus.Client.Building
@@ -20,10 +25,10 @@ namespace Basyc.MessageBus.Client.Building
 
 		public BusClientSetupProviderStage RegisterBasycTypedHandlers<THandlerAssemblyMarker>()
 		{
-			return RegisterBasycTypedHandlers(typeof(THandlerAssemblyMarker).Assembly);
+			return RegisterBasycTypedHandlersCustom(typeof(THandlerAssemblyMarker).Assembly);
 		}
 
-		public BusClientSetupProviderStage RegisterBasycTypedHandlers(params Assembly[] assembliesToScan)
+		private BusClientSetupProviderStage RegisterBasycTypedHandlers(params Assembly[] assembliesToScan)
 		{
 			services.Scan(scan =>
 			scan.FromAssemblies(assembliesToScan)
@@ -41,6 +46,59 @@ namespace Basyc.MessageBus.Client.Building
 			.WithScopedLifetime());
 
 			return new BusClientSetupProviderStage(services);
+		}
+
+		public BusClientSetupProviderStage RegisterBasycTypedHandlersCustom(params Assembly[] assembliesToScan)
+		{
+
+			foreach (var assembly in assembliesToScan)
+			{
+				Type[] typesInAssembly = assembly.GetTypes();
+				var handlerTypesInAssembly = typesInAssembly.Where(x => x.IsAssignableToGenericType(typeof(IMessageHandler<>)));
+				foreach (var handlerType in handlerTypesInAssembly)
+				{
+					var serviceType = typeof(IMessageHandler<>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<>)));
+					services.AddScoped(serviceType, serviceProvider => CreateHandlerWithDecoratedLoggerT(handlerType, serviceProvider));
+				}
+
+				var handlerTypesInAssembly2 = typesInAssembly.Where(x => x.IsAssignableToGenericType(typeof(IMessageHandler<,>)));
+				foreach (var handlerType in handlerTypesInAssembly2)
+				{
+					var serviceType = typeof(IMessageHandler<,>).MakeGenericType(GenericsHelper.GetTypeArgumentsFromParent(handlerType, typeof(IMessageHandler<,>)));
+					services.AddScoped(serviceType, serviceProvider => CreateHandlerWithDecoratedLoggerT(handlerType, serviceProvider));
+				}
+
+			}
+			return new BusClientSetupProviderStage(services);
+		}
+
+		private static object CreateHandlerWithDecoratedLoggerT(Type handlerType, IServiceProvider services)
+		{
+			var ctor = handlerType.GetConstructors().First();
+			var ctorParams = ctor.GetParameters();
+			object[] ctorArguments = new object[ctorParams.Length];
+			for (int paramIndex = 0; paramIndex < ctorParams.Length; paramIndex++)
+			{
+				ParameterInfo ctorParam = ctorParams[paramIndex];
+				if (ctorParam.ParameterType == typeof(ILogger))
+				{
+					var logSinks = services.GetServices<ILogSink>().ToArray();
+					ctorArguments[paramIndex] = new BusHandlerLogger((ILogger)services.GetRequiredService(ctorParam.ParameterType), logSinks, handlerType.Name);
+					continue;
+				}
+				if (ctorParam.ParameterType == typeof(ILogger<>).MakeGenericType(handlerType))
+				{
+					var logSinks = services.GetServices<ILogSink>().ToArray();
+					var decoLoggerType = typeof(BusHandlerLogger<>).MakeGenericType(handlerType);
+					var decoLoggerCtor = decoLoggerType.GetConstructor(new Type[] { typeof(ILogger), typeof(IEnumerable<ILogSink>) });
+					var decoLogger = decoLoggerCtor.Invoke(new object[] { services.GetRequiredService(ctorParam.ParameterType), logSinks });
+					ctorArguments[paramIndex] = decoLogger;
+					continue;
+				}
+				ctorArguments[paramIndex] = services.GetRequiredService(ctorParam.ParameterType);
+			}
+			var handlerInstance = ctor.Invoke(ctorArguments);
+			return handlerInstance;
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿using Basyc.Diagnostics.Receiving.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,11 +16,11 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			}
 		}
 
-		private void LogSource_LogsReceived(object? sender, LogsReceivedArgs e)
+		private void LogSource_LogsReceived(object? sender, LogsUpdatedArgs e)
 		{
-			foreach (var logEntry in e.LogEntries)
+			foreach (var logEntry in e.NewLogEntries)
 			{
-				var loggingContext = GetLoggingContext(logEntry.RequestId);
+				var loggingContext = GetLoggingContext(logEntry.SessionId);
 				loggingContext.AddLog(logEntry);
 			}
 		}

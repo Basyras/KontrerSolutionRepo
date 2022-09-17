@@ -1,10 +1,7 @@
 ﻿using Basyc.MessageBus.Client.Building;
-using Basyc.MessageBus.Client.Diagnostics;
 using Basyc.MessageBus.Client.Diagnostics.Sinks;
 using Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics;
 using Basyc.MessageBus.Client.Diagnostics.Sinks.Http;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -17,8 +14,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
 			stage.services.AddLogging(loggingBuilder =>
 			{
-				InjectLoggerT(stage, loggingBuilder);
-
 				loggingBuilder.Services.AddSingleton<ILogSink, HttpLogSink>();
 				stage.services.Configure<HttpLogSinkOptions>(sinkOptions =>
 				{
@@ -32,17 +27,8 @@ namespace Microsoft.Extensions.DependencyInjection
 		{
 			stage.services.AddLogging(loggingBuilder =>
 			{
-				InjectLoggerT(stage, loggingBuilder);
 				loggingBuilder.Services.AddSingleton<ILogSink, BasycDiagnosticsLogSink>();
 			});
 		}
-
-		private static void InjectLoggerT(BusClientSetupDiagnosticsStage stage, ILoggingBuilder loggingBuilder)
-		{
-			loggingBuilder.Services.RemoveAll(typeof(ILogger<>));
-			stage.services.Add(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(BusHandlerLoggerT<>)));
-			stage.services.AddSingleton(typeof(LoggerToBypassCircularDepedency<>));
-		}
-
 	}
 }

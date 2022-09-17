@@ -9,7 +9,9 @@ namespace Basyc.MessageBus.Client.Building
 		{
 		}
 
+#pragma warning disable CA1822 // Mark members as static
 		public void NoDiagnostics()
+#pragma warning restore CA1822 // Mark members as static
 		{
 		}
 	}

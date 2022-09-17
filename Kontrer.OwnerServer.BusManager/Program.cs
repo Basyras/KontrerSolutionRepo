@@ -25,23 +25,28 @@ var assembliesToScan = new Assembly[]
 	typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
 };
 
-builder.Services.AddBasycBus()
-	.SelectHttpProxy()
+builder.Services.AddBasycMessageBus()
+	.UseHttpProxy()
 	.SetProxyServerUri(new Uri("https://localhost:44310/"));
+
+builder.Services.AddBasycDiagnosticReceiver()
+	.UseSignalR()
+	.SetServerUri("https://localhost:44310");
 
 var busManagerBuilder = builder.Services.AddBasycBusBlazorUI();
 CreateTestingMessages(busManagerBuilder);
 
 busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
 	.RegisterMessagesAsCQRS(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>))
-	.SelectBasycTypedMessageBusRequester()
+	.UseBasycDiagnosticsReceivers()
+	.UseBasycTypedMessageBusRequester()
 	.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
 
 
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
 var app = builder.Build();
+await app.Services.StartBasycDiagnosticsReceivers();
 await app.RunAsync();
 
 static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration.BusManagerApplicationBuilder busManagerBuilder)

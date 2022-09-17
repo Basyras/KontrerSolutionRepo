@@ -21,14 +21,14 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.Http
 			this.logger = logger;
 		}
 
-		public void SendLog<TState>(string handlerDisplayName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+		public void SendLog<TState>(string handlerDisplayName, LogLevel logLevel, int sessionId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
-			var logKey = new LogStorageKey(handlerDisplayName, eventId);
+			var logKey = new LogStorageKey(handlerDisplayName, sessionId);
 
 			var message = formatter.Invoke(state, exception);
 			messageMap.TryAdd(logKey, new List<string>());
 			messageMap[logKey].Add(message);
-			var logMessageDTO = new LogMessageDTO(logLevel, DateTimeOffset.UtcNow, eventId, message);
+			var logMessageDTO = new LogMessageDTO(logLevel, DateTimeOffset.UtcNow, sessionId, message);
 			SendViaHttp(logMessageDTO);
 		}
 

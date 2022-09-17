@@ -10,7 +10,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building
 		{
 		}
 
-		public SetupTypeFormattingStage SelectBasycTypedMessageBusRequester()
+		public SetupTypeFormattingStage UseBasycTypedMessageBusRequester()
 		{
 			services.AddSingleton<IRequester, BasycTypedMessageBusRequester>();
 			return new SetupTypeFormattingStage(services);

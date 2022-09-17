@@ -11,7 +11,7 @@ namespace Basyc.MessageBus.Client.NetMQ
 		/// <param name="messageType"></param>
 		/// <param name="messageData"></param>
 		/// <returns></returns>
-		Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken);
+		Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken, int sessionId);
 		string[] GetConsumableMessageTypes();
 	}
 }

@@ -1,11 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Basyc.Diagnostics.Producing.SignalR.Shared;
 using Basyc.MessageBus.Client;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
-
-
 
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
@@ -17,18 +15,18 @@ clientServices.AddLogging(x =>
 
 clientServices
 	.AddBasycDiagnosticsProducing()
-	.AddSignalRProducer()
-	.UseOptions(options =>
+	.UseSignalR()
+	.SetOptions(options =>
 	{
-		options.SignalRServerUri = "https://localhost:7030";
+		options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
 	});
 
 
 clientServices
-	.AddBasycBus()
+	.AddBasycMessageBus()
 	.NoProxy()
 	.RegisterBasycTypedHandlers<Program>()
-	.SelectNetMQProvider("Console1")
+	.UseNetMQProvider("Console1")
 	.UseBasycDiagnosticsProducers();
 //.SelectHttpDiagnostics("https://localhost:7115/log");
 
