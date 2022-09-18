@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.HttpProxy.Server.Asp.SignalR
 {
-	public class ProxyClientHub : Hub<IProxyClientHubMethods>
+	public class ProxyClientHub : Hub<IProxyClientMethods>, IProxyServerMethods
 	{
 		private readonly IByteMessageBusClient messageBus;
 

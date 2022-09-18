@@ -77,39 +77,39 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 
 		}
 
-		Task IObjectMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
+		public Task PublishAsync(string eventType, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(eventType, null, null, cancellationToken);
 		}
 
-		Task IObjectMessageBusClient.PublishAsync(string eventType, object eventData, CancellationToken cancellationToken)
+		public Task PublishAsync(string eventType, object eventData, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(eventType, eventData, null, cancellationToken);
 		}
 
-		Task IObjectMessageBusClient.SendAsync(string commandType, CancellationToken cancellationToken)
+		public Task SendAsync(string commandType, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(commandType, null, null, cancellationToken);
 		}
 
-		Task IObjectMessageBusClient.SendAsync(string commandType, object commandData, CancellationToken cancellationToken)
+		public Task SendAsync(string commandType, object commandData, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(commandType, commandData, null, cancellationToken);
 		}
 
-		Task<object> IObjectMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
+		public Task<object> RequestAsync(string requestType, CancellationToken cancellationToken)
 		{
 			return HttpCallToProxyServer(requestType, null, typeof(UknownResponseType), cancellationToken);
 		}
 
-		BusTask<object> IObjectMessageBusClient.RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
+		public BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
 		{
 			var proxyCallTask = HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
 			var busTask = BusTask<object>.FromTask(-1, proxyCallTask);
 			return busTask;
 		}
 
-		Task IObjectMessageBusClient.StartAsync(CancellationToken cancellationToken)
+		public Task StartAsync(CancellationToken cancellationToken)
 		{
 			return Task.CompletedTask;
 		}

@@ -1,6 +1,7 @@
-﻿using Basyc.Diagnostics.Producing.SignalR.Shared;
-using Basyc.Diagnostics.Receiving.Abstractions;
+﻿using Basyc.Diagnostics.Receiving.Abstractions;
 using Basyc.Diagnostics.Shared.Logging;
+using Basyc.Diagnostics.SignalR.Shared;
+using Basyc.Extensions.SignalR.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
 
@@ -9,7 +10,7 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 	public class SignalRLogReceiver : ILogReceiver
 	{
 
-		private readonly HubConnection hubConnection;
+		private readonly IStrongTypedHubConnection<IServerMethodsReceiversCanCall> hubConnection;
 		private readonly IOptions<SignalRLogReceiverOptions> options;
 
 		public event EventHandler<LogsReceivedArgs>? LogsReceived;
@@ -20,13 +21,13 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 			hubConnection = new HubConnectionBuilder()
 				.WithUrl(options.Value.SignalRServerReceiverHubUri!)
 				.WithAutomaticReconnect()
-				.Build();
+				.BuildStrongTyped<IServerMethodsReceiversCanCall, IReceiversMethodsServerCanCall>(new ReceiversMethodsServerCanCall(OnLogsReceived));
 
-			hubConnection.On(SignalRConstants.ReceiveLogEntriesFromServerMessage, (Action<LogEntrySignalRDTO[]>)(logEntriesDtos =>
-			{
-				LogEntry[] logEntries = logEntriesDtos.Select(x => LogEntrySignalRDTO.ToLogEntry(x)).ToArray();
-				OnLogsReceived(logEntries);
-			}));
+			//hubConnection.UnderlyingHubConnection.On(SignalRConstants.ReceiveLogEntriesFromServerMessage, (Action<LogEntrySignalRDTO[]>)(logEntriesDtos =>
+			//{
+			//	LogEntry[] logEntries = logEntriesDtos.Select(x => LogEntrySignalRDTO.ToLogEntry(x)).ToArray();
+			//	OnLogsReceived(logEntries);
+			//}));
 		}
 
 		private void OnLogsReceived(LogEntry[] logEntries)

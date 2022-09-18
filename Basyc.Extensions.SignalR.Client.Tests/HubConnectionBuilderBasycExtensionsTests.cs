@@ -1,4 +1,5 @@
 using Basyc.Extensions.SignalR.Client.Tests.Mocks;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Basyc.Extensions.SignalR.Client.Tests
 {
@@ -9,34 +10,34 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 		public void When_BuildStrongTyped_With_CorrectHub_Should_Not_Throw()
 		{
 			var hubClient = new HubConnectionMockBuilder()
-			.BuildStrongTyped<ICorrectHubClientWithAllMethodTypes>();
+				.BuildStrongTyped<ICorrectHubClient_Has_Voids>();
 
 			var mockConnection = (HubConnectionMock)hubClient.UnderlyingHubConnection;
-			hubClient.Methods.SendNumber(1);
+			hubClient.Call.SendNumber(1);
 
 			mockConnection.LastSendCoreCall.Should().NotBeNull();
-			mockConnection.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClientWithAllMethodTypes.SendNumber));
+			mockConnection.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClient_Has_Voids.SendNumber));
 		}
 
 		[Fact]
 		public async Task When_CreateStrongTyped_With_CorrectHub_Should_Not_Throw()
 		{
 			var connectionMock = new HubConnectionMockBuilder().BuildAsMock();
-			var hubClient = connectionMock.CreateStrongTyped<ICorrectHubClientWithAllMethodTypes>();
+			var hubClient = connectionMock.CreateStrongTyped<ICorrectHubClient_Has_AllCorrect>();
 
-			hubClient.Methods.SendNumber(1);
+			hubClient.Call.SendNumber(1);
 			connectionMock.LastSendCoreCall.Should().NotBeNull();
-			connectionMock.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClientWithAllMethodTypes.SendNumber));
+			connectionMock.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClient_Has_AllCorrect.SendNumber));
 			connectionMock.LastSendCoreCall!.Args.Should().Equal(new object?[] { 1 });
 
-			hubClient.Methods.SendNothing();
-			connectionMock.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClientWithAllMethodTypes.SendNothing));
+			hubClient.Call.SendNothing();
+			connectionMock.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClient_Has_AllCorrect.SendNothing));
 			connectionMock.LastSendCoreCall!.Args.Should().Equal(new object?[] { });
 
-			var sendNumberTask = hubClient.Methods.SendNumberAsync(2);
+			var sendNumberTask = hubClient.Call.SendIntAsync(2);
 			sendNumberTask.Should().NotBeNull();
-			sendNumberTask.Should().BeOfType<Task>();
-			connectionMock.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClientWithAllMethodTypes.SendNumberAsync));
+			sendNumberTask.Should().BeAssignableTo<Task>();
+			connectionMock.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClient_Has_AllCorrect.SendIntAsync));
 			connectionMock.LastSendCoreCall!.Args.Should().Equal(new object?[] { 2 });
 
 

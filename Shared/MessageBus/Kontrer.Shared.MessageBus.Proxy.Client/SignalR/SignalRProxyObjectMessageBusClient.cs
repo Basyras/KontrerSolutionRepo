@@ -1,9 +1,10 @@
-﻿using Basyc.MessageBus.Client;
+﻿using Basyc.Extensions.SignalR.Client;
+using Basyc.MessageBus.Client;
+using Basyc.MessageBus.HttpProxy.Client.SignalR;
 using Basyc.MessageBus.HttpProxy.Shared.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,71 +12,55 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 {
 	public class SignalRProxyObjectMessageBusClient : IObjectMessageBusClient
 	{
-		private readonly HubConnection hubConnection;
+		private readonly IStrongTypedHubConnection<IProxyClientMethods> hubConnection;
 
 		public SignalRProxyObjectMessageBusClient(IOptions<SignalROptions> options)
 		{
 			hubConnection = new HubConnectionBuilder()
 			.WithUrl(options.Value.SignalRServerUri + options.Value.ProxyClientHubPattern)
 			.WithAutomaticReconnect()
-			.Build();
+			.BuildStrongTyped<IProxyClientMethods, IProxyServerMethods>(new ProxyServerMethods());
+		}
 
-			hubConnection.On(SignalRConstants.ReceiveRequestResultMetadataMessage, (Action<LogEntrySignalRDTO[]>)(logEntriesDtos =>
-			{
-				LogEntry[] logEntries = logEntriesDtos.Select(x => LogEntrySignalRDTO.ToLogEntry(x)).ToArray();
-				OnLogsReceived(logEntries);
-			}));
+		public Task StartAsync(CancellationToken cancellationToken)
+		{
+			return hubConnection.StartAsync();
 		}
 
 		public void Dispose()
 		{
-
+			hubConnection.DisposeAsync().GetAwaiter().GetResult();
 		}
 
-
-
-		Task IObjectMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
+		public Task PublishAsync(string eventType, CancellationToken cancellationToken = default)
 		{
-			return HttpCallToProxyServer(eventType, null, null, cancellationToken);
+			throw new NotImplementedException();
 		}
 
-		Task IObjectMessageBusClient.PublishAsync(string eventType, object eventData, CancellationToken cancellationToken)
+		public Task PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default)
 		{
-			return HttpCallToProxyServer(eventType, eventData, null, cancellationToken);
+			throw new NotImplementedException();
 		}
 
-		Task IObjectMessageBusClient.SendAsync(string commandType, CancellationToken cancellationToken)
+		public Task<object> RequestAsync(string requestType, CancellationToken cancellationToken = default)
 		{
-			return HttpCallToProxyServer(commandType, null, null, cancellationToken);
+			throw new NotImplementedException();
 		}
 
-		Task IObjectMessageBusClient.SendAsync(string commandType, object commandData, CancellationToken cancellationToken)
+		public BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default)
 		{
-			return HttpCallToProxyServer(commandType, commandData, null, cancellationToken);
+			throw new NotImplementedException();
 		}
 
-		Task<object> IObjectMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
+		public Task SendAsync(string commandType, CancellationToken cancellationToken = default)
 		{
-			return HttpCallToProxyServer(requestType, null, typeof(UknownResponseType), cancellationToken);
+			throw new NotImplementedException();
 		}
 
-		BusTask<object> IObjectMessageBusClient.RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
+		public Task SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default)
 		{
-			var proxyCallTask = HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
-			var busTask = BusTask<object>.FromTask(-1, proxyCallTask);
-			return busTask;
+			throw new NotImplementedException();
 		}
 
-		Task IObjectMessageBusClient.StartAsync(CancellationToken cancellationToken)
-		{
-			var hubConnection = HubConnectionBuilder
-		}
-
-		void IDisposable.Dispose()
-		{
-
-		}
-
-		private class UknownResponseType { };
 	}
 }

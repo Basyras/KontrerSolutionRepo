@@ -1,15 +1,16 @@
 ﻿using Basyc.Diagnostics.Producing.SignalR.Shared;
 using Basyc.Diagnostics.Server.Abstractions;
 using Basyc.Diagnostics.Shared.Logging;
+using Basyc.Diagnostics.SignalR.Shared;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Basyc.Diagnostics.SignalR.Server
 {
 	public class SignalRDiagnosticsServer : IDiagnosticsServer
 	{
-		private readonly IHubContext<LoggingReceiversHub, ILoggingReceiversMethods> receiversHubContext;
+		private readonly IHubContext<LoggingReceiversHub, IReceiversMethodsServerCanCall> receiversHubContext;
 
-		public SignalRDiagnosticsServer(IHubContext<LoggingReceiversHub, ILoggingReceiversMethods> receiversHubContext)
+		public SignalRDiagnosticsServer(IHubContext<LoggingReceiversHub, IReceiversMethodsServerCanCall> receiversHubContext)
 		{
 			this.receiversHubContext = receiversHubContext;
 		}

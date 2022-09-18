@@ -4,34 +4,39 @@
 	{
 		public static Type[] WrongHubTypes = new Type[]
 		{
-			typeof(IWrongHubClient_Has_ReturnValue),
-			typeof(IWrongHubClient_Has_TaskReturnValue),
-			typeof(IWrongHubClient_Has_MultipleReturnValue),
+			typeof(IWrongHubClient_Has_ReturnValues),
+			typeof(IWrongHubClient_Has_TaskReturnValues),
+			typeof(IWrongHubClient_HasInherited_ReturnValue),
+			typeof(IWrongHubClient_Has_AllWrongs),
 		};
 	}
 
-	public interface IWrongHubClient_Has_ReturnValue
+	public interface IWrongHubClient_Has_ReturnValues : ICorrectHubClient_Has_Voids
 	{
-		int SendNothingReceiveNumber();
+		int WrongSendNothingReceiveNumber();
+		string WrongSendNothingReceiveText();
+		int WrongSendNothing();
+		int WrongSendNothing2();
+		string WrongSendInt(int number);
+		object WrongSendIntString(int number, string name);
 	}
 
-	public interface IWrongHubClient_Has_TaskReturnValue
+	public interface IWrongHubClient_Has_TaskReturnValues : ICorrectHubClient_Has_Voids
 	{
-		Task<int> SendNothingReceiveTaskNumber();
+		Task<int> WrongSendNothingAsyncInt();
+		Task<int> WrongSendIntAsyncInt(int number);
+		Task<int> WrongSendIntCancelAsyncInt(int number, CancellationToken cancellationToken);
+		Task<int> WrongSendIntStringAsyncInt(int number, string text);
 	}
 
-	public interface IWrongHubClient_Has_MultipleReturnValue
+	public interface IWrongHubClient_HasInherited_ReturnValue : IWrongHubClient_Has_ReturnValues
 	{
-		int SendNothing();
-		int SendNothing2();
-		string SendNothing3(int number);
-		object SendNothing4(int number, string name);
 	}
 
 	public interface IWrongHubClient_Has_AllWrongs :
-		IWrongHubClient_Has_ReturnValue,
-		IWrongHubClient_Has_TaskReturnValue,
-		IWrongHubClient_Has_MultipleReturnValue
+		IWrongHubClient_Has_ReturnValues,
+		IWrongHubClient_Has_TaskReturnValues,
+		ICorrectHubClient_Has_AllCorrect
 	{
 	}
 }

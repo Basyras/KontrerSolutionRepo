@@ -1,24 +1,39 @@
-﻿using Castle.DynamicProxy;
-using Microsoft.AspNetCore.SignalR.Client;
+﻿using Basyc.Extensions.SignalR.Client;
+using Castle.DynamicProxy;
 
-namespace Basyc.Extensions.SignalR.Client
+namespace Microsoft.AspNetCore.SignalR.Client
 {
 	public static class HubConnectionBuilderBasycExtensions
 	{
 		private static readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
-		public static IHubConnection<THubClient> BuildStrongTyped<THubClient>(this IHubConnectionBuilder hubConnectionBuilder) where THubClient : class
+
+		public static IStrongTypedHubConnection BuildStrongTypedReceiver<TMethodsServerCanCall>(this IHubConnectionBuilder hubConnectionBuilder, TMethodsServerCanCall serverMethods)
 		{
-			HubConnection connection = hubConnectionBuilder.Build();
-			HubClientInteceptor hubClientInteceptor = new HubClientInteceptor(connection, typeof(THubClient));
-			var hubClientProxy = proxyGenerator.CreateInterfaceProxyWithoutTarget<THubClient>(hubClientInteceptor);
-			return new HubConnection<THubClient>(hubClientProxy, connection);
+			var connection = hubConnectionBuilder.Build();
+			return new StrongTypedHubConnectionReceiver<TMethodsServerCanCall>(connection, serverMethods);
 		}
 
-		public static IHubConnection<THubClient> CreateStrongTyped<THubClient>(this HubConnection connection) where THubClient : class
+		public static IStrongTypedHubConnection<TMethodsClientCanCall> BuildStrongTyped<TMethodsClientCanCall>(this IHubConnectionBuilder hubConnectionBuilder)
+			where TMethodsClientCanCall : class
 		{
-			HubClientInteceptor hubClientInteceptor = new HubClientInteceptor(connection, typeof(THubClient));
-			var hubClientProxy = proxyGenerator.CreateInterfaceProxyWithoutTarget<THubClient>(hubClientInteceptor);
-			return new HubConnection<THubClient>(hubClientProxy, connection);
+			CreateMethodsClientCanCallProxy<TMethodsClientCanCall>(hubConnectionBuilder, out var connection, out var hubClientProxy);
+			return new StrongTypedHubConnection<TMethodsClientCanCall>(hubClientProxy, connection);
+		}
+
+		public static IStrongTypedHubConnection<TMethodsClientCanCall> BuildStrongTyped<TMethodsClientCanCall, TMethodsServerCanCall>(this IHubConnectionBuilder hubConnectionBuilder, TMethodsServerCanCall serverMethods)
+			where TMethodsClientCanCall : class
+		{
+			CreateMethodsClientCanCallProxy<TMethodsClientCanCall>(hubConnectionBuilder, out var connection, out var hubClientProxy);
+			return new StrongTypedHubConnection<TMethodsClientCanCall, TMethodsServerCanCall>(hubClientProxy, connection, serverMethods);
+		}
+
+
+		private static void CreateMethodsClientCanCallProxy<TMethodsClientCanCall>(IHubConnectionBuilder hubConnectionBuilder, out HubConnection connection, out TMethodsClientCanCall hubClientProxy)
+			where TMethodsClientCanCall : class
+		{
+			connection = hubConnectionBuilder.Build();
+			HubClientInteceptor hubClientInteceptor = new HubClientInteceptor(connection, typeof(TMethodsClientCanCall));
+			hubClientProxy = proxyGenerator.CreateInterfaceProxyWithoutTarget<TMethodsClientCanCall>(hubClientInteceptor);
 		}
 	}
 }

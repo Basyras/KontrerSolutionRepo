@@ -4,27 +4,45 @@
 	{
 		public static Type[] CorrectHubTypes = new Type[]
 		{
-			typeof(ICorrectHubClientWithoutMethods),
-			typeof(ICorrectHubClientWithAllMethodTypes),
-			typeof(ICorrectHubClient3),
+			typeof(ICorrectHubClient_Has_NoMethods),
+			typeof(ICorrectHubClient_Has_Voids),
+			typeof(ICorrectHubClient_Has_Tasks),
+			typeof(ICorrectHubClient_HasInherited_Voids),
+			typeof(ICorrectHubClient_Has_AllCorrect),
 		};
 	}
 
-	public interface ICorrectHubClientWithoutMethods
+	public interface ICorrectHubClient_Has_NoMethods
 	{
 
 	}
 
-	public interface ICorrectHubClientWithAllMethodTypes
+	public interface ICorrectHubClient_Has_Voids
 	{
 		void SendNothing();
 		void SendNumber(int number);
-		Task SendNumberAsync(int number);
-		Task SendNumberAsync(int number, CancellationToken cancellationToken);
+		void SendIntString(int number, string name);
 	}
 
-	public interface ICorrectHubClient3
+	public interface ICorrectHubClient_Has_Tasks
 	{
-		Task SendNumberAsync(int number, int number2, int number3, int number4, CancellationToken cancellationToken);
+		Task SendNothingAsync();
+		Task SendIntAsync(int number);
+		Task SendIntCancelAsync(int number, CancellationToken cancellationToken);
+		Task SendIntStringCancelAsync(int number, string name, CancellationToken cancellationToken);
 	}
+
+	public interface ICorrectHubClient_HasInherited_Voids : ICorrectHubClient_Has_Voids
+	{
+
+	}
+
+
+	public interface ICorrectHubClient_Has_AllCorrect :
+		ICorrectHubClient_Has_NoMethods,
+		ICorrectHubClient_Has_Voids,
+		ICorrectHubClient_Has_Tasks
+	{
+	}
+
 }

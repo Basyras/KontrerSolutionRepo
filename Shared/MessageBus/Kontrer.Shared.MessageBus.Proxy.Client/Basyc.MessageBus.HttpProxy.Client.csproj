@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Basyc.Extensions.SignalR.Client\Basyc.Extensions.SignalR.Client.csproj" />
     <ProjectReference Include="..\..\..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />
     <ProjectReference Include="..\Kontrer.Shared.MessageBus.Proxy.Shared\Basyc.MessageBus.HttpProxy.Shared.csproj" />
   </ItemGroup>

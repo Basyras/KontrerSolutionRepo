@@ -1,5 +1,7 @@
-﻿using Castle.DynamicProxy;
-using Microsoft.AspNetCore.SignalR.Client;
+﻿using Basyc.Extensions.SignalR.Client.Tests.Mocks;
+using Basyc.Shared.Helpers;
+using Castle.DynamicProxy;
+using System.Reflection;
 
 namespace Basyc.Extensions.SignalR.Client.Tests
 {
@@ -7,25 +9,58 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 	{
 		private static readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
 
-		private readonly HubConnection connection;
+		private readonly HubConnectionMock connection;
 		public HubClientInteceptorTests()
 		{
-			connection = new HubConnectionBuilder().WithUrl("https://localhost:44310/correctHub").Build();
+			connection = new HubConnectionMockBuilder().BuildAsMock();
 		}
 
 		[Fact]
-		public void Should_Create_Proxy_With_0_Methods()
+		public void Should_Not_Throw_When_CorrectHub()
 		{
-			var inteceptor = new HubClientInteceptor(connection, typeof(ICorrectHubClientWithoutMethods));
-			var proxy = proxyGenerator.CreateInterfaceProxyWithoutTarget<ICorrectHubClientWithoutMethods>(inteceptor);
+			foreach (var correctHubType in CorrectHubs.CorrectHubTypes)
+			{
+				var publicMethods = correctHubType.GetMethodsRecursive(BindingFlags.Public | BindingFlags.Instance);
+				var inteceptor = new HubClientInteceptor(connection, correctHubType);
+				inteceptor.InterceptedMethods.Count.Should().Be(publicMethods.Length);
+				for (int methodIndex = 0; methodIndex < publicMethods.Length; methodIndex++)
+				{
+					var publicMethod = publicMethods[methodIndex];
+					var methodMetadata = inteceptor.InterceptedMethods[methodIndex];
+					(methodMetadata.MethodInfo == publicMethod).Should().BeTrue();
+
+					methodMetadata.ReturnsVoid.Should().Be(publicMethod.ReturnType == typeof(void));
+					methodMetadata.ReturnsTask.Should().Be(publicMethod.ReturnType == typeof(Task));
+					ParameterInfo[] parameterInfos = publicMethod.GetParameters();
+					methodMetadata.Parameters.Should().Equal(parameterInfos.Select(x => x.ParameterType));
+					methodMetadata.HasCancelToken.Should().Be(parameterInfos.Any(x => x.ParameterType == typeof(CancellationToken)));
+					if (methodMetadata.HasCancelToken)
+					{
+						var cancelTokenIndex = -1;
+						for (int paramIndex = 0; paramIndex < parameterInfos.Length; paramIndex++)
+						{
+							var paraInfo = parameterInfos[paramIndex];
+							if (paraInfo.ParameterType == typeof(CancellationToken))
+							{
+								cancelTokenIndex = paramIndex;
+								break;
+							}
+						}
+						methodMetadata.CancelTokenIndex.Should().Be(cancelTokenIndex);
+					}
+				}
+			}
+
 		}
 
-
 		[Fact]
-		public void Should_Create_Proxy_With_All_Method_Types()
+		public void Should_Include_Inherited_Public_Methods()
 		{
-			var inteceptor = new HubClientInteceptor(connection, typeof(ICorrectHubClientWithAllMethodTypes));
-			var proxy = proxyGenerator.CreateInterfaceProxyWithoutTarget<ICorrectHubClientWithAllMethodTypes>(inteceptor);
+			var hubClientType = typeof(ICorrectHubClient_HasInherited_Voids);
+			var publicMethods = hubClientType.GetMethodsRecursive(BindingFlags.Public | BindingFlags.Instance);
+
+			var inteceptor = new HubClientInteceptor(connection, hubClientType);
+			inteceptor.InterceptedMethods.Count.Should().Be(publicMethods.Length);
 		}
 
 		[Fact]
@@ -38,21 +73,6 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 					var inteceptor = new HubClientInteceptor(connection, hubType);
 				};
 				action.Should().Throw<ArgumentException>();
-
-			}
-
-		}
-
-		[Fact]
-		public void Should_Not_Throw_When_CreatingCorrectHub()
-		{
-			foreach (var hubType in CorrectHubs.CorrectHubTypes)
-			{
-				var action = () =>
-				{
-					var inteceptor = new HubClientInteceptor(connection, hubType);
-				};
-				action.Should().NotThrow();
 
 			}
 
