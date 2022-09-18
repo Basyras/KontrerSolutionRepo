@@ -16,6 +16,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			RequestResult = requestResult;
 		}
 
+
 		public void AddLog(DateTimeOffset time, LogLevel logLevel, string message)
 		{
 			LogEntry newLogEntry = new(RequestResult.Id, time, logLevel, message);

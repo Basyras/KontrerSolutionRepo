@@ -1,5 +1,6 @@
 ﻿using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,11 +35,11 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 			var requestResult = new RequestResult(request, DateTime.Now, requestCounter++);
 			results.Add(requestResult);
 			var loggingContext = loggingManager.RegisterLoggingContex(requestResult);
-			loggingContext.AddLog(DateTimeOffset.UtcNow, Microsoft.Extensions.Logging.LogLevel.Information, "Picking Requester");
+			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Picking requester");
 			var requester = requesterSelector.PickRequester(request.RequestInfo);
-			loggingContext.AddLog(DateTimeOffset.UtcNow, Microsoft.Extensions.Logging.LogLevel.Information, "Starting request");
+			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Starting request");
 			requester.StartRequest(requestResult);
-			loggingContext.AddLog(DateTimeOffset.UtcNow, Microsoft.Extensions.Logging.LogLevel.Information, "Request started");
+			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Request started");
 
 
 			return requestResult;

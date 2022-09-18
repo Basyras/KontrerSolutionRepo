@@ -1,11 +1,11 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Application.Requesting;
+using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.Formatters;
 using Basyc.MessageBus.Shared;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,17 +18,23 @@ namespace Basyc.MessageBus.Manager
 
 		private readonly IRequestInfoTypeStorage requestInfoTypeStorage;
 		private readonly IResponseFormatter responseFormatter;
+		private readonly IResultLoggingManager resultLoggingManager;
 		private readonly ITypedMessageBusClient typedMessageBusClient;
 
-		public BasycTypedMessageBusRequester(ITypedMessageBusClient typedMessageBusClient, IRequestInfoTypeStorage requestInfoTypeStorage, IResponseFormatter responseFormatter)
+		public BasycTypedMessageBusRequester(ITypedMessageBusClient typedMessageBusClient,
+			IRequestInfoTypeStorage requestInfoTypeStorage,
+			IResponseFormatter responseFormatter,
+			IResultLoggingManager resultLoggingManager)
 		{
 			this.typedMessageBusClient = typedMessageBusClient;
 			this.requestInfoTypeStorage = requestInfoTypeStorage;
 			this.responseFormatter = responseFormatter;
+			this.resultLoggingManager = resultLoggingManager;
 		}
 
 
 		public string UniqueName => BasycTypedMessageBusRequesterUniqueName;
+
 
 		public void StartRequest(RequestResult requestResult)
 		{
@@ -36,17 +42,15 @@ namespace Basyc.MessageBus.Manager
 			var requestType = requestInfoTypeStorage.GetRequestType(requestResult.Request.RequestInfo);
 			var paramValues = requestResult.Request.Parameters.Select(x => x.Value).ToArray();
 			var requestObject = Activator.CreateInstance(requestType, paramValues);
-
 			Task.Run(async () =>
 			{
-				var stopWatch = new Stopwatch();
 				try
 				{
-
 					if (requestResult.Request.RequestInfo.HasResponse)
 					{
 						var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
 						var response = await typedMessageBusClient.RequestAsync(requestType, requestObject, requestResult.Request.RequestInfo.ResponseType);
+						resultLoggingManager.AddSessionToContext(requestResult, "");
 						waitingForBusSegment.End();
 						if (response.Value is ErrorMessage error)
 						{
@@ -78,6 +82,8 @@ namespace Basyc.MessageBus.Manager
 								}
 								requestResult.Fail(errorMessage);
 							}
+
+							resultLoggingManager.AddSessionToContext(requestResult, "");
 							requestResult.Complete();
 
 						});

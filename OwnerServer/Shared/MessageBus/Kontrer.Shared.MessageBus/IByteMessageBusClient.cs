@@ -15,6 +15,7 @@ namespace Basyc.MessageBus.Client
 
 		Task<ByteResponse> RequestAsync(string requestType, CancellationToken cancellationToken = default);
 		Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default);
+		Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default);
 
 		Task StartAsync(CancellationToken cancellationToken = default);
 	}
