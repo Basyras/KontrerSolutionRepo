@@ -34,7 +34,7 @@ namespace SandBox.AspApiApp
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SandBoxApp", Version = "v1" });
             //});
 
-            services.AddMessageBusProxy();
+            services.UseHttp();
             //.AddMassTransit(Assembly.GetExecutingAssembly());
         }
 
@@ -65,7 +65,7 @@ namespace SandBox.AspApiApp
             {
                 //endpoints.MapRazorPages();
                 //endpoints.MapControllers();
-                endpoints.MapMessageBusProxyServer();
+                endpoints.MapHttpMessageBusProxyServer();
             });
         }
     }

@@ -43,10 +43,10 @@ namespace Basyc.MessageBus.Client.MasstTransit
 		async Task<OneOf<object, ErrorMessage>> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
 		{
 			var bus = (ITypedMessageBusClient)this;
-			return await bus.RequestAsync(requestType, Activator.CreateInstance(requestType), responseType, cancellationToken);
+			return await bus.RequestAsync(requestType, Activator.CreateInstance(requestType), responseType, cancellationToken).Task;
 		}
 
-		public async Task<OneOf<object, ErrorMessage>> RequestAsync(Type requestType, object request, Type responseType, CancellationToken cancellationToken)
+		public BusTask<object> RequestAsync(Type requestType, object request, Type responseType, CancellationToken cancellationToken)
 		{
 			var conType = typeof(SendContext<>).MakeGenericType(requestType);
 			var actionType = typeof(Action<>).MakeGenericType(conType);
@@ -57,8 +57,12 @@ namespace Basyc.MessageBus.Client.MasstTransit
 			var parameters = requestMethodInfo.GetParameters();
 			MethodInfo genericMethod = requestMethodInfo.MakeGenericMethod(requestType, responseType);
 
-			var busResponse = (Response<object>)await InvokeAsync(genericMethod, null, new object[] { massTransitBus, request, cancellationToken, default(RequestTimeout), null });
-			return busResponse.Message;
+			//var busResponse = (Response<object>)await InvokeAsync(genericMethod, null, new object[] { massTransitBus, request, cancellationToken, default(RequestTimeout), null });
+			//return busResponse.Message;
+
+			var busResponse = InvokeAsync(genericMethod, null, new object[] { massTransitBus, request, cancellationToken, default(RequestTimeout), null });
+			var busTask = BusTask<object>.FromTask(-1, busResponse);
+			return busTask;
 		}
 
 		public async Task SendAsync(Type requestType, object request, CancellationToken cancellationToken)
@@ -67,7 +71,7 @@ namespace Basyc.MessageBus.Client.MasstTransit
 			//await _massTransitBus.Send(request, requestType, cancellationToken); //Does not work
 
 			//Command can return response, but should not query data, returning command completion status is allowed
-			await RequestAsync(requestType, request, typeof(VoidCommandResult), cancellationToken);
+			await RequestAsync(requestType, request, typeof(VoidCommandResult), cancellationToken).Task;
 		}
 
 		public async Task SendAsync(Type requestType, CancellationToken cancellationToken)

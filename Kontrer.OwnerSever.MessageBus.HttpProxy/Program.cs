@@ -8,7 +8,11 @@ builder.Services.AddBasycMessageBus()
 	//.AddMassTransitClient();
 	.UseNetMQProvider("HttpProxy");
 
-builder.Services.AddMessageBusProxy();
+builder.Services.AddBasycMessageBusProxy()
+	.UseHttp();
+
+builder.Services.AddBasycMessageBusProxy()
+	.UseSignalR();
 
 builder.Services.AddCors(policy =>
 {
@@ -39,7 +43,10 @@ app.MapGet("/", async (httpContext) =>
 });
 app.UseHttpsRedirection();
 app.UseCors("*");
-app.MapBasycMessageBusProxy();
+
+app.MapBasycHttpMessageBusProxy();
+app.MapBasycSignalRMessageBusProxy();
+
 app.MapBasycSignalRDiagnosticsServer();
 app.Services.StartBasycMessageBusAsync();
 app.Run();

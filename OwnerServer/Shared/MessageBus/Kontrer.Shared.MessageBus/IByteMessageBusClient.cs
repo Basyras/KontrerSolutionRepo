@@ -1,6 +1,4 @@
-﻿using Basyc.MessageBus.Shared;
-using OneOf;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
@@ -14,8 +12,8 @@ namespace Basyc.MessageBus.Client
 		Task SendAsync(string commandType, byte[] commandData, CancellationToken cancellationToken = default);
 
 		Task<ByteResponse> RequestAsync(string requestType, CancellationToken cancellationToken = default);
-		Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default);
-		Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default);
+		//Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default);
+		BusTask<ByteResponse> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default);
 
 		Task StartAsync(CancellationToken cancellationToken = default);
 	}

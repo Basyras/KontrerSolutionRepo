@@ -6,7 +6,8 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
 	public class ResultLoggingManager : IResultLoggingManager
 	{
-		private readonly Dictionary<RequestResult, ResultLoggingContext> loggingContexts = new Dictionary<RequestResult, ResultLoggingContext>();
+		private readonly Dictionary<RequestResult, ResultLoggingContext> resultToContextMap = new Dictionary<RequestResult, ResultLoggingContext>();
+		private readonly Dictionary<int, ResultLoggingContext> sesionIdToContextMap = new();
 
 		public ResultLoggingManager(IEnumerable<ILogSource> logSources)
 		{
@@ -28,27 +29,31 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		public ResultLoggingContext RegisterLoggingContex(RequestResult requestResult)
 		{
 			ResultLoggingContext loggingContext = new ResultLoggingContext(requestResult);
-			loggingContexts.Add(requestResult, loggingContext);
+			resultToContextMap.Add(requestResult, loggingContext);
 			return loggingContext;
 		}
 
 		public ResultLoggingContext GetLoggingContext(RequestResult requestResult)
 		{
-			return loggingContexts[requestResult];
+			return resultToContextMap[requestResult];
 		}
 
 		public ResultLoggingContext GetLoggingContext(int requestResultId)
 		{
-			return loggingContexts.Values.First(x => x.RequestResult.Id == requestResultId);
+			return resultToContextMap.Values.First(x => x.RequestResult.Id == requestResultId);
 		}
 
 		public void FinishLoggingContext(RequestResult requestResult)
 		{
-			if (loggingContexts.Remove(requestResult) is false)
+			if (resultToContextMap.Remove(requestResult) is false)
 			{
 				throw new ArgumentException("Coresponding context not found", nameof(requestResult));
 			}
 		}
 
+		public void AddSessionToContext(RequestResult requestResult, int sessionId)
+		{
+			sesionIdToContextMap.Add(sessionId, resultToContextMap[requestResult]);
+		}
 	}
 }

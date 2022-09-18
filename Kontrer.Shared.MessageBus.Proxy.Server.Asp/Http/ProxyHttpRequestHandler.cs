@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.HttpProxy.Server.Asp
+namespace Basyc.MessageBus.HttpProxy.Server.Asp.Http
 {
 	public class ProxyHttpRequestHandler
 	{
@@ -31,9 +31,9 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp
 
 			if (proxyRequest.HasResponse)
 			{
-				var busRequestResponse = await messageBus.RequestAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
-
-				await busRequestResponse.Match(
+				var busTask = messageBus.RequestAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
+				var busTaskValue = await busTask.Task;
+				await busTaskValue.Match(
 					async byteResponse =>
 					{
 						var proxyResponse = new ProxyResponse(proxyRequest.MessageType, proxyRequest.HasResponse, byteResponse.ResponseBytes, byteResponse.ResposneType);

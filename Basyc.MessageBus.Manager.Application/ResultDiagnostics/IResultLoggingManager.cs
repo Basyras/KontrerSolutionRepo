@@ -3,7 +3,7 @@
 	public interface IResultLoggingManager
 	{
 		ResultLoggingContext RegisterLoggingContex(RequestResult requestResult);
-		ResultLoggingContext AddSessionToContext(RequestResult requestResult, int sessionId);
+		void AddSessionToContext(RequestResult requestResult, int sessionId);
 
 		ResultLoggingContext GetLoggingContext(RequestResult requestResult);
 		ResultLoggingContext GetLoggingContext(int sessionId);

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Basyc.Shared.Helpers
+﻿namespace System
 {
 	public static class GenericsHelper
 	{

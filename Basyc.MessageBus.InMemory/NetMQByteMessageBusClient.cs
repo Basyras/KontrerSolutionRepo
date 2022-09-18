@@ -213,16 +213,51 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 
 	private Task SendAsync(byte[]? commnadData, string commandType, CancellationToken cancellationToken)
 	{
-		return RequestAsync(commnadData, commandType, cancellationToken);
+		return RequestAsync(commnadData, commandType, cancellationToken).Task;
 	}
 
-	private Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(byte[]? requestBytes, string requestType, CancellationToken cancellationToken)
+	//private Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(byte[]? requestBytes, string requestType, CancellationToken cancellationToken)
+	//{
+	//	Task<OneOf<ByteResponse, ErrorMessage>> task = Task.Run<OneOf<ByteResponse, ErrorMessage>>(async () =>
+	//	{
+	//		requestBytes ??= new byte[0];
+	//		cancellationToken.ThrowIfCancellationRequested();
+	//		var newSession = sessionManager.CreateSession(requestType);
+	//		var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(requestBytes, requestType, newSession.SessionId, MessageCase.Request);
+	//		var messageToBroker = new NetMQMessage();
+	//		messageToBroker.AppendEmptyFrame();
+	//		messageToBroker.Append(netMQByteMessage);
+
+	//		cancellationToken.ThrowIfCancellationRequested();
+
+	//		logger.LogInformation($"Requesting '{requestType}'");
+	//		try
+	//		{
+	//			dealerSocket.SendMultipartMessage(messageToBroker);
+	//		}
+	//		catch (Exception ex)
+	//		{
+	//			logger.LogCritical(ex, "Failed to send request");
+	//			var sessionResultError = CreateErrorMessageBytes("Failed to send request");
+	//			sessionManager.TryCompleteSession(newSession.SessionId, sessionResultError);
+	//		}
+
+	//		logger.LogInformation($"Requested '{requestType}'");
+	//		var sessionResult = await newSession.ResponseSource.Task;
+	//		return new ByteResponse(sessionResult.bytes, sessionResult.responseType);
+	//	});
+
+	//	return task;
+	//}
+
+	private BusTask<ByteResponse> RequestAsync(byte[]? requestBytes, string requestType, CancellationToken cancellationToken)
 	{
+		var newSession = sessionManager.CreateSession(requestType);
+
 		Task<OneOf<ByteResponse, ErrorMessage>> task = Task.Run<OneOf<ByteResponse, ErrorMessage>>(async () =>
 		{
 			requestBytes ??= new byte[0];
 			cancellationToken.ThrowIfCancellationRequested();
-			var newSession = sessionManager.CreateSession(requestType);
 			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(requestBytes, requestType, newSession.SessionId, MessageCase.Request);
 			var messageToBroker = new NetMQMessage();
 			messageToBroker.AppendEmptyFrame();
@@ -247,7 +282,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			return new ByteResponse(sessionResult.bytes, sessionResult.responseType);
 		});
 
-		return task;
+		return BusTask<ByteResponse>.FromTask(newSession.SessionId, task);
 	}
 
 
@@ -273,13 +308,20 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 
 	async Task<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
 	{
-		var response = await RequestAsync(null, requestType, cancellationToken);
+		var response = await RequestAsync(null, requestType, cancellationToken).Task;
 		return response.Match(byteResponse => byteResponse, error => throw new Exception(error.Message));
 	}
 
-	async Task<OneOf<ByteResponse, ErrorMessage>> IByteMessageBusClient.RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken)
+	//async Task<OneOf<ByteResponse, ErrorMessage>> IByteMessageBusClient.RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken)
+	//{
+	//	return await RequestAsync(requestData, requestType, cancellationToken);
+	//}
+
+	BusTask<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken)
 	{
-		return await RequestAsync(requestData, requestType, cancellationToken);
+		var reqeustTask = RequestAsync(requestData, requestType, cancellationToken);
+		return reqeustTask;
+
 	}
 
 	public void Dispose()

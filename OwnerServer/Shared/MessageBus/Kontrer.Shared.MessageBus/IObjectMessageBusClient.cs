@@ -18,7 +18,7 @@ namespace Basyc.MessageBus.Client
         Task SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default);
 
         Task<object> RequestAsync(string requestType, CancellationToken cancellationToken = default);
-        Task<OneOf<object,ErrorMessage>> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default);
+        BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default);
 
         Task StartAsync(CancellationToken cancellationToken = default);
     }

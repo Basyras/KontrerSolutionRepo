@@ -15,7 +15,7 @@ namespace Basyc.MessageBus.HttpProxy.Shared
 		{
 			MessageType = requestType;
 			MessageBytes = requestBytes ?? Array.Empty<byte>();
-			ResponseAssemblyQualifiedTypeName = responseType;
+			ResponseType = responseType;
 			HasResponse = hasResponse;
 		}
 
@@ -24,7 +24,7 @@ namespace Basyc.MessageBus.HttpProxy.Shared
 		[ProtoMember(2)]
 		public byte[] MessageBytes { get; set; }
 		[ProtoMember(3)]
-		public string ResponseAssemblyQualifiedTypeName { get; set; }
+		public string ResponseType { get; set; }
 		[ProtoMember(4)]
 		public bool HasResponse { get; set; }
 	}

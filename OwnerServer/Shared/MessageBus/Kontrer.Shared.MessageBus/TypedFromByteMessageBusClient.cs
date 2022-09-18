@@ -39,18 +39,29 @@ namespace Basyc.MessageBus.Client
 			return objectToByteSerailizer.Deserialize(requestResponse.ResponseBytes, requestResponse.ResposneType);
 		}
 
-		public async Task<OneOf<object, ErrorMessage>> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default)
+		//public async Task<OneOf<object, ErrorMessage>> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default)
+		//{
+		//	var requestTypeString = TypedToSimpleConverter.ConvertTypeToSimple(requestType);
+		//	var responseTypeString = TypedToSimpleConverter.ConvertTypeToSimple(responseType);
+
+		//	var requestBytes = objectToByteSerailizer.Serialize(requestData, requestTypeString);
+		//	var requestResponseResult = await byteMessageBusClient.RequestAsync(requestTypeString, requestBytes, cancellationToken);
+		//	return requestResponseResult.Match(byteResponse =>
+		//	{
+		//		return objectToByteSerailizer.Deserialize(byteResponse.ResponseBytes, byteResponse.ResposneType);
+		//	},
+		//	error => throw new Exception(error.Message));
+		//}
+
+		public BusTask<object> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default)
 		{
 			var requestTypeString = TypedToSimpleConverter.ConvertTypeToSimple(requestType);
 			var responseTypeString = TypedToSimpleConverter.ConvertTypeToSimple(responseType);
 
 			var requestBytes = objectToByteSerailizer.Serialize(requestData, requestTypeString);
-			var requestResponseResult = await byteMessageBusClient.RequestAsync(requestTypeString, requestBytes, cancellationToken);
-			return requestResponseResult.Match(byteResponse =>
-			{
-				return objectToByteSerailizer.Deserialize(byteResponse.ResponseBytes, byteResponse.ResposneType);
-			},
-			error => throw new Exception(error.Message));
+			var byteBusTask = byteMessageBusClient.RequestAsync(requestTypeString, requestBytes, cancellationToken);
+			var objectBusTask = BusTask<object>.FromBusTask(byteBusTask, byteResponse => objectToByteSerailizer.Deserialize(byteResponse.ResponseBytes, byteResponse.ResposneType));
+			return objectBusTask;
 		}
 
 		public Task SendAsync<TCommand>(TCommand commandData, CancellationToken cancellationToken = default) where TCommand : notnull, IMessage
@@ -92,7 +103,7 @@ namespace Basyc.MessageBus.Client
 
 		async Task<OneOf<TResponse, ErrorMessage>> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest requestData, CancellationToken cancellationToken)
 		{
-			var response = await RequestAsync(typeof(TRequest), requestData, typeof(TResponse), cancellationToken);
+			var response = await RequestAsync(typeof(TRequest), requestData, typeof(TResponse), cancellationToken).Task;
 			return response.MapT0(x => (TResponse)x);
 		}
 

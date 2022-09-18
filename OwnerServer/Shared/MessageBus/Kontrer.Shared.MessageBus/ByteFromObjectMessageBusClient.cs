@@ -1,6 +1,5 @@
 ﻿using Basyc.MessageBus.Shared;
 using Basyc.Serialization.Abstraction;
-using OneOf;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,17 +31,24 @@ namespace Basyc.MessageBus.Client
 			return new ByteResponse((byte[])resposne, "unknown");
 		}
 
-		public async Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default)
+		public BusTask<ByteResponse> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default)
 		{
-			var requestResult = await objectMessageBusClient.RequestAsync(requestType, requestData, cancellationToken);
-			return requestResult.Match<OneOf<ByteResponse, ErrorMessage>>(resultObject =>
-			{
-				if (resultObject is byte[] bytes)
-					return new ByteResponse(bytes, "unknown");
+			var innerBusTask = objectMessageBusClient.RequestAsync(requestType, requestData, cancellationToken);
+			//return requestResult.Match<OneOf<ByteResponse, ErrorMessage>>(resultObject =>
+			//{
+			//	if (resultObject is byte[] bytes)
+			//		return new ByteResponse(bytes, "unknown");
 
-				//return byteSerailizer.Serialize(resultObject, requestType).AsT0;
-				throw new System.Exception("Does not know how to serialize");
-			}, error => error);
+			//	//return byteSerailizer.Serialize(resultObject, requestType).AsT0;
+			//	throw new System.Exception("Does not know how to serialize");
+			//}, error => error);
+			return BusTask<ByteResponse>.FromBusTask(innerBusTask, nestedValue =>
+			{
+				if (nestedValue is byte[] bytes)
+					return new ByteResponse(bytes, "unknown");
+				else
+					return new ErrorMessage("Does not know how to serialize");
+			});
 		}
 
 		public Task SendAsync(string commandType, CancellationToken cancellationToken = default)

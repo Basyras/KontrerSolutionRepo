@@ -1,3 +1,4 @@
+using Basyc.MessageBus.HttpProxy.Client.Http;
 using FluentAssertions;
 using Kontrer.Shared.MessageBus.HttpProxy.Shared;
 using Microsoft.Extensions.Options;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace Basyc.MessageBus.HttpProxy.Client.Tests
 {
-    public class HttpProxyClientMessageBusManagerTests
+	public class HttpProxyClientMessageBusManagerTests
     {
         private readonly HttpProxyObjectMessageBusClient manager;
         private readonly Mock<HttpMessageHandler> httpHandlerMock;

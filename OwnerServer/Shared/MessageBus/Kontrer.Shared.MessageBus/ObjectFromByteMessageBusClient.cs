@@ -1,6 +1,4 @@
-﻿using Basyc.MessageBus.Shared;
-using Basyc.Serialization.Abstraction;
-using OneOf;
+﻿using Basyc.Serialization.Abstraction;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,15 +39,12 @@ namespace Basyc.MessageBus.Client
 			return objectToByteSerailizer.Deserialize(responseBytes.ResponseBytes, responseBytes.ResposneType);
 		}
 
-		public async Task<OneOf<object, ErrorMessage>> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default)
+		public BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default)
 		{
 			var requestBytes = objectToByteSerailizer.Serialize(requestData, requestType);
-			var requestResponseResult = await byteMessageBusClient.RequestAsync(requestType, requestBytes, cancellationToken);
-			return requestResponseResult.Match(byteResponse =>
-			{
-				return objectToByteSerailizer.Deserialize(byteResponse.ResponseBytes, byteResponse.ResposneType);
-			},
-			error => error);
+			var innerBusTask = byteMessageBusClient.RequestAsync(requestType, requestBytes, cancellationToken);
+			var busTask = BusTask<object>.FromBusTask(innerBusTask, byteResponse => objectToByteSerailizer.Deserialize(byteResponse.ResponseBytes, byteResponse.ResposneType));
+			return busTask;
 		}
 
 		public Task SendAsync(string commandType, CancellationToken cancellationToken = default)

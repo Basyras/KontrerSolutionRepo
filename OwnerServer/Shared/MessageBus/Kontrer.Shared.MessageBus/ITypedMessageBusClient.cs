@@ -29,7 +29,8 @@ namespace Basyc.MessageBus.Client
 			 where TResponse : class;
 		Task<OneOf<object, ErrorMessage>> RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken = default);
 
-		Task<OneOf<object, ErrorMessage>> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default);
+		//Task<OneOf<object, ErrorMessage>> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default);
+		BusTask<object> RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken = default);
 
 		Task<OneOf<TResponse, ErrorMessage>> RequestAsync<TRequest, TResponse>(TRequest requestData, CancellationToken cancellationToken = default)
 			where TRequest : class, IMessage<TResponse>

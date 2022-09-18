@@ -1,10 +1,8 @@
 ﻿using Basyc.MessageBus.Client;
 using Basyc.MessageBus.HttpProxy.Shared;
-using Basyc.MessageBus.Shared;
 using Basyc.Serialization.Abstraction;
 using Basyc.Serializaton.Abstraction;
 using Microsoft.Extensions.Options;
-using OneOf;
 using Polly;
 using Polly.Wrap;
 using System;
@@ -13,7 +11,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Basyc.MessageBus.HttpProxy.Client
+namespace Basyc.MessageBus.HttpProxy.Client.Http
 {
 	public class HttpProxyObjectMessageBusClient : IObjectMessageBusClient
 	{
@@ -29,9 +27,9 @@ namespace Basyc.MessageBus.HttpProxy.Client
 			IObjectToByteSerailizer byteSerializer)
 		{
 			retryPolicy = Policy.Handle<Exception>().RetryAsync(0).WrapAsync(Policy.TimeoutAsync(10, Polly.Timeout.TimeoutStrategy.Pessimistic));
-			this.httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
+			httpClient = new HttpClient() { BaseAddress = options.Value.ProxyHostUri };
 			this.options = options;
-			this.objectToByteSerializer = byteSerializer;
+			objectToByteSerializer = byteSerializer;
 		}
 
 		private async Task<object> HttpCallToProxyServer(string messageType, object messageData, Type responseType = null, CancellationToken cancellationToken = default)
@@ -104,10 +102,11 @@ namespace Basyc.MessageBus.HttpProxy.Client
 			return HttpCallToProxyServer(requestType, null, typeof(UknownResponseType), cancellationToken);
 		}
 
-		async Task<OneOf<object, ErrorMessage>> IObjectMessageBusClient.RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
+		BusTask<object> IObjectMessageBusClient.RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
 		{
-			var result = await HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
-			return result;
+			var proxyCallTask = HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
+			var busTask = BusTask<object>.FromTask(-1, proxyCallTask);
+			return busTask;
 		}
 
 		Task IObjectMessageBusClient.StartAsync(CancellationToken cancellationToken)

@@ -5,28 +5,35 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
 {
-	[Obsolete("Not used")]
+	//[Obsolete("Not used")]
 	public struct BusTask<TValue>
 	{
 
-		public static BusTask<TValue> FromTask(int sessioId, Task<OneOf<TValue, ErrorMessage>> value)
+		public static BusTask<TValue> FromTask(int sessionId, Task<TValue> nestedTask)
 		{
-			return new BusTask<TValue>(sessioId, value);
+			var wrapperTask = nestedTask.ContinueWith<OneOf<TValue, ErrorMessage>>(x =>
+			{
+				if (x.IsCompletedSuccessfully)
+				{
+					return (OneOf<TValue, ErrorMessage>)x.Result;
+				}
+
+				if (x.IsCanceled)
+					return new ErrorMessage("Canceled");
+
+				return new ErrorMessage(x.Exception.Message);
+			});
+			return FromTask(sessionId, wrapperTask);
 		}
 
-		public static BusTask<TValue> FromError(int sessioId, ErrorMessage error)
+		public static BusTask<TValue> FromTask(int sessionId, Task<OneOf<TValue, ErrorMessage>> nestedTask)
 		{
-			return new BusTask<TValue>(sessioId, error);
+			return new BusTask<TValue>(sessionId, nestedTask);
 		}
 
-		public static BusTask<TValue> FromValue(int sessioId, TValue value)
+		public static BusTask<TValue> FromTask<TNestedValue>(int sessionId, Task<OneOf<TNestedValue, ErrorMessage>> nestedTask, Func<TNestedValue, OneOf<TValue, ErrorMessage>> converter)
 		{
-			return new BusTask<TValue>(sessioId, value);
-		}
-
-		public static BusTask<TValue> FromBusTask<TNestedValue>(int sessioId, BusTask<TNestedValue> nestedBusTask, Func<TNestedValue, TValue> converter)
-		{
-			var task = nestedBusTask.Value.ContinueWith<OneOf<TValue, ErrorMessage>>(x =>
+			var wrapperTask = nestedTask.ContinueWith<OneOf<TValue, ErrorMessage>>(x =>
 			{
 				if (x.IsCompletedSuccessfully)
 				{
@@ -41,28 +48,47 @@ namespace Basyc.MessageBus.Client
 				return new ErrorMessage(x.Exception.Message);
 
 			});
-			return new BusTask<TValue>(sessioId, task);
+			return FromTask(sessionId, wrapperTask);
+		}
+
+		public static BusTask<TValue> FromError(int sessionId, ErrorMessage error)
+		{
+			return new BusTask<TValue>(sessionId, error);
+		}
+
+		public static BusTask<TValue> FromValue(int sessionId, TValue value)
+		{
+			return new BusTask<TValue>(sessionId, value);
+		}
+
+		public static BusTask<TValue> FromBusTask<TNestedValue>(BusTask<TNestedValue> nestedBusTask, Func<TNestedValue, OneOf<TValue, ErrorMessage>> converter)
+		{
+			return FromBusTask<TNestedValue>(nestedBusTask.SessionId, nestedBusTask, converter);
+		}
+		public static BusTask<TValue> FromBusTask<TNestedValue>(int sessionId, BusTask<TNestedValue> nestedBusTask, Func<TNestedValue, OneOf<TValue, ErrorMessage>> converter)
+		{
+			return FromTask(sessionId, nestedBusTask.Task, converter);
 		}
 
 		private BusTask(int sessionId, Task<OneOf<TValue, ErrorMessage>> value)
 		{
 			SessionId = sessionId;
-			Value = value;
+			Task = value;
 		}
 
 		private BusTask(int sessionId, ErrorMessage error)
 		{
 			SessionId = sessionId;
-			Value = Task.FromResult<OneOf<TValue, ErrorMessage>>(error);
+			Task = System.Threading.Tasks.Task.FromResult<OneOf<TValue, ErrorMessage>>(error);
 		}
 
 		private BusTask(int sessionId, TValue value)
 		{
 			SessionId = sessionId;
-			Value = Task.FromResult<OneOf<TValue, ErrorMessage>>(value);
+			Task = System.Threading.Tasks.Task.FromResult<OneOf<TValue, ErrorMessage>>(value);
 		}
 
-		public Task<OneOf<TValue, ErrorMessage>> Value { get; init; }
+		public Task<OneOf<TValue, ErrorMessage>> Task { get; init; }
 		public int SessionId { get; init; }
 	}
 }
