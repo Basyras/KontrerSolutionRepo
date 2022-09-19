@@ -12,7 +12,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 		private readonly IRequester[] requesters;
 		private readonly IRequesterSelector requesterSelector;
 		private readonly IResultLoggingManager loggingManager;
-		private int requestCounter;
+		private readonly int requestCounter;
 
 		public RequestManager(IEnumerable<IRequester> requesters, IRequesterSelector requesterSelector, IResultLoggingManager loggingManager)
 		{
@@ -32,13 +32,13 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 				Results.Add(request.RequestInfo, results);
 			}
 
-			var requestResult = new RequestResult(request, DateTime.Now, requestCounter++);
+			var requester = requesterSelector.PickRequester(request.RequestInfo);
+			var requestResult = new RequestResult(request, DateTime.Now);
 			results.Add(requestResult);
+			requester.StartRequest(requestResult);
 			var loggingContext = loggingManager.RegisterLoggingContex(requestResult);
 			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Picking requester");
-			var requester = requesterSelector.PickRequester(request.RequestInfo);
 			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Starting request");
-			requester.StartRequest(requestResult);
 			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Request started");
 
 

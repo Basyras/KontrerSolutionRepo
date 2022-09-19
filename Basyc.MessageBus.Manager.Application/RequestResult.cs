@@ -10,19 +10,18 @@ namespace Basyc.MessageBus.Manager.Application
 
 		public Request Request { get; init; }
 		public DateTimeOffset RequestCreationTime { get; init; }
-		public int Id { get; init; }
+		public int SessionId { get; set; }
 		public RequestResultState State { get; private set; }
 		public object? Response { get; private set; }
 		public string? ErrorMessage { get; private set; }
 		public DurationMap? DurationMap { get; private set; }
 
 
-		public RequestResult(Request request, DateTimeOffset requestCreationTime, int id)
+		public RequestResult(Request request, DateTimeOffset requestCreationTime)
 		{
 			Request = request;
 			durationMapBuilder = new DurationMapBuilder();
 			RequestCreationTime = requestCreationTime;
-			Id = id;
 			State = RequestResultState.Started;
 		}
 

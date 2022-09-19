@@ -33,6 +33,8 @@ namespace Basyc.Extensions.SignalR.Client.Tests.Mocks
 				message = null;
 				return false;
 			}
+
+			//binder.GetParameterTypes()
 			InvocationMessage? invocationMessage = new InvocationMessage(getterMessage.Target, getterMessage.Arguments);
 			message = invocationMessage;
 			return true;

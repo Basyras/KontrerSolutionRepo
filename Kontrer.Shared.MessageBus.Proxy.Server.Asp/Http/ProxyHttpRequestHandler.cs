@@ -1,5 +1,5 @@
 ﻿using Basyc.MessageBus.Client;
-using Basyc.MessageBus.HttpProxy.Shared;
+using Basyc.MessageBus.HttpProxy.Shared.Http;
 using Basyc.Serialization.Abstraction;
 using Basyc.Serializaton.Abstraction;
 using Microsoft.AspNetCore.Http;
@@ -13,8 +13,8 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Http
 	{
 		private readonly IByteMessageBusClient messageBus;
 		private readonly IObjectToByteSerailizer serializer;
-		private static readonly string proxyRequestSimpleDatatype = TypedToSimpleConverter.ConvertTypeToSimple<ProxyRequest>();
-		private static readonly string proxyResponseSimpleDataType = TypedToSimpleConverter.ConvertTypeToSimple<ProxyResponse>();
+		private static readonly string proxyRequestSimpleDatatype = TypedToSimpleConverter.ConvertTypeToSimple<RequestHttpDTO>();
+		private static readonly string proxyResponseSimpleDataType = TypedToSimpleConverter.ConvertTypeToSimple<ResponseHttpDTO>();
 
 		public ProxyHttpRequestHandler(IByteMessageBusClient messageBus, IObjectToByteSerailizer serializer)
 		{
@@ -27,7 +27,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Http
 			MemoryStream httpBodyMemoryStream = new MemoryStream();
 			await context.Request.Body.CopyToAsync(httpBodyMemoryStream);
 			var proxyRequestBytes = httpBodyMemoryStream.ToArray();
-			ProxyRequest proxyRequest = (ProxyRequest)serializer.Deserialize(proxyRequestBytes, proxyRequestSimpleDatatype);
+			RequestHttpDTO proxyRequest = (RequestHttpDTO)serializer.Deserialize(proxyRequestBytes, proxyRequestSimpleDatatype);
 
 			if (proxyRequest.HasResponse)
 			{
@@ -36,7 +36,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Http
 				await busTaskValue.Match(
 					async byteResponse =>
 					{
-						var proxyResponse = new ProxyResponse(proxyRequest.MessageType, proxyRequest.HasResponse, byteResponse.ResponseBytes, byteResponse.ResposneType);
+						var proxyResponse = new ResponseHttpDTO(proxyRequest.MessageType, busTask.SessionId, proxyRequest.HasResponse, byteResponse.ResponseBytes, byteResponse.ResposneType);
 						var proxyResponseBytes = serializer.Serialize(proxyResponse, proxyResponseSimpleDataType);
 						await context.Response.BodyWriter.WriteAsync(proxyResponseBytes);
 					},

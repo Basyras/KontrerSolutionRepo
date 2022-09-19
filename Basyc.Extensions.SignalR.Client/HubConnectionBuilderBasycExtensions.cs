@@ -7,24 +7,24 @@ namespace Microsoft.AspNetCore.SignalR.Client
 	{
 		private static readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
 
-		public static IStrongTypedHubConnection BuildStrongTypedReceiver<TMethodsServerCanCall>(this IHubConnectionBuilder hubConnectionBuilder, TMethodsServerCanCall serverMethods)
+		public static IStrongTypedHubConnectionBase BuildStrongTypedReceiver<TMethodsServerCanCall>(this IHubConnectionBuilder hubConnectionBuilder, TMethodsServerCanCall serverMethods)
 		{
 			var connection = hubConnectionBuilder.Build();
 			return new StrongTypedHubConnectionReceiver<TMethodsServerCanCall>(connection, serverMethods);
 		}
 
-		public static IStrongTypedHubConnection<TMethodsClientCanCall> BuildStrongTyped<TMethodsClientCanCall>(this IHubConnectionBuilder hubConnectionBuilder)
+		public static IStrongTypedHubConnectionPusher<TMethodsClientCanCall> BuildStrongTyped<TMethodsClientCanCall>(this IHubConnectionBuilder hubConnectionBuilder)
 			where TMethodsClientCanCall : class
 		{
 			CreateMethodsClientCanCallProxy<TMethodsClientCanCall>(hubConnectionBuilder, out var connection, out var hubClientProxy);
-			return new StrongTypedHubConnection<TMethodsClientCanCall>(hubClientProxy, connection);
+			return new StrongTypedHubConnectionPusher<TMethodsClientCanCall>(hubClientProxy, connection);
 		}
 
-		public static IStrongTypedHubConnection<TMethodsClientCanCall> BuildStrongTyped<TMethodsClientCanCall, TMethodsServerCanCall>(this IHubConnectionBuilder hubConnectionBuilder, TMethodsServerCanCall serverMethods)
+		public static IStrongTypedHubConnectionPusherAndReceiver<TMethodsClientCanCall, TMethodsServerCanCall> BuildStrongTyped<TMethodsClientCanCall, TMethodsServerCanCall>(this IHubConnectionBuilder hubConnectionBuilder, TMethodsServerCanCall serverMethods)
 			where TMethodsClientCanCall : class
 		{
 			CreateMethodsClientCanCallProxy<TMethodsClientCanCall>(hubConnectionBuilder, out var connection, out var hubClientProxy);
-			return new StrongTypedHubConnection<TMethodsClientCanCall, TMethodsServerCanCall>(hubClientProxy, connection, serverMethods);
+			return new StrongTypedHubConnectionPusherAndReceiver<TMethodsClientCanCall, TMethodsServerCanCall>(hubClientProxy, connection, serverMethods);
 		}
 
 

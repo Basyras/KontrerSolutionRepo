@@ -42,15 +42,17 @@ namespace Basyc.MessageBus.Manager
 			var requestType = requestInfoTypeStorage.GetRequestType(requestResult.Request.RequestInfo);
 			var paramValues = requestResult.Request.Parameters.Select(x => x.Value).ToArray();
 			var requestObject = Activator.CreateInstance(requestType, paramValues);
-			Task.Run(async () =>
+
+			try
 			{
-				try
+				if (requestResult.Request.RequestInfo.HasResponse)
 				{
-					if (requestResult.Request.RequestInfo.HasResponse)
+					var busTask = typedMessageBusClient.RequestAsync(requestType, requestObject, requestResult.Request.RequestInfo.ResponseType);
+					requestResult.SessionId = busTask.SessionId;
+
+					var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
+					Task.Run(async () =>
 					{
-						var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
-						var busTask = typedMessageBusClient.RequestAsync(requestType, requestObject, requestResult.Request.RequestInfo.ResponseType);
-						resultLoggingManager.AddSessionToContext(requestResult, busTask.SessionId);
 						var response = await busTask.Task;
 						waitingForBusSegment.End();
 						if (response.Value is ErrorMessage error)
@@ -62,14 +64,14 @@ namespace Basyc.MessageBus.Manager
 							var resultObject = response.AsT0;
 							requestResult.Complete(responseFormatter.Format(resultObject));
 						}
-					}
-					else
+					});
+				}
+				else
+				{
+					var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
+					Task.Run(async () =>
 					{
-						var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
-						resultLoggingManager.AddSessionToContext(requestResult, -1);
-
 						await typedMessageBusClient.SendAsync(requestType, requestObject)
-
 						.ContinueWith(x =>
 						{
 							waitingForBusSegment.End();
@@ -90,13 +92,14 @@ namespace Basyc.MessageBus.Manager
 							requestResult.Complete();
 
 						});
-					}
+
+					});
 				}
-				catch (Exception ex)
-				{
-					requestResult.Fail(ex.Message);
-				}
-			});
+			}
+			catch (Exception ex)
+			{
+				requestResult.Fail(ex.Message);
+			}
 		}
 	}
 }

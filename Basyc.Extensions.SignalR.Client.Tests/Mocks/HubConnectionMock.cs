@@ -41,7 +41,7 @@ namespace Basyc.Extensions.SignalR.Client.Tests.Mocks
 		{
 			hubProtocolMock.AddReceivingMessage(new HubProtocolMockMessage(messageName, arguments));
 			await pipe.Writer.WriteAsync(new byte[] { 0 });
-			await Task.Delay(100);
+			await Task.Delay(100); //Give SignalR time to process
 		}
 	}
 }

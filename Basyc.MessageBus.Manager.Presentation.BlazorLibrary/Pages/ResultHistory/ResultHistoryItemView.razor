@@ -12,7 +12,7 @@
     {
         @*string latencyClass = $"latency--state--{RequestResult.State.ToString()}";*@
         <id>
-            #@RequestResult.Id
+            #@RequestResult.SessionId
         </id>
         <inputBorder>
             @CreateInputOverview(RequestResult.Request.Parameters)

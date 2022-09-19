@@ -1,17 +1,17 @@
 ﻿using ProtoBuf;
 using System;
 
-namespace Basyc.MessageBus.HttpProxy.Shared
+namespace Basyc.MessageBus.HttpProxy.Shared.Http
 {
 	[ProtoContract]
-	public class ProxyRequest
+	public class RequestHttpDTO
 	{
-		protected ProxyRequest()
+		protected RequestHttpDTO()
 		{
 
 		}
 
-		public ProxyRequest(string requestType, bool hasResponse, byte[] requestBytes = null, string responseType = null)
+		public RequestHttpDTO(string requestType, bool hasResponse, byte[] requestBytes = null, string responseType = null)
 		{
 			MessageType = requestType;
 			MessageBytes = requestBytes ?? Array.Empty<byte>();

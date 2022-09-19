@@ -8,7 +8,7 @@ namespace Microsoft.AspNetCore.Builder;
 
 public static class IServiceProviderMessageBusClientExtensions
 {
-	public static Task StartBasycMessageBusAsync(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
+	public static Task StartBasycMessageBusClient(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
 	{
 		var busClient = serviceProvider.GetRequiredService<IObjectMessageBusClient>();
 		return busClient.StartAsync(cancellationToken);

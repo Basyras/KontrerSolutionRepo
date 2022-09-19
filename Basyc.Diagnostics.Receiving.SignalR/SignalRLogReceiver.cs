@@ -10,7 +10,7 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 	public class SignalRLogReceiver : ILogReceiver
 	{
 
-		private readonly IStrongTypedHubConnection<IServerMethodsReceiversCanCall> hubConnection;
+		private readonly IStrongTypedHubConnectionPusherAndReceiver<IServerMethodsReceiversCanCall, IReceiversMethodsServerCanCall> hubConnection;
 		private readonly IOptions<SignalRLogReceiverOptions> options;
 
 		public event EventHandler<LogsReceivedArgs>? LogsReceived;

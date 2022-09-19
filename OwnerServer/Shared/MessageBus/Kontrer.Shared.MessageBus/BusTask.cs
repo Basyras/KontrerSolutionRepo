@@ -5,9 +5,13 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
 {
-	//[Obsolete("Not used")]
-	public struct BusTask<TValue>
+	public class BusTask<TValue>
 	{
+
+		public static BusTask<TValue> FromTask(int sessionId, Task<OneOf<TValue, ErrorMessage>> nestedTask)
+		{
+			return new BusTask<TValue>(sessionId, nestedTask);
+		}
 
 		public static BusTask<TValue> FromTask(int sessionId, Task<TValue> nestedTask)
 		{
@@ -26,9 +30,24 @@ namespace Basyc.MessageBus.Client
 			return FromTask(sessionId, wrapperTask);
 		}
 
-		public static BusTask<TValue> FromTask(int sessionId, Task<OneOf<TValue, ErrorMessage>> nestedTask)
+		public static BusTask<TValue> FromTask<TNestedValue>(int sessionId, Task<TNestedValue> nestedTask, Func<TNestedValue, OneOf<TValue, ErrorMessage>> converter)
 		{
-			return new BusTask<TValue>(sessionId, nestedTask);
+			var wrapperTask = nestedTask.ContinueWith<OneOf<TValue, ErrorMessage>>(x =>
+			{
+				if (x.IsCompletedSuccessfully)
+				{
+
+					var converterResult = converter.Invoke(x.Result);
+					return converterResult;
+				}
+
+				if (x.IsCanceled)
+					return new ErrorMessage("Canceled");
+
+				return new ErrorMessage(x.Exception.Message);
+
+			});
+			return FromTask(sessionId, wrapperTask);
 		}
 
 		public static BusTask<TValue> FromTask<TNestedValue>(int sessionId, Task<OneOf<TNestedValue, ErrorMessage>> nestedTask, Func<TNestedValue, OneOf<TValue, ErrorMessage>> converter)
@@ -74,21 +93,26 @@ namespace Basyc.MessageBus.Client
 		{
 			SessionId = sessionId;
 			Task = value;
+			FailedToStart = false;
 		}
 
 		private BusTask(int sessionId, ErrorMessage error)
 		{
 			SessionId = sessionId;
 			Task = System.Threading.Tasks.Task.FromResult<OneOf<TValue, ErrorMessage>>(error);
+			FailedToStart = true;
+
 		}
 
 		private BusTask(int sessionId, TValue value)
 		{
 			SessionId = sessionId;
 			Task = System.Threading.Tasks.Task.FromResult<OneOf<TValue, ErrorMessage>>(value);
+			FailedToStart = false;
 		}
 
 		public Task<OneOf<TValue, ErrorMessage>> Task { get; init; }
 		public int SessionId { get; init; }
+		public bool FailedToStart { get; private set; }
 	}
 }

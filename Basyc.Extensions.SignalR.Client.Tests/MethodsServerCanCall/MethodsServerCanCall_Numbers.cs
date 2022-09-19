@@ -15,5 +15,17 @@
 			await Task.Delay(150);
 		}
 
+		public async Task ReceiveNumbers(int number, int number2)
+		{
+			LastReceivedNumber = number2;
+			await Task.Delay(150);
+		}
+
+		public async Task ReceiveNumbers(int number, int number2, int number3)
+		{
+			LastReceivedNumber = number3;
+			await Task.Delay(150);
+		}
+
 	}
 }

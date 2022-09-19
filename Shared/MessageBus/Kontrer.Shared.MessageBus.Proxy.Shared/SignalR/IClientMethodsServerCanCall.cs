@@ -2,10 +2,10 @@
 
 namespace Basyc.MessageBus.HttpProxy.Shared.SignalR
 {
-	public interface IProxyClientMethods
+	public interface IClientMethodsServerCanCall
 	{
 		Task ReceiveRequestResultMetadata(RequestMetadataSignalRDTO requestMetadata);
-		Task ReceiveRequestResult(RequestResponseSignalRDTO response);
+		Task ReceiveRequestResult(ResponseSignalRDTO response);
 		Task ReceiveRequestFailed(RequestFailedSignalRDTO requestFailed);
 	}
 }

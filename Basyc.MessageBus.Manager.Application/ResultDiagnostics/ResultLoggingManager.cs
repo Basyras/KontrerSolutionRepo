@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
@@ -21,7 +19,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		{
 			foreach (var logEntry in e.NewLogEntries)
 			{
-				var loggingContext = GetLoggingContext(logEntry.SessionId);
+				var loggingContext = GetLoggingContextBySessionId(logEntry.SessionId);
 				loggingContext.AddLog(logEntry);
 			}
 		}
@@ -30,6 +28,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		{
 			ResultLoggingContext loggingContext = new ResultLoggingContext(requestResult);
 			resultToContextMap.Add(requestResult, loggingContext);
+			sesionIdToContextMap.Add(requestResult.SessionId, loggingContext);
 			return loggingContext;
 		}
 
@@ -38,22 +37,9 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			return resultToContextMap[requestResult];
 		}
 
-		public ResultLoggingContext GetLoggingContext(int requestResultId)
+		public ResultLoggingContext GetLoggingContextBySessionId(int sessionId)
 		{
-			return resultToContextMap.Values.First(x => x.RequestResult.Id == requestResultId);
-		}
-
-		public void FinishLoggingContext(RequestResult requestResult)
-		{
-			if (resultToContextMap.Remove(requestResult) is false)
-			{
-				throw new ArgumentException("Coresponding context not found", nameof(requestResult));
-			}
-		}
-
-		public void AddSessionToContext(RequestResult requestResult, int sessionId)
-		{
-			sesionIdToContextMap.Add(sessionId, resultToContextMap[requestResult]);
+			return sesionIdToContextMap[sessionId];
 		}
 	}
 }

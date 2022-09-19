@@ -5,6 +5,7 @@ using Kontrer.OwnerServer.BusManager;
 using Kontrer.OwnerServer.CustomerService.Domain;
 using Kontrer.OwnerServer.IdGeneratorService.Domain;
 using Kontrer.OwnerServer.OrderService.Domain;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Reflection;
@@ -26,8 +27,9 @@ var assembliesToScan = new Assembly[]
 };
 
 builder.Services.AddBasycMessageBus()
-	.UseHttpProxy()
-	.SetProxyServerUri(new Uri("https://localhost:44310/"));
+	//.UseHttpProxy()
+	//.SetProxyServerUri(new Uri("https://localhost:44310/"));
+	.UseSignalRProxy("https://localhost:44310");
 
 builder.Services.AddBasycDiagnosticReceiver()
 	.UseSignalR()
@@ -47,6 +49,7 @@ busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 var app = builder.Build();
 await app.Services.StartBasycDiagnosticsReceivers();
+await app.Services.StartBasycMessageBusClient();
 await app.RunAsync();
 
 static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration.BusManagerApplicationBuilder busManagerBuilder)

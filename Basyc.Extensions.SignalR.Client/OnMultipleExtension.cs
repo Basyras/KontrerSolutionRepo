@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace Basyc.Extensions.SignalR.Client
 {
-	public static class HubListener
+	public static class OnMultipleExtension
 	{
-		public static void ForwardTo<TMethodsServerCanCall>(HubConnection hubConnection, TMethodsServerCanCall serverMethods)
+		public static void OnMultiple<TMethodsServerCanCall>(HubConnection hubConnection, TMethodsServerCanCall serverMethods)
 		{
 			var methodInfos = FilterMethods(serverMethods);
 			foreach (var methodInfo in methodInfos)
@@ -35,9 +35,12 @@ namespace Basyc.Extensions.SignalR.Client
 
 		private static MethodInfo[] FilterMethods<TMethodsServerCanCall>(TMethodsServerCanCall serverMethods)
 		{
-			var filteredMethods = serverMethods!.GetType()
+			//var genericArgType = typeof(TMethodsServerCanCall);
+			//Type targetType = serverMethods!.GetType();
+			Type targetType = typeof(TMethodsServerCanCall); //Ignore methods that are not specified in interfac (They should not be called from server + server hub does even see them)
+			var filteredMethods = targetType
 				.GetMethodsRecursive(BindingFlags.Public | BindingFlags.Instance)
-				.Where(methodInfo =>
+				.Where<MethodInfo>(methodInfo =>
 				{
 					if (methodInfo.IsSpecialName)
 						return false;

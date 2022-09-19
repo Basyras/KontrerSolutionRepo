@@ -1,11 +1,13 @@
-﻿namespace Basyc.Serialization.Abstraction
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Basyc.Serialization.Abstraction
 {
-	public interface ISerializer<TDeserialized, TSerialized, TSerializationMetadata> 
+	public interface ISerializer<TDeserialized, TSerialized, TSerializationMetadata>
 	{
 		//OneOf<TOutput, SerializationFailure> TrySerialize(TInput input, TObjectTypeMetadata dataType);
 		//OneOf<TInput, SerializationFailure> TryDeserialize(TOutput serializedInput, TObjectTypeMetadata dataType);
 
-		public bool TrySerialize(TDeserialized deserializedObject, TSerializationMetadata dataType, out TSerialized? serializedObject, out SerializationFailure? error)
+		public bool TrySerialize(TDeserialized deserializedObject, TSerializationMetadata dataType, [NotNullWhen(true)] out TSerialized? serializedObject, [NotNullWhen(false)] out SerializationFailure? error)
 		{
 			try
 			{
@@ -13,14 +15,14 @@
 				error = null;
 				return true;
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				serializedObject = default;
 				error = new SerializationFailure(ex);
 				return false;
 			}
 		}
-		bool TryDeserialize(TSerialized serializedObject, TSerializationMetadata dataType, out TDeserialized? deserializedObject, out SerializationFailure? error)
+		bool TryDeserialize(TSerialized serializedObject, TSerializationMetadata dataType, [NotNullWhen(true)] out TDeserialized? deserializedObject, [NotNullWhen(false)] out SerializationFailure? error)
 		{
 			try
 			{

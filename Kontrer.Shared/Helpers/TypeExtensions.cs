@@ -6,6 +6,28 @@ namespace System;
 
 public static class TypeExtensions
 {
+	public static object CanBeNull(this Type type)
+	{
+		TypeInfo typeInfo = type.GetTypeInfo();
+		if (typeInfo.IsValueType && !type.IsNullable())
+		{
+			return type == typeof(string);
+		}
+
+		return true;
+	}
+
+	public static bool IsNullable(this Type type)
+	{
+		TypeInfo typeInfo = type.GetTypeInfo();
+		if (typeInfo.IsGenericType)
+		{
+			return typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>);
+		}
+
+		return false;
+	}
+
 	public static object GetDefaultValue(this Type type)
 	{
 		if (type.IsValueType && Nullable.GetUnderlyingType(type) == null)
@@ -41,4 +63,6 @@ public static class TypeExtensions
 
 		return methods.ToArray();
 	}
+
+
 }

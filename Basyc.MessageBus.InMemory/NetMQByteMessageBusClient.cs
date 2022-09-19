@@ -21,7 +21,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	private readonly ISessionManager<NetMQSessionResult> sessionManager;
 	private readonly INetMQMessageWrapper netMQMessageWrapper;
 	private readonly IObjectToByteSerailizer objectToByteSerailizer;
-	private readonly NetMQPoller poller = new NetMQPoller();
+	private readonly NetMQPoller poller = new();
 	private readonly DealerSocket dealerSocket;
 
 	public NetMQByteMessageBusClient(

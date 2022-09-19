@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Application.Requesting
@@ -17,6 +18,8 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 		private readonly Dictionary<RequestInfo, Action<RequestResult>> handlersMap;
 		public string UniqueName => InMemoryDelegateRequesterUniqueName;
 
+		private int reqeustCounter;
+
 		public InMemoryDelegateRequester(IOptions<InMemoryDelegateRequesterOptions> options, InMemoryLogSource inMemoryLogSource)
 		{
 			this.options = options;
@@ -26,20 +29,22 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 
 		public void StartRequest(RequestResult requestResult)
 		{
-			inMemoryLogSource.PushLog(requestResult.Id, LogLevel.Information, "Starting invoking in-memory delegate");
+			var requestId = Interlocked.Increment(ref reqeustCounter);
+			requestResult.SessionId = requestId;
+			inMemoryLogSource.PushLog(requestResult.SessionId, LogLevel.Information, "Starting invoking in-memory delegate");
 			var handler = handlersMap[requestResult.Request.RequestInfo];
 			try
 			{
 				Task.Run(() =>
 				{
 					handler.Invoke(requestResult);
-					inMemoryLogSource.PushLog(requestResult.Id, LogLevel.Information, "In-memory delegate completed");
+					inMemoryLogSource.PushLog(requestResult.SessionId, LogLevel.Information, "In-memory delegate completed");
 				});
 
 			}
 			catch (Exception ex)
 			{
-				inMemoryLogSource.PushLog(requestResult.Id, LogLevel.Error, "In-memory delegate failed");
+				inMemoryLogSource.PushLog(requestResult.SessionId, LogLevel.Error, "In-memory delegate failed");
 				requestResult.Fail(ex.Message);
 			}
 		}

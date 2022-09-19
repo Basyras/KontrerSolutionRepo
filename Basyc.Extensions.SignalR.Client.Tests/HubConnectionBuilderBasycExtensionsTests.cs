@@ -20,7 +20,7 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 		}
 
 		[Fact]
-		public async Task When_CreateStrongTyped_With_CorrectHub_Should_Not_Throw()
+		public void When_CreateStrongTyped_With_CorrectHub_Should_Not_Throw()
 		{
 			var connectionMock = new HubConnectionMockBuilder().BuildAsMock();
 			var hubClient = connectionMock.CreateStrongTyped<ICorrectHubClient_Has_AllCorrect>();
@@ -32,7 +32,7 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 
 			hubClient.Call.SendNothing();
 			connectionMock.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectHubClient_Has_AllCorrect.SendNothing));
-			connectionMock.LastSendCoreCall!.Args.Should().Equal(new object?[] { });
+			connectionMock.LastSendCoreCall!.Args.Should().Equal(Array.Empty<object?>());
 
 			var sendNumberTask = hubClient.Call.SendIntAsync(2);
 			sendNumberTask.Should().NotBeNull();

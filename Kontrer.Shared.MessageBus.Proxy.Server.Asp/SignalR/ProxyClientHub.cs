@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.HttpProxy.Server.Asp.SignalR
 {
-	public class ProxyClientHub : Hub<IProxyClientMethods>, IProxyServerMethods
+	public class ProxyClientHub : Hub<IClientMethodsServerCanCall>, IMethodsClientCanCall
 	{
 		private readonly IByteMessageBusClient messageBus;
 
@@ -24,7 +24,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.SignalR
 				await busTaskValue.Match(
 					async byteResponse =>
 					{
-						var response = new RequestResponseSignalRDTO(proxyRequest.MessageType, proxyRequest.HasResponse, byteResponse.ResponseBytes, byteResponse.ResposneType);
+						var response = new ResponseSignalRDTO(busTask.SessionId, true, byteResponse.ResponseBytes, byteResponse.ResposneType);
 						await Clients.Caller.ReceiveRequestResult(response);
 					},
 					async busRequestError =>

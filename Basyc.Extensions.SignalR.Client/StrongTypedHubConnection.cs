@@ -3,7 +3,7 @@
 namespace Basyc.Extensions.SignalR.Client
 {
 
-	internal abstract class StrongTypedHubConnectionBase : IStrongTypedHubConnection, IAsyncDisposable
+	internal abstract class StrongTypedHubConnectionBase : IStrongTypedHubConnectionBase, IAsyncDisposable
 	{
 		public HubConnection UnderlyingHubConnection { get; }
 
@@ -23,29 +23,29 @@ namespace Basyc.Extensions.SignalR.Client
 		}
 	}
 
-	internal class StrongTypedHubConnection<TMethodsClientCanCall> : StrongTypedHubConnectionBase, IStrongTypedHubConnection<TMethodsClientCanCall>
+	internal class StrongTypedHubConnectionPusher<TMethodsClientCanCall> : StrongTypedHubConnectionBase, IStrongTypedHubConnectionPusher<TMethodsClientCanCall>
 	{
 		public TMethodsClientCanCall Call { get; }
 
-		public StrongTypedHubConnection(TMethodsClientCanCall clientMethods, HubConnection hubConnection) : base(hubConnection)
+		public StrongTypedHubConnectionPusher(TMethodsClientCanCall clientMethods, HubConnection hubConnection) : base(hubConnection)
 		{
 			Call = clientMethods;
 		}
 	}
 
-	internal class StrongTypedHubConnectionReceiver<TMethodsServerCanCall> : StrongTypedHubConnectionBase
+	internal class StrongTypedHubConnectionReceiver<TMethodsServerCanCall> : StrongTypedHubConnectionBase, IStrongTypedHubConnectionReceiver<TMethodsServerCanCall>
 	{
 		public StrongTypedHubConnectionReceiver(HubConnection hubConnection, TMethodsServerCanCall serverMethods) : base(hubConnection)
 		{
-			HubListener.ForwardTo<TMethodsServerCanCall>(hubConnection, serverMethods);
+			OnMultipleExtension.OnMultiple<TMethodsServerCanCall>(hubConnection, serverMethods);
 		}
 	}
 
-	internal class StrongTypedHubConnection<TMethodsClientCanCall, TMethodsServerCanCall> : StrongTypedHubConnection<TMethodsClientCanCall>
+	internal class StrongTypedHubConnectionPusherAndReceiver<TMethodsClientCanCall, TMethodsServerCanCall> : StrongTypedHubConnectionPusher<TMethodsClientCanCall>, IStrongTypedHubConnectionReceiver<TMethodsServerCanCall>, IStrongTypedHubConnectionPusherAndReceiver<TMethodsClientCanCall, TMethodsServerCanCall>
 	{
-		public StrongTypedHubConnection(TMethodsClientCanCall clientMethods, HubConnection hubConnection, TMethodsServerCanCall serverMethods) : base(clientMethods, hubConnection)
+		public StrongTypedHubConnectionPusherAndReceiver(TMethodsClientCanCall clientMethods, HubConnection hubConnection, TMethodsServerCanCall serverMethods) : base(clientMethods, hubConnection)
 		{
-			HubListener.ForwardTo<TMethodsServerCanCall>(hubConnection, serverMethods);
+			OnMultipleExtension.OnMultiple<TMethodsServerCanCall>(hubConnection, serverMethods);
 		}
 
 	}
