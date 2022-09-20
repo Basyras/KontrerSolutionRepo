@@ -242,7 +242,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serialization.Protobu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serailization.SystemTextJson", "Basyc.Serailization.SystemTextJson\Basyc.Serailization.SystemTextJson.csproj", "{99D8811B-6510-486C-8A7F-D4AB879AB75B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serialization.ProtobufNet.Tests2", "Basyc.Serialization.ProtobufNet.Tests2\Basyc.Serialization.ProtobufNet.Tests2.csproj", "{786E5B92-A672-4269-8239-BF6E5CCDD8C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Serialization.ProtobufNet.Tests", "Basyc.Serialization.ProtobufNet.Tests2\Basyc.Serialization.ProtobufNet.Tests.csproj", "{786E5B92-A672-4269-8239-BF6E5CCDD8C9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.MessageBus.Proxy.Http", "Basyc.MessageBus.Proxy.Http", "{028D6D0E-BD98-439F-8867-7E1AB7612304}"
 EndProject
@@ -272,23 +272,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Diagnostics.Receiving
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.MessageBus.Clients", "Basyc.MessageBus.Clients", "{7BFF09C8-BD31-44F9-AF03-83FC9CEC4503}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.MessageBus.Client.Tests", "Basyc.MessageBus.Client.Tests\Basyc.MessageBus.Client.Tests.csproj", "{82CA95D6-0032-4088-9D07-C82C1750EA25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.MessageBus.Client.Tests", "Basyc.MessageBus.Client.Tests\Basyc.MessageBus.Client.Tests.csproj", "{82CA95D6-0032-4088-9D07-C82C1750EA25}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.Diagnostics.SignalR", "Basyc.Diagnostics.SignalR", "{7D08F6B3-3457-46EE-966C-AA21083E76DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Diagnostics.SignalR.Server", "Basyc.Diagnostics.SignalR.Server\Basyc.Diagnostics.SignalR.Server.csproj", "{D44F5DB6-A00A-4F1E-A0BD-7763C77F3989}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Diagnostics.SignalR.Server", "Basyc.Diagnostics.SignalR.Server\Basyc.Diagnostics.SignalR.Server.csproj", "{D44F5DB6-A00A-4F1E-A0BD-7763C77F3989}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.Diagnostics.Server", "Basyc.Diagnostics.Server", "{AB9BDCFD-97D5-4C67-B8CF-8C0AD3D7EFD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Diagnostics.Server.Abstractions", "Basyc.Diagnostics.Server.Abstractions\Basyc.Diagnostics.Server.Abstractions.csproj", "{A5834F52-113F-4C57-977D-939D1E9544CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Diagnostics.Server.Abstractions", "Basyc.Diagnostics.Server.Abstractions\Basyc.Diagnostics.Server.Abstractions.csproj", "{A5834F52-113F-4C57-977D-939D1E9544CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Diagnostics.SignalR.Shared", "Basyc.Diagnostics.SignalR.Shared\Basyc.Diagnostics.SignalR.Shared.csproj", "{54A6408D-A38C-4067-83B2-099F48B587F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Diagnostics.SignalR.Shared", "Basyc.Diagnostics.SignalR.Shared\Basyc.Diagnostics.SignalR.Shared.csproj", "{54A6408D-A38C-4067-83B2-099F48B587F9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basyc.Extensions", "Basyc.Extensions", "{7E55E0AA-354C-49DC-B389-704F587B50E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Extensions.SignalR.Client", "Basyc.Extensions.SignalR.Client\Basyc.Extensions.SignalR.Client.csproj", "{1F145C94-5A6E-4015-8C95-B6A2DEC1A258}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Extensions.SignalR.Client", "Basyc.Extensions.SignalR.Client\Basyc.Extensions.SignalR.Client.csproj", "{1F145C94-5A6E-4015-8C95-B6A2DEC1A258}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basyc.Extensions.SignalR.Client.Tests", "Basyc.Extensions.SignalR.Client.Tests\Basyc.Extensions.SignalR.Client.Tests.csproj", "{3232F20F-D770-4466-B1B4-53E6DCD89BB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basyc.Extensions.SignalR.Client.Tests", "Basyc.Extensions.SignalR.Client.Tests\Basyc.Extensions.SignalR.Client.Tests.csproj", "{3232F20F-D770-4466-B1B4-53E6DCD89BB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

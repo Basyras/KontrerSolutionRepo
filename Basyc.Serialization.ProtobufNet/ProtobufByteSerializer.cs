@@ -1,5 +1,4 @@
 ﻿using Basyc.Serialization.Abstraction;
-using Basyc.Shared.Helpers;
 using ProtoBuf;
 using ProtoBuf.Meta;
 using System.Reflection;
@@ -21,7 +20,11 @@ namespace Basyc.Serialization.ProtobufNet
 			{
 				if (TryFixWithSkippingEmptyCtor(typeToPrepare) is false)
 				{
-					throw new Exception($"Could not prepare type '{typeToPrepare.Name}'");
+					RuntimeTypeModel.Default.Add(typeToPrepare);
+					if (RuntimeTypeModel.Default.CanSerialize(typeToPrepare) is false)
+					{
+						throw new Exception($"Could not prepare type '{typeToPrepare.Name}'");
+					}
 				}
 			}
 			var hasZeroProperties = typeToPrepare.GetProperties().Length == 0;
@@ -126,6 +129,16 @@ namespace Basyc.Serialization.ProtobufNet
 			input = (T?)inputObject;
 			return wasSuccesful;
 
+		}
+
+		public byte[] Serialize<T>(object? deserializedObject)
+		{
+			return Serialize(deserializedObject, typeof(T));
+		}
+
+		public object? Deserialize<T>(byte[] serializedObject)
+		{
+			return Deserialize(serializedObject, typeof(T));
 		}
 	}
 }

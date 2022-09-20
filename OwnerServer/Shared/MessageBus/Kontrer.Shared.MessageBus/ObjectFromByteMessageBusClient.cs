@@ -22,21 +22,26 @@ namespace Basyc.MessageBus.Client
 				disposable.Dispose();
 		}
 
-		public Task PublishAsync(string eventType, CancellationToken cancellationToken = default)
+		public BusTask PublishAsync(string eventType, CancellationToken cancellationToken = default)
 		{
 			return byteMessageBusClient.PublishAsync(eventType, cancellationToken);
 		}
 
-		public Task PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default)
+		public BusTask PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default)
 		{
 			var eventBytes = objectToByteSerailizer.Serialize(eventData, eventType);
 			return byteMessageBusClient.PublishAsync(eventType, eventBytes, cancellationToken);
 		}
 
-		public async Task<object> RequestAsync(string requestType, CancellationToken cancellationToken = default)
+		public BusTask<object> RequestAsync(string requestType, CancellationToken cancellationToken = default)
 		{
-			var responseBytes = await byteMessageBusClient.RequestAsync(requestType, cancellationToken);
-			return objectToByteSerailizer.Deserialize(responseBytes.ResponseBytes, responseBytes.ResposneType);
+			var innerBusTask = byteMessageBusClient.RequestAsync(requestType, cancellationToken);
+			var busTask = innerBusTask.ContinueWith<object>(x =>
+			{
+				var deseriResult = objectToByteSerailizer.Deserialize(x.ResponseBytes, x.ResposneType);
+				return deseriResult;
+			});
+			return busTask;
 		}
 
 		public BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default)
@@ -47,12 +52,12 @@ namespace Basyc.MessageBus.Client
 			return busTask;
 		}
 
-		public Task SendAsync(string commandType, CancellationToken cancellationToken = default)
+		public BusTask SendAsync(string commandType, CancellationToken cancellationToken = default)
 		{
 			return byteMessageBusClient.SendAsync(commandType, cancellationToken);
 		}
 
-		public Task SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default)
+		public BusTask SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default)
 		{
 			var requestBytes = objectToByteSerailizer.Serialize(commandData, commandType);
 			return byteMessageBusClient.SendAsync(commandType, requestBytes, cancellationToken);

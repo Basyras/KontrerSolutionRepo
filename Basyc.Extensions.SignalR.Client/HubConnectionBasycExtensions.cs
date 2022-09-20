@@ -1,4 +1,5 @@
 ﻿using Basyc.Extensions.SignalR.Client;
+using Basyc.Extensions.SignalR.Client.OnMultiple;
 using Castle.DynamicProxy;
 
 namespace Microsoft.AspNetCore.SignalR.Client
@@ -28,10 +29,9 @@ namespace Microsoft.AspNetCore.SignalR.Client
 			return new StrongTypedHubConnectionPusherAndReceiver<TMethodsClientCanCall, TMethodsServerCanCall>(hubClientProxy, connection, methodsServerCanCall);
 		}
 
-		public static HubConnection OnMultiple<TMethodsServerCanCall>(this HubConnection hubConnection, TMethodsServerCanCall methodsServerCanCall)
+		public static OnMultipleSubscription OnMultiple<TMethodsServerCanCall>(this HubConnection hubConnection, TMethodsServerCanCall methodsServerCanCall)
 		{
-			OnMultipleExtension.OnMultiple(hubConnection, methodsServerCanCall);
-			return hubConnection;
+			return OnMultipleExtension.OnMultiple(hubConnection, methodsServerCanCall);
 		}
 	}
 }

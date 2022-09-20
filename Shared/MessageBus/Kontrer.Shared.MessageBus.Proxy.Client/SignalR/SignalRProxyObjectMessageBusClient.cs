@@ -42,65 +42,79 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 			hubConnection.DisposeAsync().GetAwaiter().GetResult();
 		}
 
-		public Task PublishAsync(string eventType, CancellationToken cancellationToken = default)
+		public BusTask PublishAsync(string eventType, CancellationToken cancellationToken = default)
 		{
-			throw new NotImplementedException();
+			return CreateAndStartBusTask(eventType, null, cancellationToken).ToBusTask();
+
 		}
 
-		public Task PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default)
+		public BusTask PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default)
 		{
-			throw new NotImplementedException();
+			return CreateAndStartBusTask(eventType, eventData, cancellationToken).ToBusTask();
 		}
 
-		public Task<object> RequestAsync(string requestType, CancellationToken cancellationToken = default)
+		public BusTask<object> RequestAsync(string requestType, CancellationToken cancellationToken = default)
 		{
-			throw new NotImplementedException();
+			return BusTask<object>.FromBusTask(CreateAndStartBusTask(requestType, null, cancellationToken), x => x!);
+
 		}
 
 		public BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default)
 		{
+			return BusTask<object>.FromBusTask(CreateAndStartBusTask(requestType, requestData, cancellationToken), x => x!);
+		}
+
+		public BusTask SendAsync(string commandType, CancellationToken cancellationToken = default)
+		{
+			return CreateAndStartBusTask(commandType, null, cancellationToken).ToBusTask();
+		}
+
+		public BusTask SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default)
+		{
+			return CreateAndStartBusTask(commandType, commandData, cancellationToken).ToBusTask();
+		}
+
+		private BusTask<object?> CreateAndStartBusTask(string requestType, object? requestData = null, CancellationToken cancellationToken = default)
+		{
 			SignalRSession session = sessionManager.StartSession();
-			var busTask = BusTask<object>.FromTask(session.SessionId, StartReqeust(session, requestType, requestData, cancellationToken));
-			return busTask;
-		}
-
-		private async Task<OneOf<object, ErrorMessage>> StartReqeust(SignalRSession session, string requestType, object requestData, CancellationToken cancellationToken = default)
-		{
-			if (byteSerializer.TrySerialize(requestData, requestType, out var requestDataBytes, out var error) is false)
+			Task<OneOf<object?, ErrorMessage>> reqeustTask = Task.Run(async () =>
 			{
-				return new ErrorMessage("Failed to serailize request");
-			}
-			try
-			{
-				await hubConnection.Call.Request(new RequestSignalRDTO(requestType, true, requestDataBytes));
-			}
-			catch (Exception ex)
-			{
-				return new ErrorMessage("Failed while requesting. " + ex.Message);
-			}
-
-			var result = await session.WaitForCompletion();
-			return result.Match<OneOf<object, ErrorMessage>>(resultDTO =>
-			{
-				if (byteSerializer.TryDeserialize(resultDTO.ResponseData, resultDTO.ResponseType, out var deserializedResult, out var error) is false)
+				if (byteSerializer.TrySerialize(requestData, requestType, out var requestDataBytes, out var error) is false)
 				{
-					return new ErrorMessage("Failed to serailize response");
+					return new ErrorMessage("Failed to serailize request");
 				}
-				return deserializedResult;
-			},
-			error => error);
+				try
+				{
+					await hubConnection.Call.Request(new RequestSignalRDTO(requestType, true, requestDataBytes));
+				}
+				catch (Exception ex)
+				{
+					return new ErrorMessage("Failed while requesting. " + ex.Message);
+				}
+
+				var result = await session.WaitForCompletion();
+				return result.Match<OneOf<object?, ErrorMessage>>(resultDTO =>
+				{
+					if (resultDTO.HasResponse)
+					{
+						if (byteSerializer.TryDeserialize(resultDTO.ResponseData!, resultDTO.ResponseType!, out var deserializedResult, out var error) is false)
+						{
+							return new ErrorMessage("Failed to serailize response");
+						}
+						return deserializedResult;
+
+					}
+					else
+					{
+						return (OneOf<object?, ErrorMessage>)null;
+					}
+				},
+				error => error);
+
+			});
+
+			return BusTask<object?>.FromTask(session.SessionId, reqeustTask);
+
 		}
-
-
-		public Task SendAsync(string commandType, CancellationToken cancellationToken = default)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default)
-		{
-			throw new NotImplementedException();
-		}
-
 	}
 }

@@ -35,7 +35,19 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.SignalR
 			}
 			else
 			{
-				await messageBus.SendAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
+				var busTask = messageBus.SendAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
+				var busTaskValue = await busTask.Task;
+				await busTaskValue.Match(
+				async success =>
+				{
+					var response = new ResponseSignalRDTO(busTask.SessionId, false);
+					await Clients.Caller.ReceiveRequestResult(response);
+				},
+				async error =>
+				{
+					RequestFailedSignalRDTO failure = new RequestFailedSignalRDTO(busTask.SessionId, error.Message);
+					await Clients.Caller.ReceiveRequestFailed(failure);
+				});
 			}
 		}
 	}

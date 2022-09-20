@@ -18,7 +18,7 @@ namespace Basyc.MessageBus.Client.NetMQ.Sessions
 		/// <returns></returns>
 		public Session<TSessionResult> CreateSession(string messageType)
 		{
-			var newSessionId = ++lastUsedSessionId;
+			var newSessionId = Interlocked.Increment(ref lastUsedSessionId);
 			TaskCompletionSource<TSessionResult> responseSource = new TaskCompletionSource<TSessionResult>();
 			var newSession = new Session<TSessionResult>(newSessionId, messageType, responseSource);
 			sessions.Add(newSessionId, newSession);

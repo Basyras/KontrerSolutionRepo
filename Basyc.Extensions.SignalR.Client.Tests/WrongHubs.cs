@@ -8,10 +8,11 @@
 			typeof(IWrongHubClient_Has_TaskReturnValues),
 			typeof(IWrongHubClient_HasInherited_ReturnValue),
 			typeof(IWrongHubClient_Has_AllWrongs),
+			typeof(WrongHubClient_Is_Class),
 		};
 	}
 
-	public interface IWrongHubClient_Has_ReturnValues : ICorrectHubClient_Has_Voids
+	public interface IWrongHubClient_Has_ReturnValues : ICorrectMethodsClientCanCall_Voids
 	{
 		int WrongSendNothingReceiveNumber();
 		string WrongSendNothingReceiveText();
@@ -21,7 +22,7 @@
 		object WrongSendIntString(int number, string name);
 	}
 
-	public interface IWrongHubClient_Has_TaskReturnValues : ICorrectHubClient_Has_Voids
+	public interface IWrongHubClient_Has_TaskReturnValues : ICorrectMethodsClientCanCall_Voids
 	{
 		Task<int> WrongSendNothingAsyncInt();
 		Task<int> WrongSendIntAsyncInt(int number);
@@ -36,7 +37,12 @@
 	public interface IWrongHubClient_Has_AllWrongs :
 		IWrongHubClient_Has_ReturnValues,
 		IWrongHubClient_Has_TaskReturnValues,
-		ICorrectHubClient_Has_AllCorrect
+		ICorrectMethodsClientCanCall_AllCorrect
 	{
+	}
+
+	public class WrongHubClient_Is_Class
+	{
+
 	}
 }

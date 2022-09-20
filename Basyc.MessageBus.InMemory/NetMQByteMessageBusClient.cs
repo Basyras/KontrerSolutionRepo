@@ -157,13 +157,14 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	}
 
 
-	private Task PublishAsync(byte[]? eventBytes, string eventType, CancellationToken cancellationToken)
+	private BusTask PublishAsync(byte[]? eventBytes, string eventType, CancellationToken cancellationToken)
 	{
+		var newSession = sessionManager.CreateSession(eventType);
+
 		var task = Task.Run(() =>
 		{
 			eventBytes ??= new byte[0];
 			cancellationToken.ThrowIfCancellationRequested();
-			var newSession = sessionManager.CreateSession(eventType);
 			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(eventBytes, eventType, newSession.SessionId, MessageCase.Event);
 			var messageToBroker = new NetMQMessage();
 			messageToBroker.AppendEmptyFrame();
@@ -192,7 +193,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			//return Task.CompletedTask;
 		});
 
-		return task;
+		return BusTask.FromTask(newSession.SessionId, task);
 	}
 
 	private NetMQSessionResult CreateErrorMessageBytes(string errorMessage)
@@ -211,9 +212,9 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	//	return new NetMQSessionResult(resultBytes, resultType);
 	//}
 
-	private Task SendAsync(byte[]? commnadData, string commandType, CancellationToken cancellationToken)
+	private BusTask SendAsync(byte[]? commnadData, string commandType, CancellationToken cancellationToken)
 	{
-		return RequestAsync(commnadData, commandType, cancellationToken).Task;
+		return RequestAsync(commnadData, commandType, cancellationToken).ToBusTask();
 	}
 
 	//private Task<OneOf<ByteResponse, ErrorMessage>> RequestAsync(byte[]? requestBytes, string requestType, CancellationToken cancellationToken)
@@ -286,36 +287,30 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	}
 
 
-	Task IByteMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
+	BusTask IByteMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
 	{
 		return PublishAsync(null, eventType, cancellationToken);
 	}
 
-	Task IByteMessageBusClient.PublishAsync(string eventType, byte[] eventBytes, CancellationToken cancellationToken)
+	BusTask IByteMessageBusClient.PublishAsync(string eventType, byte[] eventBytes, CancellationToken cancellationToken)
 	{
 		return PublishAsync(eventBytes, eventType, cancellationToken);
 	}
 
-	Task IByteMessageBusClient.SendAsync(string commandType, CancellationToken cancellationToken)
+	BusTask IByteMessageBusClient.SendAsync(string commandType, CancellationToken cancellationToken)
 	{
 		return SendAsync(null, commandType, cancellationToken);
 	}
 
-	Task IByteMessageBusClient.SendAsync(string commandType, byte[] commandData, CancellationToken cancellationToken)
+	BusTask IByteMessageBusClient.SendAsync(string commandType, byte[] commandData, CancellationToken cancellationToken)
 	{
 		return SendAsync(commandData, commandType, cancellationToken);
 	}
 
-	async Task<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
+	BusTask<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
 	{
-		var response = await RequestAsync(null, requestType, cancellationToken).Task;
-		return response.Match(byteResponse => byteResponse, error => throw new Exception(error.Message));
+		return RequestAsync(null, requestType, cancellationToken);
 	}
-
-	//async Task<OneOf<ByteResponse, ErrorMessage>> IByteMessageBusClient.RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken)
-	//{
-	//	return await RequestAsync(requestData, requestType, cancellationToken);
-	//}
 
 	BusTask<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken)
 	{

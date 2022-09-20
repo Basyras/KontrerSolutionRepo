@@ -1,6 +1,6 @@
 ﻿namespace Basyc.Extensions.SignalR.Client.Tests.MethodsServerCanCall
 {
-	public class MethodsServerCanCall_Numbers
+	public class MethodsServerCanCall_Numbers : IMethodsServerCanCall_Empty, IMethodsServerCanCall_Numbers
 	{
 		public int LastReceivedNumber { get; private set; }
 

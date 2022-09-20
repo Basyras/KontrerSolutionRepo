@@ -1,6 +1,6 @@
 ﻿using Basyc.Extensions.SignalR.Client.Tests.Mocks;
-using Basyc.Shared.Helpers;
 using Castle.DynamicProxy;
+using System.Data;
 using System.Reflection;
 
 namespace Basyc.Extensions.SignalR.Client.Tests
@@ -18,7 +18,7 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 		[Fact]
 		public void Should_Not_Throw_When_CorrectHub()
 		{
-			foreach (var correctHubType in CorrectHubs.CorrectHubTypes)
+			foreach (var correctHubType in CorrectMethodsClientCanCallHubs.CorrectMethodsClientCanCallTypes)
 			{
 				var publicMethods = correctHubType.GetMethodsRecursive(BindingFlags.Public | BindingFlags.Instance);
 				var inteceptor = new HubClientInteceptor(connection, correctHubType);
@@ -56,7 +56,7 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 		[Fact]
 		public void Should_Include_Inherited_Public_Methods()
 		{
-			var hubClientType = typeof(ICorrectHubClient_HasInherited_Voids);
+			var hubClientType = typeof(ICorrectMethodsClientCanCall_Inherited_Voids);
 			var publicMethods = hubClientType.GetMethodsRecursive(BindingFlags.Public | BindingFlags.Instance);
 
 			var inteceptor = new HubClientInteceptor(connection, hubClientType);
@@ -75,7 +75,6 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 				action.Should().Throw<ArgumentException>();
 
 			}
-
 		}
 	}
 }

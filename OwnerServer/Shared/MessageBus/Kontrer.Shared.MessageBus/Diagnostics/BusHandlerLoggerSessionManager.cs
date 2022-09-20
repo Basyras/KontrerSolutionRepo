@@ -5,17 +5,17 @@ namespace Basyc.MessageBus.Client.Diagnostics
 {
 	public static class BusHandlerLoggerSessionManager
 	{
-		private static AsyncLocal<int> SessionId { get; } = new AsyncLocal<int>();
+		private static AsyncLocal<LoggingSession> SessionId { get; } = new AsyncLocal<LoggingSession>();
 		private static AsyncLocal<bool> HasSesion { get; } = new AsyncLocal<bool>() { Value = false };
 
-		public static void StartSession(int sessionId)
+		public static void StartSession(LoggingSession loggingSession)
 		{
 			if (HasSesion.Value is true)
 			{
 				throw new InvalidOperationException($"Cant call {nameof(StartSession)} twice on same async context");
 			}
 
-			SessionId.Value = sessionId;
+			SessionId.Value = loggingSession;
 			HasSesion.Value = true;
 		}
 
@@ -26,13 +26,13 @@ namespace Basyc.MessageBus.Client.Diagnostics
 				throw new InvalidOperationException($"Cant call {nameof(EndSession)} without calling {nameof(StartSession)} before");
 			}
 
-			SessionId.Value = 0;
+			SessionId.Value = default;
 			HasSesion.Value = false;
 		}
 
-		public static bool HasSession(out int sessionId)
+		public static bool HasSession(out LoggingSession loggingSession)
 		{
-			sessionId = SessionId.Value;
+			loggingSession = SessionId.Value;
 			return HasSesion.Value;
 		}
 	}

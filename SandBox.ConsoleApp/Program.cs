@@ -38,6 +38,7 @@ client.StartAsync();
 while (Console.ReadLine() != "stop")
 {
 	var response = client.RequestAsync<CreateCustomerCommand, CreateCustomerCommandResponse>(new("Jan", "Console12", "aasdů"))
+		.Task
 		.GetAwaiter()
 		.GetResult();
 

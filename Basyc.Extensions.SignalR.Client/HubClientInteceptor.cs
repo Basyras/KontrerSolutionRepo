@@ -1,5 +1,4 @@
-﻿using Basyc.Shared.Helpers;
-using Castle.DynamicProxy;
+﻿using Castle.DynamicProxy;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Reflection;
 
@@ -14,6 +13,7 @@ namespace Basyc.Extensions.SignalR.Client
 		{
 			CreateInteceptorsForPublicMethods(connection, hubClientInterfaceType);
 		}
+
 		public void Intercept(IInvocation invocation)
 		{
 			var methodMetadata = methodInfoToMethodMetadataMap[invocation.Method];
@@ -27,11 +27,12 @@ namespace Basyc.Extensions.SignalR.Client
 				invocation.ReturnValue = continuation();
 			}
 		}
-		private void CreateInteceptorsForPublicMethods(HubConnection connection, Type hubClientInterfaceType)
+		private void CreateInteceptorsForPublicMethods(HubConnection connection, Type methodsClientCanCallType)
 		{
-			foreach (var methodInfo in hubClientInterfaceType.GetMethodsRecursive(BindingFlags.Instance | BindingFlags.Public))
+			CheckAndThrowType(methodsClientCanCallType);
+			foreach (var methodInfo in methodsClientCanCallType.GetMethodsRecursive(BindingFlags.Instance | BindingFlags.Public))
 			{
-				CheckMethodReturns(methodInfo, out var returnsVoid, out var returnsTask);
+				CheckAndThrowMethodSignatures(methodInfo, out var returnsVoid, out var returnsTask);
 				ParameterInfo[] methodParamInfos = methodInfo.GetParameters();
 				var paramTypes = methodParamInfos.Select(x => x.ParameterType).ToArray();
 				var hasCancelToken = HasCancelToken(methodParamInfos, out var cancelTokenParamIndex);
@@ -53,6 +54,11 @@ namespace Basyc.Extensions.SignalR.Client
 			}
 		}
 
+		private static void CheckAndThrowType(Type methodsClientCanCallType)
+		{
+			if (methodsClientCanCallType.IsClass)
+				throw new ArgumentException("Selected can't be a class");
+		}
 
 		public bool HasCancelToken(ParameterInfo[] paramInfos, out int cancelTokenParamIndex)
 		{
@@ -90,7 +96,7 @@ namespace Basyc.Extensions.SignalR.Client
 			return filteredArguments;
 		}
 
-		private static bool CheckMethodReturns(MethodInfo methodInfo, out bool returnsVoid, out bool returnsTask)
+		private static bool CheckAndThrowMethodSignatures(MethodInfo methodInfo, out bool returnsVoid, out bool returnsTask)
 		{
 			if (methodInfo.ReturnType == typeof(Task))
 			{

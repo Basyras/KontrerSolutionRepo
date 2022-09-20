@@ -1,34 +1,48 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Basyc.Extensions.SignalR.Client.OnMultiple;
+using Microsoft.AspNetCore.SignalR.Client;
 using System.Reflection;
 
 namespace Basyc.Extensions.SignalR.Client
 {
 	public static class OnMultipleExtension
 	{
-		public static void OnMultiple<TMethodsServerCanCall>(HubConnection hubConnection, TMethodsServerCanCall serverMethods)
+		/// <summary>
+		/// Returns subsribrion that can be closed when calling <see cref="IDisposable.Dispose"/>
+		/// </summary>
+		/// <typeparam name="TMethodsServerCanCall"></typeparam>
+		/// <param name="hubConnection"></param>
+		/// <param name="serverMethods"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
+		public static OnMultipleSubscription OnMultiple<TMethodsServerCanCall>(HubConnection hubConnection, TMethodsServerCanCall serverMethods)
 		{
 			var methodInfos = FilterMethods(serverMethods);
-			foreach (var methodInfo in methodInfos)
+			IDisposable[] innerSubsriptions = new IDisposable[methodInfos.Length];
+			for (int methodIndex = 0; methodIndex < methodInfos.Length; methodIndex++)
 			{
+				MethodInfo? methodInfo = methodInfos[methodIndex];
 				Type[] parameterTypes = methodInfo.GetParameters().Select(x => x.ParameterType).ToArray();
 				if (methodInfo.ReturnType == typeof(Task))
 				{
-					hubConnection.On(methodInfo.Name, parameterTypes, (arguments) => (Task)methodInfo.Invoke(serverMethods, arguments)!);
+					var innerSubscription = hubConnection.On(methodInfo.Name, parameterTypes, (arguments) => (Task)methodInfo.Invoke(serverMethods, arguments)!);
+					innerSubsriptions[methodIndex] = innerSubscription;
 					continue;
 				}
 
 				if (methodInfo.ReturnType == typeof(void))
 				{
-					hubConnection.On(methodInfo.Name, parameterTypes, (arguments) =>
+					var innerSubscription = hubConnection.On(methodInfo.Name, parameterTypes, (arguments) =>
 					{
 						methodInfo.Invoke(serverMethods, arguments);
 						return Task.CompletedTask;
 					});
+					innerSubsriptions[methodIndex] = innerSubscription;
 					continue;
 				}
 
 				throw new ArgumentException("Class must not contain public methods with different return types than void and Task");
 			}
+			return new OnMultipleSubscription(innerSubsriptions);
 		}
 
 		private static readonly MethodInfo[] MethodsToIgnore = new object().GetType().GetMethodsRecursive(BindingFlags.Public | BindingFlags.Instance);

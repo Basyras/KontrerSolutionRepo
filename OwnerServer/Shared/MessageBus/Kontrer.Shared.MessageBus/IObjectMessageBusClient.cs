@@ -1,25 +1,20 @@
-﻿using Basyc.MessageBus.Shared;
-using OneOf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Client
 {
-    public interface IObjectMessageBusClient : IDisposable
-    {
-        Task PublishAsync(string eventType, CancellationToken cancellationToken = default);
-        Task PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default);
+	public interface IObjectMessageBusClient : IDisposable
+	{
+		BusTask PublishAsync(string eventType, CancellationToken cancellationToken = default);
+		BusTask PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default);
 
-        Task SendAsync(string commandType, CancellationToken cancellationToken = default);
-        Task SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default);
+		BusTask SendAsync(string commandType, CancellationToken cancellationToken = default);
+		BusTask SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default);
 
-        Task<object> RequestAsync(string requestType, CancellationToken cancellationToken = default);
-        BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default);
+		BusTask<object> RequestAsync(string requestType, CancellationToken cancellationToken = default);
+		BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default);
 
-        Task StartAsync(CancellationToken cancellationToken = default);
-    }
+		Task StartAsync(CancellationToken cancellationToken = default);
+	}
 }

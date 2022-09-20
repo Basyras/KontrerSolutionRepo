@@ -20,7 +20,7 @@
 				return false;
 			}
 		}
-		bool TryDeserialize<T>(byte[] serializedObject, out T? deserializedObject, out SerializationFailure? error)
+		public bool TryDeserialize<T>(byte[] serializedObject, out T? deserializedObject, out SerializationFailure? error)
 		{
 			try
 			{
@@ -36,6 +36,15 @@
 			}
 		}
 
+		public byte[] Serialize<T>(object? deserializedObject)
+		{
+			return Serialize(deserializedObject, typeof(T));
+		}
+
+		public object? Deserialize<T>(byte[] serializedObject)
+		{
+			return Deserialize(serializedObject, typeof(T));
+		}
 
 	}
 }

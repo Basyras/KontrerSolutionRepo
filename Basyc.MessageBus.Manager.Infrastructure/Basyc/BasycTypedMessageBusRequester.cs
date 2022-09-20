@@ -68,37 +68,30 @@ namespace Basyc.MessageBus.Manager
 				}
 				else
 				{
+					var busTask = typedMessageBusClient.SendAsync(requestType, requestObject);
+					requestResult.SessionId = busTask.SessionId;
 					var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
+
 					Task.Run(async () =>
 					{
-						await typedMessageBusClient.SendAsync(requestType, requestObject)
-						.ContinueWith(x =>
+						var response = await busTask.Task;
+						waitingForBusSegment.End();
+						if (response.Value is ErrorMessage error)
 						{
-							waitingForBusSegment.End();
-							string errorMessage = string.Empty;
-							if (x.IsFaulted)
-							{
-								if (x.Exception is AggregateException aggregateException)
-								{
-									errorMessage = aggregateException.InnerExceptions.Select(x => x.Message).Aggregate((x, y) => $"{x},\n{y}");
-								}
-								else
-								{
-									errorMessage = x.Exception != null ? x.Exception.Message : string.Empty;
-								}
-								requestResult.Fail(errorMessage);
-							}
-
+							requestResult.Fail(error.Message);
+						}
+						else
+						{
+							var resultObject = response.AsT0;
 							requestResult.Complete();
-
-						});
-
+						}
 					});
+
 				}
 			}
 			catch (Exception ex)
 			{
-				requestResult.Fail(ex.Message);
+				requestResult.Fail("Exception while sending request. " + ex.Message);
 			}
 		}
 	}

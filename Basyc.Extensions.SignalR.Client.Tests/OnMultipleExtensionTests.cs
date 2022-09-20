@@ -26,10 +26,13 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 			await hubConnection.StartAsync();
 			await hubConnection.ReceiveMessage(MethodsServerCanCall_PrivateMethods.ReceiveTextMethodName, new object?[] { "text" });
 			messageReceiver.LastReceivedText.Should().BeNull();
+
+			await hubConnection.ReceiveMessage(MethodsServerCanCall_PrivateMethods.ReceiveVoidMethodName, Array.Empty<object?>());
+			messageReceiver.LastReceivedVoidUtc.Should().Be(default);
 		}
 
 		[Fact]
-		public async Task Should_Include_Inherited_Methods()
+		public async Task Should_Include_Inherited_Methods_From_SelectedD_Interface()
 		{
 			var messageReceiver = new MethodsServerCanCall_Inhertited_Numbers();
 			var hubConnection = HubConnectionMockBuilder.Create();
@@ -77,11 +80,12 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 
 
 		[Fact]
-		public async Task Test_All()
+		public async Task Should_Inlude_Methods_From_Selected_Class()
 		{
 			var messageReceiver = new MethodsServerCanCall_Numbers();
 			var hubConnection = HubConnectionMockBuilder.Create();
 			hubConnection.OnMultiple(messageReceiver);
+
 			await hubConnection.StartAsync();
 			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Numbers.ReceiveNumber), new object?[] { 1 });
 			messageReceiver.LastReceivedNumber.Should().Be(1);
@@ -94,23 +98,67 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 		}
 
 		[Fact]
-		public async Task Should_Ignore_Methods_That_Are_Not_Specfied_IN_Interface()
+		public async Task Should_Ignore_Methods_Not_In_Interface()
 		{
-			var messageReceiver = new MethodsServerCanCall_Texts_Inheriting_IEmpty();
+			var messageReceiver = new MethodsServerCanCall_Texts();
 			var hubConnection = HubConnectionMockBuilder.Create();
 			hubConnection.OnMultiple<IMethodsServerCanCall_Empty>(messageReceiver);
 			await hubConnection.StartAsync();
-			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts_Inheriting_IEmpty.ReceiveText), new object?[] { "1" });
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveText), new object?[] { "1" });
 			messageReceiver.LastReceivedText.Should().BeNull();
 
-			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts_Inheriting_IEmpty.ReceiveTextAsync), new object?[] { "1" });
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTextAsync), new object?[] { "1" });
 			messageReceiver.LastReceivedText.Should().BeNull();
 
-			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts_Inheriting_IEmpty.ReceiveTexts), new object?[] { "1", "2" });
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTexts), new object?[] { "1", "2" });
 			messageReceiver.LastReceivedText.Should().BeNull();
 
-			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts_Inheriting_IEmpty.ReceiveTexts), new object?[] { "1", "2" });
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTexts), new object?[] { "1", "2" });
 			messageReceiver.LastReceivedText.Should().BeNull();
+		}
+
+
+		[Fact]
+		public async Task Should_Just_Inlude_Methods_From_Interface_On_ImplementedClass()
+		{
+			var messageReceiver = new MethodsServerCanCall_Texts();
+			var hubConnection = HubConnectionMockBuilder.Create();
+			hubConnection.OnMultiple<IMethodsServerCanCall_Text>(messageReceiver);
+			await hubConnection.StartAsync();
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveText), new object?[] { "-1" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
+
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTextAsync), new object?[] { "1" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
+
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTexts), new object?[] { "1", "2" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
+
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTexts), new object?[] { "1", "2" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
+		}
+
+		[Fact]
+		public async Task Should_Unsubsribe_All()
+		{
+			var messageReceiver = new MethodsServerCanCall_Texts();
+			var hubConnection = HubConnectionMockBuilder.Create();
+			var subsriptions = hubConnection.OnMultiple<MethodsServerCanCall_Texts>(messageReceiver);
+			await hubConnection.StartAsync();
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveText), new object?[] { "-1" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
+			subsriptions.UnsubscribeAll();
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveText), new object?[] { "1" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
+
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTextAsync), new object?[] { "1" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
+
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTexts), new object?[] { "1", "2" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
+
+			await hubConnection.ReceiveMessage(nameof(MethodsServerCanCall_Texts.ReceiveTexts), new object?[] { "1", "2" });
+			messageReceiver.LastReceivedText.Should().Be("-1");
 		}
 	}
 }

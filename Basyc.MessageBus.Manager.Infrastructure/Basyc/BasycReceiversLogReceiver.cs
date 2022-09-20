@@ -20,7 +20,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc
 			}
 		}
 
-		public event EventHandler<LogsUpdatedArgs>? LogsReceived;
+		public event EventHandler<LogsUpdatedArgs> LogsReceived;
 
 		private void LogReceiver_LogsReceived(object sender, LogsReceivedArgs e)
 		{

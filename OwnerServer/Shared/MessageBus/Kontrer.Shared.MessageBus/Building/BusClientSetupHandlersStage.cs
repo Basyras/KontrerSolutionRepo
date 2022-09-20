@@ -2,7 +2,6 @@
 using Basyc.MessageBus.Client.Diagnostics;
 using Basyc.MessageBus.Client.Diagnostics.Sinks;
 using Basyc.MessageBus.Client.RequestResponse;
-using Basyc.Shared.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -86,10 +85,12 @@ namespace Basyc.MessageBus.Client.Building
 					ctorArguments[paramIndex] = new BusHandlerLogger((ILogger)services.GetRequiredService(ctorParam.ParameterType), logSinks, handlerType.Name);
 					continue;
 				}
-				if (ctorParam.ParameterType == typeof(ILogger<>).MakeGenericType(handlerType))
+				//if (ctorParam.ParameterType == typeof(ILogger<>).MakeGenericType(handlerType))
+				if (ctorParam.ParameterType.IsAssignableToGenericType(typeof(ILogger<>)))
 				{
+					var originalLoggerGenericArgument = ctorParam.ParameterType.GetTypeArgumentsFromParent(typeof(ILogger<>))[0];
 					var logSinks = services.GetServices<ILogSink>().ToArray();
-					var decoLoggerType = typeof(BusHandlerLogger<>).MakeGenericType(handlerType);
+					var decoLoggerType = typeof(BusHandlerLogger<>).MakeGenericType(originalLoggerGenericArgument);
 					var decoLoggerCtor = decoLoggerType.GetConstructor(new Type[] { typeof(ILogger), typeof(IEnumerable<ILogSink>) });
 					var decoLogger = decoLoggerCtor.Invoke(new object[] { services.GetRequiredService(ctorParam.ParameterType), logSinks });
 					ctorArguments[paramIndex] = decoLogger;
