@@ -49,9 +49,7 @@ namespace Basyc.Extensions.SignalR.Client
 
 		private static MethodInfo[] FilterMethods<TMethodsServerCanCall>(TMethodsServerCanCall serverMethods)
 		{
-			//var genericArgType = typeof(TMethodsServerCanCall);
-			//Type targetType = serverMethods!.GetType();
-			Type targetType = typeof(TMethodsServerCanCall); //Ignore methods that are not specified in interfac (They should not be called from server + server hub does even see them)
+			Type targetType = typeof(TMethodsServerCanCall); //Ignore methods that are not specified in interface (They should not be called from server + server hub does even see them)
 			var filteredMethods = targetType
 				.GetMethodsRecursive(BindingFlags.Public | BindingFlags.Instance)
 				.Where<MethodInfo>(methodInfo =>

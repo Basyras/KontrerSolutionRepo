@@ -1,4 +1,4 @@
-﻿namespace Basyc.Extensions.SignalR.Client.Tests
+﻿namespace Basyc.Extensions.SignalR.Client.Tests.Helpers
 {
 	public static class CorrectMethodsClientCanCallHubs
 	{

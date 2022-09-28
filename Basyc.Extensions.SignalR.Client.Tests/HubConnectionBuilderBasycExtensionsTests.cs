@@ -1,3 +1,4 @@
+using Basyc.Extensions.SignalR.Client.Tests.Helpers;
 using Basyc.Extensions.SignalR.Client.Tests.Mocks;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -60,6 +61,14 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 			connectionMock.LastSendCoreCall!.MethodName.Should().Be(nameof(ICorrectMethodsClientCanCall_Inherited_Voids.SendNumber));
 			connectionMock.LastSendCoreCall!.Args.Should().Equal(new object?[] { 1 });
 
+		}
+
+		[Fact]
+		public void Should_Throw_When_ReceivingMethod_Throws()
+		{
+			var connectionMock = new HubConnectionMockBuilder().BuildAsMock();
+			var hubClient = connectionMock.CreateStrongTyped<WrongHubClient_Is_Class_Numbers_Exceptions>(new WrongHubClient_Is_Class_Numbers_Exceptions());
+			hubClient.Call.Invoking(x => x.ThrowNumberVoid(1)).Should().Throw<MethodExceptionHelperException>();
 		}
 	}
 }

@@ -19,11 +19,9 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 		private readonly IObjectToByteSerailizer byteSerializer;
 		private readonly SignalRSessionManager sessionManager;
 
-		public SignalRProxyObjectMessageBusClient(IOptions<SignalROptions> options, IObjectToByteSerailizer byteSerializer)
+		public SignalRProxyObjectMessageBusClient(IOptions<SignalROptions> options, IObjectToByteSerailizer byteSerializer, ISharedRequestIdCounter requestIdCounter)
 		{
-			sessionManager = new SignalRSessionManager();
-
-
+			sessionManager = new SignalRSessionManager(requestIdCounter);
 			hubConnection = new HubConnectionBuilder()
 			.WithUrl(options.Value.SignalRServerUri + options.Value.ProxyClientHubPattern)
 			.WithAutomaticReconnect()

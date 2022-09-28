@@ -1,4 +1,6 @@
-﻿namespace Basyc.MessageBus.Manager.Application.Requesting
+﻿using Microsoft.Extensions.Logging;
+
+namespace Basyc.MessageBus.Manager.Application.Requesting
 {
 	public interface IRequester
 	{
@@ -8,6 +10,6 @@
 		/// </summary>
 		/// <param name="requestResult"></param>
 		/// <returns></returns>
-		void StartRequest(RequestResult requestResult);
+		void StartRequest(RequestResult requestResult, ILogger requestLogger);
 	}
 }

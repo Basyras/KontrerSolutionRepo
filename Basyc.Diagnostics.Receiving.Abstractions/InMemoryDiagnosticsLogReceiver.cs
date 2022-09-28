@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Basyc.Diagnostics.Receiving.Abstractions
 {
-	public class InMemoryLogReceiver : ILogReceiver
+	public class InMemoryDiagnosticsLogReceiver : IDiagnosticsLogReceiver
 	{
 		public event EventHandler<LogsReceivedArgs>? LogsReceived;
 

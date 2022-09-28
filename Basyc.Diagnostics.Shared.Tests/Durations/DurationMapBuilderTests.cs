@@ -19,7 +19,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		{
 			var mapBuilder = new DurationMapBuilder();
 			var durationMap = mapBuilder.Build();
-			mapBuilder.HasStartedCounting.Should().BeTrue();
+			mapBuilder.HasStarted.Should().BeTrue();
 			mapBuilder.StartTime.Should().NotBe(default(DateTimeOffset));
 		}
 
@@ -28,7 +28,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		{
 			var mapBuilder = new DurationMapBuilder();
 			_ = mapBuilder.StartNewSegment("segmentName");
-			mapBuilder.HasStartedCounting.Should().BeTrue();
+			mapBuilder.HasStarted.Should().BeTrue();
 			mapBuilder.StartTime.Should().NotBe(default(DateTimeOffset));
 		}
 
@@ -40,7 +40,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 			_ = mapBuilder.StartNewSegment(segment1Name);
 			var durationMap = mapBuilder.Build();
 			durationMap.Segments.Length.Should().Be(1);
-			DurationSegment firstSegment = durationMap.Segments.First();
+			BuildedDurationSegment firstSegment = durationMap.Segments.First();
 			firstSegment.EndTime.Should().NotBe(default(DateTimeOffset));
 			durationMap.TotalDuration.Should().NotBe(default(TimeSpan));
 			durationMap.TotalDuration.Should().Be(firstSegment.EndTime - firstSegment.StartTime);
@@ -78,7 +78,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void AddAndStartSegment_Should_ReturnNewSegment()
 		{
-			List<DurationSegmentBuilder> allSegments = new List<DurationSegmentBuilder>();
+			List<IDurationSegmentBuilder> allSegments = new List<IDurationSegmentBuilder>();
 			var mapBuilder = new DurationMapBuilder();
 
 			for (int segmentIndex = 0; segmentIndex < 4; segmentIndex++)

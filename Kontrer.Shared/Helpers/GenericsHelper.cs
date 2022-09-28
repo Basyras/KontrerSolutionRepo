@@ -44,9 +44,24 @@
 
 		public static Type[] GetTypeArgumentsFromParent(this Type childType, Type parentType)
 		{
+			if (parentType.IsGenericTypeDefinition is false)
+				parentType = parentType.GetGenericTypeDefinition();
+
+			if (childType.IsGenericType)
+			{
+				if (childType.GetGenericTypeDefinition() == parentType)
+				{
+					return childType.GetGenericArguments();
+				}
+			}
+
 			if (parentType.IsInterface)
 			{
 				var baseInterface = childType.GetInterface(parentType.Name);
+				if (baseInterface is null)
+				{
+					throw new InvalidOperationException("Class does not have specified base class/interface");
+				}
 				return baseInterface.GetGenericArguments();
 			}
 
@@ -60,7 +75,7 @@
 			}
 			if (childType != typeof(object))
 			{
-				throw new InvalidOperationException("Class does not have specified base class");
+				throw new InvalidOperationException("Class does not have specified base class/interface");
 			}
 			else
 			{

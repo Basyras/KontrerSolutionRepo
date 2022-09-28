@@ -46,7 +46,7 @@ namespace Basyc.MessageBus.Client.NetMQ
 			}
 
 			object handler = serviceProvider.GetRequiredService(handlerMetadata.HandlerRuntimeType)!;
-			BusHandlerLoggerSessionManager.StartSession(sessionId);
+			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(sessionId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));
 			Task handlerResultTask = (Task)handlerMetadata.HandlerInfo.HandleMethodInfo.Invoke(handler, new object[] { messageData!, cancellationToken })!;
 			object? handlerResult;
 			try

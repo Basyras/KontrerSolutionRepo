@@ -1,8 +1,8 @@
-﻿namespace Basyc.Extensions.SignalR.Client.Tests
+﻿namespace Basyc.Extensions.SignalR.Client.Tests.Helpers
 {
 	public static class WrongHubs
 	{
-		public static Type[] WrongHubTypes = new Type[]
+		public static Type[] TypesThatShouldFailCreating = new Type[]
 		{
 			typeof(IWrongHubClient_Has_ReturnValues),
 			typeof(IWrongHubClient_Has_TaskReturnValues),
@@ -45,4 +45,34 @@
 	{
 
 	}
+
+	public class WrongHubClient_Is_Class_Numbers_Exceptions
+	{
+		public void ThrowNumberVoid(int number)
+		{
+			throw MethodExceptionHelperException.CreateForCurrentMethod();
+		}
+
+		public async Task ThrowNumberAsync(int number)
+		{
+			await Task.Delay(150);
+			throw MethodExceptionHelperException.CreateForCurrentMethod(new object?[] { number });
+		}
+
+		public async Task ThrowNumbersAsync(int number, int number2)
+		{
+			await Task.Delay(150);
+			throw MethodExceptionHelperException.CreateForCurrentMethod(new object?[] { number, number2 });
+
+
+		}
+
+		public async Task ThrowNumbers3Async(int number, int number2, int number3)
+		{
+			await Task.Delay(150);
+			throw MethodExceptionHelperException.CreateForCurrentMethod(new object?[] { number, number2, number3 });
+		}
+
+	}
+
 }

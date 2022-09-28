@@ -1,8 +1,8 @@
-﻿using Basyc.MessageBus.HttpProxy.Shared.SignalR;
+﻿using Basyc.MessageBus.Client;
+using Basyc.MessageBus.HttpProxy.Shared.SignalR;
 using Basyc.MessageBus.Shared;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
@@ -12,7 +12,12 @@ namespace Basyc.MessageBus.HttpProxy.Client.SignalR.Sessions
 	{
 		private readonly Channel<object> clientServerChannel = Channel.CreateUnbounded<object>();
 		private readonly Dictionary<int, SignalRSession> sessionMap = new();
-		private int sessionCounter = 0;
+		private readonly ISharedRequestIdCounter requestIdCounter;
+
+		public SignalRSessionManager(ISharedRequestIdCounter requestIdCounter)
+		{
+			this.requestIdCounter = requestIdCounter;
+		}
 
 		public Task ReceiveRequestFailed(RequestFailedSignalRDTO requestFailed)
 		{
@@ -61,7 +66,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.SignalR.Sessions
 
 		public SignalRSession StartSession()
 		{
-			var sessionIndex = Interlocked.Increment(ref sessionCounter);
+			var sessionIndex = requestIdCounter.GetNextId();
 			var session = new SignalRSession(sessionIndex);
 			sessionMap.Add(sessionIndex, session);
 			return session;

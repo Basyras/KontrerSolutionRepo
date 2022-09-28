@@ -62,5 +62,9 @@
   {
     "outputFile": "Components/DurationMap/DurationBoxView.razor.css",
     "inputFile": "Components/DurationMap/DurationBoxView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/ResultHistory/ResultHistoryItemView.razor.css",
+    "inputFile": "Pages/ResultHistory/ResultHistoryItemView.razor.scss"
   }
 ]

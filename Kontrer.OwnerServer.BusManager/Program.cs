@@ -1,6 +1,7 @@
 using Basyc.DomainDrivenDesign.Domain;
 using Basyc.MessageBus.Manager;
 using Basyc.MessageBus.Manager.Application;
+using Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus;
 using Kontrer.OwnerServer.BusManager;
 using Kontrer.OwnerServer.CustomerService.Domain;
 using Kontrer.OwnerServer.IdGeneratorService.Domain;
@@ -41,8 +42,9 @@ CreateTestingMessages(busManagerBuilder);
 busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
 	.RegisterMessagesAsCQRS(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>))
 	.UseBasycDiagnosticsReceivers()
+		.UseMapper<BusManagerBasycDiagnosticsReceiverSessionMapper>()
 	.UseBasycTypedMessageBusRequester()
-	.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
+		.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
 
 
 

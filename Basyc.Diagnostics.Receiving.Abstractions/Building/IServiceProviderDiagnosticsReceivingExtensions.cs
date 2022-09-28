@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
 	{
 		public static async Task StartBasycDiagnosticsReceivers(this IServiceProvider serviceProvider)
 		{
-			var receivers = serviceProvider.GetServices<ILogReceiver>();
+			var receivers = serviceProvider.GetServices<IDiagnosticsLogReceiver>();
 			foreach (var receiver in receivers)
 			{
 				await receiver.StartReceiving();

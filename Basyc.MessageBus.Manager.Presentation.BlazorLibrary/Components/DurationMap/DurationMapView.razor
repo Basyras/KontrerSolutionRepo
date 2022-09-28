@@ -8,7 +8,7 @@
     }
     else
     {
-        DurationSegment previousSegment = null;
+        BuildedDurationSegment previousSegment = null;
         foreach (var segment in DurationMap.Segments)
         {
             if (previousSegment is not null && previousSegment.EndTime != segment.StartTime)

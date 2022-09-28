@@ -1,5 +1,5 @@
-﻿using Basyc.Extensions.SignalR.Client.Tests.Mocks;
-using Castle.DynamicProxy;
+﻿using Basyc.Extensions.SignalR.Client.Tests.Helpers;
+using Basyc.Extensions.SignalR.Client.Tests.Mocks;
 using System.Data;
 using System.Reflection;
 
@@ -7,7 +7,6 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 {
 	public class HubClientInteceptorTests
 	{
-		private static readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
 
 		private readonly HubConnectionMock connection;
 		public HubClientInteceptorTests()
@@ -66,7 +65,7 @@ namespace Basyc.Extensions.SignalR.Client.Tests
 		[Fact]
 		public void Should_Throw_When_CreatingWrongHub()
 		{
-			foreach (var hubType in WrongHubs.WrongHubTypes)
+			foreach (var hubType in WrongHubs.TypesThatShouldFailCreating)
 			{
 				var action = () =>
 				{

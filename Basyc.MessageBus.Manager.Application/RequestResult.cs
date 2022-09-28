@@ -10,19 +10,20 @@ namespace Basyc.MessageBus.Manager.Application
 
 		public Request Request { get; init; }
 		public DateTimeOffset RequestCreationTime { get; init; }
-		public int SessionId { get; set; }
+		public int SessionId { get; init; }
 		public RequestResultState State { get; private set; }
 		public object? Response { get; private set; }
 		public string? ErrorMessage { get; private set; }
 		public DurationMap? DurationMap { get; private set; }
 
 
-		public RequestResult(Request request, DateTimeOffset requestCreationTime)
+		public RequestResult(Request request, DateTimeOffset requestCreationTime, int sessionId, DurationMapBuilder durationMapBuilder)
 		{
 			Request = request;
-			durationMapBuilder = new DurationMapBuilder();
+			this.durationMapBuilder = durationMapBuilder;
 			RequestCreationTime = requestCreationTime;
 			State = RequestResultState.Started;
+			SessionId = sessionId;
 		}
 
 		/// <summary>
@@ -30,12 +31,12 @@ namespace Basyc.MessageBus.Manager.Application
 		/// </summary>
 		public void Start()
 		{
-			if (durationMapBuilder.HasStartedCounting)
+			if (durationMapBuilder.HasStarted)
 				throw new InvalidOperationException($"{nameof(Start)} was already called");
 			durationMapBuilder.Start();
 		}
 
-		public DurationSegmentBuilder StartNewSegment(string segmentName)
+		public IDurationSegmentBuilder StartNewSegment(string segmentName)
 		{
 			return durationMapBuilder.StartNewSegment(segmentName);
 		}

@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Basyc.Diagnostics.Producing.Shared\Basyc.Diagnostics.Producing.Shared.csproj" />
     <ProjectReference Include="..\Basyc.Diagnostics.Shared\Basyc.Diagnostics.Shared.csproj" />
     <ProjectReference Include="..\Basyc.Diagnostics.SignalR.Shared\Basyc.Diagnostics.SignalR.Shared.csproj" />
+    <ProjectReference Include="..\Basyc.Extensions.SignalR.Client\Basyc.Extensions.SignalR.Client.csproj" />
   </ItemGroup>
 
 </Project>

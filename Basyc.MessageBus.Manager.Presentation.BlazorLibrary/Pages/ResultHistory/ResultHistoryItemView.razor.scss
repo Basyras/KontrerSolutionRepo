@@ -31,14 +31,18 @@ responseValue {
 }
 
 .historyItem--state--Started {
+    background-color: #EFF5F9;
+    border: 2px solid #EFF5F9;
 }
 
 .historyItem--state--Completed {
     background-color: $Success-Background;
+    border: 2px solid $Success-Background;
 }
 
 .historyItem--state--Failed {
     background-color: $Error-Background;
+    border: 2px solid $Error-Background;
 }
 
 historyItem {
@@ -49,8 +53,7 @@ historyItem {
     align-items: center;
     overflow: hidden;
     color: #628E8E;
-    background-color: #EFF5F9;
-    border: 2px solid #EFF5F9;
+
     border-radius: 4px;
 }
 

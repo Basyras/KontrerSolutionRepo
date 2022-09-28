@@ -1,6 +1,4 @@
 ﻿using Basyc.DependencyInjection;
-using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
-using Basyc.MessageBus.Manager.Infrastructure.Basyc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Basyc.MessageBus.Manager.Infrastructure.Building
@@ -16,10 +14,6 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building
 			return new SetupRequesterStage(services);
 		}
 
-		public SetupRequesterStage UseBasycDiagnosticsReceivers()
-		{
-			services.AddSingleton<ILogSource, BasycReceiversLogSource>();
-			return new SetupRequesterStage(services);
-		}
+
 	}
 }

@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
 	{
 		public static SetupSignalRReceiverStage UseSignalR(this SelectReceiverProviderStage parent)
 		{
-			parent.services.AddSingleton<ILogReceiver, SignalRLogReceiver>();
+			parent.services.AddSingleton<IDiagnosticsLogReceiver, SignalRDiagnosticsLogReceiver>();
 			return new SetupSignalRReceiverStage(parent.services);
 		}
 	}

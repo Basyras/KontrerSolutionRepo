@@ -2,7 +2,7 @@
 {
 	public static class DurationTestsHelper
 	{
-		public const int TaskDelayPrecisionMs = 50;
+		public const int TaskDelayPrecisionMs = 75;
 		public static TimeSpan TaskDelayPrecision = TimeSpan.FromMilliseconds(TaskDelayPrecisionMs);
 	}
 }

@@ -2,12 +2,12 @@
 {
 	public class DurationMapBuilder
 	{
-		private DurationSegmentBuilder? rootSegmentBuilder;
+		private InMemoryDurationSegmentBuilder? rootSegmentBuilder;
 		public DateTimeOffset StartTime { get; private set; }
 		public DateTimeOffset EndTime { get; private set; }
 		public bool MapFinished => EndTime != default;
 
-		public bool HasStartedCounting { get; private set; }
+		public bool HasStarted { get; private set; }
 
 		/// <summary>
 		/// Return start time
@@ -15,15 +15,15 @@
 		/// <returns></returns>
 		public DateTimeOffset Start()
 		{
-			StartTime = DateTimeOffset.UtcNow;
-			rootSegmentBuilder = new DurationSegmentBuilder("root", StartTime, () => rootSegmentBuilder!);
-			HasStartedCounting = true;
+			rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", () => rootSegmentBuilder!);
+			StartTime = rootSegmentBuilder.Start();
+			HasStarted = true;
 			return StartTime;
 		}
 
-		public DurationSegmentBuilder StartNewSegment(string segmentName)
+		public IDurationSegmentBuilder StartNewSegment(string segmentName)
 		{
-			if (HasStartedCounting is false)
+			if (HasStarted is false)
 			{
 				var mapStart = Start();
 				var newSegment = rootSegmentBuilder!.StartNewNestedSegment(segmentName, mapStart);
@@ -44,7 +44,7 @@
 
 		private void End(DateTimeOffset endTime)
 		{
-			if (HasStartedCounting is false)
+			if (HasStarted is false)
 				throw new InvalidOperationException($"{nameof(End)} method must be called after {nameof(Start)} or other method that {nameof(Start)} calls internally ({nameof(Build)})");
 			EndTime = DateTimeOffset.UtcNow;
 		}
@@ -52,7 +52,7 @@
 
 		public DurationMap Build()
 		{
-			if (HasStartedCounting)
+			if (HasStarted)
 			{
 				if (MapFinished is false)
 				{

@@ -11,8 +11,22 @@ namespace Microsoft.AspNetCore.SignalR.Client
 		public static IStrongTypedHubConnectionPusher<TMethodsClientCanCall> CreateStrongTyped<TMethodsClientCanCall>(this HubConnection connection)
 			where TMethodsClientCanCall : class
 		{
-			HubClientInteceptor hubClientInteceptor = new HubClientInteceptor(connection, typeof(TMethodsClientCanCall));
-			var hubClientProxy = proxyGenerator.CreateInterfaceProxyWithoutTarget<TMethodsClientCanCall>(hubClientInteceptor);
+			var receiverType = typeof(TMethodsClientCanCall);
+			HubClientInteceptor hubClientInteceptor = new HubClientInteceptor(connection, receiverType);
+			TMethodsClientCanCall hubClientProxy = proxyGenerator.CreateInterfaceProxyWithoutTarget<TMethodsClientCanCall>(hubClientInteceptor);
+			return new StrongTypedHubConnectionPusher<TMethodsClientCanCall>(hubClientProxy, connection);
+		}
+
+
+		public static IStrongTypedHubConnectionPusher<TMethodsClientCanCall> CreateStrongTyped<TMethodsClientCanCall>(this HubConnection connection, TMethodsClientCanCall beforeMethods)
+			where TMethodsClientCanCall : class
+		{
+			var receiverType = typeof(TMethodsClientCanCall);
+			HubClientInteceptor hubClientInteceptor = new HubClientInteceptor(connection, receiverType, true);
+			TMethodsClientCanCall hubClientProxy;
+
+			hubClientProxy = proxyGenerator.CreateClassProxyWithTarget<TMethodsClientCanCall>(beforeMethods, hubClientInteceptor);
+
 			return new StrongTypedHubConnectionPusher<TMethodsClientCanCall>(hubClientProxy, connection);
 		}
 

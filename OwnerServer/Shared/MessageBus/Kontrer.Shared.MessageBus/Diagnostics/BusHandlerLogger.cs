@@ -6,16 +6,16 @@ using System.Linq;
 
 namespace Basyc.MessageBus.Client.Diagnostics
 {
+	public class DummyLoggerCategory { };
+
 	public class BusHandlerLogger : ILogger
 	{
 		private readonly ILogger normalLogger;
-		private readonly string handlerDisplayName;
 		private readonly ILogSink[] logSinks;
 
-		public BusHandlerLogger(ILogger normalLogger, IEnumerable<ILogSink> logSinks, string handlerDisplayName)
+		public BusHandlerLogger(ILogger normalLogger, IEnumerable<ILogSink> logSinks)
 		{
 			this.normalLogger = normalLogger;
-			this.handlerDisplayName = handlerDisplayName;
 			this.logSinks = logSinks.ToArray();
 		}
 
@@ -32,9 +32,9 @@ namespace Basyc.MessageBus.Client.Diagnostics
 
 		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
-			if (BusHandlerLoggerSessionManager.HasSession(out var sessionId) is false)
+			if (BusHandlerLoggerSessionManager.HasSession(out var session) is false)
 			{
-				throw new InvalidOperationException($"Can't log without starting {nameof(BusHandlerLoggerSessionManager.StartSession)}");
+				throw new InvalidOperationException($"Can't log without starting {nameof(BusHandlerLoggerSessionManager.StartSession)}. This logger should be only used for bus handlers");
 			}
 
 			if (normalLogger.IsEnabled(logLevel))
@@ -44,14 +44,14 @@ namespace Basyc.MessageBus.Client.Diagnostics
 
 			foreach (var logSink in logSinks)
 			{
-				logSink.SendLog(handlerDisplayName, logLevel, sessionId, state, exception, formatter);
+				logSink.SendLog(session.HandlerName, logLevel, session.SessionId, state, exception, formatter);
 			}
 		}
 	}
 
 	public class BusHandlerLogger<THandler> : BusHandlerLogger, ILogger<THandler>
 	{
-		public BusHandlerLogger(ILogger normalLogger, IEnumerable<ILogSink> logSinks) : base(normalLogger, logSinks, typeof(THandler).Name)
+		public BusHandlerLogger(ILogger<THandler> normalLogger, IEnumerable<ILogSink> logSinks) : base(normalLogger, logSinks)
 		{
 		}
 	}

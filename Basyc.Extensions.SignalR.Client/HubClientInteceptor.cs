@@ -9,8 +9,9 @@ namespace Basyc.Extensions.SignalR.Client
 		internal List<InterceptedMethodMetadata> InterceptedMethods { get; } = new();
 		private readonly Dictionary<MethodInfo, InterceptedMethodMetadata> methodInfoToMethodMetadataMap = new();
 
-		public HubClientInteceptor(HubConnection connection, Type hubClientInterfaceType)
+		public HubClientInteceptor(HubConnection connection, Type hubClientInterfaceType, bool usingBaseClass = false)
 		{
+			this.usingBaseClass = usingBaseClass;
 			CreateInteceptorsForPublicMethods(connection, hubClientInterfaceType);
 		}
 
@@ -22,6 +23,10 @@ namespace Basyc.Extensions.SignalR.Client
 			{
 				Func<Task> continuation = async () =>
 				{
+					if (usingBaseClass)
+					{
+						invocation.Proceed();
+					}
 					await sendCoreTask!;
 				};
 				invocation.ReturnValue = continuation();
@@ -29,8 +34,9 @@ namespace Basyc.Extensions.SignalR.Client
 		}
 		private void CreateInteceptorsForPublicMethods(HubConnection connection, Type methodsClientCanCallType)
 		{
-			CheckAndThrowType(methodsClientCanCallType);
-			foreach (var methodInfo in methodsClientCanCallType.GetMethodsRecursive(BindingFlags.Instance | BindingFlags.Public))
+			CheckAndThrowType(methodsClientCanCallType, out var isClass);
+			MethodInfo[] methodsToIntercept = GetMethodsToIntercept(methodsClientCanCallType, isClass);
+			foreach (var methodInfo in methodsToIntercept)
 			{
 				CheckAndThrowMethodSignatures(methodInfo, out var returnsVoid, out var returnsTask);
 				ParameterInfo[] methodParamInfos = methodInfo.GetParameters();
@@ -54,10 +60,47 @@ namespace Basyc.Extensions.SignalR.Client
 			}
 		}
 
-		private static void CheckAndThrowType(Type methodsClientCanCallType)
+		private static MethodInfo[] GetMethodsToIntercept(Type methodsClientCanCallType, bool isClass)
 		{
+			var publicMethods = methodsClientCanCallType.GetMethodsRecursive(BindingFlags.Instance | BindingFlags.Public);
+			if (isClass is false)
+			{
+				return publicMethods;
+			}
+			else
+			{
+				return FilterObjectMethods(FilterObjectMethods(publicMethods));
+			}
+
+		}
+
+		private static readonly MethodInfo[] MethodsToIgnore = new object().GetType().GetMethodsRecursive(BindingFlags.Public | BindingFlags.Instance);
+		private readonly bool usingBaseClass;
+
+		private static MethodInfo[] FilterObjectMethods(MethodInfo[] methodsTofilter)
+		{
+			var filteredMethods = methodsTofilter
+				.Where(methodInfo =>
+				{
+					if (methodInfo.IsSpecialName)
+						return false;
+					return MethodsToIgnore.All(methodToIgnore => methodToIgnore.Name != methodInfo.Name);
+				})
+				.ToArray();
+			return filteredMethods;
+		}
+
+		private void CheckAndThrowType(Type methodsClientCanCallType, out bool isClass)
+		{
+			isClass = false;
 			if (methodsClientCanCallType.IsClass)
-				throw new ArgumentException("Selected can't be a class");
+			{
+
+				isClass = true;
+			}
+
+			if (usingBaseClass != isClass)
+				throw new ArgumentException("Settings does not match provided type");
 		}
 
 		public bool HasCancelToken(ParameterInfo[] paramInfos, out int cancelTokenParamIndex)

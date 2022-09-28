@@ -1,6 +1,7 @@
 ﻿using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Application.Requesting;
+using Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus;
 using Basyc.Shared.Helpers;
 using Microsoft.Extensions.Options;
 using System;

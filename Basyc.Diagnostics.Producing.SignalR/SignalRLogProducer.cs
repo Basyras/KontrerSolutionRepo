@@ -2,6 +2,8 @@
 using Basyc.Diagnostics.Producing.SignalR.Shared;
 using Basyc.Diagnostics.Receiving.SignalR;
 using Basyc.Diagnostics.Shared.Logging;
+using Basyc.Diagnostics.SignalR.Shared;
+using Basyc.Extensions.SignalR.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
@@ -17,13 +19,13 @@ namespace Basyc.Diagnostics.Producing.SignalR
 		private readonly TaskCompletionSource connectionStartingSource = new();
 
 
-		private readonly HubConnection hubConnection;
+		private readonly IStrongTypedHubConnectionPusher<IServerMethodsProducersCanCall> hubConnection;
 
 		public SignalRLogProducer(IOptions<SignalRLogReceiverOptions> options)
 		{
 			hubConnection = new HubConnectionBuilder()
 				.WithUrl(options.Value.SignalRServerUri!)
-				.Build();
+				.BuildStrongTyped<IServerMethodsProducersCanCall>();
 		}
 
 		public async Task ProduceLog(LogEntry logEntry)
@@ -32,7 +34,7 @@ namespace Basyc.Diagnostics.Producing.SignalR
 			{
 				return;
 			}
-			await hubConnection.SendAsync(SignalRConstants.ReceiveLogEntriesFromProducerMessage, new LogEntrySignalRDTO[] { LogEntrySignalRDTO.FromLogEntry(logEntry) });
+			await hubConnection.Call.ReceiveLogEntriesFromProducer(new LogEntrySignalRDTO[] { LogEntrySignalRDTO.FromLogEntry(logEntry) });
 		}
 
 		/// <summary>

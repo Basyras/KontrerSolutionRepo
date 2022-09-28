@@ -1,4 +1,5 @@
-﻿using Basyc.MessageBus.Client.Building;
+﻿using Basyc.MessageBus.Client;
+using Basyc.MessageBus.Client.Building;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -6,6 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 	{
 		public static BusClientSetupProxyStage AddBasycMessageBus(this IServiceCollection services)
 		{
+			services.AddSingleton<ISharedRequestIdCounter, InMemorySharedRequestIdCounter>();
 			return new BusClientSetupProxyStage(services);
 		}
 	}

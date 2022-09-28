@@ -13,7 +13,7 @@
             segmentNameNumberOfLines = 1;
         }
         string segmentNameStyle = $"-webkit-line-clamp: {segmentNameNumberOfLines}; line-clamp: {segmentNameNumberOfLines};";
-        DurationSegment previousSegment = null;
+        BuildedDurationSegment previousSegment = null;
     }
 
     <durationBox Style="@durationBoxStyle">
@@ -69,7 +69,7 @@
 
 
 @code {
-    [Parameter] public DurationSegment DurationSegment { get; set; }
+    [Parameter] public BuildedDurationSegment DurationSegment { get; set; }
     [Parameter] public double Scale { get; set; } = 20;
     public double GetDurationAsRem(TimeSpan duration)
     {

@@ -16,6 +16,10 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			RequestResult = requestResult;
 		}
 
+		public void AddLog(LogLevel logLevel, string message)
+		{
+			AddLog(DateTimeOffset.UtcNow, logLevel, message);
+		}
 
 		public void AddLog(DateTimeOffset time, LogLevel logLevel, string message)
 		{
@@ -32,7 +36,6 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			LogEntries.Add(newLogEntry);
 			OnLogAdded(newLogEntry);
 		}
-
 
 		public event EventHandler<LogEntry>? LogAdded;
 		private void OnLogAdded(LogEntry newLogEntry)
