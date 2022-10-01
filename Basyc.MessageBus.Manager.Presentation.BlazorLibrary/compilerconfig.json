@@ -66,5 +66,13 @@
   {
     "outputFile": "Pages/ResultHistory/ResultHistoryItemView.razor.css",
     "inputFile": "Pages/ResultHistory/ResultHistoryItemView.razor.scss"
+  },
+  {
+    "outputFile": "Components/DurationMap/DurationUnknownBoxView.razor.css",
+    "inputFile": "Components/DurationMap/DurationUnknownBoxView.razor.scss"
+  },
+  {
+    "outputFile": "Components/DurationMap/DurationBoxToolTip.razor.css",
+    "inputFile": "Components/DurationMap/DurationBoxToolTip.razor.scss"
   }
 ]

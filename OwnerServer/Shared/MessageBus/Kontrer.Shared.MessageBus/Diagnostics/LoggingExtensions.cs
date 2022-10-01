@@ -8,27 +8,24 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class LoggingExtensions
 	{
-		public static void SelectHttpDiagnostics(this BusClientSetupDiagnosticsStage stage, string httpAddressToSendLogs)
+		public static void SelectHttpExporter(this BusClientSetupDiagnosticsStage stage, string httpAddressToSendLogs)
 		{
 			ArgumentNullException.ThrowIfNull(httpAddressToSendLogs, nameof(httpAddressToSendLogs));
 
 			stage.services.AddLogging(loggingBuilder =>
 			{
-				loggingBuilder.Services.AddSingleton<ILogSink, HttpLogSink>();
+				loggingBuilder.Services.AddSingleton<IBusClientLogExporter, HttpBusClientLogExporter>();
 				stage.services.Configure<HttpLogSinkOptions>(sinkOptions =>
 				{
 					sinkOptions.HttpAddressToSendLogs = httpAddressToSendLogs;
 				});
-				loggingBuilder.Services.AddHttpClient<ILogSink, HttpLogSink>();
+				loggingBuilder.Services.AddHttpClient<IBusClientLogExporter, HttpBusClientLogExporter>();
 			});
 		}
 
-		public static void UseBasycDiagnosticsProducers(this BusClientSetupDiagnosticsStage stage)
+		public static void UseBasycDiagnosticsLogExporter(this BusClientSetupDiagnosticsStage stage)
 		{
-			stage.services.AddLogging(loggingBuilder =>
-			{
-				loggingBuilder.Services.AddSingleton<ILogSink, BasycDiagnosticsLogSink>();
-			});
+			stage.services.AddSingleton<IBusClientLogExporter, BasycDiagnosticsBusClientLogExporter>();
 		}
 	}
 }

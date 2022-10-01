@@ -12,7 +12,7 @@ namespace Basyc.MessageBus.Client.Tests.Diagnostics
 			int currectionSessionId = 1;
 			string currentHandlerName = "testHandler";
 			var normalLogger = new Mock<ILogger>();
-			var logSink = new Mock<ILogSink>();
+			var logSink = new Mock<IBusClientLogExporter>();
 			logSink.Setup(x => x.SendLog<It.IsAnyType>(
 				  It.IsAny<string>(),
 				  It.IsAny<LogLevel>(),
@@ -25,7 +25,7 @@ namespace Basyc.MessageBus.Client.Tests.Diagnostics
 				sessionId.Should().Be(currectionSessionId);
 				handlerName.Should().Be(currentHandlerName);
 			});
-			var handlerLogger = new BusHandlerLogger(normalLogger.Object, new ILogSink[] { logSink.Object }, currentHandlerName);
+			var handlerLogger = new BusHandlerLogger(normalLogger.Object, new IBusClientLogExporter[] { logSink.Object }, currentHandlerName);
 			//var handlerLoggerScope = handlerLogger.BeginHandlerScope(new HandlerScopeState(currectionSessionId));
 			BusHandlerLoggerSessionManager.StartSession(1);
 			handlerLogger.LogInformation("mess1");

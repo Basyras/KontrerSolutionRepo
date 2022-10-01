@@ -8,7 +8,7 @@ public static class SetupSignalRLogProducerStageExtensions
 {
 	public static SetupProducerStage UseSignalR(this SelectProducerStage parent)
 	{
-		parent.services.AddSingleton<ILogProducer, SignalRLogProducer>();
+		parent.services.AddSingleton<IDiagnosticsProducer, SignalRDiagnosticsProducer>();
 		//parent.services.AddSingleton<ILogProducer, SignalRLogProducer>(serviceProvider => serviceProvider.GetRequiredService<SignalRLogProducer>());
 		return new SetupProducerStage(parent.services);
 	}

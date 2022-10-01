@@ -16,11 +16,11 @@ public static class BuildingNetMQExtensions
 	private const int defaultBrokerServerPort = 5367;
 	private const string defaultBrokerServerAddress = "localhost";
 
-	public static BusClientSetupDiagnosticsStage SelectNetMQProvider(this BusClientSetupProviderStage builder,
+	public static BusClientUseDiagnosticsStage SelectNetMQProvider(this BusClientSetupProviderStage builder,
 	   int? brokerServerPort) =>
 		UseNetMQProvider(builder, null, defaultBrokerServerPort, defaultBrokerServerAddress);
 
-	public static BusClientSetupDiagnosticsStage UseNetMQProvider(this BusClientSetupProviderStage builder,
+	public static BusClientUseDiagnosticsStage UseNetMQProvider(this BusClientSetupProviderStage builder,
 		string? clientId = null, int brokerServerPort = defaultBrokerServerPort, string brokerServerAddress = defaultBrokerServerAddress)
 	{
 		var services = builder.services;
@@ -41,7 +41,7 @@ public static class BuildingNetMQExtensions
 		var areMessagesByte = services.FirstOrDefault(x => x.ServiceType == typeof(IByteMessageBusClient)) == null;
 
 		AddMessageHandlerManager(services);
-		return new BusClientSetupDiagnosticsStage(services);
+		return new BusClientUseDiagnosticsStage(services);
 	}
 
 	private static void AddMessageHandlerManager(IServiceCollection services)

@@ -11,19 +11,19 @@ namespace Basyc.MessageBus.HttpProxy.Shared.Http
 
 		}
 
-		public ResponseHttpDTO(int sessionId) : this(sessionId,null,null)
+		public ResponseHttpDTO(string traceId) : this(traceId,null,null)
 		{
 		}
 
-		public ResponseHttpDTO(int sessionId, byte[]? responseData, string? responseType)
+		public ResponseHttpDTO(string traceId, byte[]? responseData, string? responseType)
 		{
-			SessionId = sessionId;
+			TraceId = traceId;
 			ResponseBytes = responseData ?? Array.Empty<byte>();
 			ResponseType = responseType;
 		}
 
 		[ProtoMember(5)]
-		public int SessionId { get; }	
+		public string TraceId { get; }	
 		[ProtoMember(2)]
 		public byte[]? ResponseBytes { get; set; }
 		[ProtoMember(3)]

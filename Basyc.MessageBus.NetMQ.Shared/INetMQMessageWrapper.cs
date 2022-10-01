@@ -1,10 +1,11 @@
-﻿using OneOf;
+﻿using Basyc.MessageBus.NetMQ.Shared.Cases;
+using OneOf;
 
 namespace Basyc.MessageBus.NetMQ.Shared
 {
 	public interface INetMQMessageWrapper
 	{
 		OneOf<CheckInMessage, RequestCase, ResponseCase, EventCase, DeserializationFailureCase> ReadWrapperMessage(byte[] messageBytes);
-		byte[] CreateWrapperMessage(object? message, string messageType, int sessionId, MessageCase messageCase);
+		byte[] CreateWrapperMessage(object? messageData, string messageType, int sessionId, string traceId, MessageCase messageCase);
 	}
 }

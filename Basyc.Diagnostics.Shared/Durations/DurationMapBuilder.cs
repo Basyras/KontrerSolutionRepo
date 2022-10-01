@@ -2,12 +2,18 @@
 {
 	public class DurationMapBuilder
 	{
+		public DurationMapBuilder(ServiceIdentity service)
+		{
+			Service = service;
+		}
+
 		private InMemoryDurationSegmentBuilder? rootSegmentBuilder;
 		public DateTimeOffset StartTime { get; private set; }
 		public DateTimeOffset EndTime { get; private set; }
 		public bool MapFinished => EndTime != default;
 
 		public bool HasStarted { get; private set; }
+		public ServiceIdentity Service { get; }
 
 		/// <summary>
 		/// Return start time
@@ -15,7 +21,7 @@
 		/// <returns></returns>
 		public DateTimeOffset Start()
 		{
-			rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", () => rootSegmentBuilder!);
+			rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", Service, () => rootSegmentBuilder!);
 			StartTime = rootSegmentBuilder.Start();
 			HasStarted = true;
 			return StartTime;
@@ -34,7 +40,23 @@
 				var newSegment = rootSegmentBuilder!.StartNewNestedSegment(segmentName);
 				return newSegment;
 			}
+		}
 
+		public IDurationSegmentBuilder StartNewSegment(ServiceIdentity service, string segmentName, DateTimeOffset starTime)
+		{
+			DateTimeOffset mapStart = HasStarted is false ? Start() : StartTime;
+
+			if (mapStart > starTime)
+				throw new ArgumentException("nested segment cant start before map starts");
+
+			var newSegment = rootSegmentBuilder!.StartNewNestedSegment(service, segmentName, starTime);
+			return newSegment;
+		}
+
+
+		public IDurationSegmentBuilder StartNewSegment(string segmentName, DateTimeOffset starTime)
+		{
+			return StartNewSegment(Service, segmentName, starTime);
 		}
 
 		public void End()

@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
 	{
 		public static SetupBasycDiagnosticsReceiverMapper UseBasycDiagnosticsReceivers(this SetupDiagnosticsStage parent)
 		{
-			parent.services.AddSingleton<ILogSource, BasycReceiversLogSource>();
+			parent.services.AddSingleton<IRequestDiagnosticsSource, BasycReceiversRequestDiagnosticsSource>();
 			return new SetupBasycDiagnosticsReceiverMapper(parent.services);
 		}
 	}

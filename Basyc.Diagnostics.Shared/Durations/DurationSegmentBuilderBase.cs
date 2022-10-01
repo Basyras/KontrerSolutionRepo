@@ -9,11 +9,17 @@
 		public bool HasStarted { get; protected set; }
 		public bool HasEnded { get; protected set; }
 		public string Name { get; init; }
+		/// <summary>
+		/// Service (application) executing this segment
+		/// </summary>
+		public ServiceIdentity Service { get; init; }
 
 
-		public DurationSegmentBuilderBase(string name)
+
+		public DurationSegmentBuilderBase(string name, ServiceIdentity service)
 		{
 			Name = name;
+			Service = service;
 		}
 
 
@@ -49,9 +55,7 @@
 		/// <returns></returns>
 		public abstract IDurationSegmentBuilder EndAndStartNewFollowingSegment(string segmentName);
 
-		public abstract IDurationSegmentBuilder StartNewNestedSegment(string segmentName, DateTimeOffset start);
 
-		public abstract IDurationSegmentBuilder StartNewNestedSegment(string segmentName);
 
 		public virtual void Dispose()
 		{
@@ -90,5 +94,21 @@
 			return true;
 		}
 
+		public abstract IDurationSegmentBuilder StartNewNestedSegment(ServiceIdentity service, string segmentName, DateTimeOffset start);
+		public virtual IDurationSegmentBuilder StartNewNestedSegment(ServiceIdentity service, string segmentName)
+		{
+			var wasStarted = EnsureStarted(out var rootStartTime);
+			return StartNewNestedSegment(service, segmentName, wasStarted ? DateTimeOffset.UtcNow : rootStartTime);
+		}
+
+		public virtual IDurationSegmentBuilder StartNewNestedSegment(string segmentName, DateTimeOffset start)
+		{
+			return StartNewNestedSegment(Service, segmentName, start);
+		}
+
+		public virtual IDurationSegmentBuilder StartNewNestedSegment(string segmentName)
+		{
+			return StartNewNestedSegment(Service, segmentName);
+		}
 	}
 }

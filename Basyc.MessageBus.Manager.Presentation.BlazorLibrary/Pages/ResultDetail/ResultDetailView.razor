@@ -13,7 +13,7 @@
     }
 }
 
-@inject IResultLoggingManager resultLoggingManager;
+@inject IRequestDiagnosticsManager resultLoggingManager;
 
 <requestDetailView class="@requestDetailViewClass">
     @if (RequestResult is null)
@@ -108,6 +108,19 @@
                 </durationMap>
             </paddedSection>
 
+            <paddedSection>
+                <label>
+                    Activities
+                </label>
+                <br/>
+                @foreach (var activity in loggingContext.Activities)
+                {
+                    @(activity.EndTime - activity.StartTime)
+                    @activity.Name
+                }
+            </paddedSection>
+
+
             <label>
                 Log
             </label>
@@ -118,7 +131,7 @@
 </requestDetailView>
 
 @code {
-    private ResultLoggingContext loggingContext;
+    private RequestDiagnosticsContext loggingContext;
     private RequestResult requestResult;
     [Parameter]
     public RequestResult RequestResult
@@ -133,7 +146,7 @@
             requestResult = value;
             requestResult.StateChanged += ResultStateChanged;
 
-            loggingContext = resultLoggingManager.GetLoggingContext(requestResult);
+            loggingContext = resultLoggingManager.GetContext(requestResult);
         }
     }
 

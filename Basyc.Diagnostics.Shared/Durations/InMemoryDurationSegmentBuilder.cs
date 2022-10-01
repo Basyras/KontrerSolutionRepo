@@ -4,20 +4,23 @@
 	{
 		private readonly List<InMemoryDurationSegmentBuilder> nestedSegmentBuilders = new List<InMemoryDurationSegmentBuilder>();
 		private readonly Func<InMemoryDurationSegmentBuilder>? parentSegmentGetter;
-		public InMemoryDurationSegmentBuilder(string name) : base(name)
+
+
+		public InMemoryDurationSegmentBuilder(string name, ServiceIdentity service) : base(name, service)
 		{
 			Name = name;
+			Service = service;
 		}
 
-		public InMemoryDurationSegmentBuilder(string name, Func<InMemoryDurationSegmentBuilder> parentSegmentGetter)
-			: this(name)
+		public InMemoryDurationSegmentBuilder(string name, ServiceIdentity service, Func<InMemoryDurationSegmentBuilder> parentSegmentGetter)
+			: this(name, service)
 		{
 			this.parentSegmentGetter = parentSegmentGetter;
 			HasParent = true;
 		}
 
-		public InMemoryDurationSegmentBuilder(string name, DateTimeOffset segmentStart, InMemoryDurationSegmentBuilder parentSegment)
-			: this(name, () => parentSegment)
+		public InMemoryDurationSegmentBuilder(string name, ServiceIdentity service, DateTimeOffset segmentStart, InMemoryDurationSegmentBuilder parentSegment)
+			: this(name, service, () => parentSegment)
 		{
 			StartTime = segmentStart;
 			HasStarted = true;
@@ -75,7 +78,7 @@
 				var nestedSegment = nestedSegmentBuilder.Build(EndTime);
 				nestedSegments[nestedSegmentIndex] = nestedSegment;
 			}
-			return new BuildedDurationSegment(Name, StartTime, EndTime, EndTime - StartTime, nestedSegments);
+			return new BuildedDurationSegment(Service, Name, StartTime, EndTime, EndTime - StartTime, nestedSegments);
 		}
 		public override void End(DateTimeOffset finalEndTime)
 		{
@@ -108,19 +111,12 @@
 			return parentSegmentGetter!.Invoke().StartNewNestedSegment(segmentName, endTime);
 		}
 
-		public override IDurationSegmentBuilder StartNewNestedSegment(string segmentName, DateTimeOffset start)
+		public override IDurationSegmentBuilder StartNewNestedSegment(ServiceIdentity service, string segmentName, DateTimeOffset start)
 		{
 			EnsureStarted(start);
-			var nestedSegment = new InMemoryDurationSegmentBuilder(segmentName, start, this);
+			var nestedSegment = new InMemoryDurationSegmentBuilder(segmentName, service, start, this);
 			nestedSegmentBuilders.Add(nestedSegment);
 			return nestedSegment;
 		}
-
-		public override IDurationSegmentBuilder StartNewNestedSegment(string segmentName)
-		{
-			var wasStarted = EnsureStarted(out var rootStartTime);
-			return StartNewNestedSegment(segmentName, wasStarted ? DateTimeOffset.UtcNow : rootStartTime);
-		}
-
 	}
 }

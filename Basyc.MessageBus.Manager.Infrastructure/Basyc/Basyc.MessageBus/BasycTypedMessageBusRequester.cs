@@ -17,15 +17,15 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 
 		private readonly IRequestInfoTypeStorage requestInfoTypeStorage;
 		private readonly IResponseFormatter responseFormatter;
-		private readonly IResultLoggingManager resultLoggingManager;
-		private readonly BusManagerBasycDiagnosticsReceiverSessionMapper inMemorySessionMapper;
+		private readonly IRequestDiagnosticsManager resultLoggingManager;
+		private readonly BusManagerBasycDiagnosticsReceiverTraceIDMapper inMemorySessionMapper;
 		private readonly ITypedMessageBusClient typedMessageBusClient;
 
 		public BasycTypedMessageBusRequester(ITypedMessageBusClient typedMessageBusClient,
 			IRequestInfoTypeStorage requestInfoTypeStorage,
 			IResponseFormatter responseFormatter,
-			IResultLoggingManager resultLoggingManager,
-			BusManagerBasycDiagnosticsReceiverSessionMapper inMemorySessionMapper)
+			IRequestDiagnosticsManager resultLoggingManager,
+			BusManagerBasycDiagnosticsReceiverTraceIDMapper inMemorySessionMapper)
 		{
 			this.typedMessageBusClient = typedMessageBusClient;
 			this.requestInfoTypeStorage = requestInfoTypeStorage;
@@ -48,7 +48,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 			if (requestResult.Request.RequestInfo.HasResponse)
 			{
 				var busTask = typedMessageBusClient.RequestAsync(requestType, requestObject, requestResult.Request.RequestInfo.ResponseType);
-				inMemorySessionMapper.AddMapping(requestResult.SessionId, busTask.SessionId);
+				inMemorySessionMapper.AddMapping(requestResult.TraceId, busTask.TraceId);
 				var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
 				busTask.Task.ContinueWith(x =>
 				{
@@ -81,7 +81,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 			else
 			{
 				var busTask = typedMessageBusClient.SendAsync(requestType, requestObject);
-				inMemorySessionMapper.AddMapping(requestResult.SessionId, busTask.SessionId);
+				inMemorySessionMapper.AddMapping(requestResult.TraceId, busTask.TraceId);
 
 				var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
 				busTask.Task.ContinueWith(x =>

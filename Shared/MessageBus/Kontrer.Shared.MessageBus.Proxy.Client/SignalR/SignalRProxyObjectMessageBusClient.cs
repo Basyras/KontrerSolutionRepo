@@ -111,7 +111,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 
 			});
 
-			return BusTask<object?>.FromTask(session.SessionId, reqeustTask);
+			return BusTask<object?>.FromTask(session.TraceId, reqeustTask);
 
 		}
 	}

@@ -10,10 +10,12 @@ namespace Basyc.MessageBus.HttpProxy.Client.SignalR.Sessions
 		private readonly TaskCompletionSource<OneOf<ResponseSignalRDTO, ErrorMessage>> taskSource;
 
 		public int SessionId { get; }
+		public string TraceId { get; }
 
-		public SignalRSession(int sessionId)
+		public SignalRSession(int sessionId, string TraceId)
 		{
 			SessionId = sessionId;
+			this.TraceId = TraceId;
 			this.taskSource = new TaskCompletionSource<OneOf<ResponseSignalRDTO, ErrorMessage>>();
 		}
 

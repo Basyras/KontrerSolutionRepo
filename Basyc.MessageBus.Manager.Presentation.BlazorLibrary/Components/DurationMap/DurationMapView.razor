@@ -11,11 +11,18 @@
         BuildedDurationSegment previousSegment = null;
         foreach (var segment in DurationMap.Segments)
         {
-            if (previousSegment is not null && previousSegment.EndTime != segment.StartTime)
+            if (previousSegment is not null)
             {
-                @:|
+                if (previousSegment.EndTime > segment.StartTime)
+                {
+                    <DurationUnknownBoxView StartTime="previousSegment.EndTime" Duration="previousSegment.EndTime - segment.StartTime" Scale="Scale" Service="previousSegment.Service" />
+                }
+                else
+                {
+
+                }
             }
-            <DurationBoxView DurationSegment="segment" />
+            <DurationBoxView DurationSegment="segment" Scale="Scale"/>
             previousSegment = segment;
         }
     }
@@ -27,4 +34,5 @@
 
 @code {
     [Parameter] public DurationMap DurationMap { get; set; }
+    [Parameter] public double Scale { get; set; } = 20;
 }

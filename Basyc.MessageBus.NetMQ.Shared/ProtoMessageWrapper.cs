@@ -1,4 +1,5 @@
-﻿using ProtoBuf;
+﻿using Basyc.MessageBus.NetMQ.Shared.Cases;
+using ProtoBuf;
 
 namespace Basyc.MessageBus.NetMQ.Shared;
 
@@ -13,12 +14,13 @@ public class ProtoMessageWrapper
 
 	}
 
-	public ProtoMessageWrapper(int sessionId, MessageCase messageCase, string messageType, byte[] messageData)
+	public ProtoMessageWrapper(int sessionId, MessageCase messageCase, string messageType, byte[] messageData, string traceId)
 	{
 		SessionId = sessionId;
 		MessageCase = messageCase;
 		MessageType = messageType;
 		MessageBytes = messageData;
+		TraceId = traceId;
 	}
 
 	[ProtoMember(1)]
@@ -32,4 +34,7 @@ public class ProtoMessageWrapper
 
 	[ProtoMember(4)]
 	public byte[] MessageBytes { get; set; }
+
+	[ProtoMember(5)]
+	public string TraceId { get; set; }
 }

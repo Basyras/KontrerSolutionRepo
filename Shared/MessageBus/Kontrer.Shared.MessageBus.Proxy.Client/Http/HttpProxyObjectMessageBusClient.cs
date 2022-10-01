@@ -37,7 +37,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 		{
 			if (objectToByteSerializer.TrySerialize(messageData, messageType, out var requestBytes, out var seriError) is false)
 			{
-				return BusTask<ProxyResponse>.FromValue(-1, new ProxyResponse(seriError, true, true, null));
+				return BusTask<ProxyResponse>.FromValue("-1", new ProxyResponse(seriError, true, true, null));
 			}
 
 			var responseTypeString = responseType?.AssemblyQualifiedName;
@@ -46,7 +46,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 
 			if (objectToByteSerializer.TrySerialize(proxyRequest, wrapperMessageType, out var proxyRequestBytes, out var error) is false)
 			{
-				return BusTask<ProxyResponse>.FromValue(-1, new ProxyResponse(error, true, true, null));
+				return BusTask<ProxyResponse>.FromValue("-1", new ProxyResponse(error, true, true, null));
 
 			}
 
@@ -61,7 +61,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 				var httpErrorContent = httpResult.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 				var errorMessageText = $"Message bus response failure, code: {(int)httpResult.StatusCode},\nreason: {httpResult.ReasonPhrase},\ncontent: {httpErrorContent}";
 				//throw new Exception($"Message bus response failure, code: {(int)httpResult.StatusCode},\nreason: {httpResult.ReasonPhrase},\ncontent: {httpErrorContent}");
-				return BusTask<ProxyResponse>.FromValue(-1, new ProxyResponse(new ErrorMessage(errorMessageText), true, true, null));
+				return BusTask<ProxyResponse>.FromValue("-1", new ProxyResponse(new ErrorMessage(errorMessageText), true, true, null));
 			}
 
 
@@ -76,10 +76,10 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 
 			var proxyResponse = (ResponseHttpDTO)objectToByteSerializer.Deserialize(proxyResponseResponseBytes, proxyResponseSimpleDataType);
 			if (hasResponse is false)
-				return BusTask<ProxyResponse>.FromValue(proxyResponse.SessionId, new ProxyResponse(null, false, false, proxyResponse.SessionId));
+				return BusTask<ProxyResponse>.FromValue(proxyResponse.TraceId, new ProxyResponse(null, false, false, proxyResponse.TraceId));
 
 			var deserializedResponse = objectToByteSerializer.Deserialize(proxyResponse.ResponseBytes, proxyResponse.ResponseType);
-			return BusTask<ProxyResponse>.FromValue(proxyResponse.SessionId, new ProxyResponse(deserializedResponse, true, false, proxyResponse.SessionId));
+			return BusTask<ProxyResponse>.FromValue(proxyResponse.TraceId, new ProxyResponse(deserializedResponse, true, false, proxyResponse.TraceId));
 		}
 
 		public void Dispose()

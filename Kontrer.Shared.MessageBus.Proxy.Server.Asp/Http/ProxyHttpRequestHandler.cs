@@ -36,7 +36,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Http
 				await busTaskValue.Match(
 					async byteResponse =>
 					{
-						var proxyResponse = new ResponseHttpDTO(busTask.SessionId, byteResponse.ResponseBytes, byteResponse.ResposneType);
+						var proxyResponse = new ResponseHttpDTO(busTask.TraceId, byteResponse.ResponseBytes, byteResponse.ResposneType);
 						var proxyResponseBytes = serializer.Serialize(proxyResponse, proxyResponseSimpleDataType);
 						await context.Response.BodyWriter.WriteAsync(proxyResponseBytes);
 					},
@@ -49,7 +49,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.Http
 				await sendResult.Match(
 				async success =>
 				{
-					var proxyResponse = new ResponseHttpDTO(busTask.SessionId);
+					var proxyResponse = new ResponseHttpDTO(busTask.TraceId);
 					var proxyResponseBytes = serializer.Serialize(proxyResponse, proxyResponseSimpleDataType);
 					await context.Response.BodyWriter.WriteAsync(proxyResponseBytes);
 				},

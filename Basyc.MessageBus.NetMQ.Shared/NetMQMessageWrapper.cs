@@ -1,4 +1,5 @@
-﻿using Basyc.Serialization.Abstraction;
+﻿using Basyc.MessageBus.NetMQ.Shared.Cases;
+using Basyc.Serialization.Abstraction;
 using Basyc.Serializaton.Abstraction;
 using OneOf;
 
@@ -14,14 +15,15 @@ public class NetMQMessageWrapper : INetMQMessageWrapper
 		this.objectToByteSerializer = byteSerailizer;
 
 	}
-	public byte[] CreateWrapperMessage(object? messageData, string messageType, int sessionId, MessageCase messageCase)
+
+	public byte[] CreateWrapperMessage(object? messageData, string messageType, int sessionId, string tracId, MessageCase messageCase)
 	{
 		byte[] messageBytes = messageData is byte[] bytes ? bytes : objectToByteSerializer.Serialize(messageData, messageType);
 
 		if (messageBytes is null)
 			throw new Exception();
 
-		var wrapperMessageData = new ProtoMessageWrapper(sessionId, messageCase, messageType, messageBytes);
+		var wrapperMessageData = new ProtoMessageWrapper(sessionId, messageCase, messageType, messageBytes, tracId);
 		return objectToByteSerializer.Serialize(wrapperMessageData, wrapperMessageType);
 	}
 
@@ -39,22 +41,22 @@ public class NetMQMessageWrapper : INetMQMessageWrapper
 				{
 					var checkIn = (CheckInMessage?)objectToByteSerializer.Deserialize(wrapper.MessageBytes, wrapper.MessageType);
 					if (checkIn is null)
-						return new DeserializationFailureCase(wrapper.SessionId, wrapper.MessageCase, wrapper.MessageType, null, string.Empty);
+						return new DeserializationFailureCase(wrapper.SessionId, wrapper.TraceId, wrapper.MessageCase, wrapper.MessageType, null, string.Empty);
 					return checkIn;
 				}
 				catch (Exception ex)
 				{
-					return new DeserializationFailureCase(wrapper.SessionId, wrapper.MessageCase, wrapper.MessageType, ex, $"{ex.Message}");
+					return new DeserializationFailureCase(wrapper.SessionId, wrapper.TraceId, wrapper.MessageCase, wrapper.MessageType, ex, $"{ex.Message}");
 				}
 
 			case MessageCase.Request:
-				RequestCase requestCase = new RequestCase(wrapper.SessionId, wrapper.MessageType, wrapper.MessageBytes, false);
+				RequestCase requestCase = new RequestCase(wrapper.SessionId, wrapper.TraceId, wrapper.MessageType, wrapper.MessageBytes, false);
 				return requestCase;
 			case MessageCase.Response:
-				ResponseCase responseCase = new ResponseCase(wrapper.SessionId, wrapper.MessageBytes, wrapper.MessageType);
+				ResponseCase responseCase = new ResponseCase(wrapper.SessionId, wrapper.TraceId, wrapper.MessageBytes, wrapper.MessageType);
 				return responseCase;
 			case MessageCase.Event:
-				var eventCase = new EventCase(wrapper.SessionId, wrapper.MessageType, wrapper.MessageBytes);
+				var eventCase = new EventCase(wrapper.SessionId, wrapper.TraceId, wrapper.MessageType, wrapper.MessageBytes);
 				return eventCase;
 			default:
 				throw new Exception();

@@ -22,8 +22,8 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 			services.AddSingleton<IRequesterSelector, RequesterSelector>();
 			services.AddSingleton<IRequester, InMemoryDelegateRequester>();
 			services.AddSingleton<InMemoryDelegateRequester>();
-			services.AddSingleton<InMemoryLogSource>();
-			services.AddSingleton<ILogSource>(serviceProvider => serviceProvider.GetRequiredService<InMemoryLogSource>());
+			services.AddSingleton<InMemoryRequestDiagnosticsSource>();
+			services.AddSingleton<IRequestDiagnosticsSource>(serviceProvider => serviceProvider.GetRequiredService<InMemoryRequestDiagnosticsSource>());
 			services.AddSingleton<IDomainInfoProvider, FluentApiDomainInfoProvider>();
 
 			return new RegisterMessagesFromFluentApiStage(services);

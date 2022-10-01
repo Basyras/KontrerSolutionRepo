@@ -1,9 +1,10 @@
-﻿using Basyc.Diagnostics.Producing.SignalR.Shared;
+﻿using Basyc.Diagnostics.SignalR.Shared.DTOs;
 
 namespace Basyc.Diagnostics.SignalR.Shared
 {
 	public interface IServerMethodsProducersCanCall
 	{
-		Task ReceiveLogEntriesFromProducer(LogEntrySignalRDTO[] logEntryDTOs);
+		Task ReceiveLogsFromProducer(LogEntrySignalRDTO[] logEntryDTOs);
+		Task ReceiveActivitiesFromProducer(ActivitySignalRDTO[] activityDTOs);
 	}
 }

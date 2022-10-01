@@ -10,7 +10,7 @@ namespace Basyc.MessageBus.Manager
 		public static BusManagerApplicationBuilder AddMessageManager(this IServiceCollection services)
 		{
 			services.AddSingleton<IRequestManager, RequestManager>();
-			services.AddSingleton<IResultLoggingManager, ResultLoggingManager>();
+			services.AddSingleton<IRequestDiagnosticsManager, RequestDiagnosticsManager>();
 			var builder = new BusManagerApplicationBuilder(services);
 			return builder;
 		}

@@ -6,15 +6,21 @@ namespace Basyc.Diagnostics.Receiving.Abstractions
 	public class InMemoryDiagnosticsLogReceiver : IDiagnosticsLogReceiver
 	{
 		public event EventHandler<LogsReceivedArgs>? LogsReceived;
+		public event EventHandler<ActivitiesReceivedArgs>? ActivitiesReceived;
 
 		private void OnLogsReceived(LogEntry[] logEntries)
 		{
 			LogsReceived?.Invoke(this, new LogsReceivedArgs(logEntries));
 		}
 
-		public void PushLog(int requestId, LogLevel logLevel, string message)
+		private void OnActivitiesReceived(ActivityEntry[] activities)
 		{
-			OnLogsReceived(new LogEntry[] { new LogEntry(requestId, DateTimeOffset.UtcNow, logLevel, message) });
+			ActivitiesReceived?.Invoke(this, new ActivitiesReceivedArgs(activities));
+		}
+
+		public void PushLog(string traceId, LogLevel logLevel, string message)
+		{
+			OnLogsReceived(new LogEntry[] { new LogEntry(traceId, DateTimeOffset.UtcNow, logLevel, message) });
 		}
 
 		public void PushLog(LogEntry logEntry)

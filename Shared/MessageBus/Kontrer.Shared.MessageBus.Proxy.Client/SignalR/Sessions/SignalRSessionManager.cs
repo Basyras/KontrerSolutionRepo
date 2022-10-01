@@ -11,7 +11,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.SignalR.Sessions
 	public class SignalRSessionManager : IClientMethodsServerCanCall
 	{
 		private readonly Channel<object> clientServerChannel = Channel.CreateUnbounded<object>();
-		private readonly Dictionary<int, SignalRSession> sessionMap = new();
+		private readonly Dictionary<string, SignalRSession> sessionMap = new();
 		private readonly ISharedRequestIdCounter requestIdCounter;
 
 		public SignalRSessionManager(ISharedRequestIdCounter requestIdCounter)
@@ -46,14 +46,14 @@ namespace Basyc.MessageBus.HttpProxy.Client.SignalR.Sessions
 					switch (responseObject)
 					{
 						case ResponseSignalRDTO response:
-							session = sessionMap[response.SessionId];
+							session = sessionMap[response.TraceId];
 							session.Complete(response);
-							sessionMap.Remove(response.SessionId);
+							sessionMap.Remove(response.TraceId);
 							break;
 						case RequestFailedSignalRDTO error:
-							session = sessionMap[error.SessionId];
+							session = sessionMap[error.TraceId];
 							session.Complete(new ErrorMessage(error.Message));
-							sessionMap.Remove(error.SessionId);
+							sessionMap.Remove(error.TraceId);
 							break;
 						default:
 							throw new ArgumentException("message not recognized");
@@ -67,8 +67,9 @@ namespace Basyc.MessageBus.HttpProxy.Client.SignalR.Sessions
 		public SignalRSession StartSession()
 		{
 			var sessionIndex = requestIdCounter.GetNextId();
-			var session = new SignalRSession(sessionIndex);
-			sessionMap.Add(sessionIndex, session);
+			var traceId = sessionIndex.ToString();
+			var session = new SignalRSession(sessionIndex, traceId);
+			sessionMap.Add(traceId, session);
 			return session;
 		}
 	}

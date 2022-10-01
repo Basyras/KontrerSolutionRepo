@@ -2,7 +2,7 @@
 <durationBoxContainer>
 
     @{
-        var minHeight = GetDurationAsRem(DurationSegment.Duration);
+        var minHeight = DurationViewHelper.GetDurationAsRem(DurationSegment.Duration, Scale);
         string durationBoxStyle = $"min-height: {minHeight}rem;";
         var showDurationInBox = minHeight > 2.5;
         //-0.5 to compensate margings and line heights.
@@ -20,16 +20,11 @@
         @if (showDurationInBox)
         {
             <durationBoxDuration>
-                @(DurationSegment.Duration.TotalMilliseconds)ms
+                @(Math.Ceiling(DurationSegment.Duration.TotalMilliseconds))ms
             </durationBoxDuration>
         }
         <div class="tooltiptext">
-            <toolTipDurationName>
-                @DurationSegment.Name
-            </toolTipDurationName>
-            <toolTipDurationDuration>
-                lasted: @(DurationSegment.Duration.TotalMilliseconds) ms
-            </toolTipDurationDuration>
+            <DurationBoxToolTip Name="DurationSegment.Name" StartTime="DurationSegment.StartTime" Duration="DurationSegment.Duration" Service="DurationSegment.Service" />
         </div>
     </durationBox>
     <nestedContent>
@@ -44,15 +39,7 @@
             string borderMergerStyle = "";
             if (previousSegment is not null && previousSegment.EndTime != nestedSegment.StartTime)
             {
-                <unknownDurationContainer style="height: @(GetDurationAsRem(nestedSegment.StartTime - previousSegment.EndTime))rem;">
-                    <unknownDurationLine />
-                    <div class="tooltiptext">
-                        Unknown duration
-                        <br />
-                        lasted: @((nestedSegment.StartTime - previousSegment.EndTime).TotalMilliseconds) ms
-                    </div>
-                </unknownDurationContainer>
-
+                <DurationUnknownBoxView StartTime="previousSegment.EndTime" Duration="previousSegment.EndTime - nestedSegment.StartTime" Scale="Scale"  Service="previousSegment.Service"/>
             }
             else
             {
@@ -70,18 +57,6 @@
 
 @code {
     [Parameter] public BuildedDurationSegment DurationSegment { get; set; }
-    [Parameter] public double Scale { get; set; } = 20;
-    public double GetDurationAsRem(TimeSpan duration)
-    {
-        var minHeight = Math.Round(duration.TotalMilliseconds / Scale);
-        if (minHeight < 1)
-        {
-            minHeight = 1;
-        }
-        if (minHeight > 25)
-        {
-            minHeight = 25;
-        }
-        return minHeight;
-    }
+    [Parameter] public double Scale { get; set; }
+
 }

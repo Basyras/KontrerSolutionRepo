@@ -17,7 +17,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.Diagnostics
 		/// <returns></returns>
 		public SetupRequesterStage NoMapper()
 		{
-			services.AddSingleton<IBasycDiagnosticsReceiverSessionMapper, NullBasycDiagnosticsReceiverSessionMapper>();
+			services.AddSingleton<IBasycDiagnosticsReceiverTraceIdMapper, NullBasycDiagnosticsReceiverTraceIdMapper>();
 			return new(services);
 		}
 
@@ -26,11 +26,11 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.Diagnostics
 		/// </summary>
 		/// <typeparam name="TMapper"></typeparam>
 		/// <returns></returns>
-		public SetupRequesterStage UseMapper<TMapper>() where TMapper : class, IBasycDiagnosticsReceiverSessionMapper
+		public SetupRequesterStage UseMapper<TMapper>() where TMapper : class, IBasycDiagnosticsReceiverTraceIdMapper
 		{
-			services.RemoveAll<IBasycDiagnosticsReceiverSessionMapper>();
+			services.RemoveAll<IBasycDiagnosticsReceiverTraceIdMapper>();
 			services.AddSingleton<TMapper>();
-			services.AddSingleton<IBasycDiagnosticsReceiverSessionMapper, TMapper>(x => x.GetRequiredService<TMapper>());
+			services.AddSingleton<IBasycDiagnosticsReceiverTraceIdMapper, TMapper>(x => x.GetRequiredService<TMapper>());
 			return new(services);
 		}
 	}

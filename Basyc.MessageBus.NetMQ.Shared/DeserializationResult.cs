@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Basyc.MessageBus.NetMQ.Shared.Cases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

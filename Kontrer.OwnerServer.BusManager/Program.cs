@@ -42,7 +42,7 @@ CreateTestingMessages(busManagerBuilder);
 busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
 	.RegisterMessagesAsCQRS(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>))
 	.UseBasycDiagnosticsReceivers()
-		.UseMapper<BusManagerBasycDiagnosticsReceiverSessionMapper>()
+		.UseMapper<BusManagerBasycDiagnosticsReceiverTraceIDMapper>()
 	.UseBasycTypedMessageBusRequester()
 		.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
 

@@ -6,9 +6,9 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 {
 	public class ResultLoggingContextLogger : ILogger
 	{
-		private readonly ResultLoggingContext loggingContext;
+		private readonly RequestDiagnosticsContext loggingContext;
 
-		public ResultLoggingContextLogger(ResultLoggingContext loggingContext)
+		public ResultLoggingContextLogger(RequestDiagnosticsContext loggingContext)
 		{
 			this.loggingContext = loggingContext;
 		}

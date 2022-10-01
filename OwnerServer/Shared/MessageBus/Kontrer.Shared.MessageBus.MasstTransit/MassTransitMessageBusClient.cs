@@ -21,26 +21,26 @@ namespace Basyc.MessageBus.Client.MasstTransit
 		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(CancellationToken cancellationToken)
 		{
 			var publishTask = massTransitBus.Publish<TEvent>(cancellationToken);
-			return BusTask.FromTask(-1, publishTask);
+			return BusTask.FromTask("-1", publishTask);
 		}
 
 		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken)
 		{
 			var publishTask = massTransitBus.Publish(data, cancellationToken);
-			return BusTask.FromTask(-1, publishTask);
+			return BusTask.FromTask("-1", publishTask);
 
 		}
 
 		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
 		{
 			var requestTask = massTransitBus.Request<TRequest, TResponse>(cancellationToken);
-			return BusTask<TResponse>.FromTask<Response<TResponse>>(-1, requestTask, x => (OneOf<TResponse, ErrorMessage>)x.Message);
+			return BusTask<TResponse>.FromTask<Response<TResponse>>("-1", requestTask, x => (OneOf<TResponse, ErrorMessage>)x.Message);
 		}
 
 		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
 		{
 			var requestTask = massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
-			return BusTask<TResponse>.FromTask<Response<TResponse>>(-1, requestTask, x => (OneOf<TResponse, ErrorMessage>)x.Message);
+			return BusTask<TResponse>.FromTask<Response<TResponse>>("-1", requestTask, x => (OneOf<TResponse, ErrorMessage>)x.Message);
 		}
 
 		BusTask<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
@@ -64,7 +64,7 @@ namespace Basyc.MessageBus.Client.MasstTransit
 			//return busResponse.Message;
 
 			var busResponse = InvokeAsync(genericMethod, null, new object[] { massTransitBus, request, cancellationToken, default(RequestTimeout), null });
-			var busTask = BusTask<object>.FromTask(-1, busResponse);
+			var busTask = BusTask<object>.FromTask("-1", busResponse);
 			return busTask;
 		}
 

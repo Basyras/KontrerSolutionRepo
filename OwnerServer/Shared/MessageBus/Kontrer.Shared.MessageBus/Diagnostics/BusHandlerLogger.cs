@@ -11,9 +11,9 @@ namespace Basyc.MessageBus.Client.Diagnostics
 	public class BusHandlerLogger : ILogger
 	{
 		private readonly ILogger normalLogger;
-		private readonly ILogSink[] logSinks;
+		private readonly IBusClientLogExporter[] logSinks;
 
-		public BusHandlerLogger(ILogger normalLogger, IEnumerable<ILogSink> logSinks)
+		public BusHandlerLogger(ILogger normalLogger, IEnumerable<IBusClientLogExporter> logSinks)
 		{
 			this.normalLogger = normalLogger;
 			this.logSinks = logSinks.ToArray();
@@ -44,14 +44,14 @@ namespace Basyc.MessageBus.Client.Diagnostics
 
 			foreach (var logSink in logSinks)
 			{
-				logSink.SendLog(session.HandlerName, logLevel, session.SessionId, state, exception, formatter);
+				logSink.SendLog(session.HandlerName, logLevel, session.TraceId, state, exception, formatter);
 			}
 		}
 	}
 
 	public class BusHandlerLogger<THandler> : BusHandlerLogger, ILogger<THandler>
 	{
-		public BusHandlerLogger(ILogger<THandler> normalLogger, IEnumerable<ILogSink> logSinks) : base(normalLogger, logSinks)
+		public BusHandlerLogger(ILogger<THandler> normalLogger, IEnumerable<IBusClientLogExporter> logSinks) : base(normalLogger, logSinks)
 		{
 		}
 	}

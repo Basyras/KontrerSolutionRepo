@@ -1,4 +1,5 @@
 ﻿using Basyc.MessageBus.NetMQ.Shared;
+using Basyc.MessageBus.NetMQ.Shared.Cases;
 using Basyc.MessageBus.Shared;
 using Basyc.Serializaton.Abstraction;
 using Microsoft.Extensions.Logging;
@@ -69,7 +70,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 						messageToProducer.AppendEmptyFrame();
 						messageToProducer.AppendEmptyFrame();
 						messageToProducer.AppendEmptyFrame();
-						messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, MessageCase.Response));
+						messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, request.TraceId, MessageCase.Response));
 						logger.LogError($"Sending failure: '{failure}' to {senderAddressString}");
 						brokerSocket.SendMultipartMessage(messageToProducer);
 						logger.LogError($"Failure sent to {senderAddressFrame}");
@@ -126,7 +127,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 					messageToProducer.AppendEmptyFrame();
 					messageToProducer.AppendEmptyFrame();
 					messageToProducer.AppendEmptyFrame();
-					messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failResult, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), failure.SessionId, MessageCase.Response));
+					messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failResult, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), failure.SessionId, failure.TraceId, MessageCase.Response));
 					logger.LogDebug($"Sending failure: '{failure}' to {sendFailToAddressString}");
 					brokerSocket.SendMultipartMessage(messageToProducer);
 					logger.LogDebug($"Failure sent to {sendFailToAddressString}");

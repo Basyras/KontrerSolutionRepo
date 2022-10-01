@@ -38,25 +38,25 @@ durationBoxContainer {
     grid-template-columns: auto 100fr;
 }
 
-unknownDurationLine {
+/*unknownDurationLine {
     display: block;
     background-color: #81a7a7;
     width: 2px;
     height: 100%;
     margin-left: 0.44rem;
-}
+}*/
 
-unknownDurationContainer {
+/*unknownDurationContainer {
     position: relative;
     display: block;
     min-height: 0.3rem;
     background-color: transparent;
     width: 1rem; //Same as durationbox
-}
+}*/
 
-unknownDurationContainer:hover {
+/*unknownDurationContainer:hover {
     background-color: #b7cccc;
-}
+}*/
 
 durationBoxDuration {
     position: absolute;
@@ -95,7 +95,7 @@ durationContainer {
     flex-direction: column;
 }
 
-toolTipDurationName {
+/*toolTipDurationName {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -103,16 +103,16 @@ toolTipDurationName {
     line-height: 1rem;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-}
+}*/
 
-toolTipDurationDuration{
+/*toolTipDurationDuration{
 
-}
+}*/
 
 durationBox:hover .tooltiptext {
     visibility: visible;
 }
 
-unknownDurationContainer:hover .tooltiptext {
+/*unknownDurationContainer:hover .tooltiptext {
     visibility: visible;
-}
+}*/

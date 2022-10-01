@@ -10,20 +10,20 @@ namespace Basyc.MessageBus.Manager.Application
 
 		public Request Request { get; init; }
 		public DateTimeOffset RequestCreationTime { get; init; }
-		public int SessionId { get; init; }
+		public string TraceId { get; init; }
 		public RequestResultState State { get; private set; }
 		public object? Response { get; private set; }
 		public string? ErrorMessage { get; private set; }
 		public DurationMap? DurationMap { get; private set; }
 
 
-		public RequestResult(Request request, DateTimeOffset requestCreationTime, int sessionId, DurationMapBuilder durationMapBuilder)
+		public RequestResult(Request request, DateTimeOffset requestCreationTime, string traceId, DurationMapBuilder durationMapBuilder)
 		{
 			Request = request;
 			this.durationMapBuilder = durationMapBuilder;
 			RequestCreationTime = requestCreationTime;
 			State = RequestResultState.Started;
-			SessionId = sessionId;
+			TraceId = traceId;
 		}
 
 		/// <summary>

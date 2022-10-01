@@ -4,6 +4,7 @@ using Basyc.MessageBus.NetMQ.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OneOf;
+using System.Diagnostics;
 
 namespace Basyc.MessageBus.Client.NetMQ
 {
@@ -38,7 +39,7 @@ namespace Basyc.MessageBus.Client.NetMQ
 
 		}
 
-		public async Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken, int sessionId)
+		public async Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken, string traceId)
 		{
 			if (handlerTypesCacheMap.TryGetValue(messageType, out var handlerMetadata) is false)
 			{
@@ -46,30 +47,33 @@ namespace Basyc.MessageBus.Client.NetMQ
 			}
 
 			object handler = serviceProvider.GetRequiredService(handlerMetadata.HandlerRuntimeType)!;
-			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(sessionId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));
-			Task handlerResultTask = (Task)handlerMetadata.HandlerInfo.HandleMethodInfo.Invoke(handler, new object[] { messageData!, cancellationToken })!;
-			object? handlerResult;
-			try
+			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(traceId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));
+			using (DiagnosticSources.HandlerStarted.StartActivity("handler started", ActivityKind.Client, traceId.ToString()))
 			{
-				if (handlerMetadata.HandlerInfo.HasResponse)
+				Task handlerResultTask = (Task)handlerMetadata.HandlerInfo.HandleMethodInfo.Invoke(handler, new object[] { messageData!, cancellationToken })!;
+				object? handlerResult;
+				try
 				{
-					object taskResult = ((dynamic)handlerResultTask).Result!;
-					handlerResult = taskResult;
-
+					if (handlerMetadata.HandlerInfo.HasResponse)
+					{
+						object taskResult = ((dynamic)handlerResultTask).Result!;
+						handlerResult = taskResult;
+					}
+					else
+					{
+						await handlerResultTask;
+						handlerResult = new VoidResult();
+					}
 				}
-				else
+				catch (Exception ex)
 				{
-					await handlerResultTask;
-					handlerResult = new VoidResult();
+					BusHandlerLoggerSessionManager.EndSession();
+					return ex;
 				}
-			}
-			catch (Exception ex)
-			{
 				BusHandlerLoggerSessionManager.EndSession();
-				return ex;
+				return handlerResult;
 			}
-			BusHandlerLoggerSessionManager.EndSession();
-			return handlerResult;
+
 		}
 
 		public string[] GetConsumableMessageTypes()

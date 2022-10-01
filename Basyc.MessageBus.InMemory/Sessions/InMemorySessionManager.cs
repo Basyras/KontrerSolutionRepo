@@ -9,18 +9,18 @@ namespace Basyc.MessageBus.Client.NetMQ.Sessions
 			this.logger = logger;
 		}
 		private int lastUsedSessionId = 0;
-		private readonly Dictionary<int, Session<TSessionResult>> sessions = new Dictionary<int, Session<TSessionResult>>();
+		private readonly Dictionary<int, NetMqSession<TSessionResult>> sessions = new Dictionary<int, NetMqSession<TSessionResult>>();
 		private readonly ILogger<InMemorySessionManager<TSessionResult>> logger;
 
 		/// <summary>
 		/// Return new session's id
 		/// </summary>
 		/// <returns></returns>
-		public Session<TSessionResult> CreateSession(string messageType)
+		public NetMqSession<TSessionResult> CreateSession(string messageType)
 		{
 			var newSessionId = Interlocked.Increment(ref lastUsedSessionId);
 			TaskCompletionSource<TSessionResult> responseSource = new TaskCompletionSource<TSessionResult>();
-			var newSession = new Session<TSessionResult>(newSessionId, messageType, responseSource);
+			var newSession = new NetMqSession<TSessionResult>(newSessionId, newSessionId.ToString(), messageType, responseSource);
 			sessions.Add(newSessionId, newSession);
 			logger.LogDebug($"Session '{newSession.SessionId}' created for '{messageType}'");
 			return newSession;

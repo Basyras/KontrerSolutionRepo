@@ -1,0 +1,17 @@
+﻿@using Basyc.Diagnostics.Shared.Durations
+
+<toolTipDurationName>
+    @Service.ServiceName: @Name
+</toolTipDurationName>
+<toolTipDurationDuration>
+    started: @DurationViewHelper.TimeToText(StartTime.LocalDateTime);
+    <br />
+    lasted: @DurationViewHelper.DurationToText(Duration);
+</toolTipDurationDuration>
+
+@code {
+    [Parameter] public string Name { get; set; }
+    [Parameter] public DateTimeOffset StartTime { get; set; }
+    [Parameter] public TimeSpan Duration { get; set; }
+    [Parameter] public ServiceIdentity Service { get; set; }
+}

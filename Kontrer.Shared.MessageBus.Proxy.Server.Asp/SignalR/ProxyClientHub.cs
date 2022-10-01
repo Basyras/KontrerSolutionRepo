@@ -19,17 +19,17 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.SignalR
 			if (proxyRequest.HasResponse)
 			{
 				var busTask = messageBus.RequestAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
-				await Clients.Caller.ReceiveRequestResultMetadata(new RequestMetadataSignalRDTO(busTask.SessionId));
+				await Clients.Caller.ReceiveRequestResultMetadata(new RequestMetadataSignalRDTO(busTask.TraceId));
 				var busTaskValue = await busTask.Task;
 				await busTaskValue.Match(
 					async byteResponse =>
 					{
-						var response = new ResponseSignalRDTO(busTask.SessionId, true, byteResponse.ResponseBytes, byteResponse.ResposneType);
+						var response = new ResponseSignalRDTO(busTask.TraceId, true, byteResponse.ResponseBytes, byteResponse.ResposneType);
 						await Clients.Caller.ReceiveRequestResult(response);
 					},
 					async busRequestError =>
 					{
-						RequestFailedSignalRDTO failure = new RequestFailedSignalRDTO(busTask.SessionId, busRequestError.Message);
+						RequestFailedSignalRDTO failure = new RequestFailedSignalRDTO(busTask.TraceId, busRequestError.Message);
 						await Clients.Caller.ReceiveRequestFailed(failure);
 					});
 			}
@@ -40,12 +40,12 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.SignalR
 				await busTaskValue.Match(
 				async success =>
 				{
-					var response = new ResponseSignalRDTO(busTask.SessionId, false);
+					var response = new ResponseSignalRDTO(busTask.TraceId, false);
 					await Clients.Caller.ReceiveRequestResult(response);
 				},
 				async error =>
 				{
-					RequestFailedSignalRDTO failure = new RequestFailedSignalRDTO(busTask.SessionId, error.Message);
+					RequestFailedSignalRDTO failure = new RequestFailedSignalRDTO(busTask.TraceId, error.Message);
 					await Clients.Caller.ReceiveRequestFailed(failure);
 				});
 			}
