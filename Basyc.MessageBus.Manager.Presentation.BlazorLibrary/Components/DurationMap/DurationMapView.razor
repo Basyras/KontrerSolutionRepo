@@ -11,18 +11,22 @@
         BuildedDurationSegment previousSegment = null;
         foreach (var segment in DurationMap.Segments)
         {
-            if (previousSegment is not null)
-            {
-                if (previousSegment.EndTime > segment.StartTime)
+            ServicesMap.TryAdd(segment.Service, ServicesMap.Count);
+            string serviceIndent = $"margin-left: {ServicesMap[segment.Service]*2}rem";
+            <serviceIndent style="@serviceIndent">
+                @if (previousSegment is not null)
                 {
-                    <DurationUnknownBoxView StartTime="previousSegment.EndTime" Duration="previousSegment.EndTime - segment.StartTime" Scale="Scale" Service="previousSegment.Service" />
-                }
-                else
-                {
+                    if (previousSegment.EndTime > segment.StartTime)
+                    {
+                        <DurationUnknownBoxView StartTime="previousSegment.EndTime" Duration="previousSegment.EndTime - segment.StartTime" Scale="Scale" Service="previousSegment.Service" />
+                    }
+                    else
+                    {
 
+                    }
                 }
-            }
-            <DurationBoxView DurationSegment="segment" Scale="Scale"/>
+                <DurationBoxView DurationSegment="segment" Scale="Scale" />
+            </serviceIndent>
             previousSegment = segment;
         }
     }
@@ -35,4 +39,5 @@
 @code {
     [Parameter] public DurationMap DurationMap { get; set; }
     [Parameter] public double Scale { get; set; } = 20;
+    public Dictionary<ServiceIdentity, int> ServicesMap = new();
 }

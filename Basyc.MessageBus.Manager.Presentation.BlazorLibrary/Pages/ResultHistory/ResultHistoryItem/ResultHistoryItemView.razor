@@ -1,53 +1,63 @@
 ﻿@using Basyc.MessageBus.Manager.Application
 @using System.Text
+@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components
 
 @{
     string historyItemClass = $"historyItem--state--{RequestResult.State.ToString()}";
-    string historyItemIsSelectedClass = $"historyItem--isSelected--{IsSelected.ToString()}";
 }
 
-<historyItem class="@historyItemClass @historyItemIsSelectedClass">
-    @if (RequestResult is not null)
+<historyItem class="@historyItemClass">
+    @if (RequestResult is not null && DiagnosticsContext is not null)
     {
-        @*string latencyClass = $"latency--state--{RequestResult.State.ToString()}";*@
-        <id>
-            #@RequestResult.TraceId
-        </id>
-        <inputBorder>
-            @CreateInputOverview(RequestResult.Request.Parameters)
-        </inputBorder>
-        <outputBorder>
-            @if (RequestResult.State == RequestResultState.Started)
-            {
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%"  />
-            }
-            else
-            {
-                <responseValue>
-                    @if (RequestResult.State == RequestResultState.Completed)
-                    {
-                        if (RequestResult.Request.RequestInfo.HasResponse)
+        if (IsSelected)
+        {
+            <ResultHistoryItemExpandedView RequestResult="RequestResult" DiagnosticsContext="DiagnosticsContext" />
+        }
+        else
+        {
+            <collapsedGrid>
+               
+            <id>
+                #@RequestResult.TraceId
+            </id>
+            <inputBorder>
+                @CreateInputOverview(RequestResult.Request.Parameters)
+            </inputBorder>
+            <outputBorder>
+                @if (RequestResult.State == RequestResultState.Started)
+                {
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" />
+                }
+                else
+                {
+                    <responseValue>
+                        @if (RequestResult.State == RequestResultState.Completed)
                         {
-                            @RequestResult.Response
+                            if (RequestResult.Request.RequestInfo.HasResponse)
+                            {
+                                @RequestResult.Response
+                            }
+                            else
+                            {
+                                <ghostLabel>
+                                    Result does not have an output
+                                </ghostLabel>
+                            }
                         }
-                        else
+                        @if (RequestResult.State == RequestResultState.Failed)
                         {
-                            <ghostLabel>
-                                Result does not have an output
-                            </ghostLabel>
+                            @RequestResult.ErrorMessage
                         }
-                    }
-                    @if (RequestResult.State == RequestResultState.Failed)
-                    {
-                        @RequestResult.ErrorMessage
-                    }
-                </responseValue>
-            }
-        </outputBorder>
-        <status>
-            <LatencyView RequestResult="RequestResult" />
-        </status>
+                    </responseValue>
+                }
+            </outputBorder>
+            <status>
+                <LatencyView RequestResult="RequestResult" />
+            </status>
+            </collapsedGrid>
+        }
+
     }
     else
     {
@@ -73,6 +83,9 @@
             requestResult.StateChanged += ResultStateChanged;
         }
     }
+
+    [Parameter]
+    public RequestDiagnosticsContext DiagnosticsContext { get; set; }
 
     [Parameter]
     public bool IsSelected

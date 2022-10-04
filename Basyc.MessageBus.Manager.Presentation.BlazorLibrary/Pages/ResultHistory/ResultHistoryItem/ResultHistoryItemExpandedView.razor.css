@@ -1,0 +1,13 @@
+﻿resultHistoryItemExpandedView {
+  display: block;
+}
+
+sectionLabel {
+  margin-left: 1.5rem;
+  display: block;
+  text-align: left;
+}
+
+section, logsSection, activityMapSecion, basicSection {
+  display: block;
+}

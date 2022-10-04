@@ -1,1 +1,1 @@
-.resultHistoryItemViewButton{margin-bottom:0.5rem;display:block}historyView{display:flex;flex-direction:column;overflow:scroll}
+.resultHistoryItemViewButton{margin-bottom:0.5rem;display:block;min-height:0px}historyView{display:flex;flex-direction:column;overflow:scroll}

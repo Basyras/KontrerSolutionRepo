@@ -1,0 +1,42 @@
+﻿@using Basyc.MessageBus.Manager.Application
+@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.LogWindow
+
+<resultHistoryItemExpandedView>
+    <basicSection>
+
+    </basicSection>
+    <activityMapSecion>
+        <sectionLabel>
+            ActivityMap
+        </sectionLabel>
+        <MudGrid>
+            <MudItem sm="3">
+                <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+                    Basic
+                </MudPaper>
+            </MudItem>
+
+            <MudItem sm="9">
+                <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+                    IO
+                </MudPaper>
+            </MudItem>        
+        </MudGrid>
+    </activityMapSecion>
+    <logsSection>
+        <sectionLabel class="sectionLabel--logs">
+            Logs
+        </sectionLabel>
+        <LogWindowView DiagnosticsContext="DiagnosticsContext" />
+    </logsSection>
+</resultHistoryItemExpandedView>
+
+
+@code {
+    [Parameter]
+    public RequestResult RequestResult { get; set; }
+
+    [Parameter]
+    public RequestDiagnosticsContext DiagnosticsContext { get; set; }
+}

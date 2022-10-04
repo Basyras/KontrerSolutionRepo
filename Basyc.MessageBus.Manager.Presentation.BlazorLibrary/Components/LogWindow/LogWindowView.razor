@@ -1,14 +1,14 @@
 ﻿@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 <logWindowView>
-    @for (int logEntryIndex = 0; logEntryIndex < LoggingContext.LogEntries.Count; logEntryIndex++)
+    @for (int logEntryIndex = 0; logEntryIndex < DiagnosticsContext.LogEntries.Count; logEntryIndex++)
     {
-        var logEntry = LoggingContext.LogEntries[logEntryIndex];
+        var logEntry = DiagnosticsContext.LogEntries[logEntryIndex];
         <LogEntryView LogEntry="logEntry" AlternateColor="logEntryIndex % 2 != 0" />
     }
 </logWindowView>
 
 
 @code {
-    [Parameter] public RequestDiagnosticsContext LoggingContext { get; set; }
+    [Parameter] public RequestDiagnosticsContext DiagnosticsContext { get; set; }
 }

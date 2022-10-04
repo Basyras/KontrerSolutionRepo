@@ -74,5 +74,17 @@
   {
     "outputFile": "Components/DurationMap/DurationBoxToolTip.razor.css",
     "inputFile": "Components/DurationMap/DurationBoxToolTip.razor.scss"
+  },
+  {
+    "outputFile": "Pages/ResultHistory/ResultHistoryView.razor.css",
+    "inputFile": "Pages/ResultHistory/ResultHistoryView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/ResultHistory/ResultHistoryItem/ResultHistoryItemExpandedView.razor.css",
+    "inputFile": "Pages/ResultHistory/ResultHistoryItem/ResultHistoryItemExpandedView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/ResultHistory/ResultHistoryItem/ResultHistoryItemView.razor.css",
+    "inputFile": "Pages/ResultHistory/ResultHistoryItem/ResultHistoryItemView.razor.scss"
   }
 ]

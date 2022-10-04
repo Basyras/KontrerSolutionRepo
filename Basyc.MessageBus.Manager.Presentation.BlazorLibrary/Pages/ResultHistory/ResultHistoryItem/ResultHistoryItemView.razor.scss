@@ -1,4 +1,4 @@
-﻿@import "../../Shared/Colors.scss";
+﻿@import "../../../Shared/Colors.scss";
 
 
 inputOutputBorderBase {
@@ -45,25 +45,15 @@ responseValue {
     border: 2px solid $Error-Background;
 }
 
-historyItem {
-    height: 3rem;
-    padding: 0.5rem 1rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+historyItem {    
+    display: block;
     overflow: hidden;
     color: #628E8E;
-
     border-radius: 4px;
 }
 
 historyItem:hover {
     border-color: #CCDAEC;
-}
-
-
-.historyItem--isSelected--True {
-    border-color: #7AA9E5 !important;
 }
 
 id {
@@ -87,4 +77,11 @@ status {
     flex: 0 0 3rem;
     flex: 8;
     text-align: right;
+}
+
+collapsedGrid {
+    padding: 0.5rem 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }
