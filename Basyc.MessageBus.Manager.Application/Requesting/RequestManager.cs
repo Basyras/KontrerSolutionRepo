@@ -13,7 +13,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 		private readonly IRequesterSelector requesterSelector;
 		private readonly IRequestDiagnosticsManager requestDiagnosticsManager;
 		private int requestCounter;
-		private readonly ServiceIdentity service = new ServiceIdentity("RequestManager");
+		private readonly ServiceIdentity requestManagerServiceIdentity = new ServiceIdentity("RequestManager");
 
 		public RequestManager(IRequesterSelector requesterSelector, IRequestDiagnosticsManager loggingManager)
 		{
@@ -33,14 +33,14 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 			}
 
 			var requester = requesterSelector.PickRequester(request.RequestInfo);
-			var durationMapBuilder = new DurationMapBuilder(service);
+			var durationMapBuilder = new DurationMapBuilder(requestManagerServiceIdentity);
 			var requestResult = new RequestResult(request, DateTime.Now, Interlocked.Increment(ref requestCounter).ToString(), durationMapBuilder);
 			results.Add(requestResult);
 			var loggingContext = requestDiagnosticsManager.RegisterRequest(requestResult, durationMapBuilder);
-			requester.StartRequest(requestResult, new ResultLoggingContextLogger(loggingContext));
-			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Picking requester");
-			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Starting request");
-			loggingContext.AddLog(DateTimeOffset.UtcNow, LogLevel.Information, "Request started");
+			requester.StartRequest(requestResult, new ResultLoggingContextLogger(requestManagerServiceIdentity, loggingContext));
+			loggingContext.AddLog(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Picking requester");
+			loggingContext.AddLog(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Starting request");
+			loggingContext.AddLog(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Request started");
 
 
 			return requestResult;

@@ -7,12 +7,13 @@
 <historyView>
     @if (RequestResults is not null)
     {
-        @foreach (var result in RequestResults.AsEnumerable().Reverse())
+        int resultCounter = 0;
+        @foreach (var result in RequestResults)
         {
             var diagnosticsContext = resultLoggingManager.GetContext(result);
-            <button @onclick="() => SelectedRequestResults = result" class="resultHistoryItemViewButton">
-                <ResultHistoryItemView RequestResult="result" DiagnosticsContext="diagnosticsContext" IsSelected="result == SelectedRequestResults" />
-            </button>
+            <item>
+                <ResultHistoryItemView RequestResult="result" DiagnosticsContext="diagnosticsContext" OrderIndex="++resultCounter" />
+            </item>
         }
     }
     else
@@ -25,7 +26,7 @@
     [Parameter] public List<RequestResult> RequestResults { get; set; }
     private RequestResult selectedRequestResults;
 
-    [Parameter] 
+    [Parameter]
     public RequestResult SelectedRequestResults
     {
         get => selectedRequestResults;
@@ -33,11 +34,7 @@
         {
             if (value == selectedRequestResults) return;
             selectedRequestResults = value;
-            SelectedRequestResultsChanged.InvokeAsync(value);
         }
     }
-
-    [Parameter]
-    public EventCallback<RequestResult> SelectedRequestResultsChanged { get; set; }
 
 }

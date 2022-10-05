@@ -23,14 +23,14 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			this.activityMapBuilder = activityMapBuilder;
 		}
 
-		public void AddLog(LogLevel logLevel, string message)
+		public void AddLog(ServiceIdentity service, LogLevel logLevel, string message)
 		{
-			AddLog(DateTimeOffset.UtcNow, logLevel, message);
+			AddLog(service, DateTimeOffset.UtcNow, logLevel, message);
 		}
 
-		public void AddLog(DateTimeOffset time, LogLevel logLevel, string message)
+		public void AddLog(ServiceIdentity service, DateTimeOffset time, LogLevel logLevel, string message)
 		{
-			LogEntry newLogEntry = new(RequestResult.TraceId, time, logLevel, message);
+			LogEntry newLogEntry = new(service, RequestResult.TraceId, time, logLevel, message);
 			logEntries.Add(newLogEntry);
 			OnLogAdded(newLogEntry);
 		}

@@ -54,27 +54,32 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 				{
 					waitingForBusSegment.End();
 					if (x.IsFaulted)
+					{
 						requestResult.Fail(x.Exception.ToString());
+						requestLogger.LogError($"Request handeling failed with exception: {x.Exception.ToString()}");
+					}
 
 					if (x.IsCanceled)
+					{
 						requestResult.Fail("canceled");
+						requestLogger.LogError($"Request handeling was canceled");
+					}
 
 					if (x.IsCompletedSuccessfully)
 					{
 						if (x.Result.Value is ErrorMessage error)
 						{
 							requestResult.Fail(error.Message);
+							requestLogger.LogError($"Request handler returned error. {error.Message}");
 						}
 						else
 						{
 							var resultObject = x.Result.AsT0;
 							requestResult.Complete(responseFormatter.Format(resultObject));
+							requestLogger.LogInformation($"Request completed");
+
 						}
 					}
-
-					if (x.IsCanceled)
-						requestResult.Fail("Unknown error");
-
 				});
 
 			}
@@ -87,26 +92,32 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 				busTask.Task.ContinueWith(x =>
 				{
 					waitingForBusSegment.End();
+
 					if (x.IsFaulted)
+					{
 						requestResult.Fail(x.Exception.ToString());
+						requestLogger.LogError($"Request handeling failed with exception: {x.Exception.ToString()}");
+					}
 
 					if (x.IsCanceled)
+					{
 						requestResult.Fail("canceled");
+						requestLogger.LogError($"Request handeling was canceled");
+					}
 
 					if (x.IsCompletedSuccessfully)
 					{
 						if (x.Result.Value is ErrorMessage error)
 						{
 							requestResult.Fail(error.Message);
+							requestLogger.LogError($"Request handler returned error. {error.Message}");
 						}
 						else
 						{
 							requestResult.Complete();
+							requestLogger.LogInformation($"Request completed");
 						}
 					}
-
-					if (x.IsCanceled)
-						requestResult.Fail("Unknown error");
 
 				});
 			}

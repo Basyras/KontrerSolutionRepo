@@ -9,15 +9,37 @@ logEntryView {
 }
 
 logEntryView:hover {
-    background-color: #818983;
+    background-color: #626262;
 }
 
 
 .logEntryView--alternate {
-    background-color: #6F7A72;
+    /*background-color: #6F7A72;*/
+    background-color: #00000012;
 }
 
-time{
+time {
     margin-right: 0.3rem;
     color: #ffffffb2;
+}
+
+serviceName {
+    color: white;
+}
+
+level{
+    display: inline;
+    padding: 0px;
+}
+
+.level--Information {
+    color: #7BAFBC;
+}
+
+.level--Warning {
+    background-color: #BCB17B;
+}
+
+.level--Error {
+    background-color: #C15C5C;
 }

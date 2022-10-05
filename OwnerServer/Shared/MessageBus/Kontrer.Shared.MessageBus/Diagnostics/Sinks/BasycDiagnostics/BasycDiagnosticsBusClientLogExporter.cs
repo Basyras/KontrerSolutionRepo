@@ -45,7 +45,7 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 			{
 				try
 				{
-					producer.ProduceLog(new LogEntry(traceId, DateTimeOffset.UtcNow, logLevel, formattedMessage));
+					producer.ProduceLog(new LogEntry(options.Value.Service, traceId, DateTimeOffset.UtcNow, logLevel, formattedMessage));
 				}
 				catch (Exception ex)
 				{

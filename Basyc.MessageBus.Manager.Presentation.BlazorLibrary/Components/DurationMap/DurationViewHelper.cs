@@ -16,15 +16,5 @@
 			return minHeight;
 		}
 
-		public static string DurationToText(TimeSpan duration)
-		{
-			return $"{Math.Ceiling(duration.TotalMilliseconds)} ms";
-		}
-
-		public static string TimeToText(DateTime dateTime)
-		{
-			return dateTime.ToString("hh:mm:ss:ffff");
-		}
-
 	}
 }

@@ -1,12 +1,13 @@
 ﻿@using Basyc.Diagnostics.Shared.Durations
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
 <toolTipDurationName>
     @Service.ServiceName: @Name
 </toolTipDurationName>
 <toolTipDurationDuration>
-    started: @DurationViewHelper.TimeToText(StartTime.LocalDateTime);
+    started: @TimeConverter.TimeToText(StartTime);
     <br />
-    lasted: @DurationViewHelper.DurationToText(Duration);
+    lasted: @TimeConverter.DurationToText(Duration);
 </toolTipDurationDuration>
 
 @code {

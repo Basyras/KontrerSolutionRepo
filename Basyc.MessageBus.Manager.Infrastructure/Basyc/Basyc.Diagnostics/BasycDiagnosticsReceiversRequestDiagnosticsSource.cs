@@ -8,10 +8,10 @@ using System.Linq;
 
 namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.Diagnostics
 {
-	public class BasycReceiversRequestDiagnosticsSource : IRequestDiagnosticsSource
+	public class BasycDiagnosticsReceiversRequestDiagnosticsSource : IRequestDiagnosticsSource
 	{
 		private readonly IBasycDiagnosticsReceiverTraceIdMapper sessionMapper;
-		public BasycReceiversRequestDiagnosticsSource(IEnumerable<IDiagnosticsLogReceiver> logReceivers, IBasycDiagnosticsReceiverTraceIdMapper sessionMapper)
+		public BasycDiagnosticsReceiversRequestDiagnosticsSource(IEnumerable<IDiagnosticsLogReceiver> logReceivers, IBasycDiagnosticsReceiverTraceIdMapper sessionMapper)
 		{
 			foreach (var logReceiver in logReceivers)
 			{
@@ -43,7 +43,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.Diagnostics
 		}
 		private void LogReceiver_LogsReceived(object sender, LogsReceivedArgs e)
 		{
-			var mappedSessions = e.LogEntries.Select(x => new LogEntry(sessionMapper.GetTraceId(x.TraceId), x.Time, x.LogLevel, x.Message)).ToArray();
+			var mappedSessions = e.LogEntries.Select(x => new LogEntry(x.Service, sessionMapper.GetTraceId(x.TraceId), x.Time, x.LogLevel, x.Message)).ToArray();
 			OnLogsReceived(mappedSessions);
 		}
 	}

@@ -4,8 +4,14 @@
     min-height: 0px;
 }
 
-historyView {
+item {
+    margin-bottom: 0.5rem;
     display: flex;
-    flex-direction: column;
+    min-height: 0px;
+}
+
+historyView {
+    display: flex;    
+    flex-direction: column-reverse;
     overflow: scroll;
 }

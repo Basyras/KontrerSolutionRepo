@@ -1,4 +1,5 @@
-﻿using Basyc.Diagnostics.Shared.Logging;
+﻿using Basyc.Diagnostics.Shared.Durations;
+using Basyc.Diagnostics.Shared.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -14,9 +15,9 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			LogsReceived?.Invoke(this, new LogsUpdatedArgs(logEntries));
 		}
 
-		public void PushLog(string traceId, LogLevel logLevel, string message)
+		public void PushLog(ServiceIdentity service, string traceId, LogLevel logLevel, string message)
 		{
-			OnLogsReceived(new LogEntry[] { new LogEntry(traceId, DateTimeOffset.UtcNow, logLevel, message) });
+			OnLogsReceived(new LogEntry[] { new LogEntry(service, traceId, DateTimeOffset.UtcNow, logLevel, message) });
 		}
 
 		public void PushLog(LogEntry logEntry)

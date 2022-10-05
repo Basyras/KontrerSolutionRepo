@@ -1,28 +1,79 @@
-﻿@using Basyc.MessageBus.Manager.Application
-@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+﻿@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+@using Basyc.MessageBus.Manager.Application
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.DurationMap
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.LogWindow
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
 <resultHistoryItemExpandedView>
     <basicSection>
+        <MudGrid Spacing="0">
+            <MudItem lg="3">
+                <basicTable>
+                    <MudGrid Spacing="0">
+                        <MudItem lg="6">
+                            <MudStack Spacing="2">
+                                <formLabel>
+                                    StartTime
+                                </formLabel>
+                                <formLabel>
+                                    State
+                                </formLabel>
+                                <formLabel>
+                                    Duration
+                                </formLabel>
+                                <formLabel>
+                                    TraceId
+                                </formLabel>
+                            </MudStack>
+                        </MudItem>
+                        <MudItem lg="6">
+                            <MudStack Spacing="2">
+                                <formValue>
+                                    @if (RequestResult.DurationMap != null)
+                                    {
+                                        @TimeConverter.TimeToText(RequestResult.DurationMap.StartTime)
+                                    }
+                                </formValue>
+                                <formValue>
+                                    @RequestResult.State.ToString()
+                                </formValue>
+                                <formValue>
+                                    @if (RequestResult.DurationMap != null)
+                                    {
+                                        @*@TimeConverter.DurationToText(RequestResult.DurationMap.TotalDuration)*@
+                                    }
+                                    <LatencyView RequestResult="RequestResult" />
 
+                                </formValue>
+                                <formValue>
+                                    @RequestResult.TraceId
+                                </formValue>
+
+                            </MudStack>
+                        </MudItem>
+                    </MudGrid>
+                </basicTable>
+            </MudItem>
+
+            <MudItem lg="9">
+                <MudGrid Spacing="0">
+                    <MudItem lg="6">
+                        asd
+                    </MudItem>
+                    <MudItem lg="6">
+                        asd
+                    </MudItem>
+                </MudGrid>
+
+            </MudItem>
+        </MudGrid>
     </basicSection>
     <activityMapSecion>
         <sectionLabel>
             ActivityMap
         </sectionLabel>
-        <MudGrid>
-            <MudItem sm="3">
-                <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
-                    Basic
-                </MudPaper>
-            </MudItem>
-
-            <MudItem sm="9">
-                <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
-                    IO
-                </MudPaper>
-            </MudItem>        
-        </MudGrid>
+        <DurationMapView Scale="20" DurationMap="RequestResult.DurationMap" />
     </activityMapSecion>
     <logsSection>
         <sectionLabel class="sectionLabel--logs">

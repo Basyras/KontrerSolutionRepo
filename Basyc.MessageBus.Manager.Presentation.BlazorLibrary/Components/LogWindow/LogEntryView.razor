@@ -1,16 +1,21 @@
 ﻿@using Basyc.Diagnostics.Shared.Logging
 @using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+@using Microsoft.Extensions.Logging
 
 @{
     string logEntryViewClass = AlternateColor ? "logEntryView--alternate" : "";
+    string levelClass = $"level--{LogEntry.LogLevel.ToString()}";
 }
 
 <logEntryView class="@logEntryViewClass">
     <time>
         @LogEntry.Time.ToString("HH:mm:ss")
     </time>
-    <level>
-        [@LogEntry.LogLevel]
+    <serviceName>
+        @LogEntry.Service.ServiceName:
+    </serviceName>
+    <level class="@levelClass">
+        @LogLevelToString(LogEntry.LogLevel)
     </level>
     <message>
         @LogEntry.Message
@@ -21,5 +26,18 @@
 @code {
     [Parameter] public LogEntry LogEntry { get; set; }
     [Parameter] public bool AlternateColor { get; set; }
+
+    private static string LogLevelToString(LogLevel logLevel)
+    {
+        return logLevel switch
+        {
+            LogLevel.Warning => "warn",
+            LogLevel.Information => "info",
+            LogLevel.Debug => "debug",
+            LogLevel.Error => "error",
+            LogLevel.Critical => "crit",
+            _ => logLevel.ToString(),
+        };
+    }
 
 }

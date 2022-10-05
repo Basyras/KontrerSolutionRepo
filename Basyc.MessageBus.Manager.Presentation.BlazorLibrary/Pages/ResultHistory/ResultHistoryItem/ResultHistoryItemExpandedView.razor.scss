@@ -1,26 +1,53 @@
 ﻿
-resultHistoryItemExpandedView{
+resultHistoryItemExpandedView {
     display: block;
 }
 
 sectionLabel {
-    margin-left: 1.5rem;
     display: block;
-    text-align: left
+    text-align: left;
+    font-weight: bold;
+    color: #7b9595;
+    padding: 0.75rem 1.75rem;
 }
 
-section{
+section {
     display: block;
 }
 
-basicSection{
+basicSection {
     @extend section;
+    padding: 0rem 1rem;
+    margin-right: 1.5rem; //Space for collapse arrow
 }
 
 activityMapSecion {
     @extend section;
+    background-color: #00000011;
 }
 
 logsSection {
     @extend section;
+    background-color: #000000a6;
+}
+
+formLabel {
+    color: #979797;
+    height: 1rem;
+    display: block;
+}
+
+formValue {
+    color: #535353;
+    height: 1rem;
+    display: block;
+}
+
+basicTable {
+    display: block;
+    padding: 1rem;
+}
+
+.sectionLabel--logs {
+    color: #E3E3E3;
 }
