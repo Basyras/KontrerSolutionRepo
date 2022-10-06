@@ -1,7 +1,6 @@
 ﻿@using Basyc.Diagnostics.Shared.Durations
 
-<durationMapView>
-
+<horizontalDurationMapView>
     @if (DurationMap is null || DurationMap.Segments.Length == 0)
     {
         @:Nothing to show
@@ -30,9 +29,7 @@
             previousSegment = segment;
         }
     }
-
-
-</durationMapView>
+</horizontalDurationMapView>
 
 
 
