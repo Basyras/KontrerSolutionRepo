@@ -2,6 +2,7 @@
 @using System.Text
 @using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
 @{
     string historyItemClass = $"historyItem--state--{RequestResult.State.ToString()}";
@@ -18,43 +19,51 @@
         else
         {
             <collapsedGrid>
-                <id>
-                    #@OrderIndex
-                </id>
-                <inputBorder>
-                    @CreateInputOverview(RequestResult.Request.Parameters)
-                </inputBorder>
-                <outputBorder>
-                    @if (RequestResult.State == RequestResultState.Started)
-                    {
-                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" />
-                    }
-                    else
-                    {
-                        <responseValue>
-                            @if (RequestResult.State == RequestResultState.Completed)
-                            {
-                                if (RequestResult.Request.RequestInfo.HasResponse)
+                <basicTable>
+                    <id>
+                        #@OrderIndex
+                    </id>
+                    <status>
+                        <LatencyView RequestResult="RequestResult" />
+                    </status>
+                </basicTable>
+                <dataSubSection>
+                    <inputBorder>
+                        @ResponseResultConverter.CreateInputOverview(RequestResult.Request.Parameters)
+                    </inputBorder>
+                    <arrow>
+                        <MudIcon Icon="@Icons.Material.Rounded.Forward" />
+                    </arrow>
+                    <outputBorder>
+                        @if (RequestResult.State == RequestResultState.Started)
+                        {
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" />
+                        }
+                        else
+                        {
+                            <responseValue>
+                                @if (RequestResult.State == RequestResultState.Completed)
                                 {
-                                    @RequestResult.Response
+                                    if (RequestResult.Request.RequestInfo.HasResponse)
+                                    {
+                                        @RequestResult.Response
+                                    }
+                                    else
+                                    {
+                                        <ghostLabel>
+                                            Result does not have an output
+                                        </ghostLabel>
+                                    }
                                 }
-                                else
+                                @if (RequestResult.State == RequestResultState.Failed)
                                 {
-                                    <ghostLabel>
-                                        Result does not have an output
-                                    </ghostLabel>
+                                    @RequestResult.ErrorMessage
                                 }
-                            }
-                            @if (RequestResult.State == RequestResultState.Failed)
-                            {
-                                @RequestResult.ErrorMessage
-                            }
-                        </responseValue>
-                    }
-                </outputBorder>
-                <status>
-                    <LatencyView RequestResult="RequestResult" />
-                </status>
+                            </responseValue>
+                        }
+                    </outputBorder>
+                </dataSubSection>
+
             </collapsedGrid>
         }
 
@@ -142,21 +151,7 @@
     //    return stringBuilder.ToString();
     //}
 
-    private static string CreateInputOverview(IEnumerable<Parameter> parameters)
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        foreach (var parameter in parameters)
-        {
-            var paramterValueString = parameter.Value is null ? "null" : parameter.Value.ToString();
-            stringBuilder.Append(paramterValueString);
-            stringBuilder.Append(", ");
-        }
-        if (parameters.Count() > 0)
-        {
-            stringBuilder.Remove(stringBuilder.Length - 2, 2);
-        }
-        return stringBuilder.ToString();
-    }
+
 
     private void ItemClick()
     {

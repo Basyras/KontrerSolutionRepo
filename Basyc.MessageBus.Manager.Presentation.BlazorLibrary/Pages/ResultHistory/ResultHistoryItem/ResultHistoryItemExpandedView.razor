@@ -7,67 +7,58 @@
 
 <resultHistoryItemExpandedView>
     <basicSection>
-        <MudGrid Spacing="0">
-            <MudItem lg="3">
-                <basicTable>
-                    <MudGrid Spacing="0">
-                        <MudItem lg="6">
-                            <MudStack Spacing="2">
-                                <formLabel>
-                                    StartTime
-                                </formLabel>
-                                <formLabel>
-                                    State
-                                </formLabel>
-                                <formLabel>
-                                    Duration
-                                </formLabel>
-                                <formLabel>
-                                    TraceId
-                                </formLabel>
-                            </MudStack>
-                        </MudItem>
-                        <MudItem lg="6">
-                            <MudStack Spacing="2">
-                                <formValue>
-                                    @if (RequestResult.DurationMap != null)
-                                    {
-                                        @TimeConverter.TimeToText(RequestResult.DurationMap.StartTime)
-                                    }
-                                </formValue>
-                                <formValue>
-                                    @RequestResult.State.ToString()
-                                </formValue>
-                                <formValue>
-                                    @if (RequestResult.DurationMap != null)
-                                    {
-                                        @*@TimeConverter.DurationToText(RequestResult.DurationMap.TotalDuration)*@
-                                    }
-                                    <LatencyView RequestResult="RequestResult" />
+        <basicTable>
+            <MudGrid Spacing="0">
+                <MudItem lg="6">
+                    <MudStack Spacing="2">
+                        <formLabel>
+                            StartTime
+                        </formLabel>
+                        <formLabel>
+                            State
+                        </formLabel>
+                        <formLabel>
+                            Duration
+                        </formLabel>
+                        <formLabel>
+                            TraceId
+                        </formLabel>
+                    </MudStack>
+                </MudItem>
+                <MudItem lg="6">
+                    <MudStack Spacing="2">
+                        <formValue>
+                            @if (RequestResult.DurationMap != null)
+                            {
+                                @TimeConverter.TimeToText(RequestResult.DurationMap.StartTime)
+                            }
+                        </formValue>
+                        <formValue>
+                            @RequestResult.State.ToString()
+                        </formValue>
+                        <formValue>
+                            <LatencyView RequestResult="RequestResult" />
+                        </formValue>
+                        <formValue>
+                            @RequestResult.TraceId
+                        </formValue>
+                    </MudStack>
+                </MudItem>
+            </MudGrid>
+        </basicTable>
 
-                                </formValue>
-                                <formValue>
-                                    @RequestResult.TraceId
-                                </formValue>
+        <dataSubSection>
+            <requestBox>
+                @ResponseResultConverter.CreateInputOverview(RequestResult.Request.Parameters)
+            </requestBox>
+            <arrow>
+                <MudIcon Icon="@Icons.Material.Rounded.Forward" />
+            </arrow>
+            <responseBox>
+                @RequestResult.Response
+            </responseBox>
+        </dataSubSection>
 
-                            </MudStack>
-                        </MudItem>
-                    </MudGrid>
-                </basicTable>
-            </MudItem>
-
-            <MudItem lg="9">
-                <MudGrid Spacing="0">
-                    <MudItem lg="6">
-                        asd
-                    </MudItem>
-                    <MudItem lg="6">
-                        asd
-                    </MudItem>
-                </MudGrid>
-
-            </MudItem>
-        </MudGrid>
     </basicSection>
     <activityMapSecion>
         <sectionLabel>

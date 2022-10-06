@@ -7,11 +7,11 @@ inputOutputBorderBase {
     align-items: center;
     height: 100%;
     border-radius: 4px;
-    flex: 40;
     overflow: hidden;
     word-wrap: anywhere;
     word-break: break-all;
     white-space: nowrap;
+    width: 50%;
 }
 
 inputBorder {
@@ -84,9 +84,8 @@ status {
 collapsedGrid {
     padding: 0.5rem 1rem;
     display: flex;
-    gap: 1rem;
     align-items: center;
-    flex-grow: 1;
+    flex-grow: 1;    
     margin-right: 1.5rem; //Make space for expand arrow
 }
 
@@ -96,4 +95,22 @@ collapsedGrid {
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;
+}
+
+basicTable {
+    display: block;
+    padding-left: 1rem;
+    width: 25%;
+}
+
+arrow {
+    color: #cccccc;
+    display: flex;
+    align-items: center;
+}
+
+dataSubSection {
+    margin-left: 0.75rem;
+    display: flex;
+    flex-grow: 1;
 }
