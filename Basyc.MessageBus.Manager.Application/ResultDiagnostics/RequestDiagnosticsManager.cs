@@ -5,7 +5,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
 	public class RequestDiagnosticsManager : IRequestDiagnosticsManager
 	{
-		private readonly Dictionary<RequestResult, RequestDiagnosticsContext> resultToContextMap = new Dictionary<RequestResult, RequestDiagnosticsContext>();
+		private readonly Dictionary<RequestResultContext, RequestDiagnosticsContext> resultToContextMap = new Dictionary<RequestResultContext, RequestDiagnosticsContext>();
 		private readonly Dictionary<string, RequestDiagnosticsContext> traceIdToContextMap = new();
 
 		public RequestDiagnosticsManager(IEnumerable<IRequestDiagnosticsSource> logSources)
@@ -13,16 +13,28 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			foreach (var logSource in logSources)
 			{
 				logSource.LogsReceived += LogSource_LogsReceived;
-				logSource.ActivitiesReceived += LogSource_ActivitiesReceived;
+				logSource.ActivityStartsReceived += LogSource_ActivityStartsReceived;
+				logSource.ActivityEndsReceived += LogSource_ActivityEndsReceived;
 			}
 		}
 
-		private void LogSource_ActivitiesReceived(object? sender, ActivitesUpdatedArgs e)
+
+
+		private void LogSource_ActivityStartsReceived(object? sender, ActivityStartsReceivedArgs e)
 		{
-			foreach (var activity in e.NewActivities)
+			foreach (var activityStart in e.ActivityStarts)
 			{
-				var loggingContext = GetContextByTraceId(activity.TraceId);
-				loggingContext.AddActivity(activity);
+				var loggingContext = GetContextByTraceId(activityStart.TraceId);
+				loggingContext.StartActivity(activityStart);
+			}
+		}
+
+		private void LogSource_ActivityEndsReceived(object? sender, ActivityEndsReceivedArgs e)
+		{
+			foreach (var activityEnd in e.ActivityEnds)
+			{
+				var loggingContext = GetContextByTraceId(activityEnd.TraceId);
+				loggingContext.EndActivity(activityEnd);
 			}
 		}
 
@@ -35,7 +47,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			}
 		}
 
-		public RequestDiagnosticsContext RegisterRequest(RequestResult requestResult, DurationMapBuilder durationMapBuilder)
+		public RequestDiagnosticsContext RegisterRequest(RequestResultContext requestResult, DurationMapBuilder durationMapBuilder)
 		{
 			RequestDiagnosticsContext loggingContext = new RequestDiagnosticsContext(requestResult, durationMapBuilder);
 			resultToContextMap.Add(requestResult, loggingContext);
@@ -43,7 +55,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			return loggingContext;
 		}
 
-		public RequestDiagnosticsContext GetContext(RequestResult requestResult)
+		public RequestDiagnosticsContext GetContext(RequestResultContext requestResult)
 		{
 			return resultToContextMap[requestResult];
 		}

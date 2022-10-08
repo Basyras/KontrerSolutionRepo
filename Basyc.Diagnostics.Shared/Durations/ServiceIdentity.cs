@@ -1,4 +1,8 @@
 ﻿namespace Basyc.Diagnostics.Shared.Durations
 {
+	/// <summary>
+	/// Identifies Service that is owner/producer of diagnostics data (logs, acitvities/spans etc.)
+	/// </summary>
+	/// <param name="ServiceName"></param>
 	public record struct ServiceIdentity(string ServiceName);
 }

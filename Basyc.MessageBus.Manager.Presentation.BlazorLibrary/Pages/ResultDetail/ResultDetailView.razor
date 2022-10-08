@@ -116,7 +116,7 @@
                 @foreach (var activity in loggingContext.Activities)
                 {
                     @(activity.EndTime - activity.StartTime)
-                    @activity.Name
+                    @activity.DisplayName
                 }
             </paddedSection>
 
@@ -132,9 +132,9 @@
 
 @code {
     private RequestDiagnosticsContext loggingContext;
-    private RequestResult requestResult;
+    private RequestResultContext requestResult;
     [Parameter]
-    public RequestResult RequestResult
+    public RequestResultContext RequestResult
     {
         get => requestResult;
         set

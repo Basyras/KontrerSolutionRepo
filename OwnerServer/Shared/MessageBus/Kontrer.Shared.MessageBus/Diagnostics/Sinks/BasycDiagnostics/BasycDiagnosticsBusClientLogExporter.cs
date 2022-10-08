@@ -25,19 +25,27 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 			var listener = new ActivityListener();
 			listener.ShouldListenTo = activity =>
 			{
-				return activity == DiagnosticSources.HandlerStarted;
+				//return activity == DiagnosticSources.HandlerStarted;
+				return true;
 			};
 			listener.Sample = (ref ActivityCreationOptions<ActivityContext> options) =>
 			{
 				return ActivitySamplingResult.AllDataAndRecorded;
 			};
+			listener.ActivityStarted += activity =>
+			{
+				string traceId = activity.TraceId.ToString().TrimStart('0');
+				SendActivityStart(new ActivityStart(options.Value.Service, traceId, activity.ParentId, activity.Id, activity.OperationName, activity.StartTimeUtc));
+			};
 			listener.ActivityStopped += activity =>
 			{
-				SendCompletedActivity(new ActivityEntry(options.Value.Service, activity.ParentId, activity.OperationName, activity.StartTimeUtc, activity.StartTimeUtc + activity.Duration, activity.Status));
+				string traceId = activity.TraceId.ToString().TrimStart('0');
+				SendActivityEnd(new ActivityEnd(options.Value.Service, traceId, activity.ParentId, activity.Id, activity.OperationName, activity.StartTimeUtc, activity.StartTimeUtc + activity.Duration, activity.Status));
 			};
 			ActivitySource.AddActivityListener(listener);
 
 		}
+
 		public void SendLog<TState>(string handlerDisplayName, LogLevel logLevel, string traceId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
 			var formattedMessage = formatter.Invoke(state, exception);
@@ -54,17 +62,47 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 			}
 		}
 
-		public void SendCompletedActivity(ActivityEntry activity)
+		public void StartActivity(ActivityStart activityStart)
 		{
 			foreach (var producer in logProducers)
 			{
 				try
 				{
-					producer.ProduceActivityEnd(activity);
+					producer.StartActivity(activityStart);
 				}
 				catch (Exception ex)
 				{
 					logger.LogError(ex, $"LogProducer: {producer.GetType().Name} failed to produce activity with error {ex.Message}");
+				}
+			}
+		}
+
+		private void SendActivityStart(ActivityStart activityStart)
+		{
+			foreach (var producer in logProducers)
+			{
+				try
+				{
+					producer.StartActivity(activityStart);
+				}
+				catch (Exception ex)
+				{
+					logger.LogError(ex, $"LogProducer: {producer.GetType().Name} failed to produce activity start with error {ex.Message}");
+				}
+			}
+		}
+
+		private void SendActivityEnd(ActivityEnd activityEnd)
+		{
+			foreach (var producer in logProducers)
+			{
+				try
+				{
+					producer.EndActivity(activityEnd);
+				}
+				catch (Exception ex)
+				{
+					logger.LogError(ex, $"LogProducer: {producer.GetType().Name} failed to produce activity end with error {ex.Message}");
 				}
 			}
 		}

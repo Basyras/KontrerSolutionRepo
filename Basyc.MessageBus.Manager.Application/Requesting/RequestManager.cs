@@ -21,20 +21,20 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 			this.requestDiagnosticsManager = loggingManager;
 		}
 
-		public Dictionary<RequestInfo, List<RequestResult>> Results { get; } = new Dictionary<RequestInfo, List<RequestResult>>();
+		public Dictionary<RequestInfo, List<RequestResultContext>> Results { get; } = new Dictionary<RequestInfo, List<RequestResultContext>>();
 
 
-		public RequestResult StartRequest(Request request)
+		public RequestResultContext StartRequest(Request request)
 		{
 			if (Results.TryGetValue(request.RequestInfo, out var results) is false)
 			{
-				results = new List<RequestResult>();
+				results = new List<RequestResultContext>();
 				Results.Add(request.RequestInfo, results);
 			}
 
 			var requester = requesterSelector.PickRequester(request.RequestInfo);
 			var durationMapBuilder = new DurationMapBuilder(requestManagerServiceIdentity);
-			var requestResult = new RequestResult(request, DateTime.Now, Interlocked.Increment(ref requestCounter).ToString(), durationMapBuilder);
+			var requestResult = new RequestResultContext(request, DateTime.Now, Interlocked.Increment(ref requestCounter).ToString(), durationMapBuilder);
 			results.Add(requestResult);
 			var loggingContext = requestDiagnosticsManager.RegisterRequest(requestResult, durationMapBuilder);
 			requester.StartRequest(requestResult, new ResultLoggingContextLogger(requestManagerServiceIdentity, loggingContext));

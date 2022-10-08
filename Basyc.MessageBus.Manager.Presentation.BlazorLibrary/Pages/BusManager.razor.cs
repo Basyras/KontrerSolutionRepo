@@ -41,14 +41,14 @@ public partial class BusManager
 				return;
 			}
 			selectedRequestViewModel.IsSelected = true;
-			resultHistory.TryAdd(value, new List<RequestResult>());
+			resultHistory.TryAdd(value, new List<RequestResultContext>());
 			selectedResult = null;
 		}
 	}
 
 	private RequestItemViewModel selectedRequestViewModel;
-	private RequestResult selectedResult;
-	private readonly Dictionary<RequestItemViewModel, List<RequestResult>> resultHistory = new Dictionary<RequestItemViewModel, List<RequestResult>>();
+	private RequestResultContext selectedResult;
+	private readonly Dictionary<RequestItemViewModel, List<RequestResultContext>> resultHistory = new Dictionary<RequestItemViewModel, List<RequestResultContext>>();
 
 	protected override void OnInitialized()
 	{
@@ -94,7 +94,7 @@ public partial class BusManager
 		Request request = new Request(requestInfo, parameters);
 		var requestResult = RequestClient.StartRequest(request);
 		requestItem.LastResult = requestResult;
-		resultHistory.TryAdd(requestItem, new List<RequestResult>());
+		resultHistory.TryAdd(requestItem, new List<RequestResultContext>());
 		var requestHistory = resultHistory[requestItem];
 		requestHistory.Add(requestResult);
 		return Task.CompletedTask;

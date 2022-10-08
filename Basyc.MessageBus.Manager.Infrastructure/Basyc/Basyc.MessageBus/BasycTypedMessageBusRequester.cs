@@ -38,7 +38,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 		public string UniqueName => BasycTypedMessageBusRequesterUniqueName;
 
 
-		public void StartRequest(RequestResult requestResult, ILogger requestLogger)
+		public void StartRequest(RequestResultContext requestResult, ILogger requestLogger)
 		{
 			var requestStartedSegment = requestResult.StartNewSegment("Requester started");
 			var requestType = requestInfoTypeStorage.GetRequestType(requestResult.Request.RequestInfo);

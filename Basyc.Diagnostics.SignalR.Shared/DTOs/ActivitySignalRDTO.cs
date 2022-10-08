@@ -1,19 +1,18 @@
-﻿using Basyc.Diagnostics.Shared.Durations;
-using Basyc.Diagnostics.Shared.Logging;
+﻿using Basyc.Diagnostics.Shared.Logging;
 using System.Diagnostics;
 
 namespace Basyc.Diagnostics.SignalR.Shared.DTOs
 {
-	public record ActivitySignalRDTO(string ServiceName, string OperatioName, string TraceId, DateTimeOffset StarTime, DateTimeOffset EndTime, ActivityStatusCode Status)
+	public record ActivitySignalRDTO(string ServiceName, string? ParentId, string Id, string TraceId, string OperatioName, DateTimeOffset StarTime, DateTimeOffset EndTime, ActivityStatusCode Status)
 	{
-		public static ActivitySignalRDTO FromEntry(ActivityEntry activity)
+		public static ActivitySignalRDTO FromEntry(ActivityEnd activity)
 		{
-			return new ActivitySignalRDTO(activity.Service.ServiceName, activity.Name, activity.TraceId, activity.StartTime, activity.EndTime, activity.Status);
+			return new ActivitySignalRDTO(activity.Service.ServiceName, activity.ParentId, activity.Id, activity.TraceId, activity.Name, activity.StartTime, activity.EndTime, activity.Status);
 		}
 
-		public static ActivityEntry ToEntry(ActivitySignalRDTO activityDTO)
+		public static ActivityEnd ToEntry(ActivitySignalRDTO activityDTO)
 		{
-			return new ActivityEntry(new(activityDTO.ServiceName), activityDTO.TraceId, activityDTO.OperatioName, activityDTO.StarTime, activityDTO.EndTime, activityDTO.Status);
+			return new ActivityEnd(new(activityDTO.ServiceName), activityDTO.TraceId, activityDTO.ParentId, activityDTO.Id, activityDTO.OperatioName, activityDTO.StarTime, activityDTO.EndTime, activityDTO.Status);
 		}
 	}
 

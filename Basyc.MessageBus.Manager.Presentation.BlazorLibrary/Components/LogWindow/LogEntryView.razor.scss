@@ -6,6 +6,7 @@ logEntryView {
     display: block;
     color: white;
     padding: 0.3rem 1.5rem;
+    background-color: #00000012;
 }
 
 logEntryView:hover {
@@ -14,8 +15,7 @@ logEntryView:hover {
 
 
 .logEntryView--alternate {
-    /*background-color: #6F7A72;*/
-    background-color: #00000012;
+    background-color: #00000000;
 }
 
 time {

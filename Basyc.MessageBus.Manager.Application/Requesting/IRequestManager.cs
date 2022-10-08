@@ -5,7 +5,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 {
 	public interface IRequestManager
 	{
-		RequestResult StartRequest(Request request);
-		Dictionary<RequestInfo, List<RequestResult>> Results { get; }
+		RequestResultContext StartRequest(Request request);
+		Dictionary<RequestInfo, List<RequestResultContext>> Results { get; }
 	}
 }

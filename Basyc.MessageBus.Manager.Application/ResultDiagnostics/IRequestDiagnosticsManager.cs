@@ -4,8 +4,8 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
 	public interface IRequestDiagnosticsManager
 	{
-		RequestDiagnosticsContext RegisterRequest(RequestResult requestResult, DurationMapBuilder durationMapBuilder);
-		RequestDiagnosticsContext GetContext(RequestResult requestResult);
+		RequestDiagnosticsContext RegisterRequest(RequestResultContext requestResult, DurationMapBuilder durationMapBuilder);
+		RequestDiagnosticsContext GetContext(RequestResultContext requestResult);
 		RequestDiagnosticsContext GetContextByTraceId(string traceId);
 	}
 }

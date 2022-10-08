@@ -93,14 +93,25 @@ namespace Basyc.Diagnostics.Producing.SignalR
 			return true;
 		}
 
-		public async Task ProduceActivityEnd(ActivityEntry activity)
+		public async Task StartActivity(ActivityStart activityStartEntry)
 		{
 			if (await EnsureConnectionStarted() is false)
 			{
 				return;
 			}
-			await hubConnection.Call.ReceiveActivitiesFromProducer(new ActivitySignalRDTO[] { ActivitySignalRDTO.FromEntry(activity) });
+			await hubConnection.Call.ReceiveStartedActivitiesFromProducer(new ActivityStartSignalRDTO[]
+			{
+				ActivityStartSignalRDTO.FromEntry(activityStartEntry)
+			});
+		}
 
+		public async Task EndActivity(ActivityEnd activity)
+		{
+			if (await EnsureConnectionStarted() is false)
+			{
+				return;
+			}
+			await hubConnection.Call.ReceiveEndedActivitiesFromProducer(new ActivitySignalRDTO[] { ActivitySignalRDTO.FromEntry(activity) });
 		}
 	}
 }

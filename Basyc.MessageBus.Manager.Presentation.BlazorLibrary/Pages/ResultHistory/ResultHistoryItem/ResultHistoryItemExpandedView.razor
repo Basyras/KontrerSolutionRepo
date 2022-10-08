@@ -2,6 +2,7 @@
 @using Basyc.MessageBus.Manager.Application
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.DurationMap
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.DurationMap.Horizontal
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.LogWindow
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
@@ -49,13 +50,25 @@
 
         <dataSubSection>
             <requestBox>
-                @ResponseResultConverter.CreateInputOverview(RequestResult.Request.Parameters)
+                <textValue>
+                    @ResponseResultConverter.CreateInputOverview(RequestResult.Request.Parameters)
+                </textValue>
             </requestBox>
             <arrow>
                 <MudIcon Icon="@Icons.Material.Rounded.Forward" />
             </arrow>
+
             <responseBox>
-                @RequestResult.Response
+                @if (RequestResult.State == RequestResultState.Started)
+                {
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" Width="100%" />
+                }
+                else
+                {
+                    <textValue>
+                        @RequestResult.Response
+                    </textValue>
+                }
             </responseBox>
         </dataSubSection>
 
@@ -64,7 +77,13 @@
         <sectionLabel>
             ActivityMap
         </sectionLabel>
-        <DurationMapView Scale="20" DurationMap="RequestResult.DurationMap" />
+        @*<DurationMapView Scale="20" DurationMap="RequestResult.DurationMap" />*@
+@*        @foreach (var activity in DiagnosticsContext.Activities)
+        {
+            @activity.DisplayName
+            @(activity.EndTime != default)
+        }*@
+        <HorizontalDurationMapView Activities="DiagnosticsContext.Activities.ToList()"/>
     </activityMapSecion>
     <logsSection>
         <sectionLabel class="sectionLabel--logs">
@@ -76,9 +95,26 @@
 
 
 @code {
-    [Parameter]
-    public RequestResult RequestResult { get; set; }
 
     [Parameter]
-    public RequestDiagnosticsContext DiagnosticsContext { get; set; }
+    [EditorRequired]
+    public RequestResultContext RequestResult { get; init; }
+
+    [Parameter]
+    [EditorRequired]
+    public RequestDiagnosticsContext DiagnosticsContext { get; init; }
+
+    protected override void OnInitialized()
+    {
+        DiagnosticsContext.ActivityStartReceived += (s, e) =>
+        {
+            StateHasChanged();
+        };
+
+        DiagnosticsContext.ActivityEndReceived += (s, e) =>
+        {
+            StateHasChanged();
+        };
+        base.OnInitialized();
+    }
 }

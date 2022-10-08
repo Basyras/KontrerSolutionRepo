@@ -8,7 +8,7 @@
     }
     else
     {
-        BuildedDurationSegment previousSegment = null;
+        DurationSegment previousSegment = null;
         foreach (var segment in DurationMap.Segments)
         {
             servicesMap.TryAdd(segment.Service, servicesMap.Count);

@@ -86,5 +86,9 @@
   {
     "outputFile": "Pages/ResultHistory/ResultHistoryItem/ResultHistoryItemView.razor.css",
     "inputFile": "Pages/ResultHistory/ResultHistoryItem/ResultHistoryItemView.razor.scss"
+  },
+  {
+    "outputFile": "Components/DurationMap/Horizontal/HorizontalDurationMapView.razor.css",
+    "inputFile": "Components/DurationMap/Horizontal/HorizontalDurationMapView.razor.scss"
   }
 ]

@@ -12,7 +12,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 		public const string InMemoryDelegateRequesterUniqueName = nameof(InMemoryDelegateRequester);
 
 		private readonly IOptions<InMemoryDelegateRequesterOptions> options;
-		private readonly Dictionary<RequestInfo, Action<RequestResult>> handlersMap;
+		private readonly Dictionary<RequestInfo, Action<RequestResultContext>> handlersMap;
 		public string UniqueName => InMemoryDelegateRequesterUniqueName;
 
 		public InMemoryDelegateRequester(IOptions<InMemoryDelegateRequesterOptions> options)
@@ -21,7 +21,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 			handlersMap = options.Value.ResolveHandlers();
 		}
 
-		public void StartRequest(RequestResult requestResult, ILogger requestLogger)
+		public void StartRequest(RequestResultContext requestResult, ILogger requestLogger)
 		{
 			requestLogger.LogInformation("Starting invoking in-memory delegate");
 			var handler = handlersMap[requestResult.Request.RequestInfo];
@@ -41,7 +41,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 			}
 		}
 
-		public void AddHandler(RequestInfo requestInfo, Action<RequestResult> handler)
+		public void AddHandler(RequestInfo requestInfo, Action<RequestResultContext> handler)
 		{
 			handlersMap.Add(requestInfo, handler);
 		}

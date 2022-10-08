@@ -3,21 +3,20 @@
 
 inputOutputBorderBase {
     display: flex;
-    justify-content: left;
-    align-items: center;
     height: 100%;
     border-radius: 4px;
+    width: 50%;
     overflow: hidden;
     word-wrap: anywhere;
     word-break: break-all;
     white-space: nowrap;
-    width: 50%;
+    justify-content: left;
+    align-items: center;
 }
 
 inputBorder {
     @extend inputOutputBorderBase;
     border: 2.5px solid $Information-Background;
-    padding: 0 0.5rem;
 }
 
 outputBorder {
@@ -25,7 +24,7 @@ outputBorder {
     background-color: $Information-Background;
 }
 
-responseValue {
+textValue {
     display: block;
     padding: 0 0.5rem;
 }
@@ -59,9 +58,11 @@ historyItem {
 }
 
 id {
-    flex: 0 0 2.5rem;
+    display: block;
+    /*flex: 0 0 2.5rem;*/
     overflow: hidden;
     text-align: left;
+    width: 50%;
 }
 
 ghostLabel {
@@ -77,16 +78,18 @@ ghostLabel {
 
 status {
     flex: 0 0 3rem;
-    flex: 8;
+    /*flex: 8;*/
     text-align: right;
+    width: 50%;
 }
 
 collapsedGrid {
     padding: 0.5rem 1rem;
     display: flex;
     align-items: center;
-    flex-grow: 1;    
+    flex-grow: 1;
     margin-right: 1.5rem; //Make space for expand arrow
+    height: 2.6rem;
 }
 
 .buttonExpand {
@@ -98,7 +101,8 @@ collapsedGrid {
 }
 
 basicTable {
-    display: block;
+    display: flex;
+    align-items: center;
     padding-left: 1rem;
     width: 25%;
 }
@@ -113,4 +117,7 @@ dataSubSection {
     margin-left: 0.75rem;
     display: flex;
     flex-grow: 1;
+    align-items: stretch;
+    align-content: stretch;
+    height: 100%;
 }

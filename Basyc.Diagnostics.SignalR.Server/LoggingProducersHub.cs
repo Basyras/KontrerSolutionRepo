@@ -14,13 +14,6 @@ namespace Basyc.Diagnostics.SignalR.Server
 			this.diagnosticsServer = diagnosticsServer;
 		}
 
-		public Task ReceiveActivitiesFromProducer(ActivitySignalRDTO[] activityDTOs)
-		{
-			var activities = activityDTOs.Select(dto => ActivitySignalRDTO.ToEntry(dto)).ToArray();
-			diagnosticsServer.ReceiveActivities(activities);
-			return Task.CompletedTask;
-		}
-
 		/// <summary>
 		/// Name should be same as <see cref="SignalRConstants.ReceiveLogEntriesFromProducerMessage"/> value
 		/// </summary>
@@ -32,7 +25,18 @@ namespace Basyc.Diagnostics.SignalR.Server
 			return Task.CompletedTask;
 		}
 
+		public Task ReceiveStartedActivitiesFromProducer(ActivityStartSignalRDTO[] activityStartsDTOs)
+		{
+			var activities = activityStartsDTOs.Select(dto => ActivityStartSignalRDTO.ToEntry(dto)).ToArray();
+			diagnosticsServer.ReceiveStartedActivities(activities);
+			return Task.CompletedTask;
+		}
 
-
+		public Task ReceiveEndedActivitiesFromProducer(ActivitySignalRDTO[] activityDTOs)
+		{
+			var activities = activityDTOs.Select(dto => ActivitySignalRDTO.ToEntry(dto)).ToArray();
+			diagnosticsServer.ReceiveEndedActivities(activities);
+			return Task.CompletedTask;
+		}
 	}
 }

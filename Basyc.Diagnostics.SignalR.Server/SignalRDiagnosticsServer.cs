@@ -15,18 +15,29 @@ namespace Basyc.Diagnostics.SignalR.Server
 			this.receiversHubContext = receiversHubContext;
 		}
 
-		public Task ReceiveActivities(ActivityEntry[] activities)
-		{
-			var activityDTOs = activities.Select(x => ActivitySignalRDTO.FromEntry(x)).ToArray();
-			receiversHubContext.Clients.All.ReceiveChangesFromServer(new ChangesSignalRDTO(Array.Empty<LogEntrySignalRDTO>(), activityDTOs));
-			return Task.CompletedTask;
-		}
-
 		public Task ReceiveLogs(LogEntry[] logEntries)
 		{
 			var logDtos = logEntries.Select(x => LogEntrySignalRDTO.FromLogEntry(x)).ToArray();
-			receiversHubContext.Clients.All.ReceiveChangesFromServer(new ChangesSignalRDTO(logDtos, Array.Empty<ActivitySignalRDTO>()));
+			receiversHubContext.Clients.All.ReceiveChangesFromServer(new ChangesSignalRDTO(logDtos, Array.Empty<ActivityStartSignalRDTO>(), Array.Empty<ActivitySignalRDTO>()));
 			return Task.CompletedTask;
 		}
+
+		public Task ReceiveStartedActivities(ActivityStart[] startedActivity)
+		{
+			var activityDTOs = startedActivity.Select(x => ActivityStartSignalRDTO.FromEntry(x)).ToArray();
+			receiversHubContext.Clients.All.ReceiveChangesFromServer(new ChangesSignalRDTO(Array.Empty<LogEntrySignalRDTO>(), activityDTOs, Array.Empty<ActivitySignalRDTO>()));
+			return Task.CompletedTask;
+		}
+
+		public Task ReceiveEndedActivities(ActivityEnd[] activities)
+		{
+			var activityDTOs = activities.Select(x => ActivitySignalRDTO.FromEntry(x)).ToArray();
+			receiversHubContext.Clients.All.ReceiveChangesFromServer(new ChangesSignalRDTO(Array.Empty<LogEntrySignalRDTO>(), Array.Empty<ActivityStartSignalRDTO>(), activityDTOs));
+			return Task.CompletedTask;
+		}
+
+
+
+
 	}
 }

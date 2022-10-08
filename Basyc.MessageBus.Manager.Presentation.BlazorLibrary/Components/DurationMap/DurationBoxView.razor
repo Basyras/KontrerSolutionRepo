@@ -13,7 +13,7 @@
             segmentNameNumberOfLines = 1;
         }
         string segmentNameStyle = $"-webkit-line-clamp: {segmentNameNumberOfLines}; line-clamp: {segmentNameNumberOfLines};";
-        BuildedDurationSegment previousSegment = null;
+        DurationSegment previousSegment = null;
     }
 
     <durationBox Style="@durationBoxStyle">
@@ -56,7 +56,7 @@
 
 
 @code {
-    [Parameter] public BuildedDurationSegment DurationSegment { get; set; }
+    [Parameter] public DurationSegment DurationSegment { get; set; }
     [Parameter] public double Scale { get; set; }
 
 }

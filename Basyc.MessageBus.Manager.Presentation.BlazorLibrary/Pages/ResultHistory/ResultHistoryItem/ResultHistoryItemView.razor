@@ -29,7 +29,9 @@
                 </basicTable>
                 <dataSubSection>
                     <inputBorder>
-                        @ResponseResultConverter.CreateInputOverview(RequestResult.Request.Parameters)
+                        <textValue>
+                            @ResponseResultConverter.CreateInputOverview(RequestResult.Request.Parameters)
+                        </textValue>
                     </inputBorder>
                     <arrow>
                         <MudIcon Icon="@Icons.Material.Rounded.Forward" />
@@ -37,11 +39,11 @@
                     <outputBorder>
                         @if (RequestResult.State == RequestResultState.Started)
                         {
-                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" />
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" Width="100%"/>
                         }
                         else
                         {
-                            <responseValue>
+                            <textValue>
                                 @if (RequestResult.State == RequestResultState.Completed)
                                 {
                                     if (RequestResult.Request.RequestInfo.HasResponse)
@@ -59,7 +61,7 @@
                                 {
                                     @RequestResult.ErrorMessage
                                 }
-                            </responseValue>
+                            </textValue>
                         }
                     </outputBorder>
                 </dataSubSection>
@@ -81,10 +83,10 @@
 
 
 @code {
-    private RequestResult requestResult;
+    private RequestResultContext requestResult;
 
     [Parameter]
-    public RequestResult RequestResult
+    public RequestResultContext RequestResult
     {
         get => requestResult;
         set

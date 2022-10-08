@@ -61,7 +61,7 @@ basicTable {
 dataBox {
     display: flex;
     border-radius: 5px;
-    padding: 0.75rem;
+    /*padding: 0.75rem;*/
     overflow: hidden;
     word-break: break-all;
     flex-grow: 1;
@@ -90,4 +90,9 @@ arrow{
     color: #cccccc;
     display: flex;
     align-items: center;
+}
+
+textValue {
+    display: block;
+    padding: 0.5rem;
 }

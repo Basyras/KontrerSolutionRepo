@@ -1,12 +1,11 @@
-﻿using Basyc.Diagnostics.Shared.Durations;
-using Basyc.Diagnostics.Shared.Logging;
-using System.Diagnostics;
+﻿using Basyc.Diagnostics.Shared.Logging;
 
 namespace Basyc.Diagnostics.Producing.Shared
 {
 	public interface IDiagnosticsProducer
 	{
 		Task ProduceLog(LogEntry logEntry);
-		Task ProduceActivityEnd(ActivityEntry activity);
+		Task StartActivity(ActivityStart activity);
+		Task EndActivity(ActivityEnd activity);
 	}
 }

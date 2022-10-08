@@ -1,40 +1,40 @@
 ﻿@using Basyc.Diagnostics.Shared.Durations
+@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 <horizontalDurationMapView>
-    @if (DurationMap is null || DurationMap.Segments.Length == 0)
+    @foreach (var service in map)
     {
-        @:Nothing to show
-    }
-    else
-    {
-        BuildedDurationSegment previousSegment = null;
-        foreach (var segment in DurationMap.Segments)
-        {
-            servicesMap.TryAdd(segment.Service, servicesMap.Count);
-            string serviceIndent = $"margin-left: {servicesMap[segment.Service]*2}rem";
-            <serviceIndent style="@serviceIndent">
-                @if (previousSegment is not null)
+        <service>
+            <serviceName>
+                @service.Key.ServiceName
+            </serviceName>
+            <durationBoxes>
+                @foreach (var activity in service.Value)
                 {
-                    if (previousSegment.EndTime > segment.StartTime)
-                    {
-                        <DurationUnknownBoxView StartTime="previousSegment.EndTime" Duration="previousSegment.EndTime - segment.StartTime" Scale="Scale" Service="previousSegment.Service" />
-                    }
-                    else
-                    {
-
-                    }
+                    @activity.DisplayName
                 }
-                <DurationBoxView DurationSegment="segment" Scale="Scale" />
-            </serviceIndent>
-            previousSegment = segment;
-        }
+            </durationBoxes>
+        </service>
+
     }
 </horizontalDurationMapView>
 
 
 
 @code {
-    [Parameter] public DurationMap DurationMap { get; set; }
+    [Parameter] public List<Activity> Activities { get; set; }
     [Parameter] public double Scale { get; set; } = 20;
-    private Dictionary<ServiceIdentity, int> servicesMap = new();
+
+    private Dictionary<ServiceIdentity, List<Activity>> map = new Dictionary<ServiceIdentity, List<Activity>>();
+
+    protected override void OnInitialized()
+    {
+        foreach (var activity in Activities)
+        {
+            map.TryAdd(activity.Service, new());
+            var activities = map[activity.Service];
+            activities.Add(activity);
+        }
+        base.OnInitialized();
+    }
 }

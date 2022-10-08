@@ -3,7 +3,8 @@
 	public interface IDiagnosticsLogReceiver
 	{
 		event EventHandler<LogsReceivedArgs> LogsReceived;
-		event EventHandler<ActivitiesReceivedArgs> ActivitiesReceived;
+		event EventHandler<ActivityEndsReceivedArgs> ActivityEndsReceived;
+		event EventHandler<ActivityStartsReceivedArgs> ActivityStartsReceived;
 		Task StartReceiving();
 
 

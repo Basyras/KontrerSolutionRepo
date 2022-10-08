@@ -9,15 +9,24 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 	public class RequestDiagnosticsContext
 	{
 		private readonly DurationMapBuilder activityMapBuilder;
+
+
 		private readonly List<LogEntry> logEntries = new List<LogEntry>();
 		public IReadOnlyList<LogEntry> LogEntries { get => logEntries; }
-		private readonly List<ActivityEntry> activities = new List<ActivityEntry>();
-		public IReadOnlyList<ActivityEntry> Activities { get => activities; }
+
+		private readonly Dictionary<string, Activity> activityIdToActivityMap = new();
+
+		private readonly List<Activity> activities = new List<Activity>();
+		public IReadOnlyList<Activity> Activities { get => activities; }
 
 
-		public RequestResult RequestResult { get; init; }
+		public RequestResultContext RequestResult { get; init; }
+		public event EventHandler<LogEntry>? LogReceived;
+		public event EventHandler<ActivityStart>? ActivityStartReceived;
+		public event EventHandler<ActivityEnd>? ActivityEndReceived;
 
-		public RequestDiagnosticsContext(RequestResult requestResult, DurationMapBuilder activityMapBuilder)
+
+		public RequestDiagnosticsContext(RequestResultContext requestResult, DurationMapBuilder activityMapBuilder)
 		{
 			RequestResult = requestResult;
 			this.activityMapBuilder = activityMapBuilder;
@@ -44,17 +53,37 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			OnLogAdded(newLogEntry);
 		}
 
-		public void AddActivity(ActivityEntry activity)
+		public void StartActivity(ActivityStart activityStart)
 		{
+			Activity activity = new Activity(activityStart.Service, activityStart.TraceId, activityStart.ParentId, activityStart.Id, activityStart.Name, activityStart.StartTime);
 			activities.Add(activity);
-			var activitySegment = activityMapBuilder.StartNewSegment(activity.Service, activity.Name, activity.StartTime);
-			activitySegment.End(activity.EndTime);
+			activityIdToActivityMap.Add(activity.Id, activity);
+			//var activitySegment = activityMapBuilder.StartNewSegment(activityStart.Service, activityStart.Name, activityStart.StartTime);
+			OnActivityStartReceived(activityStart);
 		}
 
-		public event EventHandler<LogEntry>? LogAdded;
+		public void EndActivity(ActivityEnd activityEnd)
+		{
+			var activity = activityIdToActivityMap[activityEnd.Id];
+			activity.End(activityEnd.EndTime, activityEnd.Status);
+			//activitySegment.End(activityEnd.EndTime);
+			OnActivityEndReceived(activityEnd);
+
+		}
+
 		private void OnLogAdded(LogEntry newLogEntry)
 		{
-			LogAdded?.Invoke(this, newLogEntry);
+			LogReceived?.Invoke(this, newLogEntry);
+		}
+
+		private void OnActivityStartReceived(ActivityStart activityStart)
+		{
+			ActivityStartReceived?.Invoke(this, activityStart);
+		}
+
+		private void OnActivityEndReceived(ActivityEnd activityEnd)
+		{
+			ActivityEndReceived?.Invoke(this, activityEnd);
 		}
 	}
 }

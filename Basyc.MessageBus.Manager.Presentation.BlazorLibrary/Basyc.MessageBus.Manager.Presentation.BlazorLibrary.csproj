@@ -9,11 +9,6 @@
 
 	<ItemGroup>
 	  <Content Remove="compilerconfig.json" />
-	  <Content Remove="Components\DurationMap\Horizontal\HorizontalDurationMapView.razor" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Include="Components\DurationMap\Horizontal\HorizontalDurationMapView.razor" />
 	</ItemGroup>
 
 	<ItemGroup>

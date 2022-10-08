@@ -27,9 +27,9 @@
 		}
 
 		/// <summary>
-		/// Ensures that <see cref="End"/> was called and produce <see cref="BuildedDurationSegment"/> with processed timestamps
+		/// Ensures that <see cref="End"/> was called and produce <see cref="DurationSegment"/> with processed timestamps
 		/// </summary>
-		public BuildedDurationSegment Build()
+		public DurationSegment Build()
 		{
 			var wasStarted = EnsureStarted(out var starTtime);
 
@@ -42,9 +42,9 @@
 		}
 
 		/// <summary>
-		/// Ensures that <see cref="End"/> was called and produce <see cref="BuildedDurationSegment"/> with processed timestamps
+		/// Ensures that <see cref="End"/> was called and produce <see cref="DurationSegment"/> with processed timestamps
 		/// </summary>
-		public BuildedDurationSegment Build(DateTimeOffset finalEndTime)
+		public DurationSegment Build(DateTimeOffset finalEndTime)
 		{
 			if (EnsureStarted(finalEndTime) is false)
 			{
@@ -69,16 +69,16 @@
 			return BuildNestedSegments();
 		}
 
-		private BuildedDurationSegment BuildNestedSegments()
+		private DurationSegment BuildNestedSegments()
 		{
-			BuildedDurationSegment[] nestedSegments = new BuildedDurationSegment[nestedSegmentBuilders.Count];
+			DurationSegment[] nestedSegments = new DurationSegment[nestedSegmentBuilders.Count];
 			for (int nestedSegmentIndex = 0; nestedSegmentIndex < nestedSegmentBuilders.Count; nestedSegmentIndex++)
 			{
 				InMemoryDurationSegmentBuilder? nestedSegmentBuilder = nestedSegmentBuilders[nestedSegmentIndex];
 				var nestedSegment = nestedSegmentBuilder.Build(EndTime);
 				nestedSegments[nestedSegmentIndex] = nestedSegment;
 			}
-			return new BuildedDurationSegment(Service, Name, StartTime, EndTime, EndTime - StartTime, nestedSegments);
+			return new DurationSegment(Service, Name, StartTime, EndTime, EndTime - StartTime, nestedSegments);
 		}
 		public override void End(DateTimeOffset finalEndTime)
 		{

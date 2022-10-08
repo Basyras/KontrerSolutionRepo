@@ -12,7 +12,8 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 	{
 		private readonly IStrongTypedHubConnectionPusherAndReceiver<IServerMethodsReceiversCanCall, IReceiversMethodsServerCanCall> hubConnection;
 		public event EventHandler<LogsReceivedArgs>? LogsReceived;
-		public event EventHandler<ActivitiesReceivedArgs>? ActivitiesReceived;
+		public event EventHandler<ActivityEndsReceivedArgs>? ActivityEndsReceived;
+		public event EventHandler<ActivityStartsReceivedArgs>? ActivityStartsReceived;
 
 		public SignalRDiagnosticsLogReceiver(IOptions<SignalRLogReceiverOptions> options)
 		{
@@ -27,9 +28,14 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 			LogsReceived?.Invoke(this, new LogsReceivedArgs(logEntries));
 		}
 
-		private void OnActivitiesReceived(ActivityEntry[] activities)
+		private void OnActivityEndsReceived(ActivityEnd[] activities)
 		{
-			ActivitiesReceived?.Invoke(this, new ActivitiesReceivedArgs(activities));
+			ActivityEndsReceived?.Invoke(this, new ActivityEndsReceivedArgs(activities));
+		}
+
+		private void OnActivityStartsReceived(ActivityStart[] activityStarts)
+		{
+			ActivityStartsReceived?.Invoke(this, new ActivityStartsReceivedArgs(activityStarts));
 		}
 
 		public async Task StartReceiving()
@@ -41,8 +47,13 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 		{
 			if (changes.Logs.Any())
 				receiveLogEntriesFromServer(changes.Logs);
-			if (changes.Activities.Any())
-				receiveActivitiesFromServer(changes.Activities);
+
+			if (changes.StartedActivities.Any())
+				receivStartedActivitiesFromServer(changes.StartedActivities);
+
+			if (changes.EndedActivities.Any())
+				receiveEndedActivitiesFromServer(changes.EndedActivities);
+
 			return Task.CompletedTask;
 		}
 
@@ -55,13 +66,22 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 			OnLogsReceived(logEntries);
 		}
 
-		private void receiveActivitiesFromServer(ActivitySignalRDTO[] activitiesDTOs)
+		private void receivStartedActivitiesFromServer(ActivityStartSignalRDTO[] activitiesDTOs)
+		{
+			var activities = activitiesDTOs
+				.Select(x => ActivityStartSignalRDTO.ToEntry(x))
+				.ToArray();
+
+			OnActivityStartsReceived(activities);
+		}
+
+		private void receiveEndedActivitiesFromServer(ActivitySignalRDTO[] activitiesDTOs)
 		{
 			var activities = activitiesDTOs
 				.Select(x => ActivitySignalRDTO.ToEntry(x))
 				.ToArray();
 
-			OnActivitiesReceived(activities);
+			OnActivityEndsReceived(activities);
 		}
 	}
 }

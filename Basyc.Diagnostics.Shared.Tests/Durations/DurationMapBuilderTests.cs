@@ -42,7 +42,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 			_ = mapBuilder.StartNewSegment(segment1Name);
 			var durationMap = mapBuilder.Build();
 			durationMap.Segments.Length.Should().Be(1);
-			BuildedDurationSegment firstSegment = durationMap.Segments.First();
+			DurationSegment firstSegment = durationMap.Segments.First();
 			firstSegment.EndTime.Should().NotBe(default(DateTimeOffset));
 			durationMap.TotalDuration.Should().NotBe(default(TimeSpan));
 			durationMap.TotalDuration.Should().Be(firstSegment.EndTime - firstSegment.StartTime);

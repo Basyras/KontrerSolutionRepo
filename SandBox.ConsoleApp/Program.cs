@@ -5,26 +5,6 @@ using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-//Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-//Activity.ForceDefaultIdFormat = true;
-//var listener = new ActivityListener();
-//listener.ShouldListenTo = activity =>
-//{
-//	return activity == DiagnosticSources.HandlerStarted;
-//};
-//listener.Sample = (ref ActivityCreationOptions<ActivityContext> options) =>
-//{
-//	return ActivitySamplingResult.AllDataAndRecorded;
-//};
-//listener.ActivityStarted += activity =>
-//{
-//};
-//listener.ActivityStopped += activity =>
-//{
-//};
-//ActivitySource.AddActivityListener(listener);
-
-
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
 {

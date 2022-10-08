@@ -1,27 +1,26 @@
-﻿using Basyc.Diagnostics.Shared.Durations;
-using Basyc.Diagnostics.Shared.Logging;
-using Microsoft.Extensions.Logging;
+﻿using Basyc.Diagnostics.Shared.Logging;
 
 namespace Basyc.Diagnostics.Receiving.Abstractions
 {
 	public class InMemoryDiagnosticsLogReceiver : IDiagnosticsLogReceiver
 	{
 		public event EventHandler<LogsReceivedArgs>? LogsReceived;
-		public event EventHandler<ActivitiesReceivedArgs>? ActivitiesReceived;
+		public event EventHandler<ActivityEndsReceivedArgs>? ActivityEndsReceived;
+		public event EventHandler<ActivityStartsReceivedArgs>? ActivityStartsReceived;
 
 		private void OnLogsReceived(LogEntry[] logEntries)
 		{
 			LogsReceived?.Invoke(this, new LogsReceivedArgs(logEntries));
 		}
 
-		private void OnActivitiesReceived(ActivityEntry[] activities)
+		private void OnActivityStartsReceived(ActivityStart[] activityStarts)
 		{
-			ActivitiesReceived?.Invoke(this, new ActivitiesReceivedArgs(activities));
+			ActivityStartsReceived?.Invoke(this, new ActivityStartsReceivedArgs(activityStarts));
 		}
 
-		public void PushLog(ServiceIdentity service, string traceId, LogLevel logLevel, string message)
+		private void OnActivityEndsReceived(ActivityEnd[] activityEnds)
 		{
-			OnLogsReceived(new LogEntry[] { new LogEntry(service, traceId, DateTimeOffset.UtcNow, logLevel, message) });
+			ActivityEndsReceived?.Invoke(this, new ActivityEndsReceivedArgs(activityEnds));
 		}
 
 		public void PushLog(LogEntry logEntry)
@@ -29,9 +28,14 @@ namespace Basyc.Diagnostics.Receiving.Abstractions
 			OnLogsReceived(new LogEntry[] { logEntry });
 		}
 
-		public void PushLogs(params LogEntry[] logEntries)
+		public void StartActivity(ActivityStart activityStart)
 		{
-			OnLogsReceived(logEntries);
+			OnActivityStartsReceived(new ActivityStart[] { activityStart });
+		}
+
+		public void EndActivity(ActivityEnd activityEnd)
+		{
+			OnActivityEndsReceived(new ActivityEnd[] { activityEnd });
 		}
 
 		public Task StartReceiving()

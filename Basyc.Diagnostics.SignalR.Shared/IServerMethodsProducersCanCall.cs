@@ -5,6 +5,7 @@ namespace Basyc.Diagnostics.SignalR.Shared
 	public interface IServerMethodsProducersCanCall
 	{
 		Task ReceiveLogsFromProducer(LogEntrySignalRDTO[] logEntryDTOs);
-		Task ReceiveActivitiesFromProducer(ActivitySignalRDTO[] activityDTOs);
+		Task ReceiveStartedActivitiesFromProducer(ActivityStartSignalRDTO[] activityStartsDTOs);
+		Task ReceiveEndedActivitiesFromProducer(ActivitySignalRDTO[] activityDTOs);
 	}
 }

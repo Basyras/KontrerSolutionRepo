@@ -15,7 +15,7 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 			this.inProgressDomain = inProgressDomain;
 		}
 
-		public FluentSetupDomainPostStage HandeledBy(Action<RequestResult> handler)
+		public FluentSetupDomainPostStage HandeledBy(Action<RequestResultContext> handler)
 		{
 			inProgressMessage.RequestHandler = handler;
 			return new FluentSetupDomainPostStage(services, inProgressDomain);
@@ -23,7 +23,7 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 
 		public FluentSetupDomainPostStage HandeledBy(Action<Request> handler)
 		{
-			Action<RequestResult> handlerWrapper = (requestResult) =>
+			Action<RequestResultContext> handlerWrapper = (requestResult) =>
 			{
 				requestResult.Start();
 				handler.Invoke(requestResult.Request);

@@ -23,11 +23,11 @@
 </historyView>
 
 @code {
-    [Parameter] public List<RequestResult> RequestResults { get; set; }
-    private RequestResult selectedRequestResults;
+    [Parameter] public List<RequestResultContext> RequestResults { get; set; }
+    private RequestResultContext selectedRequestResults;
 
     [Parameter]
-    public RequestResult SelectedRequestResults
+    public RequestResultContext SelectedRequestResults
     {
         get => selectedRequestResults;
         set
