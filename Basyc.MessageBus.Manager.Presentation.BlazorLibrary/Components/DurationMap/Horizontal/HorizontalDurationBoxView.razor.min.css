@@ -1,0 +1,1 @@
+﻿horizontalDurationBoxView{display:flex;flex-direction:column;}durationBox{display:flex;align-items:center;border:1.7px solid #628e8e;background-color:#cdd8d8;padding:.3rem;height:2.3rem;overflow:hidden;}nestedDurationBoxes{display:flex;}spinner{display:flex;width:1.5rem;align-items:center;}acitvityName{display:block;flex:1;min-width:0;overflow:hidden;}

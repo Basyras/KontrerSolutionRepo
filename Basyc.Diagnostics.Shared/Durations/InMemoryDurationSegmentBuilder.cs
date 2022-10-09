@@ -100,7 +100,7 @@
 			HasEnded = true;
 		}
 
-		public override IDurationSegmentBuilder EndAndStartNewFollowingSegment(string segmentName)
+		public override IDurationSegmentBuilder EndAndStartFollowing(string segmentName)
 		{
 			var endTime = DateTimeOffset.UtcNow;
 			End(endTime);
@@ -108,10 +108,10 @@
 			{
 				throw new InvalidOperationException("Cannot create following segment because this segment deos not have a parent");
 			}
-			return parentSegmentGetter!.Invoke().StartNewNestedSegment(segmentName, endTime);
+			return parentSegmentGetter!.Invoke().StartNested(segmentName, endTime);
 		}
 
-		public override IDurationSegmentBuilder StartNewNestedSegment(ServiceIdentity service, string segmentName, DateTimeOffset start)
+		public override IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start)
 		{
 			EnsureStarted(start);
 			var nestedSegment = new InMemoryDurationSegmentBuilder(segmentName, service, start, this);

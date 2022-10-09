@@ -1,12 +1,10 @@
-﻿using Basyc.Diagnostics.Shared.Durations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
 	public class RequestDiagnosticsManager : IRequestDiagnosticsManager
 	{
-		private readonly Dictionary<RequestResultContext, RequestDiagnosticsContext> resultToContextMap = new Dictionary<RequestResultContext, RequestDiagnosticsContext>();
-		private readonly Dictionary<string, RequestDiagnosticsContext> traceIdToContextMap = new();
+		private readonly Dictionary<string, RequestDiagnostics> traceIdToContextMap = new();
 
 		public RequestDiagnosticsManager(IEnumerable<IRequestDiagnosticsSource> logSources)
 		{
@@ -18,13 +16,11 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			}
 		}
 
-
-
 		private void LogSource_ActivityStartsReceived(object? sender, ActivityStartsReceivedArgs e)
 		{
 			foreach (var activityStart in e.ActivityStarts)
 			{
-				var loggingContext = GetContextByTraceId(activityStart.TraceId);
+				var loggingContext = GetDiagnostics(activityStart.TraceId);
 				loggingContext.StartActivity(activityStart);
 			}
 		}
@@ -33,7 +29,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		{
 			foreach (var activityEnd in e.ActivityEnds)
 			{
-				var loggingContext = GetContextByTraceId(activityEnd.TraceId);
+				var loggingContext = GetDiagnostics(activityEnd.TraceId);
 				loggingContext.EndActivity(activityEnd);
 			}
 		}
@@ -42,25 +38,19 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		{
 			foreach (var logEntry in e.NewLogEntries)
 			{
-				var loggingContext = GetContextByTraceId(logEntry.TraceId);
-				loggingContext.AddLog(logEntry);
+				var loggingContext = GetDiagnostics(logEntry.TraceId);
+				loggingContext.Log(logEntry);
 			}
 		}
 
-		public RequestDiagnosticsContext RegisterRequest(RequestResultContext requestResult, DurationMapBuilder durationMapBuilder)
+		public RequestDiagnostics CreateDiagnostics(string traceId)
 		{
-			RequestDiagnosticsContext loggingContext = new RequestDiagnosticsContext(requestResult, durationMapBuilder);
-			resultToContextMap.Add(requestResult, loggingContext);
-			traceIdToContextMap.Add(requestResult.TraceId, loggingContext);
+			RequestDiagnostics loggingContext = new RequestDiagnostics(traceId);
+			traceIdToContextMap.Add(traceId, loggingContext);
 			return loggingContext;
 		}
 
-		public RequestDiagnosticsContext GetContext(RequestResultContext requestResult)
-		{
-			return resultToContextMap[requestResult];
-		}
-
-		public RequestDiagnosticsContext GetContextByTraceId(string traceId)
+		public RequestDiagnostics GetDiagnostics(string traceId)
 		{
 			return traceIdToContextMap[traceId];
 		}

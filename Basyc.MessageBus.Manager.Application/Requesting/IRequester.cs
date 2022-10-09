@@ -10,6 +10,6 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 		/// </summary>
 		/// <param name="requestResult"></param>
 		/// <returns></returns>
-		void StartRequest(RequestResultContext requestResult, ILogger requestLogger);
+		void StartRequest(RequestContext requestResult, ILogger requestLogger);
 	}
 }

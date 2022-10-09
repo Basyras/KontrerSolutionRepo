@@ -1,6 +1,6 @@
 ﻿namespace Basyc.Diagnostics.Shared.Durations
 {
-	public class DurationMapBuilder
+	public class DurationMapBuilder : IDurationMapBuilder
 	{
 		public DurationMapBuilder(ServiceIdentity service)
 		{
@@ -10,7 +10,7 @@
 		private InMemoryDurationSegmentBuilder? rootSegmentBuilder;
 		public DateTimeOffset StartTime { get; private set; }
 		public DateTimeOffset EndTime { get; private set; }
-		public bool MapFinished => EndTime != default;
+		public bool HasEnded => EndTime != default;
 
 		public bool HasStarted { get; private set; }
 		public ServiceIdentity Service { get; }
@@ -32,31 +32,31 @@
 			if (HasStarted is false)
 			{
 				var mapStart = Start();
-				var newSegment = rootSegmentBuilder!.StartNewNestedSegment(segmentName, mapStart);
+				var newSegment = rootSegmentBuilder!.StartNested(segmentName, mapStart);
 				return newSegment;
 			}
 			else
 			{
-				var newSegment = rootSegmentBuilder!.StartNewNestedSegment(segmentName);
+				var newSegment = rootSegmentBuilder!.StartNested(segmentName);
 				return newSegment;
 			}
 		}
 
-		public IDurationSegmentBuilder StartNewSegment(ServiceIdentity service, string segmentName, DateTimeOffset starTime)
+		public IDurationSegmentBuilder StartNewSegment(ServiceIdentity service, string segmentName, DateTimeOffset startTime)
 		{
 			DateTimeOffset mapStart = HasStarted is false ? Start() : StartTime;
 
-			if (mapStart > starTime)
+			if (mapStart > startTime)
 				throw new ArgumentException("nested segment cant start before map starts");
 
-			var newSegment = rootSegmentBuilder!.StartNewNestedSegment(service, segmentName, starTime);
+			var newSegment = rootSegmentBuilder!.StartNested(service, segmentName, startTime);
 			return newSegment;
 		}
 
 
-		public IDurationSegmentBuilder StartNewSegment(string segmentName, DateTimeOffset starTime)
+		public IDurationSegmentBuilder StartNewSegment(string segmentName, DateTimeOffset startTime)
 		{
-			return StartNewSegment(Service, segmentName, starTime);
+			return StartNewSegment(Service, segmentName, startTime);
 		}
 
 		public void End()
@@ -76,7 +76,7 @@
 		{
 			if (HasStarted)
 			{
-				if (MapFinished is false)
+				if (HasEnded is false)
 				{
 					End();
 				}

@@ -38,7 +38,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 		public string UniqueName => BasycTypedMessageBusRequesterUniqueName;
 
 
-		public void StartRequest(RequestResultContext requestResult, ILogger requestLogger)
+		public void StartRequest(RequestContext requestResult, ILogger requestLogger)
 		{
 			var requestStartedSegment = requestResult.StartNewSegment("Requester started");
 			var requestType = requestInfoTypeStorage.GetRequestType(requestResult.Request.RequestInfo);
@@ -49,10 +49,12 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 			{
 				var busTask = typedMessageBusClient.RequestAsync(requestType, requestObject, requestResult.Request.RequestInfo.ResponseType);
 				inMemorySessionMapper.AddMapping(requestResult.TraceId, busTask.TraceId);
-				var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
+				var waitingForBusSegment = requestStartedSegment.StartNested("Waiting for message bus");
 				busTask.Task.ContinueWith(x =>
 				{
-					waitingForBusSegment.End();
+					var endTime = DateTimeOffset.UtcNow;
+					waitingForBusSegment.End(endTime);
+					requestStartedSegment.End(endTime);
 					if (x.IsFaulted)
 					{
 						requestResult.Fail(x.Exception.ToString());
@@ -88,11 +90,12 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 				var busTask = typedMessageBusClient.SendAsync(requestType, requestObject);
 				inMemorySessionMapper.AddMapping(requestResult.TraceId, busTask.TraceId);
 
-				var waitingForBusSegment = requestStartedSegment.StartNewNestedSegment("Waiting for message bus");
+				var waitingForBusSegment = requestStartedSegment.StartNested("Waiting for message bus");
 				busTask.Task.ContinueWith(x =>
 				{
-					waitingForBusSegment.End();
-
+					var endTime = DateTimeOffset.UtcNow;
+					waitingForBusSegment.End(endTime);
+					requestStartedSegment.End(endTime);
 					if (x.IsFaulted)
 					{
 						requestResult.Fail(x.Exception.ToString());

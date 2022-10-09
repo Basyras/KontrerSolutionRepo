@@ -103,7 +103,8 @@
                     }
                     else
                     {
-                        <DurationMapView DurationMap="RequestResult.DurationMap" />
+                        @*<DurationMapView DurationMap="RequestResult.DurationMap" />*@
+                        @:not implemented
                     }
                 </durationMap>
             </paddedSection>
@@ -131,10 +132,10 @@
 </requestDetailView>
 
 @code {
-    private RequestDiagnosticsContext loggingContext;
-    private RequestResultContext requestResult;
+    private RequestDiagnostics loggingContext;
+    private RequestContext requestResult;
     [Parameter]
-    public RequestResultContext RequestResult
+    public RequestContext RequestResult
     {
         get => requestResult;
         set
@@ -146,7 +147,7 @@
             requestResult = value;
             requestResult.StateChanged += ResultStateChanged;
 
-            loggingContext = resultLoggingManager.GetContext(requestResult);
+            loggingContext = resultLoggingManager.GetDiagnostics(requestResult.TraceId);
         }
     }
 

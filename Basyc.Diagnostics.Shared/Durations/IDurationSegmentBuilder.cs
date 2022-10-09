@@ -14,11 +14,11 @@
 		DateTimeOffset End();
 		void End(DateTimeOffset finalEndTime);
 
-		IDurationSegmentBuilder StartNewNestedSegment(ServiceIdentity service, string segmentName, DateTimeOffset start);
-		IDurationSegmentBuilder StartNewNestedSegment(string segmentName, DateTimeOffset start);
-		IDurationSegmentBuilder StartNewNestedSegment(ServiceIdentity service, string segmentName);
-		IDurationSegmentBuilder StartNewNestedSegment(string segmentName);
-		IDurationSegmentBuilder EndAndStartNewFollowingSegment(string segmentName);
+		IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start);
+		IDurationSegmentBuilder StartNested(string segmentName, DateTimeOffset start);
+		IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName);
+		IDurationSegmentBuilder StartNested(string segmentName);
+		IDurationSegmentBuilder EndAndStartFollowing(string segmentName);
 
 		void Dispose();
 	}

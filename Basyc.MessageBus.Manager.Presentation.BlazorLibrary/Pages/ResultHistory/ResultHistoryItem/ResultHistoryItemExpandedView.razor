@@ -29,19 +29,16 @@
                 <MudItem lg="6">
                     <MudStack Spacing="2">
                         <formValue>
-                            @if (RequestResult.DurationMap != null)
-                            {
-                                @TimeConverter.TimeToText(RequestResult.DurationMap.StartTime)
-                            }
+                            @TimeConverter.TimeToText(RequestContext.CreationTime)
                         </formValue>
                         <formValue>
-                            @RequestResult.State.ToString()
+                            @RequestContext.State.ToString()
                         </formValue>
                         <formValue>
-                            <LatencyView RequestResult="RequestResult" />
+                            <LatencyView RequestContext="RequestContext" />
                         </formValue>
                         <formValue>
-                            @RequestResult.TraceId
+                            @RequestContext.TraceId
                         </formValue>
                     </MudStack>
                 </MudItem>
@@ -51,7 +48,7 @@
         <dataSubSection>
             <requestBox>
                 <textValue>
-                    @ResponseResultConverter.CreateInputOverview(RequestResult.Request.Parameters)
+                    @ResponseResultConverter.CreateInputOverview(RequestContext.Request.Parameters)
                 </textValue>
             </requestBox>
             <arrow>
@@ -59,14 +56,30 @@
             </arrow>
 
             <responseBox>
-                @if (RequestResult.State == RequestResultState.Started)
+                @if (RequestContext.State == RequestResultState.Started)
                 {
                     <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" Width="100%" />
                 }
                 else
                 {
                     <textValue>
-                        @RequestResult.Response
+                        @if (RequestContext.State == RequestResultState.Completed)
+                        {
+                            if (RequestContext.Request.RequestInfo.HasResponse)
+                            {
+                                @RequestContext.Response
+                            }
+                            else
+                            {
+                                <ghostLabel>
+                                    Result does not have an output
+                                </ghostLabel>
+                            }
+                        }
+                        @if (RequestContext.State == RequestResultState.Failed)
+                        {
+                            @RequestContext.ErrorMessage
+                        }
                     </textValue>
                 }
             </responseBox>
@@ -77,19 +90,13 @@
         <sectionLabel>
             ActivityMap
         </sectionLabel>
-        @*<DurationMapView Scale="20" DurationMap="RequestResult.DurationMap" />*@
-@*        @foreach (var activity in DiagnosticsContext.Activities)
-        {
-            @activity.DisplayName
-            @(activity.EndTime != default)
-        }*@
-        <HorizontalDurationMapView Activities="DiagnosticsContext.Activities.ToList()"/>
+        <HorizontalDurationMapView Activities="RequestContext.Diagnostics.Activities.ToList()" />
     </activityMapSecion>
     <logsSection>
         <sectionLabel class="sectionLabel--logs">
             Logs
         </sectionLabel>
-        <LogWindowView DiagnosticsContext="DiagnosticsContext" />
+        <LogWindowView DiagnosticsContext="RequestContext.Diagnostics" />
     </logsSection>
 </resultHistoryItemExpandedView>
 
@@ -98,20 +105,16 @@
 
     [Parameter]
     [EditorRequired]
-    public RequestResultContext RequestResult { get; init; }
-
-    [Parameter]
-    [EditorRequired]
-    public RequestDiagnosticsContext DiagnosticsContext { get; init; }
+    public RequestContext RequestContext { get; init; }
 
     protected override void OnInitialized()
     {
-        DiagnosticsContext.ActivityStartReceived += (s, e) =>
+        RequestContext.Diagnostics.ActivityStartReceived += (s, e) =>
         {
             StateHasChanged();
         };
 
-        DiagnosticsContext.ActivityEndReceived += (s, e) =>
+        RequestContext.Diagnostics.ActivityEndReceived += (s, e) =>
         {
             StateHasChanged();
         };

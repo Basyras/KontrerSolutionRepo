@@ -19,7 +19,7 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 			messageBinder = new RequestToTypeBinder<TMessage>();
 		}
 
-		public FluentSetupDomainPostStage HandeledBy(Action<RequestResultContext> handler)
+		public FluentSetupDomainPostStage HandeledBy(Action<RequestContext> handler)
 		{
 			inProgressMessage.RequestHandler = handler;
 			return new FluentSetupDomainPostStage(services, inProgressDomain);
@@ -27,7 +27,7 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 
 		public FluentSetupDomainPostStage HandeledBy(Func<Request, TReturn> handler)
 		{
-			Action<RequestResultContext> handlerWrapper = (requestResult) =>
+			Action<RequestContext> handlerWrapper = (requestResult) =>
 			{
 				var returnObject = handler.Invoke(requestResult.Request);
 				requestResult.Complete(returnObject);
@@ -38,7 +38,7 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 
 		public FluentSetupDomainPostStage HandeledBy(Func<TMessage, TReturn> handlerWithTReturn)
 		{
-			Action<RequestResultContext> wrapperHandler = (result) =>
+			Action<RequestContext> wrapperHandler = (result) =>
 			{
 				var message = messageBinder.CreateMessage(result.Request);
 				var returnObject = handlerWithTReturn.Invoke(message);

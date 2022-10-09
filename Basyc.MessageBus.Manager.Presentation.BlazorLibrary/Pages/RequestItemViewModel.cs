@@ -10,14 +10,14 @@ public class RequestItemViewModel
 	{
 	}
 
-	public RequestItemViewModel(RequestResultContext response, RequestInfo requestInfo)
+	public RequestItemViewModel(RequestContext response, RequestInfo requestInfo)
 	{
 		LastResult = response;
 		RequestInfo = requestInfo;
 		ParameterValues = new ObservableCollection<string>(Enumerable.Range(0, RequestInfo.Parameters.Count).Select(x => string.Empty).ToList());
 	}
 
-	public RequestResultContext LastResult { get; set; }
+	public RequestContext LastResult { get; set; }
 	public RequestInfo RequestInfo { get; init; }
 	public ObservableCollection<string> ParameterValues { get; init; }
 	public bool IsLoading => LastResult.State == RequestResultState.Started;

@@ -1,27 +1,43 @@
 ﻿using Basyc.Diagnostics.Shared.Durations;
+using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
 using System;
 
 namespace Basyc.MessageBus.Manager.Application
 {
-	public class RequestResultContext
+	public class RequestContext
 	{
 
-		private readonly DurationMapBuilder durationMapBuilder;
+		private readonly IDurationMapBuilder durationMapBuilder;
 
 		public Request Request { get; init; }
-		public DateTimeOffset RequestCreationTime { get; init; }
+		public DateTimeOffset CreationTime { get; init; }
+		public DateTimeOffset StartTime => durationMapBuilder.StartTime;
+		public DateTimeOffset EndTime => durationMapBuilder.EndTime;
+		public TimeSpan Duration
+		{
+			get
+			{
+				if (State == RequestResultState.Started)
+				{
+					return default;
+				}
+				return durationMapBuilder.EndTime - durationMapBuilder.StartTime;
+			}
+		}
+
 		public string TraceId { get; init; }
+		public RequestDiagnostics Diagnostics { get; }
 		public RequestResultState State { get; private set; }
 		public object? Response { get; private set; }
 		public string? ErrorMessage { get; private set; }
-		public DurationMap? DurationMap { get; private set; }
 
 
-		public RequestResultContext(Request request, DateTimeOffset requestCreationTime, string traceId, DurationMapBuilder durationMapBuilder)
+		public RequestContext(Request request, DateTimeOffset requestCreationTime, string traceId, IDurationMapBuilder durationMapBuilder, RequestDiagnostics requestDiagnostics)
 		{
 			Request = request;
 			this.durationMapBuilder = durationMapBuilder;
-			RequestCreationTime = requestCreationTime;
+			Diagnostics = requestDiagnostics;
+			CreationTime = requestCreationTime;
 			State = RequestResultState.Started;
 			TraceId = traceId;
 		}
@@ -33,7 +49,6 @@ namespace Basyc.MessageBus.Manager.Application
 		{
 			if (durationMapBuilder.HasStarted)
 				throw new InvalidOperationException($"{nameof(Start)} was already called");
-			durationMapBuilder.Start();
 		}
 
 		public IDurationSegmentBuilder StartNewSegment(string segmentName)
@@ -83,8 +98,7 @@ namespace Basyc.MessageBus.Manager.Application
 
 		private void FinishDurationMap()
 		{
-			DurationMap = durationMapBuilder.Build();
-
+			durationMapBuilder.End();
 		}
 	}
 }

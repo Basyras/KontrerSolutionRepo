@@ -1,0 +1,54 @@
+﻿@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.DurationMap
+@{
+    var width = DurationViewHelper.GetDurationAsRem(Activity.EndTime - Activity.StartTime, Scale);
+    var marginLeft = ParentActivity == null ? 0d : DurationViewHelper.GetDifferenceAsRem(Activity.StartTime - ParentActivity.StartTime, Scale);
+    if (Activity.EndTime == default)
+    {
+        width = 5;
+    }
+    string boxStyle = $"width: {width}rem; margin-left:{marginLeft}rem;";
+
+}
+
+<horizontalDurationBoxView>
+    <durationBox style="@boxStyle">
+        <acitvityName>
+            @Activity.StartTime.Millisecond
+            @Activity.EndTime.Millisecond
+            @(ParentActivity == null)
+            @Activity.DisplayName
+        </acitvityName>
+        @if (Activity.EndTime == default)
+        {
+            <spinner>
+                <MudProgressCircular Color="Color.Default" Indeterminate="true" Size="Size.Small" />
+            </spinner>
+        }
+
+
+    </durationBox>
+
+    <nestedDurationBoxes>
+        @foreach (var nestedActivity in Activity.NestedActivities)
+        {
+            <HorizontalDurationBoxView Activity="nestedActivity" />
+        }
+    </nestedDurationBoxes>
+</horizontalDurationBoxView>
+
+
+@code {
+    [Parameter] public Activity ParentActivity { get; set; }
+    [Parameter] public Activity Activity { get; set; }
+    [Parameter] public double Scale { get; set; } = 20;
+    protected override void OnInitialized()
+    {
+        Activity.ActivityEnded += (s, a) =>
+        {
+            StateHasChanged();
+        };
+        base.OnInitialized();
+    }
+
+}

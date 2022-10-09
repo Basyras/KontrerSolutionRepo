@@ -5,14 +5,14 @@
 
 
 <historyView>
-    @if (RequestResults is not null)
+    @if (RequestContexts is not null)
     {
         int resultCounter = 0;
-        @foreach (var result in RequestResults)
+        @foreach (var requestContext in RequestContexts)
         {
-            var diagnosticsContext = resultLoggingManager.GetContext(result);
+            var diagnosticsContext = resultLoggingManager.GetDiagnostics(requestContext.TraceId);
             <item>
-                <ResultHistoryItemView RequestResult="result" DiagnosticsContext="diagnosticsContext" OrderIndex="++resultCounter" />
+                <ResultHistoryItemView RequestContext="requestContext" OrderIndex="++resultCounter" />
             </item>
         }
     }
@@ -23,11 +23,11 @@
 </historyView>
 
 @code {
-    [Parameter] public List<RequestResultContext> RequestResults { get; set; }
-    private RequestResultContext selectedRequestResults;
+    [Parameter] public List<RequestContext> RequestContexts { get; set; }
+    private RequestContext selectedRequestResults;
 
     [Parameter]
-    public RequestResultContext SelectedRequestResults
+    public RequestContext SelectedRequestResults
     {
         get => selectedRequestResults;
         set

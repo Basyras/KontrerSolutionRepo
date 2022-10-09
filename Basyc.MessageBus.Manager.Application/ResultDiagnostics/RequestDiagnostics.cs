@@ -6,10 +6,9 @@ using System.Collections.Generic;
 
 namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
-	public class RequestDiagnosticsContext
+	public class RequestDiagnostics
 	{
-		private readonly DurationMapBuilder activityMapBuilder;
-
+		private readonly object lockObject = new object();
 
 		private readonly List<LogEntry> logEntries = new List<LogEntry>();
 		public IReadOnlyList<LogEntry> LogEntries { get => logEntries; }
@@ -20,33 +19,32 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		public IReadOnlyList<Activity> Activities { get => activities; }
 
 
-		public RequestResultContext RequestResult { get; init; }
+		public string TraceId { get; init; }
 		public event EventHandler<LogEntry>? LogReceived;
 		public event EventHandler<ActivityStart>? ActivityStartReceived;
 		public event EventHandler<ActivityEnd>? ActivityEndReceived;
 
 
-		public RequestDiagnosticsContext(RequestResultContext requestResult, DurationMapBuilder activityMapBuilder)
+		public RequestDiagnostics(string traceId)
 		{
-			RequestResult = requestResult;
-			this.activityMapBuilder = activityMapBuilder;
+			TraceId = traceId;
 		}
 
-		public void AddLog(ServiceIdentity service, LogLevel logLevel, string message)
+		public void Log(ServiceIdentity service, LogLevel logLevel, string message)
 		{
-			AddLog(service, DateTimeOffset.UtcNow, logLevel, message);
+			Log(service, DateTimeOffset.UtcNow, logLevel, message);
 		}
 
-		public void AddLog(ServiceIdentity service, DateTimeOffset time, LogLevel logLevel, string message)
+		public void Log(ServiceIdentity service, DateTimeOffset time, LogLevel logLevel, string message)
 		{
-			LogEntry newLogEntry = new(service, RequestResult.TraceId, time, logLevel, message);
+			LogEntry newLogEntry = new(service, TraceId, time, logLevel, message);
 			logEntries.Add(newLogEntry);
 			OnLogAdded(newLogEntry);
 		}
 
-		public void AddLog(LogEntry newLogEntry)
+		public void Log(LogEntry newLogEntry)
 		{
-			if (newLogEntry.TraceId != RequestResult.TraceId)
+			if (newLogEntry.TraceId != TraceId)
 				throw new ArgumentException("Request id does not match context reuqest result id", nameof(newLogEntry));
 
 			logEntries.Add(newLogEntry);
@@ -55,19 +53,32 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 		public void StartActivity(ActivityStart activityStart)
 		{
-			Activity activity = new Activity(activityStart.Service, activityStart.TraceId, activityStart.ParentId, activityStart.Id, activityStart.Name, activityStart.StartTime);
-			activities.Add(activity);
-			activityIdToActivityMap.Add(activity.Id, activity);
-			//var activitySegment = activityMapBuilder.StartNewSegment(activityStart.Service, activityStart.Name, activityStart.StartTime);
-			OnActivityStartReceived(activityStart);
+			lock (lockObject)
+			{
+				Activity activity = new Activity(activityStart.Service, activityStart.TraceId, activityStart.ParentId, activityStart.Id, activityStart.Name, activityStart.StartTime);
+				activities.Add(activity);
+				activityIdToActivityMap.Add(activity.Id, activity);
+				OnActivityStartReceived(activityStart);
+			}
+
 		}
 
 		public void EndActivity(ActivityEnd activityEnd)
 		{
-			var activity = activityIdToActivityMap[activityEnd.Id];
-			activity.End(activityEnd.EndTime, activityEnd.Status);
-			//activitySegment.End(activityEnd.EndTime);
-			OnActivityEndReceived(activityEnd);
+			try
+			{
+				lock (lockObject)
+				{
+					var activity = activityIdToActivityMap[activityEnd.Id];
+					activity.End(activityEnd.EndTime, activityEnd.Status);
+					OnActivityEndReceived(activityEnd);
+				}
+
+			}
+			catch (Exception ex)
+			{
+
+			}
 
 		}
 

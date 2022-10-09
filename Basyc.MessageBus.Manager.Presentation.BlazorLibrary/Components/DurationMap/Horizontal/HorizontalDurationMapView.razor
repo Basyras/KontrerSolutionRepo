@@ -2,7 +2,7 @@
 @using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 <horizontalDurationMapView>
-    @foreach (var service in map)
+    @foreach (var service in serviceToActivitesMap)
     {
         <service>
             <serviceName>
@@ -11,7 +11,12 @@
             <durationBoxes>
                 @foreach (var activity in service.Value)
                 {
-                    @activity.DisplayName
+                    Activity parentActivity = null;
+                    if (activity.ParentId != null)
+                    {
+                        activityIdToActivityMap.TryGetValue(activity.ParentId, out parentActivity);
+                    }
+                    <HorizontalDurationBoxView Activity="activity" ParentActivity="parentActivity" />
                 }
             </durationBoxes>
         </service>
@@ -25,15 +30,26 @@
     [Parameter] public List<Activity> Activities { get; set; }
     [Parameter] public double Scale { get; set; } = 20;
 
-    private Dictionary<ServiceIdentity, List<Activity>> map = new Dictionary<ServiceIdentity, List<Activity>>();
+    private readonly Dictionary<ServiceIdentity, List<Activity>> serviceToActivitesMap = new();
+    private readonly Dictionary<string, Activity> activityIdToActivityMap = new();
 
     protected override void OnInitialized()
     {
+        activityIdToActivityMap.Clear();
+        serviceToActivitesMap.Clear();
         foreach (var activity in Activities)
         {
-            map.TryAdd(activity.Service, new());
-            var activities = map[activity.Service];
-            activities.Add(activity);
+            activityIdToActivityMap.Add(activity.Id, activity);
+            if (activity.ParentId != null && activityIdToActivityMap.TryGetValue(activity.ParentId, out var parentActivity))
+            {
+                parentActivity.NestedActivities.Add(activity);
+            }
+            else
+            {
+                serviceToActivitesMap.TryAdd(activity.Service, new());
+                var activities = serviceToActivitesMap[activity.Service];
+                activities.Add(activity);
+            }
         }
         base.OnInitialized();
     }

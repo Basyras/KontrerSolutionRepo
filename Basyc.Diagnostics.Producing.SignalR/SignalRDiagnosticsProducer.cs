@@ -25,6 +25,7 @@ namespace Basyc.Diagnostics.Producing.SignalR
 		{
 			hubConnection = new HubConnectionBuilder()
 				.WithUrl(options.Value.SignalRServerUri!)
+				.WithAutomaticReconnect()
 				.BuildStrongTyped<IServerMethodsProducersCanCall>();
 		}
 

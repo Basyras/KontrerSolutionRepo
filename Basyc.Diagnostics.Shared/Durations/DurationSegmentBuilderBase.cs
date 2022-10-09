@@ -53,7 +53,7 @@
 		/// </summary>
 		/// <param name="segmentName"></param>
 		/// <returns></returns>
-		public abstract IDurationSegmentBuilder EndAndStartNewFollowingSegment(string segmentName);
+		public abstract IDurationSegmentBuilder EndAndStartFollowing(string segmentName);
 
 
 
@@ -94,21 +94,21 @@
 			return true;
 		}
 
-		public abstract IDurationSegmentBuilder StartNewNestedSegment(ServiceIdentity service, string segmentName, DateTimeOffset start);
-		public virtual IDurationSegmentBuilder StartNewNestedSegment(ServiceIdentity service, string segmentName)
+		public abstract IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start);
+		public virtual IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName)
 		{
 			var wasStarted = EnsureStarted(out var rootStartTime);
-			return StartNewNestedSegment(service, segmentName, wasStarted ? DateTimeOffset.UtcNow : rootStartTime);
+			return StartNested(service, segmentName, wasStarted ? DateTimeOffset.UtcNow : rootStartTime);
 		}
 
-		public virtual IDurationSegmentBuilder StartNewNestedSegment(string segmentName, DateTimeOffset start)
+		public virtual IDurationSegmentBuilder StartNested(string segmentName, DateTimeOffset start)
 		{
-			return StartNewNestedSegment(Service, segmentName, start);
+			return StartNested(Service, segmentName, start);
 		}
 
-		public virtual IDurationSegmentBuilder StartNewNestedSegment(string segmentName)
+		public virtual IDurationSegmentBuilder StartNested(string segmentName)
 		{
-			return StartNewNestedSegment(Service, segmentName);
+			return StartNested(Service, segmentName);
 		}
 	}
 }

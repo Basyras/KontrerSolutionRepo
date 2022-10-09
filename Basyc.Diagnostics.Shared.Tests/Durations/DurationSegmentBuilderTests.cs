@@ -4,11 +4,13 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 {
 	public class DurationSegmentBuilderTests
 	{
+		private static ServiceIdentity serviceIdentity = new ServiceIdentity("test");
+
 		[Fact]
 		public void When_BuildingEmpty_Should_BeEmpty()
 		{
 			const string segmentName = "segmentName";
-			var segmentBuilder = new InMemoryDurationSegmentBuilder(segmentName);
+			var segmentBuilder = new InMemoryDurationSegmentBuilder(segmentName, serviceIdentity);
 			segmentBuilder.Start();
 			segmentBuilder.End();
 			segmentBuilder.HasEnded.Should().BeTrue();
@@ -38,18 +40,18 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		{
 			allBuilders = new List<IDurationSegmentBuilder>();
 			const string segmentName = "segmentName";
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			rootSegmentBuilder.Start();
 			allBuilders.Add(rootSegmentBuilder);
 
 			for (int rootNestedSegmentIndex = 0; rootNestedSegmentIndex < nestedSegmentsNumber; rootNestedSegmentIndex++)
 			{
-				var nestedSegment = rootSegmentBuilder.StartNewNestedSegment(segmentName);
+				var nestedSegment = rootSegmentBuilder.StartNested(segmentName);
 				allBuilders.Add(nestedSegment);
 
 				for (int levelOfNestingIndex = 0; levelOfNestingIndex < levelOfNestingInNestedSegments; levelOfNestingIndex++)
 				{
-					nestedSegment = nestedSegment.StartNewNestedSegment(segmentName);
+					nestedSegment = nestedSegment.StartNested(segmentName);
 					allBuilders.Add(nestedSegment);
 				}
 			}
@@ -62,10 +64,10 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void EndAndStart_Should_HaveSameEndAndStarTimes()
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			rootSegmentBuilder.Start();
-			var nestedSegmentBuilder1 = rootSegmentBuilder.StartNewNestedSegment("nested1");
-			var nestedSegmentBuilder2 = nestedSegmentBuilder1.EndAndStartNewFollowingSegment("nested2");
+			var nestedSegmentBuilder1 = rootSegmentBuilder.StartNested("nested1");
+			var nestedSegmentBuilder2 = nestedSegmentBuilder1.EndAndStartFollowing("nested2");
 
 			nestedSegmentBuilder1.HasEnded.Should().BeTrue();
 			nestedSegmentBuilder2.HasEnded.Should().BeFalse();
@@ -85,11 +87,11 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[InlineData(4)]
 		public void StartNested_Should_AddNested(int nestedSegmentsNumber)
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			rootSegmentBuilder.Start();
 			for (int segmentIndex = 0; segmentIndex < nestedSegmentsNumber; segmentIndex++)
 			{
-				rootSegmentBuilder.StartNewNestedSegment("nestedSegment");
+				rootSegmentBuilder.StartNested("nestedSegment");
 			}
 
 			var rootSegment = rootSegmentBuilder.Build();
@@ -104,13 +106,13 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[InlineData(4)]
 		public void EndAndStart_Should_AddNestedToTheParent(int nestedSegmentsNumber)
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			rootSegmentBuilder.Start();
-			var nestedSegment = rootSegmentBuilder.StartNewNestedSegment("nestedFollowing0");
+			var nestedSegment = rootSegmentBuilder.StartNested("nestedFollowing0");
 			for (int segmentIndex = 1; segmentIndex < nestedSegmentsNumber; segmentIndex++)
 			{
 				var previousSegmentBuilder = nestedSegment;
-				nestedSegment = nestedSegment.EndAndStartNewFollowingSegment($"nestedFollowing{segmentIndex}");
+				nestedSegment = nestedSegment.EndAndStartFollowing($"nestedFollowing{segmentIndex}");
 				previousSegmentBuilder.HasEnded.Should().BeTrue();
 				nestedSegment.HasEnded.Should().BeFalse();
 			}
@@ -122,9 +124,9 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void When_DoesNotHaveParent_Should_ThrowWhenEndingAndStartingNew()
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			rootSegmentBuilder.Start();
-			Assert.Throws<InvalidOperationException>(() => rootSegmentBuilder.EndAndStartNewFollowingSegment("followingSegment"));
+			Assert.Throws<InvalidOperationException>(() => rootSegmentBuilder.EndAndStartFollowing("followingSegment"));
 		}
 
 		[Theory]
@@ -134,14 +136,14 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[InlineData(4)]
 		public void StartNested_When_NotEndingPrevious_Should_BeInParrarel(int segmentsInParrarel)
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			rootSegmentBuilder.Start();
-			var nestedSegmentBuilder = rootSegmentBuilder.StartNewNestedSegment("nestedSegment");
+			var nestedSegmentBuilder = rootSegmentBuilder.StartNested("nestedSegment");
 
 			for (int segmentIndex = 0; segmentIndex < segmentsInParrarel - 1; segmentIndex++)
 			{
 				var previous = nestedSegmentBuilder;
-				nestedSegmentBuilder = rootSegmentBuilder.StartNewNestedSegment("nestedSegment");
+				nestedSegmentBuilder = rootSegmentBuilder.StartNested("nestedSegment");
 				nestedSegmentBuilder.HasEnded.Should().BeFalse();
 				previous.HasEnded.Should().BeFalse();
 				Thread.Sleep(150);
@@ -156,8 +158,8 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void StartNewNested_Should_StartParent_With_Same_StartTime()
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
-			var nestedSegmentBuilder1 = rootSegmentBuilder.StartNewNestedSegment("nested1");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
+			var nestedSegmentBuilder1 = rootSegmentBuilder.StartNested("nested1");
 
 			rootSegmentBuilder.HasStarted.Should().BeTrue();
 
@@ -169,7 +171,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void Build_Should_Set_StartTime_When_Not_Started()
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			var rootSegment = rootSegmentBuilder.Build();
 			rootSegmentBuilder.HasStarted.Should().BeTrue();
 			rootSegmentBuilder.StartTime.Should().NotBe(default);
@@ -179,9 +181,9 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void Build_ShouldNot_Set_StartTime_When_AleradyStarted()
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			var rootbuilderStartTime = rootSegmentBuilder.Start();
-			var nestedSegmentBuilder1 = rootSegmentBuilder.StartNewNestedSegment("nested1");
+			var nestedSegmentBuilder1 = rootSegmentBuilder.StartNested("nested1");
 			var beforeBuildTime = DateTimeOffset.UtcNow;
 			var rootSegment = rootSegmentBuilder.Build();
 			rootSegmentBuilder.StartTime.Should().Be(rootbuilderStartTime);
@@ -195,7 +197,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void BuildWithStartTime_Should_Set_StartTime()
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			var startTime = DateTimeOffset.UtcNow;
 			var rootSegment = rootSegmentBuilder.Build(startTime);
 			rootSegmentBuilder.HasStarted.Should().BeTrue();
@@ -206,10 +208,10 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void BuildWithStartTime_ShouldNot_Set_StartTime_When_AleradyStarted()
 		{
-			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root");
+			var rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", serviceIdentity);
 			var startTime = DateTimeOffset.UtcNow;
 			var rootbuilderStartTime = rootSegmentBuilder.Start();
-			var nestedSegmentBuilder1 = rootSegmentBuilder.StartNewNestedSegment("nested1");
+			var nestedSegmentBuilder1 = rootSegmentBuilder.StartNested("nested1");
 
 			var beforeBuildTime = DateTimeOffset.UtcNow;
 			var rootSegment = rootSegmentBuilder.Build(startTime);

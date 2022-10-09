@@ -62,24 +62,28 @@ static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.
 						.AddMessage("Params:Manual_Return:No_HandeledBy:RequestResult")
 							.WithParameter<string>("Name")
 							.NoReturn()
-							.HandeledBy((RequestResultContext requestResult) =>
+							.HandeledBy((RequestContext requestResult) =>
 							{
 								//requestResult.Start();
 								var rootSegment = requestResult.StartNewSegment("R dur 450");
-								var nestedA = rootSegment.StartNewNestedSegment("R.A: +-0 before duration 50");
+								var nestedA = rootSegment.StartNested("R.A: +-0 before duration 50");
 								Thread.Sleep(50);
-								var nestedB = nestedA.EndAndStartNewFollowingSegment("R.B: 0 before, duration 200");
-								var nestedBA = nestedB.StartNewNestedSegment("R.B.A: +-0 before duration 150");
+								var nestedB = nestedA.EndAndStartFollowing("R.B: 0 before, duration 200");
+								var nestedBA = nestedB.StartNested("R.B.A: +-0 before duration 150");
 								Thread.Sleep(150);
 								nestedBA.End();
 								Thread.Sleep(50);
-								var nestedBB = nestedB.StartNewNestedSegment("R.B.B  50 before, duration +-0");
+								var nestedBB = nestedB.StartNested("R.B.B  50 before, duration +-0");
 								nestedBB.End();
-								var nestedBC = nestedB.StartNewNestedSegment("R.B.C  +-0 before, duration +-0");
+								var nestedBC = nestedB.StartNested("R.B.C  +-0 before, duration +-0");
 								nestedBC.End();
 								Thread.Sleep(100);
-								var nestedBD = nestedB.StartNewNestedSegment("R.B.D  100 before, duration 100");
+								var nestedBD = nestedB.StartNested("R.B.D  100 before, duration 100");
 								Thread.Sleep(100);
+
+								nestedBD.End();
+								nestedB.End();
+								rootSegment.End();
 								requestResult.Complete();
 							})
 						.AddMessage("Params:Manual_Return:No_HandeledBy:Request")
@@ -90,16 +94,16 @@ static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.
 						.AddMessage("<TEST> Params:Manual_Return:TypeOf_HandeledBy:RequestResult")
 							.WithParameter<string>("Name")
 							.Returns(typeof(string), "ResponseTypeDisplayName")
-							.HandeledBy((RequestResultContext requestResult) =>
+							.HandeledBy((RequestContext requestResult) =>
 							{
 								var rootSegment = requestResult.StartNewSegment("R duration 200");
-								var ra = rootSegment.StartNewNestedSegment("R.A 50");
+								var ra = rootSegment.StartNested("R.A 50");
 								Thread.Sleep(50);
-								var rb = ra.EndAndStartNewFollowingSegment("R.B 50");
+								var rb = ra.EndAndStartFollowing("R.B 50");
 								Thread.Sleep(50);
-								var rc = rb.EndAndStartNewFollowingSegment("R.C 50");
+								var rc = rb.EndAndStartFollowing("R.C 50");
 								Thread.Sleep(50);
-								var rd = rc.EndAndStartNewFollowingSegment("R.D 50");
+								var rd = rc.EndAndStartFollowing("R.D 50");
 								Thread.Sleep(50);
 								requestResult.Complete("returnString");
 							})
@@ -111,7 +115,7 @@ static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.
 						.AddMessage("Params:Manual_Return:T_HandeledBy:RequestResult")
 							.WithParameter<string>("Name")
 							.Returns<int>("int number")
-							.HandeledBy((RequestResultContext requestResult) => { requestResult.Complete(420); })
+							.HandeledBy((RequestContext requestResult) => { requestResult.Complete(420); })
 						.AddMessage("Params:Manual_Return:T_HandeledBy:RequestTReturn")
 							.WithParameter<string>("Name")
 							.Returns<string>("ResponseTypeDisplayName")
@@ -121,7 +125,7 @@ static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.
 						.AddMessage("Params:TMessage_Return:No_HandeledBy:RequestResult")
 							.WithParameters<DummyMessage>()
 							.NoReturn()
-							.HandeledBy((RequestResultContext requestResult) => requestResult.Complete())
+							.HandeledBy((RequestContext requestResult) => requestResult.Complete())
 						.AddMessage("Params:TMessage_Return:No_HandeledBy:Request")
 							.WithParameters<DummyMessage>()
 							.NoReturn()
@@ -130,7 +134,7 @@ static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.
 						.AddMessage("Params:TMessage_Return:TypeOf_HandeledBy:RequestResult")
 							.WithParameters<DummyMessage>()
 							.Returns(typeof(int), "ResponseTypeDisplayName")
-							.HandeledBy((RequestResultContext requestResult) => requestResult.Complete(5))
+							.HandeledBy((RequestContext requestResult) => requestResult.Complete(5))
 						.AddMessage("Params:TMessage_ReturnTypeOf_HandeledByRequest")
 							.WithParameters<DummyMessage>()
 							.Returns(typeof(int), "ResponseTypeDisplayName")
@@ -147,11 +151,11 @@ static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.
 						.AddMessage("Params:TMessage_Return:T_HandeledBy:RequestResult")
 							.WithParameters<DummyMessage>()
 							.Returns<string>("CreateCustomerMessageResponse")
-							.HandeledBy((RequestResultContext requestResult) => requestResult.Complete("asdas"))
+							.HandeledBy((RequestContext requestResult) => requestResult.Complete("asdas"))
 						.AddMessage("Params:TMessage_Return:T_HandeledBy:RequestResult")
 							.WithParameters<DummyMessage>()
 							.Returns<int>("CreateCustomerMessageResponse")
-							.HandeledBy((RequestResultContext requestResult) => requestResult.Complete(5))
+							.HandeledBy((RequestContext requestResult) => requestResult.Complete(5))
 						.AddMessage("Params:TMessage_Return:T_HandeledBy:TMessageTReturn")
 							.WithParameters<DummyMessage>()
 							.Returns<int>("int number")

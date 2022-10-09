@@ -34,11 +34,21 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 			};
 			listener.ActivityStarted += activity =>
 			{
+				if (activity.GetBaggageItem(DiagnosticConstants.ShouldBeReceived) != true.ToString())
+				{
+					if (activity.GetTagItem(DiagnosticConstants.ShouldBeReceived) as bool? != true)
+						return;
+				}
 				string traceId = activity.TraceId.ToString().TrimStart('0');
 				SendActivityStart(new ActivityStart(options.Value.Service, traceId, activity.ParentId, activity.Id, activity.OperationName, activity.StartTimeUtc));
 			};
 			listener.ActivityStopped += activity =>
 			{
+				if (activity.GetBaggageItem(DiagnosticConstants.ShouldBeReceived) != true.ToString())
+				{
+					if (activity.GetTagItem(DiagnosticConstants.ShouldBeReceived) as bool? != true)
+						return;
+				}
 				string traceId = activity.TraceId.ToString().TrimStart('0');
 				SendActivityEnd(new ActivityEnd(options.Value.Service, traceId, activity.ParentId, activity.Id, activity.OperationName, activity.StartTimeUtc, activity.StartTimeUtc + activity.Duration, activity.Status));
 			};

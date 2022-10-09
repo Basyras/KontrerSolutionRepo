@@ -7,10 +7,10 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 {
 	public class ResultLoggingContextLogger : ILogger
 	{
-		private readonly RequestDiagnosticsContext loggingContext;
+		private readonly RequestDiagnostics loggingContext;
 		private readonly ServiceIdentity serviceIdentity;
 
-		public ResultLoggingContextLogger(ServiceIdentity serviceIdentity, RequestDiagnosticsContext loggingContext)
+		public ResultLoggingContextLogger(ServiceIdentity serviceIdentity, RequestDiagnostics loggingContext)
 		{
 			this.loggingContext = loggingContext;
 			this.serviceIdentity = serviceIdentity;
@@ -28,7 +28,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
 		{
 			var message = formatter.Invoke(state, exception);
-			loggingContext.AddLog(serviceIdentity, logLevel, message);
+			loggingContext.Log(serviceIdentity, logLevel, message);
 		}
 	}
 }

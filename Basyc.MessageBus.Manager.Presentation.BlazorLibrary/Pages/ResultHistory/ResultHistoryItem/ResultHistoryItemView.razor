@@ -5,16 +5,16 @@
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
 @{
-    string historyItemClass = $"historyItem--state--{RequestResult.State.ToString()}";
+    string historyItemClass = $"historyItem--state--{RequestContext.State.ToString()}";
     string historyItemIsSelected = $"historyItem--isSelected--{IsSelected.ToString()}";
 }
 
 <historyItem class="@historyItemClass @historyItemIsSelected">
-    @if (RequestResult is not null && DiagnosticsContext is not null)
+    @if (RequestContext is not null && RequestContext.Diagnostics is not null)
     {
         if (IsSelected)
         {
-            <ResultHistoryItemExpandedView RequestResult="RequestResult" DiagnosticsContext="DiagnosticsContext" />
+            <ResultHistoryItemExpandedView RequestContext="RequestContext"/>
         }
         else
         {
@@ -24,31 +24,31 @@
                         #@OrderIndex
                     </id>
                     <status>
-                        <LatencyView RequestResult="RequestResult" />
+                        <LatencyView RequestContext="RequestContext" />
                     </status>
                 </basicTable>
                 <dataSubSection>
                     <inputBorder>
                         <textValue>
-                            @ResponseResultConverter.CreateInputOverview(RequestResult.Request.Parameters)
+                            @ResponseResultConverter.CreateInputOverview(RequestContext.Request.Parameters)
                         </textValue>
                     </inputBorder>
                     <arrow>
                         <MudIcon Icon="@Icons.Material.Rounded.Forward" />
                     </arrow>
                     <outputBorder>
-                        @if (RequestResult.State == RequestResultState.Started)
+                        @if (RequestContext.State == RequestResultState.Started)
                         {
                             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" Width="100%"/>
                         }
                         else
                         {
                             <textValue>
-                                @if (RequestResult.State == RequestResultState.Completed)
+                                @if (RequestContext.State == RequestResultState.Completed)
                                 {
-                                    if (RequestResult.Request.RequestInfo.HasResponse)
+                                    if (RequestContext.Request.RequestInfo.HasResponse)
                                     {
-                                        @RequestResult.Response
+                                        @RequestContext.Response
                                     }
                                     else
                                     {
@@ -57,9 +57,9 @@
                                         </ghostLabel>
                                     }
                                 }
-                                @if (RequestResult.State == RequestResultState.Failed)
+                                @if (RequestContext.State == RequestResultState.Failed)
                                 {
-                                    @RequestResult.ErrorMessage
+                                    @RequestContext.ErrorMessage
                                 }
                             </textValue>
                         }
@@ -83,28 +83,24 @@
 
 
 @code {
-    private RequestResultContext requestResult;
 
+    private RequestContext requestContext;
     [Parameter]
-    public RequestResultContext RequestResult
+    public RequestContext RequestContext
     {
-        get => requestResult;
+        get => requestContext;
         set
         {
-            if (requestResult is not null)
+            if (requestContext is not null)
             {
-                requestResult.StateChanged -= ResultStateChanged;
+                requestContext.StateChanged -= ResultStateChanged;
             }
-            requestResult = value;
-            requestResult.StateChanged += ResultStateChanged;
+            requestContext = value;
+            requestContext.StateChanged += ResultStateChanged;
         }
     }
 
-    [Parameter]
-    public RequestDiagnosticsContext DiagnosticsContext { get; set; }
-
     private bool isSelected;
-
     [Parameter]
     public bool IsSelected
     {

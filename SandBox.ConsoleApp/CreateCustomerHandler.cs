@@ -2,6 +2,7 @@
 using Basyc.MessageBus.Client;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace SandBox.ConsoleApp
 {
@@ -17,19 +18,25 @@ namespace SandBox.ConsoleApp
 		}
 		public async Task<CreateCustomerCommandResponse> Handle(CreateCustomerCommand message, CancellationToken cancellationToken = default)
 		{
-			logger.LogInformation($"Handeling message {message.GetType().FullName}");
-			CustomerEntity? newCustomer = new CustomerEntity()
+			using (var activity = new Activity("SandBox.ConsoleApp.CreateCustomerHandler.Handle").Start())
 			{
-				Email = message.Email,
-				FirstName = message.FirstName,
-				SecondName = message.LastName,
-				Id = new Random().Next()
-			};
-			logger.LogInformation($"Handeled message {message.GetType().FullName}");
-			logger.LogInformation($"Publising {nameof(CustomerCreatedEvent)} event");
-			await busClient.PublishAsync(new CustomerCreatedEvent(newCustomer)).Task;
-			logger.LogInformation($"{nameof(CustomerCreatedEvent)} event published");
-			return new CreateCustomerCommandResponse(newCustomer);
+				logger.LogInformation($"Handeling message {message.GetType().FullName}");
+				CustomerEntity? newCustomer = new CustomerEntity()
+				{
+					Email = message.Email,
+					FirstName = message.FirstName,
+					SecondName = message.LastName,
+					Id = new Random().Next()
+				};
+				logger.LogInformation($"Handeled message {message.GetType().FullName}");
+				logger.LogInformation($"Publising {nameof(CustomerCreatedEvent)} event");
+				using (new Activity("Publishing Creating event").Start())
+				{
+					await busClient.PublishAsync(new CustomerCreatedEvent(newCustomer)).Task;
+				}
+				logger.LogInformation($"{nameof(CustomerCreatedEvent)} event published");
+				return new CreateCustomerCommandResponse(newCustomer);
+			}
 
 		}
 	}

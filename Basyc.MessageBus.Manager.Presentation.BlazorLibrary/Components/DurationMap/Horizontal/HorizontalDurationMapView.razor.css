@@ -1,1 +1,1 @@
-service{display:block;margin-bottom:2rem}
+service{display:flex;margin-bottom:1rem;width:100%}serviceName{display:flex;align-items:center;justify-content:right;width:8rem;margin:1rem}durationBoxes{display:flex;flex-direction:row;width:100%}

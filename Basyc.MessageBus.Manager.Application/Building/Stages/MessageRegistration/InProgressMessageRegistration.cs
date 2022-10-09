@@ -9,7 +9,7 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 		public string? MessagDisplayName { get; set; }
 		public RequestType MessageType { get; set; }
 		public List<ParameterInfo> Parameters { get; } = new List<ParameterInfo>();
-		public Action<RequestResultContext>? RequestHandler { get; set; }
+		public Action<RequestContext>? RequestHandler { get; set; }
 		public Type? ResponseRunTimeType { get; set; }
 		public string? ResponseRunTimeTypeDisplayName { get; set; }
 		public bool HasResponse => ResponseRunTimeType is not null;
