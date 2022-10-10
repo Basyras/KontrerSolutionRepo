@@ -1,54 +1,108 @@
 ﻿@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.DurationMap
-@{
-    var width = DurationViewHelper.GetDurationAsRem(Activity.EndTime - Activity.StartTime, Scale);
-    var marginLeft = ParentActivity == null ? 0d : DurationViewHelper.GetDifferenceAsRem(Activity.StartTime - ParentActivity.StartTime, Scale);
-    if (Activity.EndTime == default)
-    {
-        width = 5;
-    }
-    string boxStyle = $"width: {width}rem; margin-left:{marginLeft}rem;";
 
+@implements IDisposable
+@{
+    var width = Activity.HasEnded ? DurationViewHelper.GetDurationAsRem(Activity.EndTime - Activity.StartTime, Scale) : 5;
+    string boxStyle = $"min-width: {width}rem;";
+    string mudTooltipBoxStyle = $"width: 100%;";
 }
 
 <horizontalDurationBoxView>
-    <durationBox style="@boxStyle">
-        <acitvityName>
-            @Activity.StartTime.Millisecond
-            @Activity.EndTime.Millisecond
-            @(ParentActivity == null)
-            @Activity.DisplayName
-        </acitvityName>
-        @if (Activity.EndTime == default)
-        {
-            <spinner>
-                <MudProgressCircular Color="Color.Default" Indeterminate="true" Size="Size.Small" />
-            </spinner>
-        }
-
-
-    </durationBox>
-
+    <MudTooltip RootStyle="@mudTooltipBoxStyle" Arrow="true">
+        <ChildContent>
+            <durationBox style="@boxStyle">
+                <durationBoxBorder>
+                    <acitvityName>
+                        @Activity.DisplayName
+                    </acitvityName>
+                    @if (Activity.HasEnded is false)
+                    {
+                        <spinner>
+                            <MudProgressCircular Color="Color.Default" Indeterminate="true" Size="Size.Small" />
+                        </spinner>
+                    }
+                </durationBoxBorder>
+            </durationBox>
+        </ChildContent>
+        <TooltipContent>
+            <toolTipContent>
+                name: @Activity.DisplayName
+                <br />
+                id: @Activity.Id
+                <br />
+                start: @Activity.StartTime.Millisecond
+                <br />
+                end: @Activity.EndTime.Millisecond
+                <br />
+                dur: @((Activity.EndTime - Activity.StartTime).TotalMilliseconds) ms
+                <br />
+                hasParent: @(Activity.ParentActivity != null)
+                <br />
+                ParentId?: @Activity.ParentActivity?.Id
+                <br />
+                hasEnded: @Activity.HasEnded
+            </toolTipContent>
+        </TooltipContent>
+    </MudTooltip>
     <nestedDurationBoxes>
-        @foreach (var nestedActivity in Activity.NestedActivities)
-        {
-            <HorizontalDurationBoxView Activity="nestedActivity" />
+        @{
+            ActivityContext previousActivity = null;
+            foreach (var nestedActivity in Activity.NestedActivities.ToArray())
+            {
+                var isFirstNested = previousActivity is null && Activity.ParentActivity is not null;
+
+                if (isFirstNested)
+                {
+                    var lateStartDuration = nestedActivity.StartTime - Activity.StartTime;
+                    if (lateStartDuration > TimeSpan.FromMilliseconds(0))
+                    {
+                        <HorizontalUnknownDurationBoxView StartTime="Activity.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" />
+                    }
+                }
+
+                var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != nestedActivity.StartTime;
+                if (isGapBetweenPreviousNested)
+                {
+                    <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" />
+                }
+
+                <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" />
+                previousActivity = nestedActivity;
+            }
         }
     </nestedDurationBoxes>
+
+
 </horizontalDurationBoxView>
 
 
 @code {
-    [Parameter] public Activity ParentActivity { get; set; }
-    [Parameter] public Activity Activity { get; set; }
-    [Parameter] public double Scale { get; set; } = 20;
-    protected override void OnInitialized()
+    [Parameter] public ActivityContext Activity { get; set; }
+    [Parameter] public double Scale { get; set; }
+
+    protected override Task OnParametersSetAsync()
     {
-        Activity.ActivityEnded += (s, a) =>
-        {
-            StateHasChanged();
-        };
-        base.OnInitialized();
+        Activity.ActivityEnded += OnActivityEnded;
+        Activity.NestedActivityEnded += OnNestedActivityEnded;
+        return base.OnParametersSetAsync();
     }
+
+    private void OnActivityEnded(object sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    private void OnNestedActivityEnded(object sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        Activity.ActivityEnded -= OnActivityEnded;
+        Activity.NestedActivityEnded -= OnNestedActivityEnded;
+    }
+
 
 }

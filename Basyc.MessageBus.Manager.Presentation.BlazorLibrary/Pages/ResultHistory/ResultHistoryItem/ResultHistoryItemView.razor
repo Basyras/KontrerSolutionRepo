@@ -4,6 +4,8 @@
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
+@implements IDisposable
+
 @{
     string historyItemClass = $"historyItem--state--{RequestContext.State.ToString()}";
     string historyItemIsSelected = $"historyItem--isSelected--{IsSelected.ToString()}";
@@ -14,7 +16,7 @@
     {
         if (IsSelected)
         {
-            <ResultHistoryItemExpandedView RequestContext="RequestContext"/>
+            <ResultHistoryItemExpandedView RequestContext="RequestContext" />
         }
         else
         {
@@ -39,7 +41,7 @@
                     <outputBorder>
                         @if (RequestContext.State == RequestResultState.Started)
                         {
-                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" Width="100%"/>
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" Width="100%" />
                         }
                         else
                         {
@@ -84,21 +86,8 @@
 
 @code {
 
-    private RequestContext requestContext;
     [Parameter]
-    public RequestContext RequestContext
-    {
-        get => requestContext;
-        set
-        {
-            if (requestContext is not null)
-            {
-                requestContext.StateChanged -= ResultStateChanged;
-            }
-            requestContext = value;
-            requestContext.StateChanged += ResultStateChanged;
-        }
-    }
+    public RequestContext RequestContext { get; set; }
 
     private bool isSelected;
     [Parameter]
@@ -110,7 +99,6 @@
             if (isSelected == value) return;
             isSelected = value;
             IsSelectedChanged.InvokeAsync(value);
-
         }
     }
 
@@ -122,7 +110,13 @@
 
 
 
-    private void ResultStateChanged(object sender, EventArgs eventArgs)
+    protected override void OnParametersSet()
+    {
+        RequestContext.StateChanged += ReqeustContextResultStateChanged;
+        base.OnParametersSet();
+    }
+
+    private void ReqeustContextResultStateChanged(object sender, EventArgs eventArgs)
     {
         this.StateHasChanged();
     }
@@ -154,8 +148,10 @@
     private void ItemClick()
     {
         IsSelected = !IsSelected;
-        //StateHasChanged();
     }
 
-
+    public void Dispose()
+    {
+        RequestContext.StateChanged -= ReqeustContextResultStateChanged;
+    }
 }

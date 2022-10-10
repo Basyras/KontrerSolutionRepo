@@ -10,7 +10,13 @@ namespace Basyc.MessageBus.Manager.Application
 		private readonly IDurationMapBuilder durationMapBuilder;
 
 		public Request Request { get; init; }
+		/// <summary>
+		/// Time when request was created
+		/// </summary>
 		public DateTimeOffset CreationTime { get; init; }
+		/// <summary>
+		/// Time when request started
+		/// </summary>
 		public DateTimeOffset StartTime => durationMapBuilder.StartTime;
 		public DateTimeOffset EndTime => durationMapBuilder.EndTime;
 		public TimeSpan Duration

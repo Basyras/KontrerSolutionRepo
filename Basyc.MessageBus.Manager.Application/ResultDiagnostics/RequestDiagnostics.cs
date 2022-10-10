@@ -3,6 +3,7 @@ using Basyc.Diagnostics.Shared.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
@@ -13,10 +14,9 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		private readonly List<LogEntry> logEntries = new List<LogEntry>();
 		public IReadOnlyList<LogEntry> LogEntries { get => logEntries; }
 
-		private readonly Dictionary<string, Activity> activityIdToActivityMap = new();
-
-		private readonly List<Activity> activities = new List<Activity>();
-		public IReadOnlyList<Activity> Activities { get => activities; }
+		private readonly Dictionary<string, ActivityContext> activityIdToActivityMap = new();
+		public List<ServiceIdentityContext> services = new List<ServiceIdentityContext>();
+		public IReadOnlyList<ServiceIdentityContext> Services { get => services; }
 
 
 		public string TraceId { get; init; }
@@ -38,8 +38,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		public void Log(ServiceIdentity service, DateTimeOffset time, LogLevel logLevel, string message)
 		{
 			LogEntry newLogEntry = new(service, TraceId, time, logLevel, message);
-			logEntries.Add(newLogEntry);
-			OnLogAdded(newLogEntry);
+			Log(newLogEntry);
 		}
 
 		public void Log(LogEntry newLogEntry)
@@ -48,38 +47,51 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 				throw new ArgumentException("Request id does not match context reuqest result id", nameof(newLogEntry));
 
 			logEntries.Add(newLogEntry);
+			logEntries.Sort((x, y) => x.Time.CompareTo(y.Time));
 			OnLogAdded(newLogEntry);
 		}
 
-		public void StartActivity(ActivityStart activityStart)
+		public ActivityContext StartActivity(ActivityStart activityStart)
 		{
-			lock (lockObject)
+			ServiceIdentityContext serviceVM = EnsureServiceCreated(activityStart.Service);
+
+			ActivityContext? parentActivity = null;
+			if (activityStart.ParentId is not null)
 			{
-				Activity activity = new Activity(activityStart.Service, activityStart.TraceId, activityStart.ParentId, activityStart.Id, activityStart.Name, activityStart.StartTime);
-				activities.Add(activity);
-				activityIdToActivityMap.Add(activity.Id, activity);
-				OnActivityStartReceived(activityStart);
+				try
+				{
+					parentActivity = activityIdToActivityMap[activityStart.ParentId];
+
+				}
+				catch (Exception ex)
+				{
+
+				}
+
 			}
+			ActivityContext newActivity = new ActivityContext(activityStart.Service, activityStart.TraceId, parentActivity, activityStart.Id, activityStart.Name, activityStart.StartTime);
+			activityIdToActivityMap.Add(newActivity.Id, newActivity);
+			if (parentActivity is null)
+			{
+				serviceVM.AddActivity(newActivity);
+			}
+			else
+			{
+				parentActivity.AddNestedActivity(newActivity);
+			}
+			OnActivityStartReceived(activityStart);
+			return newActivity;
 
 		}
 
 		public void EndActivity(ActivityEnd activityEnd)
 		{
-			try
+			if (activityIdToActivityMap.TryGetValue(activityEnd.Id, out var activity) is false)
 			{
-				lock (lockObject)
-				{
-					var activity = activityIdToActivityMap[activityEnd.Id];
-					activity.End(activityEnd.EndTime, activityEnd.Status);
-					OnActivityEndReceived(activityEnd);
-				}
-
+				activity = StartActivity(new ActivityStart(activityEnd.Service, activityEnd.TraceId, activityEnd.ParentId, activityEnd.Id, activityEnd.Name, activityEnd.StartTime));
 			}
-			catch (Exception ex)
-			{
-
-			}
-
+			activity.End(activityEnd.EndTime, activityEnd.Status);
+			OnActivityEndReceived(activityEnd);
 		}
 
 		private void OnLogAdded(LogEntry newLogEntry)
@@ -95,6 +107,18 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		private void OnActivityEndReceived(ActivityEnd activityEnd)
 		{
 			ActivityEndReceived?.Invoke(this, activityEnd);
+		}
+
+		private ServiceIdentityContext EnsureServiceCreated(ServiceIdentity serviceIdentity)
+		{
+			ServiceIdentityContext? serviceVM = Services.FirstOrDefault(x => x.ServiceIdentity == serviceIdentity);
+			if (serviceVM == null)
+			{
+				serviceVM = new ServiceIdentityContext(serviceIdentity);
+				services.Add(serviceVM);
+			}
+
+			return serviceVM;
 		}
 	}
 }

@@ -94,5 +94,9 @@
   {
     "outputFile": "Components/DurationMap/Horizontal/HorizontalDurationBoxView.razor.css",
     "inputFile": "Components/DurationMap/Horizontal/HorizontalDurationBoxView.razor.scss"
+  },
+  {
+    "outputFile": "Components/DurationMap/Horizontal/HorizontalUnknownDurationBoxView.razor.css",
+    "inputFile": "Components/DurationMap/Horizontal/HorizontalUnknownDurationBoxView.razor.scss"
   }
 ]

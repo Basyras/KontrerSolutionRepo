@@ -108,20 +108,6 @@
                     }
                 </durationMap>
             </paddedSection>
-
-            <paddedSection>
-                <label>
-                    Activities
-                </label>
-                <br/>
-                @foreach (var activity in loggingContext.Activities)
-                {
-                    @(activity.EndTime - activity.StartTime)
-                    @activity.DisplayName
-                }
-            </paddedSection>
-
-
             <label>
                 Log
             </label>
@@ -132,7 +118,6 @@
 </requestDetailView>
 
 @code {
-    private RequestDiagnostics loggingContext;
     private RequestContext requestResult;
     [Parameter]
     public RequestContext RequestResult
@@ -146,8 +131,6 @@
             }
             requestResult = value;
             requestResult.StateChanged += ResultStateChanged;
-
-            loggingContext = resultLoggingManager.GetDiagnostics(requestResult.TraceId);
         }
     }
 

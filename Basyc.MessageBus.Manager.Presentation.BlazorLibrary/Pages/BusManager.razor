@@ -13,10 +13,10 @@
     <MudSnackbarProvider />
 
     <sideBar>
-        <RequestsSideMenu DomainInfoViewModel="DomainInfoViewModel" RequestSelected="newSelected=>SelectedRequestViewModel = newSelected" />
+        <RequestsSideMenu DomainInfoViewModel="DomainInfoViewModel" RequestSelected="OnSelectedRequestMenuItemChanged" />
     </sideBar>
     <requestFormPage>
-        <RequestSideBarView SelectedRequestViewModel="SelectedRequestViewModel" Requested="@(async (requestItem)=>await SendMessage(requestItem))" />
+        <RequestSideBarView SelectedRequestViewModel="SelectedRequestViewModel" Requested="OnRequested" />
     </requestFormPage>
     <historyPage>
         @if (SelectedRequestViewModel is not null)
@@ -28,11 +28,5 @@
             @:Select request
         }
     </historyPage>
-    @if (selectedResult is not null)
-    {
-       @* <requestDetail>
-            <ResultDetailView RequestResult="selectedResult" />
-        </requestDetail>*@
-    }
 
 </busManager>

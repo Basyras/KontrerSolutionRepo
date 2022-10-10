@@ -5,26 +5,20 @@
 		public static double GetDurationAsRem(TimeSpan duration, double scale)
 		{
 			var minHeight = Math.Round(duration.TotalMilliseconds / scale);
-			if (minHeight < 5)
-			{
-				minHeight = 5;
-			}
-			if (minHeight > 100)
-			{
-				minHeight = 100;
-			}
+			//if (minHeight < 5)
+			//{
+			//	minHeight = 5;
+			//}
+			//if (minHeight > 100)
+			//{
+			//	minHeight = 100;
+			//}
 			return minHeight;
 		}
 
-		public static double GetDifferenceAsRem(TimeSpan duration, double scale)
+		public static double GetDurationAsRem(DateTimeOffset earlyTime, DateTimeOffset laterTime, double scale)
 		{
-			var minHeight = Math.Round(duration.TotalMilliseconds / scale);
-			return minHeight;
-		}
-
-		public static double GetDifferenceAsRem(DateTimeOffset firstEndtime, DateTimeOffset secondStartTime, double scale)
-		{
-			return GetDifferenceAsRem(secondStartTime - firstEndtime, scale);
+			return GetDurationAsRem(laterTime - earlyTime, scale);
 		}
 
 	}

@@ -56,7 +56,7 @@ namespace Basyc.MessageBus.Client.NetMQ
 			var activitySpanId = ActivitySpanId.CreateFromString("11".PadRight(16, '0'));
 			var activityContext = new ActivityContext(activityTraceId, activitySpanId, ActivityTraceFlags.Recorded);
 
-			using (var handlerStartedActivity = DiagnosticConstants.HandlerStarted.StartActivity("Basyc.MessageBus.Client.NetMQ.MessageHandlerManager ConsumeMessage", ActivityKind.Client, activityContext, new KeyValuePair<string, object?>[]
+			using (var handlerStartedActivity = DiagnosticConstants.HandlerStarted.StartActivity("Basyc.MessageBus.Client.NetMQ.MessageHandlerManager ConsumeMessage", ActivityKind.Internal, activityContext, new KeyValuePair<string, object?>[]
 			{
 				new KeyValuePair<string, object?>(DiagnosticConstants.ShouldBeReceived ,true)
 			}))

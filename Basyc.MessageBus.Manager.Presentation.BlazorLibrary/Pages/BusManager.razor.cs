@@ -25,6 +25,7 @@ public partial class BusManager
 
 	public List<DomainItemViewModel> DomainInfoViewModel { get; private set; } = new List<DomainItemViewModel>();
 
+	private RequestItemViewModel selectedRequestViewModel;
 	public RequestItemViewModel SelectedRequestViewModel
 	{
 		get => selectedRequestViewModel;
@@ -41,12 +42,9 @@ public partial class BusManager
 			}
 			selectedRequestViewModel.IsSelected = true;
 			resultHistory.TryAdd(value, new List<RequestContext>());
-			selectedResult = null;
 		}
 	}
 
-	private RequestItemViewModel selectedRequestViewModel;
-	private RequestContext selectedResult;
 	private readonly Dictionary<RequestItemViewModel, List<RequestContext>> resultHistory = new Dictionary<RequestItemViewModel, List<RequestContext>>();
 
 	protected override void OnInitialized()
@@ -96,6 +94,7 @@ public partial class BusManager
 		resultHistory.TryAdd(requestItem, new List<RequestContext>());
 		var requestHistory = resultHistory[requestItem];
 		requestHistory.Add(requestResult);
+		StateHasChanged();
 		return Task.CompletedTask;
 
 	}
@@ -174,5 +173,16 @@ public partial class BusManager
 		stringBuilder.Append(colours[2].ToString("X2"));
 		string finalColor = stringBuilder.ToString();
 		return finalColor;
+	}
+
+	private void OnSelectedRequestMenuItemChanged(RequestItemViewModel newSelectedRequest)
+	{
+		SelectedRequestViewModel = newSelectedRequest;
+		StateHasChanged();
+	}
+
+	private async void OnRequested(RequestItemViewModel request)
+	{
+		await SendMessage(request);
 	}
 }

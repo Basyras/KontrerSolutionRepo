@@ -1,0 +1,17 @@
+﻿horizontalUnknownDurationBoxView {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+}
+
+unknownDurationLine {
+
+    background-color: #81a7a7;
+    height: 2px;
+    width: 100%;
+}
+
+horizontalUnknownDurationBoxView:hover {
+    background-color: #b7cccc;
+}
