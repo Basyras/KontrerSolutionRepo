@@ -3,11 +3,12 @@
 
     @{
         var minHeight = DurationViewHelper.GetDurationAsRem(DurationSegment.Duration, Scale);
-        string durationBoxStyle = $"min-height: {minHeight}rem;";
-        var showDurationInBox = minHeight > 2.5;
+        string durationBoxStyle = $"min-height: {minHeight};";
+        var minHeightNumber = double.Parse(minHeight);
+        var showDurationInBox = double.Parse(minHeight) > 2.5;
         //-0.5 to compensate margings and line heights.
         //if line height is 1rem and margings and paddings are 0 this is not needed
-        int segmentNameNumberOfLines = (int)Math.Floor(minHeight - 0.5);
+        int segmentNameNumberOfLines = (int)Math.Floor(minHeightNumber - 0.5);
         if (segmentNameNumberOfLines == 0)
         {
             segmentNameNumberOfLines = 1;

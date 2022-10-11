@@ -48,11 +48,11 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 			if (changes.Logs.Any())
 				receiveLogEntriesFromServer(changes.Logs);
 
-			if (changes.StartedActivities.Any())
-				receivStartedActivitiesFromServer(changes.StartedActivities);
+			if (changes.ActivityStarts.Any())
+				receivStartedActivitiesFromServer(changes.ActivityStarts);
 
-			if (changes.EndedActivities.Any())
-				receiveEndedActivitiesFromServer(changes.EndedActivities);
+			if (changes.ActivityEnds.Any())
+				receiveEndedActivitiesFromServer(changes.ActivityEnds);
 
 			return Task.CompletedTask;
 		}
@@ -61,7 +61,7 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 		private void receiveLogEntriesFromServer(LogEntrySignalRDTO[] logEntriesDTOs)
 		{
 			var logEntries = logEntriesDTOs
-				.Select(x => LogEntrySignalRDTO.ToLogEntry(x))
+				.Select(x => LogEntrySignalRDTO.ToEntry(x))
 				.ToArray();
 			OnLogsReceived(logEntries);
 		}
@@ -75,10 +75,10 @@ namespace Basyc.Diagnostics.Receiving.SignalR
 			OnActivityStartsReceived(activities);
 		}
 
-		private void receiveEndedActivitiesFromServer(ActivitySignalRDTO[] activitiesDTOs)
+		private void receiveEndedActivitiesFromServer(ActivityEndSignalRDTO[] activitiesDTOs)
 		{
 			var activities = activitiesDTOs
-				.Select(x => ActivitySignalRDTO.ToEntry(x))
+				.Select(x => ActivityEndSignalRDTO.ToEntry(x))
 				.ToArray();
 
 			OnActivityEndsReceived(activities);

@@ -3,8 +3,8 @@
 
 @implements IDisposable
 @{
-    var width = Activity.HasEnded ? DurationViewHelper.GetDurationAsRem(Activity.EndTime - Activity.StartTime, Scale) : 5;
-    string boxStyle = $"min-width: {width}rem;";
+    var width = Activity.HasEnded ? DurationViewHelper.GetDurationAsRem(Activity.EndTime - Activity.StartTime, Scale) : "5rem";
+    string boxStyle = $"min-width: {width};";
     string mudTooltipBoxStyle = $"width: 100%;";
 }
 

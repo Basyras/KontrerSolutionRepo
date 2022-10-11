@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SandBox.ConsoleApp
 {
-	public class DeleteCustomerHandler : ICommandHandler<DeleteCustomerCommand>
+	public partial class DeleteCustomerHandler : ICommandHandler<DeleteCustomerCommand>
 	{
 		private readonly ILogger<CreateCustomerHandler> logger;
 
@@ -14,9 +14,16 @@ namespace SandBox.ConsoleApp
 		}
 		public Task Handle(DeleteCustomerCommand message, CancellationToken cancellationToken = default)
 		{
-			logger.LogInformation($"Handeling message {message.GetType().FullName}");
-			logger.LogInformation($"Handeled message {message.GetType().FullName}");
+			LogHandleStart(message.GetType().FullName!);
+			LogHandleEnd(message.GetType().FullName!);
 			return Task.CompletedTask;
 		}
+
+		[LoggerMessage(0, LogLevel.Information, "Handle {messageName} started")]
+		partial void LogHandleStart(string messageName);
+
+
+		[LoggerMessage(1, LogLevel.Information, "Handle {messageName} finished")]
+		partial void LogHandleEnd(string messageName);
 	}
 }

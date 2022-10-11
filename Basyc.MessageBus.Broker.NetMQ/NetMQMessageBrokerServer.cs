@@ -1,4 +1,7 @@
-﻿using Basyc.MessageBus.NetMQ.Shared;
+﻿using Basyc.Diagnostics.Producing.Shared;
+using Basyc.Diagnostics.Shared.Durations;
+using Basyc.Diagnostics.Shared.Logging;
+using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.NetMQ.Shared.Cases;
 using Basyc.MessageBus.Shared;
 using Basyc.Serializaton.Abstraction;
@@ -17,18 +20,22 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 	private readonly NetMQPoller poller = new NetMQPoller();
 	private readonly ILogger<NetMQMessageBrokerServer> logger;
 	private readonly INetMQMessageWrapper messageToByteSerializer;
+	private readonly IDiagnosticsProducer diagnosticsProducer;
 	private readonly RouterSocket brokerSocket;
+	private readonly ServiceIdentity borkerIdentity = new ServiceIdentity("Broker");
 
 	public NetMQMessageBrokerServer(IOptions<NetMQMessageBrokerServerOptions> options,
 		IWorkerRegistry workerRegistry,
 		ILogger<NetMQMessageBrokerServer> logger,
-		INetMQMessageWrapper messageToByteSerializer
+		INetMQMessageWrapper messageToByteSerializer,
+		IDiagnosticsProducer diagnosticsProducer
 		)
 	{
 		this.options = options;
 		this.workerRegistry = workerRegistry;
 		this.logger = logger;
 		this.messageToByteSerializer = messageToByteSerializer;
+		this.diagnosticsProducer = diagnosticsProducer;
 		brokerSocket = new RouterSocket($"@tcp://{options.Value.BrokerServerAddress}:{options.Value.BrokerServerPort}");
 
 		brokerSocket.ReceiveReady += (s, a) =>
@@ -42,12 +49,19 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 			deserializationResult.Switch(
 				checkIn =>
 				{
-					string handledTypesNamesString = string.Join(',', checkIn.SupportedMessageTypes.Select(assemblyTypeString => assemblyTypeString.Split(',').First().Split('.').Last()));
+					string handledTypesNamesString = string.Join(',', checkIn.SupportedMessageTypes
+						.Select(assemblyTypeString => assemblyTypeString.Split(',')
+						.First()
+						.Split('.')
+						.Last()));
 					logger.LogInformation($"CheckIn received from {senderAddressString}. WorkerId: {checkIn.WorkerId}, HandeledTypes: {handledTypesNamesString}");
 					workerRegistry.RegisterWorker(checkIn.WorkerId, checkIn.SupportedMessageTypes);
 				},
 				request =>
 				{
+					var requestStartActivity = CreateActivity(request.TraceId, "Delegating request");
+					diagnosticsProducer.StartActivity(requestStartActivity);
+					diagnosticsProducer.ProduceLog(new LogEntry(borkerIdentity, request.TraceId, DateTimeOffset.UtcNow, LogLevel.Debug, "Delegating request"));
 					logger.LogInformation($"Recieved request: '{request.RequestBytes}' from {senderAddressString}:{request.SessionId}");
 					if (workerRegistry.TryGetWorkerFor(request.RequestType, out string? workerAddressString))
 					{
@@ -60,6 +74,8 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 						messageToProducer.Append(requestBytes);
 						logger.LogDebug($"Sending request: '{request.RequestBytes}' to {workerAddressString}:{request.SessionId}");
 						brokerSocket.SendMultipartMessage(messageToProducer);
+						diagnosticsProducer.EndActivity(requestStartActivity);
+
 						logger.LogDebug($"Request sent to {workerAddressString}");
 					}
 					else
@@ -73,12 +89,17 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 						messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, request.TraceId, request.ParentSpanId, MessageCase.Response));
 						logger.LogError($"Sending failure: '{failure}' to {senderAddressString}");
 						brokerSocket.SendMultipartMessage(messageToProducer);
+						diagnosticsProducer.EndActivity(requestStartActivity);
+
 						logger.LogError($"Failure sent to {senderAddressFrame}");
 					}
 				},
 				response =>
 				{
-					logger.LogInformation($"Response recieved: '{response.ResponseBytes}' from {senderAddressString}:{response.SessionId}");
+					var responseActivityStart = CreateActivity(response.TraceId, "Delegating response");
+					diagnosticsProducer.StartActivity(responseActivityStart);
+
+					logger.LogDebug($"Response recieved: '{response.ResponseBytes}' from {senderAddressString}:{response.SessionId}");
 					var messageToConsumer = new NetMQMessage();
 					var producerAddress = recievedMessageFrame[4];
 					var producerAddressString = producerAddress.ConvertToString();
@@ -89,7 +110,9 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 					messageToConsumer.Append(recievedMessageFrame[2].Buffer);
 					logger.LogDebug($"Sending response: '{response.ResponseBytes}' to {producerAddressString}:{response.SessionId}");
 					brokerSocket.SendMultipartMessage(messageToConsumer);
+					diagnosticsProducer.EndActivity(responseActivityStart);
 					logger.LogDebug($"Response sent to {producerAddressString}");
+
 				},
 				@event =>
 				{
@@ -164,5 +187,8 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 		logger.LogInformation("NetMQ proxy disposed");
 	}
 
-
+	private ActivityStart CreateActivity(string traceId, string name)
+	{
+		return new ActivityStart(borkerIdentity, traceId, null, Guid.NewGuid().ToString(), name, DateTimeOffset.UtcNow);
+	}
 }

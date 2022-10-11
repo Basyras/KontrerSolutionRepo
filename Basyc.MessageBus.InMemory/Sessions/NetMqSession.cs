@@ -8,7 +8,7 @@
 /// <param name="ParentSpanId"></param>
 /// <param name="MessageType"></param>
 /// <param name="ResponseSource"></param>
-public record NetMqSession<TSessionResult>(int SessionId, string TraceId, string RequesterSpanId, string MessageType, TaskCompletionSource<TSessionResult> ResponseSource)
+public record NetMqSession<TSessionResult>(int SessionId, string? TraceId, string? RequesterSpanId, string MessageType, TaskCompletionSource<TSessionResult> ResponseSource)
 {
 	public const int UnknownSessionId = -1;
 }

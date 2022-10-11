@@ -11,17 +11,28 @@
             var serviceFirstActivity = service.Activities.FirstOrDefault();
             if (serviceFirstActivity is not null)
             {
-                serviceStyle = $"margin-left: {DurationViewHelper.GetDurationAsRem(RequestContext.StartTime, serviceFirstActivity.StartTime, Scale)}rem";
+                serviceStyle = $"margin-left: {DurationViewHelper.GetDurationAsRem(RequestContext.StartTime, serviceFirstActivity.StartTime, Scale)};";
             }
             <service style="@serviceStyle">
                 <serviceName>
                     @service.ServiceIdentity.ServiceName
                 </serviceName>
                 <durationBoxes>
-                    @foreach (var activity in service.Activities)
-                    {
-                        <HorizontalDurationBoxView Activity="activity" Scale="Scale" />
+                    @{
+                        ActivityContext previousActivity = null;
+                        foreach (var activity in service.Activities)
+                        {
+                            var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != activity.StartTime;
+                            if (isGapBetweenPreviousNested)
+                            {
+                                <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" />
+                            }
+
+                            <HorizontalDurationBoxView Activity="activity" Scale="Scale" />
+                            previousActivity = activity;
+                        }
                     }
+
                 </durationBoxes>
             </service>
         }

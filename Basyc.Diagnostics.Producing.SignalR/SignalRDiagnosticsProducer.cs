@@ -6,17 +6,14 @@ using Basyc.Diagnostics.SignalR.Shared.DTOs;
 using Basyc.Extensions.SignalR.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
+using System.Threading.Channels;
 
 namespace Basyc.Diagnostics.Producing.SignalR
 {
 
 	public class SignalRDiagnosticsProducer : IDiagnosticsProducer
 	{
-		private bool isStarted = false;
-		private bool isStarting = false;
-		private bool isFailed = false;
-		private readonly TaskCompletionSource connectionStartingSource = new();
+		private readonly Channel<ChangesSignalRDTO> signalRChannel = Channel.CreateUnbounded<ChangesSignalRDTO>(new UnboundedChannelOptions() { SingleReader = true });
 
 
 		private readonly IStrongTypedHubConnectionPusher<IServerMethodsProducersCanCall> hubConnection;
@@ -29,90 +26,74 @@ namespace Basyc.Diagnostics.Producing.SignalR
 				.BuildStrongTyped<IServerMethodsProducersCanCall>();
 		}
 
-		public async Task ProduceLog(LogEntry logEntry)
-		{
-			if (await EnsureConnectionStarted() is false)
-			{
-				return;
-			}
-			await hubConnection.Call.ReceiveLogsFromProducer(new LogEntrySignalRDTO[] { LogEntrySignalRDTO.FromLogEntry(logEntry) });
-		}
-
 		/// <summary>
 		/// Returns false when failed to connect
 		/// </summary>
 		/// <returns></returns>
 		public async Task<bool> StartAsync()
 		{
-			isStarting = true;
+			await hubConnection.StartAsync();
+			Task.Run(async () =>
+			{
+				while (true)
+				{
+					var changes = await ReadWithTimeoutAsync<ChangesSignalRDTO>(signalRChannel, TimeSpan.FromMilliseconds(500), default);
+					var logs = changes.SelectMany(x => x.Logs).ToArray();
+					var activityStarts = changes.SelectMany(x => x.ActivityStarts).ToArray();
+					var activityEnds = changes.SelectMany(x => x.ActivityEnds).ToArray();
+					var aggregatedChanges = new ChangesSignalRDTO(logs, activityStarts, activityEnds);
+					await hubConnection.Call.ReceiveChangesFromProducer(aggregatedChanges);
+				}
 
-			try
-			{
-				await hubConnection.StartAsync();
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex.Message);
-				isFailed = true;
-				isStarting = false;
-				connectionStartingSource.SetResult();
-				return false;
-			}
-			isStarted = true;
-			isStarting = false;
-			connectionStartingSource.SetResult();
+			});
 			return true;
 		}
 
-		/// <summary>
-		/// Returns false when connection failed to start
-		/// </summary>
-		/// <returns></returns>
-		private async Task<bool> EnsureConnectionStarted()
+
+		public async Task ProduceLog(LogEntry logEntry)
 		{
-			if (isStarting)
-			{
-				await connectionStartingSource.Task;
-			}
-			else
-			{
-				if (isStarted is false)
-				{
-					var didConnect = await StartAsync();
-					if (didConnect is false)
-					{
-						return false;
-					}
-				}
-			}
-
-			if (isFailed)
-			{
-				return false;
-			}
-
-			return true;
+			var logs = new LogEntrySignalRDTO[] { LogEntrySignalRDTO.FromEntry(logEntry) };
+			await signalRChannel.Writer.WriteAsync(new(logs, Array.Empty<ActivityStartSignalRDTO>(), Array.Empty<ActivityEndSignalRDTO>()));
 		}
 
 		public async Task StartActivity(ActivityStart activityStartEntry)
 		{
-			if (await EnsureConnectionStarted() is false)
-			{
-				return;
-			}
-			await hubConnection.Call.ReceiveStartedActivitiesFromProducer(new ActivityStartSignalRDTO[]
-			{
-				ActivityStartSignalRDTO.FromEntry(activityStartEntry)
-			});
+			var starts = new ActivityStartSignalRDTO[] { ActivityStartSignalRDTO.FromEntry(activityStartEntry) };
+			await signalRChannel.Writer.WriteAsync(new(Array.Empty<LogEntrySignalRDTO>(), starts, Array.Empty<ActivityEndSignalRDTO>()));
+
 		}
 
 		public async Task EndActivity(ActivityEnd activity)
 		{
-			if (await EnsureConnectionStarted() is false)
+			var ends = new ActivityEndSignalRDTO[] { ActivityEndSignalRDTO.FromEntry(activity) };
+			await signalRChannel.Writer.WriteAsync(new(Array.Empty<LogEntrySignalRDTO>(), Array.Empty<ActivityStartSignalRDTO>(), ends));
+		}
+
+		private static async Task<List<T>> ReadWithTimeoutAsync<T>(ChannelReader<T> reader, TimeSpan readTOut, CancellationToken cancellationToken)
+		{
+			var timeoutTokenSrc = new CancellationTokenSource();
+			timeoutTokenSrc.CancelAfter(readTOut);
+
+			var messages = new List<T>();
+
+			using (CancellationTokenSource linkedCts =
+				CancellationTokenSource.CreateLinkedTokenSource(timeoutTokenSrc.Token, cancellationToken))
 			{
-				return;
+				try
+				{
+					await foreach (var item in reader.ReadAllAsync(linkedCts.Token))
+					{
+						messages.Add(item);
+						linkedCts.Token.ThrowIfCancellationRequested();
+					}
+				}
+				catch (OperationCanceledException)
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+				}
 			}
-			await hubConnection.Call.ReceiveEndedActivitiesFromProducer(new ActivitySignalRDTO[] { ActivitySignalRDTO.FromEntry(activity) });
+			timeoutTokenSrc.Dispose();
+			return messages;
 		}
 	}
 }

@@ -64,15 +64,15 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 		public void SendLog<TState>(string handlerDisplayName, LogLevel logLevel, string traceId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
 			var formattedMessage = formatter.Invoke(state, exception);
-			foreach (var producer in logProducers)
+			foreach (var diagnosticProducer in logProducers)
 			{
 				try
 				{
-					producer.ProduceLog(new LogEntry(options.Value.Service, traceId, DateTimeOffset.UtcNow, logLevel, formattedMessage));
+					diagnosticProducer.ProduceLog(new LogEntry(options.Value.Service, traceId, DateTimeOffset.UtcNow, logLevel, formattedMessage));
 				}
 				catch (Exception ex)
 				{
-					logger.LogError(ex, $"LogProducer: {producer.GetType().Name} failed to produce log with error {ex.Message}");
+					logger.LogError(ex, $"LogProducer: {diagnosticProducer.GetType().Name} failed to produce log with error {ex.Message}");
 				}
 			}
 		}

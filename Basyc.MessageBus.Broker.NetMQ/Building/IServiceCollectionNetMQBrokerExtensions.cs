@@ -1,11 +1,13 @@
-﻿using Basyc.MessageBus.NetMQ.Shared;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Basyc.MessageBus.Broker;
+using Basyc.MessageBus.Broker.NetMQ;
+using Basyc.MessageBus.Broker.NetMQ.Building;
+using Basyc.MessageBus.NetMQ.Shared;
 
-namespace Basyc.MessageBus.Broker.NetMQ
+namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionNetMQBrokerExtensions
 	{
-		public static IServiceCollection AddNetMQMessageBroker(this IServiceCollection services,
+		public static SelectDiagnosticStage AddNetMQMessageBroker(this IServiceCollection services,
 			int brokerServerPort = 5367, string brokerServerAddress = "localhost")
 		{
 			services.AddSingleton<IMessageBrokerServer, NetMQMessageBrokerServer>();
@@ -20,7 +22,7 @@ namespace Basyc.MessageBus.Broker.NetMQ
 				x.BrokerServerAddress = brokerServerAddress;
 				x.BrokerServerPort = brokerServerPort;
 			});
-			return services;
+			return new(services);
 		}
 
 	}

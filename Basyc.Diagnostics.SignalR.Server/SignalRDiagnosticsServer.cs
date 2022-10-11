@@ -15,29 +15,10 @@ namespace Basyc.Diagnostics.SignalR.Server
 			this.receiversHubContext = receiversHubContext;
 		}
 
-		public Task ReceiveLogs(LogEntry[] logEntries)
+		public Task ReceiveChanges(DiagnosticChange change)
 		{
-			var logDtos = logEntries.Select(x => LogEntrySignalRDTO.FromLogEntry(x)).ToArray();
-			receiversHubContext.Clients.All.ReceiveChangesFromServer(new ChangesSignalRDTO(logDtos, Array.Empty<ActivityStartSignalRDTO>(), Array.Empty<ActivitySignalRDTO>()));
-			return Task.CompletedTask;
+			var changeDTO = ChangesSignalRDTO.ToDto(change);
+			return receiversHubContext.Clients.All.ReceiveChangesFromServer(changeDTO);
 		}
-
-		public Task ReceiveStartedActivities(ActivityStart[] startedActivity)
-		{
-			var activityDTOs = startedActivity.Select(x => ActivityStartSignalRDTO.FromEntry(x)).ToArray();
-			receiversHubContext.Clients.All.ReceiveChangesFromServer(new ChangesSignalRDTO(Array.Empty<LogEntrySignalRDTO>(), activityDTOs, Array.Empty<ActivitySignalRDTO>()));
-			return Task.CompletedTask;
-		}
-
-		public Task ReceiveEndedActivities(ActivityEnd[] activities)
-		{
-			var activityDTOs = activities.Select(x => ActivitySignalRDTO.FromEntry(x)).ToArray();
-			receiversHubContext.Clients.All.ReceiveChangesFromServer(new ChangesSignalRDTO(Array.Empty<LogEntrySignalRDTO>(), Array.Empty<ActivityStartSignalRDTO>(), activityDTOs));
-			return Task.CompletedTask;
-		}
-
-
-
-
 	}
 }

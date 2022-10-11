@@ -2,6 +2,7 @@
 using Basyc.Diagnostics.Producing.SignalR.Shared;
 using Basyc.MessageBus.Client;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -32,9 +33,10 @@ clientServices
 //.SelectHttpDiagnostics("https://localhost:7115/log");
 
 var services = clientServices.BuildServiceProvider();
+await services.StartBasycMessageBusClient();
 using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();
+await services.StartBasycDiagnosticsProducer();
 
-client.StartAsync();
 
 while (Console.ReadLine() != "stop")
 {

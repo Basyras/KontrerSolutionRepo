@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Basyc.Diagnostics.Producing.Shared\Basyc.Diagnostics.Producing.Shared.csproj" />
     <ProjectReference Include="..\Basyc.MessageBus.Broker\Basyc.MessageBus.Broker.csproj" />
     <ProjectReference Include="..\Basyc.MessageBus.NetMQ.Shared\Basyc.MessageBus.NetMQ.Shared.csproj" />
   </ItemGroup>
