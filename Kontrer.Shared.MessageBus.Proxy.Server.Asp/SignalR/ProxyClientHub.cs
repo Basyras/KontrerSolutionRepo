@@ -18,7 +18,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.SignalR
 		{
 			if (proxyRequest.HasResponse)
 			{
-				var busTask = messageBus.RequestAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
+				var busTask = messageBus.RequestAsync(proxyRequest.MessageType, proxyRequest.MessageBytes, proxyRequest.RequestContext);
 				await Clients.Caller.ReceiveRequestResultMetadata(new RequestMetadataSignalRDTO(busTask.TraceId));
 				var busTaskValue = await busTask.Task;
 				await busTaskValue.Match(
@@ -35,7 +35,7 @@ namespace Basyc.MessageBus.HttpProxy.Server.Asp.SignalR
 			}
 			else
 			{
-				var busTask = messageBus.SendAsync(proxyRequest.MessageType, proxyRequest.MessageBytes);
+				var busTask = messageBus.SendAsync(proxyRequest.MessageType, proxyRequest.MessageBytes, proxyRequest.RequestContext);
 				var busTaskValue = await busTask.Task;
 				await busTaskValue.Match(
 				async success =>

@@ -1,5 +1,4 @@
 ﻿using Basyc.MessageBus.Client;
-using Basyc.MessageBus.Manager.Application;
 using Basyc.MessageBus.Manager.Application.Requesting;
 using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
 using Basyc.MessageBus.Manager.Infrastructure.Formatters;
@@ -38,32 +37,38 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 		public string UniqueName => BasycTypedMessageBusRequesterUniqueName;
 
 
-		public void StartRequest(RequestContext requestResult, ILogger requestLogger)
+		public void StartRequest(Application.RequestContext requestContext, ILogger requestLogger)
 		{
-			var requestStartedSegment = requestResult.StartNewSegment("Requester started");
-			var requestType = requestInfoTypeStorage.GetRequestType(requestResult.Request.RequestInfo);
-			var paramValues = requestResult.Request.Parameters.Select(x => x.Value).ToArray();
-			var requestObject = Activator.CreateInstance(requestType, paramValues);
+			var startSegment = requestContext.StartNewSegment("Requester started");
+			var busRequestContext = new Shared.RequestContext(startSegment.Id, startSegment.TraceId);
+			var prepareSegment = startSegment.StartNested("Preperaing request object");
 
-			if (requestResult.Request.RequestInfo.HasResponse)
+			var requestType = requestInfoTypeStorage.GetRequestType(requestContext.Request.RequestInfo);
+			var paramValues = requestContext.Request.Parameters.Select(x => x.Value).ToArray();
+			var requestObject = Activator.CreateInstance(requestType, paramValues);
+			prepareSegment.End();
+
+
+			if (requestContext.Request.RequestInfo.HasResponse)
 			{
-				var busTask = typedMessageBusClient.RequestAsync(requestType, requestObject, requestResult.Request.RequestInfo.ResponseType);
-				inMemorySessionMapper.AddMapping(requestResult.TraceId, busTask.TraceId);
-				var waitingForBusSegment = requestStartedSegment.StartNested("Waiting for message bus");
+				var busStartSegment = startSegment.StartNested("Requesting to bus");
+				var busTask = typedMessageBusClient.RequestAsync(requestType, requestObject, requestContext.Request.RequestInfo.ResponseType, busRequestContext);
+				inMemorySessionMapper.AddMapping(requestContext.TraceId, busTask.TraceId);
 				busTask.Task.ContinueWith(x =>
 				{
 					var endTime = DateTimeOffset.UtcNow;
-					waitingForBusSegment.End(endTime);
-					requestStartedSegment.End(endTime);
+					busStartSegment.End(endTime);
+					startSegment.End(endTime);
+
 					if (x.IsFaulted)
 					{
-						requestResult.Fail(x.Exception.ToString());
+						requestContext.Fail(x.Exception.ToString());
 						requestLogger.LogError($"Request handeling failed with exception: {x.Exception.ToString()}");
 					}
 
 					if (x.IsCanceled)
 					{
-						requestResult.Fail("canceled");
+						requestContext.Fail("canceled");
 						requestLogger.LogError($"Request handeling was canceled");
 					}
 
@@ -71,15 +76,14 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 					{
 						if (x.Result.Value is ErrorMessage error)
 						{
-							requestResult.Fail(error.Message);
+							requestContext.Fail(error.Message);
 							requestLogger.LogError($"Request handler returned error. {error.Message}");
 						}
 						else
 						{
 							var resultObject = x.Result.AsT0;
-							requestResult.Complete(responseFormatter.Format(resultObject));
+							requestContext.Complete(responseFormatter.Format(resultObject));
 							requestLogger.LogInformation($"Request completed");
-
 						}
 					}
 				});
@@ -87,24 +91,26 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 			}
 			else
 			{
-				var busTask = typedMessageBusClient.SendAsync(requestType, requestObject);
-				inMemorySessionMapper.AddMapping(requestResult.TraceId, busTask.TraceId);
 
-				var waitingForBusSegment = requestStartedSegment.StartNested("Waiting for message bus");
+				var busStartSegment = startSegment.StartNested("Requesting to bus");
+				var busTask = typedMessageBusClient.SendAsync(requestType, requestObject, requestContext: busRequestContext);
+				inMemorySessionMapper.AddMapping(requestContext.TraceId, busTask.TraceId);
+
 				busTask.Task.ContinueWith(x =>
 				{
 					var endTime = DateTimeOffset.UtcNow;
-					waitingForBusSegment.End(endTime);
-					requestStartedSegment.End(endTime);
+					busStartSegment.End(endTime);
+					startSegment.End(endTime);
+
 					if (x.IsFaulted)
 					{
-						requestResult.Fail(x.Exception.ToString());
+						requestContext.Fail(x.Exception.ToString());
 						requestLogger.LogError($"Request handeling failed with exception: {x.Exception.ToString()}");
 					}
 
 					if (x.IsCanceled)
 					{
-						requestResult.Fail("canceled");
+						requestContext.Fail("canceled");
 						requestLogger.LogError($"Request handeling was canceled");
 					}
 
@@ -112,12 +118,12 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 					{
 						if (x.Result.Value is ErrorMessage error)
 						{
-							requestResult.Fail(error.Message);
+							requestContext.Fail(error.Message);
 							requestLogger.LogError($"Request handler returned error. {error.Message}");
 						}
 						else
 						{
-							requestResult.Complete();
+							requestContext.Complete();
 							requestLogger.LogInformation($"Request completed");
 						}
 					}

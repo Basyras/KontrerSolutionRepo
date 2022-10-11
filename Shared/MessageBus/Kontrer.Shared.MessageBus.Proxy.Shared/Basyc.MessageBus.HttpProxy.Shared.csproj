@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Basyc.MessageBus.Shared\Basyc.MessageBus.Shared.csproj" />
     <ProjectReference Include="..\..\..\Basyc.Serialization.Abstraction\Basyc.Serialization.Abstraction.csproj" />
     <ProjectReference Include="..\..\..\Basyc.Serialization.ProtobufNet\Basyc.Serialization.ProtobufNet.csproj" />
   </ItemGroup></Project>

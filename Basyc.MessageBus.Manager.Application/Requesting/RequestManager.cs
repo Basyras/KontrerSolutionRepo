@@ -37,7 +37,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 
 			var requester = requesterSelector.PickRequester(request.RequestInfo);
 			var traceId = Interlocked.Increment(ref requestCounter).ToString();
-			RequestDiagnostics requestDiagnostics = requestDiagnosticsManager.CreateDiagnostics(traceId);
+			RequestDiagnosticContext requestDiagnostics = requestDiagnosticsManager.CreateDiagnostics(traceId);
 			IDurationMapBuilder durationMapBuilder = new InMemoryDiagnosticsSourceDurationMapBuilder(requestManagerServiceIdentity, traceId, "root", inMemoryRequestDiagnosticsSource);
 			var requestContext = new RequestContext(request, DateTime.Now, traceId, durationMapBuilder, requestDiagnostics);
 			reqeustContexts.Add(requestContext);

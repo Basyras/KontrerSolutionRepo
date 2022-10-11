@@ -8,7 +8,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 	{
 		private readonly InMemoryRequestDiagnosticsSource diagnosticsSource;
 
-		public InMemoryDiagnosticsSourceDurationMapBuilder(ServiceIdentity service, string traceId, string name, InMemoryRequestDiagnosticsSource diagnosticsSource) : base(service, traceId, name, diagnosticsSource)
+		public InMemoryDiagnosticsSourceDurationMapBuilder(ServiceIdentity service, string traceId, string name, InMemoryRequestDiagnosticsSource diagnosticsSource) : base(service, traceId, Guid.NewGuid().ToString(), name, diagnosticsSource)
 		{
 			this.diagnosticsSource = diagnosticsSource;
 		}

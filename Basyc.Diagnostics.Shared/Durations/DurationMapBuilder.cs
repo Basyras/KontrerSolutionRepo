@@ -2,9 +2,10 @@
 {
 	public class DurationMapBuilder : IDurationMapBuilder
 	{
-		public DurationMapBuilder(ServiceIdentity service)
+		public DurationMapBuilder(ServiceIdentity service, string traceId)
 		{
 			Service = service;
+			TraceId = traceId;
 		}
 
 		private InMemoryDurationSegmentBuilder? rootSegmentBuilder;
@@ -14,6 +15,7 @@
 
 		public bool HasStarted { get; private set; }
 		public ServiceIdentity Service { get; }
+		public string TraceId { get; init; }
 
 		/// <summary>
 		/// Return start time
@@ -21,7 +23,7 @@
 		/// <returns></returns>
 		public DateTimeOffset Start()
 		{
-			rootSegmentBuilder = new InMemoryDurationSegmentBuilder("root", Service, () => rootSegmentBuilder!);
+			rootSegmentBuilder = new InMemoryDurationSegmentBuilder(Service, TraceId, Guid.NewGuid().ToString(), "root", () => rootSegmentBuilder!);
 			StartTime = rootSegmentBuilder.Start();
 			HasStarted = true;
 			return StartTime;

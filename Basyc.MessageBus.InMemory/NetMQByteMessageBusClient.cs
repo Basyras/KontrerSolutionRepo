@@ -55,7 +55,6 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 		dealerSocket.ReceiveReady += async (s, a) =>
 		{
 			var messageFrames = dealerSocket.ReceiveMultipartMessage(3);
-			//await HandleMessage(messageFrames,CancellationToken.None);
 			await Task.Run(async () =>
 			{
 				await HandleMessage(messageFrames, CancellationToken.None);
@@ -69,7 +68,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	{
 		poller.RunAsync();
 		CheckInMessage checkIn = new CheckInMessage(options.Value.WorkerId!, handlerManager.GetConsumableMessageTypes());
-		byte[] messageWrapperBytes = netMQMessageWrapper.CreateWrapperMessage(checkIn, TypedToSimpleConverter.ConvertTypeToSimple(typeof(CheckInMessage)), default, "checkInShouldNotHaveTraceId", MessageCase.CheckIn);
+		byte[] messageWrapperBytes = netMQMessageWrapper.CreateWrapperMessage(checkIn, TypedToSimpleConverter.ConvertTypeToSimple(typeof(CheckInMessage)), default, "checkInShouldNotHaveTraceId", "noParent", MessageCase.CheckIn);
 		var messageToServer = new NetMQMessage();
 		messageToServer.AppendEmptyFrame();
 		messageToServer.Append(messageWrapperBytes);
@@ -81,7 +80,6 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 
 	private async Task HandleMessage(NetMQMessage messageFrames, CancellationToken cancellationToken)
 	{
-		//NetMQMessage messageFrames = dealerSocket.ReceiveMultipartMessage(3);
 		var senderAddressBytes = messageFrames[1].Buffer;
 		var senderAddressString = Encoding.ASCII.GetString(senderAddressBytes);
 		byte[] messageDataBytes = messageFrames[3].Buffer;
@@ -110,7 +108,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 				}
 
 				string responseType = TypedToSimpleConverter.ConvertTypeToSimple(connsumerResultData.GetType());
-				byte[] wrapperMessageBytes = netMQMessageWrapper.CreateWrapperMessage(connsumerResultData, responseType, requestCase.SessionId, requestCase.TraceId, MessageCase.Response);
+				byte[] wrapperMessageBytes = netMQMessageWrapper.CreateWrapperMessage(connsumerResultData, responseType, requestCase.SessionId, requestCase.TraceId, requestCase.ParentSpanId, MessageCase.Response);
 				var messageToServer = new NetMQMessage();
 				messageToServer.AppendEmptyFrame();
 				messageToServer.Append(wrapperMessageBytes);
@@ -134,9 +132,6 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 				logger.LogInformation($"Event received from {senderAddressString}:{eventCase.SessionId}, data: '{eventCase.EventBytes}'");
 				var eventRequest = objectToByteSerailizer.Deserialize(eventCase.EventBytes, eventCase.EventType);
 				var responseData = await handlerManager.ConsumeMessage(eventCase.EventType, eventRequest, cancellationToken, eventCase.TraceId);
-				//var sessionResult = CreateEventPublishedMessageBytes();
-				//if (sessionManager.TryCompleteSession(eventCase.SessionId, sessionResult) is false)
-				//	logger.LogError($"Session '{eventCase.SessionId}' completation failed. Session does not exist");
 			},
 			failureCase =>
 			{
@@ -158,15 +153,18 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	}
 
 
-	private BusTask PublishAsync(byte[]? eventBytes, string eventType, CancellationToken cancellationToken)
+	private BusTask PublishAsync(byte[]? eventBytes, string eventType, RequestContext requestContext, CancellationToken cancellationToken)
 	{
-		var newSession = sessionManager.CreateSession(eventType);
+		string traceId = requestContext.TraceId is null ? Guid.NewGuid().ToString() : requestContext.TraceId;
+		string requesterSpanId = requestContext.RequesterSpanId is null ? traceId : requestContext.RequesterSpanId;
+
+		var newSession = sessionManager.CreateSession(eventType, traceId, requesterSpanId);
 
 		var task = Task.Run(() =>
 		{
 			eventBytes ??= new byte[0];
 			cancellationToken.ThrowIfCancellationRequested();
-			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(eventBytes, eventType, newSession.SessionId, newSession.TraceId, MessageCase.Event);
+			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(eventBytes, eventType, newSession.SessionId, newSession.TraceId, newSession.RequesterSpanId, MessageCase.Event);
 			var messageToBroker = new NetMQMessage();
 			messageToBroker.AppendEmptyFrame();
 			messageToBroker.Append(netMQByteMessage);
@@ -188,10 +186,8 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			logger.LogInformation($"Published '{eventType}'");
 			var publishResult = "Published";
 			var publisResultType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(string));
-			var publishResultBytes = netMQMessageWrapper.CreateWrapperMessage(publishResult, publisResultType, 0, newSession.TraceId, MessageCase.Response);
+			var publishResultBytes = netMQMessageWrapper.CreateWrapperMessage(publishResult, publisResultType, 0, newSession.TraceId, newSession.RequesterSpanId, MessageCase.Response);
 			sessionManager.TryCompleteSession(newSession.SessionId, new NetMQSessionResult(publishResultBytes, publisResultType));
-			//return newSession.ResponseSource.Task;
-			//return Task.CompletedTask;
 		});
 
 		return BusTask.FromTask(newSession.TraceId, task);
@@ -201,23 +197,25 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	{
 		var errorResult = new ErrorMessage(errorMessage);
 		var errorResultType = TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage));
-		var errorResultBytes = netMQMessageWrapper.CreateWrapperMessage(errorResult, errorResultType, 0, "noTraceID", MessageCase.Response);
+		var errorResultBytes = netMQMessageWrapper.CreateWrapperMessage(errorResult, errorResultType, 0, "noTraceID", "noParentId", MessageCase.Response);
 		return new NetMQSessionResult(errorResultBytes, errorResultType);
 	}
-	private BusTask SendAsync(byte[]? commnadData, string commandType, CancellationToken cancellationToken)
+	private BusTask SendAsync(byte[]? commnadData, string commandType, RequestContext context, CancellationToken cancellationToken)
 	{
-		return RequestAsync(commnadData, commandType, cancellationToken).ToBusTask();
+		return RequestAsync(commnadData, commandType, context, cancellationToken).ToBusTask();
 	}
-
-	private BusTask<ByteResponse> RequestAsync(byte[]? requestBytes, string requestType, CancellationToken cancellationToken)
+	private BusTask<ByteResponse> RequestAsync(byte[]? requestBytes, string requestType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 	{
-		var newSession = sessionManager.CreateSession(requestType);
+		string traceId = requestContext.TraceId is null ? Guid.NewGuid().ToString() : requestContext.TraceId;
+		string requesterSpanId = requestContext.RequesterSpanId is null ? traceId : requestContext.RequesterSpanId;
+
+		var newSession = sessionManager.CreateSession(requestType, requestContext.TraceId, requestContext.RequesterSpanId);
 
 		Task<OneOf<ByteResponse, ErrorMessage>> task = Task.Run<OneOf<ByteResponse, ErrorMessage>>(async () =>
 		{
 			requestBytes ??= new byte[0];
 			cancellationToken.ThrowIfCancellationRequested();
-			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(requestBytes, requestType, newSession.SessionId, newSession.TraceId, MessageCase.Request);
+			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(requestBytes, requestType, newSession.SessionId, newSession.TraceId, newSession.RequesterSpanId, MessageCase.Request);
 			var messageToBroker = new NetMQMessage();
 			messageToBroker.AppendEmptyFrame();
 			messageToBroker.Append(netMQByteMessage);
@@ -245,34 +243,34 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	}
 
 
-	BusTask IByteMessageBusClient.PublishAsync(string eventType, CancellationToken cancellationToken)
+	BusTask IByteMessageBusClient.PublishAsync(string eventType, RequestContext context, CancellationToken cancellationToken)
 	{
-		return PublishAsync(null, eventType, cancellationToken);
+		return PublishAsync(null, eventType, context, cancellationToken);
 	}
 
-	BusTask IByteMessageBusClient.PublishAsync(string eventType, byte[] eventBytes, CancellationToken cancellationToken)
+	BusTask IByteMessageBusClient.PublishAsync(string eventType, byte[] eventBytes, RequestContext context, CancellationToken cancellationToken)
 	{
-		return PublishAsync(eventBytes, eventType, cancellationToken);
+		return PublishAsync(eventBytes, eventType, context, cancellationToken);
 	}
 
-	BusTask IByteMessageBusClient.SendAsync(string commandType, CancellationToken cancellationToken)
+	BusTask IByteMessageBusClient.SendAsync(string commandType, RequestContext context, CancellationToken cancellationToken)
 	{
-		return SendAsync(null, commandType, cancellationToken);
+		return SendAsync(null, commandType, context, cancellationToken);
 	}
 
-	BusTask IByteMessageBusClient.SendAsync(string commandType, byte[] commandData, CancellationToken cancellationToken)
+	BusTask IByteMessageBusClient.SendAsync(string commandType, byte[] commandData, RequestContext context, CancellationToken cancellationToken)
 	{
-		return SendAsync(commandData, commandType, cancellationToken);
+		return SendAsync(commandData, commandType, context, cancellationToken);
 	}
 
-	BusTask<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, CancellationToken cancellationToken)
+	BusTask<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, RequestContext context, CancellationToken cancellationToken)
 	{
-		return RequestAsync(null, requestType, cancellationToken);
+		return RequestAsync(null, requestType, context, cancellationToken);
 	}
 
-	BusTask<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken)
+	BusTask<ByteResponse> IByteMessageBusClient.RequestAsync(string requestType, byte[] requestData, RequestContext context, CancellationToken cancellationToken)
 	{
-		var reqeustTask = RequestAsync(requestData, requestType, cancellationToken);
+		var reqeustTask = RequestAsync(requestData, requestType, context, cancellationToken);
 		return reqeustTask;
 
 	}

@@ -15,25 +15,25 @@ namespace Basyc.MessageBus.Client
 			this.objectMessageBusClient = objectMessageBusClient;
 			this.byteSerailizer = byteSerailizer;
 		}
-		public BusTask PublishAsync(string eventType, CancellationToken cancellationToken = default)
+		public BusTask PublishAsync(string eventType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			return objectMessageBusClient.PublishAsync(eventType, cancellationToken);
 		}
 
-		public BusTask PublishAsync(string eventType, byte[] eventData, CancellationToken cancellationToken = default)
+		public BusTask PublishAsync(string eventType, byte[] eventData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			return objectMessageBusClient.PublishAsync(eventType, eventData, cancellationToken);
+			return objectMessageBusClient.PublishAsync(eventType, eventData, requestContext, cancellationToken);
 		}
 
-		public BusTask<ByteResponse> RequestAsync(string requestType, CancellationToken cancellationToken = default)
+		public BusTask<ByteResponse> RequestAsync(string requestType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			var innerBusTask = objectMessageBusClient.RequestAsync(requestType, cancellationToken);
 			return innerBusTask.ContinueWith<ByteResponse>(x => new ByteResponse((byte[])x, "unknown"));
 		}
 
-		public BusTask<ByteResponse> RequestAsync(string requestType, byte[] requestData, CancellationToken cancellationToken = default)
+		public BusTask<ByteResponse> RequestAsync(string requestType, byte[] requestData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			var innerBusTask = objectMessageBusClient.RequestAsync(requestType, requestData, cancellationToken);
+			var innerBusTask = objectMessageBusClient.RequestAsync(requestType, requestData, requestContext, cancellationToken);
 			return innerBusTask.ContinueWith<ByteResponse>(nestedValue =>
 			{
 				if (nestedValue is byte[] bytes)
@@ -43,14 +43,14 @@ namespace Basyc.MessageBus.Client
 			});
 		}
 
-		public BusTask SendAsync(string commandType, CancellationToken cancellationToken = default)
+		public BusTask SendAsync(string commandType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			return objectMessageBusClient.SendAsync(commandType, cancellationToken);
 		}
 
-		public BusTask SendAsync(string commandType, byte[] commandData, CancellationToken cancellationToken = default)
+		public BusTask SendAsync(string commandType, byte[] commandData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			return objectMessageBusClient.SendAsync(commandType, commandData, cancellationToken);
+			return objectMessageBusClient.SendAsync(commandType, commandData, requestContext, cancellationToken);
 		}
 
 		public Task StartAsync(CancellationToken cancellationToken = default)

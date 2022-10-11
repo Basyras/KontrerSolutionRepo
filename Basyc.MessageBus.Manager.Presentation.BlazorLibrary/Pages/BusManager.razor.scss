@@ -7,6 +7,7 @@
     bottom: 0px;
     right: 0px;
     left: 0px;
+    overflow: hidden;
 }
 
 sideBar {
@@ -27,7 +28,10 @@ requestFormPage {
 }
 
 historyPage {
-    overflow: scroll;
+    display: block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    /*overflow: hidden;*/
     flex: 70;
     padding: 2rem 4rem;
 }

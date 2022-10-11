@@ -70,6 +70,16 @@
                 <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" />
                 previousActivity = nestedActivity;
             }
+
+
+            if (Activity.HasEnded && Activity.NestedActivities.Any() && Activity.NestedActivities.All(x => x.HasEnded))
+            {
+                var lastActivity = Activity.NestedActivities.OrderByDescending(x => x.EndTime).First();
+                if (Activity.EndTime != lastActivity.EndTime)
+                {
+                    <HorizontalUnknownDurationBoxView StartTime="lastActivity.EndTime" EndTime="Activity.EndTime" Scale="Scale" />
+                }
+            }
         }
     </nestedDurationBoxes>
 

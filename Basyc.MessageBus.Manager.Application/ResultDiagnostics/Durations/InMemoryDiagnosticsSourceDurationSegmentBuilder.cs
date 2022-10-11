@@ -6,22 +6,18 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 {
 	internal class InMemoryDiagnosticsSourceDurationSegmentBuilder : DurationSegmentBuilderBase
 	{
-		public string TraceId { get; init; }
-		private readonly string id;
 		private readonly InMemoryRequestDiagnosticsSource diagnosticsSource;
 		private readonly InMemoryDiagnosticsSourceDurationSegmentBuilder? parent;
 
-		public InMemoryDiagnosticsSourceDurationSegmentBuilder(ServiceIdentity service, string traceId, string name, InMemoryRequestDiagnosticsSource diagnosticsSource) : base(name, service)
+		public InMemoryDiagnosticsSourceDurationSegmentBuilder(ServiceIdentity service, string traceId, string id, string name, InMemoryRequestDiagnosticsSource diagnosticsSource)
+			: base(service, traceId, id, name)
 		{
-			this.TraceId = traceId;
-			this.id = Guid.NewGuid().ToString();
 			this.diagnosticsSource = diagnosticsSource;
 		}
 
-		public InMemoryDiagnosticsSourceDurationSegmentBuilder(InMemoryDiagnosticsSourceDurationSegmentBuilder parent, string traceId, string id, string name, ServiceIdentity service, InMemoryRequestDiagnosticsSource diagnosticsSource) : base(name, service)
+		public InMemoryDiagnosticsSourceDurationSegmentBuilder(InMemoryDiagnosticsSourceDurationSegmentBuilder parent, string traceId, string id, string name, ServiceIdentity service, InMemoryRequestDiagnosticsSource diagnosticsSource)
+			: base(service, traceId, id, name)
 		{
-			this.TraceId = traceId;
-			this.id = id;
 			this.diagnosticsSource = diagnosticsSource;
 			this.parent = parent;
 			HasParent = true;
@@ -30,7 +26,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 		public override void End(DateTimeOffset finalEndTime)
 		{
 			EndTime = finalEndTime;
-			diagnosticsSource.EndActivity(new ActivityEnd(Service, TraceId, parent?.id, id, Name, StartTime, EndTime, System.Diagnostics.ActivityStatusCode.Ok));
+			diagnosticsSource.EndActivity(new ActivityEnd(Service, TraceId, parent?.Id, Id, Name, StartTime, EndTime, System.Diagnostics.ActivityStatusCode.Ok));
 		}
 
 		public override IDurationSegmentBuilder EndAndStartFollowing(string segmentName)
@@ -45,7 +41,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 		public override IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start)
 		{
 			var nestedId = Guid.NewGuid().ToString();
-			diagnosticsSource.StartActivity(new ActivityStart(service, TraceId, id, nestedId, segmentName, start));
+			diagnosticsSource.StartActivity(new ActivityStart(service, TraceId, Id, nestedId, segmentName, start));
 			return new InMemoryDiagnosticsSourceDurationSegmentBuilder(this, TraceId, nestedId, segmentName, service, diagnosticsSource);
 		}
 	}

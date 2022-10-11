@@ -87,33 +87,33 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 
 		}
 
-		public BusTask PublishAsync(string eventType, CancellationToken cancellationToken)
+		public BusTask PublishAsync(string eventType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			return HttpCallToProxyServer(eventType, null, null, cancellationToken).ToBusTask();
 		}
 
-		public BusTask PublishAsync(string eventType, object eventData, CancellationToken cancellationToken)
+		public BusTask PublishAsync(string eventType, object eventData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			return HttpCallToProxyServer(eventType, eventData, null, cancellationToken).ToBusTask();
 		}
 
-		public BusTask SendAsync(string commandType, CancellationToken cancellationToken)
+		public BusTask SendAsync(string commandType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			return HttpCallToProxyServer(commandType, null, null, cancellationToken).ToBusTask();
 		}
 
-		public BusTask SendAsync(string commandType, object commandData, CancellationToken cancellationToken)
+		public BusTask SendAsync(string commandType, object commandData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			return HttpCallToProxyServer(commandType, commandData, null, cancellationToken).ToBusTask();
 		}
 
-		public BusTask<object> RequestAsync(string requestType, CancellationToken cancellationToken)
+		public BusTask<object> RequestAsync(string requestType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			var innerBusTask = HttpCallToProxyServer(requestType, null, typeof(UknownResponseType), cancellationToken);
 			return innerBusTask.ContinueWith<object>(x => (object)x);
 		}
 
-		public BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken)
+		public BusTask<object> RequestAsync(string requestType, object requestData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			var innerBusTask = HttpCallToProxyServer(requestType, requestData, typeof(UknownResponseType), cancellationToken);
 			return innerBusTask.ContinueWith<object>(x => (object)x);

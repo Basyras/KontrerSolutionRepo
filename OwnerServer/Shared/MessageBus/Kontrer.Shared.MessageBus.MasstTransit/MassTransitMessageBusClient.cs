@@ -18,38 +18,38 @@ namespace Basyc.MessageBus.Client.MasstTransit
 			this.massTransitBus = massTransitBus;
 		}
 
-		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			var publishTask = massTransitBus.Publish<TEvent>(cancellationToken);
 			return BusTask.FromTask("-1", publishTask);
 		}
 
-		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(TEvent data, CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(TEvent data, RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			var publishTask = massTransitBus.Publish(data, cancellationToken);
 			return BusTask.FromTask("-1", publishTask);
 
 		}
 
-		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
+		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			var requestTask = massTransitBus.Request<TRequest, TResponse>(cancellationToken);
 			return BusTask<TResponse>.FromTask<Response<TResponse>>("-1", requestTask, x => (OneOf<TResponse, ErrorMessage>)x.Message);
 		}
 
-		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken)
+		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest request, RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			var requestTask = massTransitBus.Request<TRequest, TResponse>(request, cancellationToken);
 			return BusTask<TResponse>.FromTask<Response<TResponse>>("-1", requestTask, x => (OneOf<TResponse, ErrorMessage>)x.Message);
 		}
 
-		BusTask<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
+		BusTask<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			var bus = (ITypedMessageBusClient)this;
-			return bus.RequestAsync(requestType, Activator.CreateInstance(requestType), responseType, cancellationToken);
+			return bus.RequestAsync(requestType, Activator.CreateInstance(requestType), responseType, requestContext, cancellationToken);
 		}
 
-		public BusTask<object> RequestAsync(Type requestType, object request, Type responseType, CancellationToken cancellationToken)
+		public BusTask<object> RequestAsync(Type requestType, object request, Type responseType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			var conType = typeof(SendContext<>).MakeGenericType(requestType);
 			var actionType = typeof(Action<>).MakeGenericType(conType);
@@ -68,32 +68,32 @@ namespace Basyc.MessageBus.Client.MasstTransit
 			return busTask;
 		}
 
-		public BusTask SendAsync(Type requestType, object request, CancellationToken cancellationToken)
+		public BusTask SendAsync(Type requestType, object request, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			//await _massTransitBus.Publish(request, requestType, cancellationToken); //Wont get response
 			//await _massTransitBus.Send(request, requestType, cancellationToken); //Does not work
 
 			//Command can return response, but should not query data, returning command completion status is allowed
-			return RequestAsync(requestType, request, typeof(VoidCommandResult), cancellationToken).ToBusTask();
+			return RequestAsync(requestType, request, typeof(VoidCommandResult), requestContext, cancellationToken).ToBusTask();
 		}
 
-		public BusTask SendAsync(Type requestType, CancellationToken cancellationToken)
+		public BusTask SendAsync(Type requestType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			var request = Activator.CreateInstance(requestType);
 			//await _massTransitBus.Publish(request, requestType, cancellationToken);
-			return SendAsync(requestType, request, cancellationToken);
+			return SendAsync(requestType, request, requestContext, cancellationToken);
 		}
 
-		BusTask ITypedMessageBusClient.SendAsync<TRequest>(CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.SendAsync<TRequest>(RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			//await _massTransitBus.Publish<TRequest>(cancellationToken);
-			return SendAsync(typeof(TRequest), cancellationToken);
+			return SendAsync(typeof(TRequest), requestContext, cancellationToken);
 		}
 
-		BusTask ITypedMessageBusClient.SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.SendAsync<TRequest>(TRequest request, RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			//await _massTransitBus.Publish(request, cancellationToken);
-			return SendAsync(typeof(TRequest), request, cancellationToken);
+			return SendAsync(typeof(TRequest), request, requestContext, cancellationToken);
 		}
 
 		private static async Task<object> InvokeAsync(MethodInfo masstransitRequestMethod, object obj, params object[] parameters)

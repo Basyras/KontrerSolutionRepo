@@ -1,9 +1,10 @@
 ﻿namespace Basyc.Diagnostics.Shared.Durations
 {
-	public interface IDurationSegmentBuilder
+	public interface IDurationSegmentBuilder : IDisposable
 	{
 		string Name { get; init; }
-
+		string Id { get; init; }
+		string TraceId { get; init; }
 		bool HasStarted { get; }
 		bool HasEnded { get; }
 		DateTimeOffset StartTime { get; }
@@ -19,7 +20,5 @@
 		IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName);
 		IDurationSegmentBuilder StartNested(string segmentName);
 		IDurationSegmentBuilder EndAndStartFollowing(string segmentName);
-
-		void Dispose();
 	}
 }

@@ -98,5 +98,9 @@
   {
     "outputFile": "Components/DurationMap/Horizontal/HorizontalUnknownDurationBoxView.razor.css",
     "inputFile": "Components/DurationMap/Horizontal/HorizontalUnknownDurationBoxView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/BusManager.razor.css",
+    "inputFile": "Pages/BusManager.razor.scss"
   }
 ]

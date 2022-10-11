@@ -40,42 +40,42 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 			hubConnection.DisposeAsync().GetAwaiter().GetResult();
 		}
 
-		public BusTask PublishAsync(string eventType, CancellationToken cancellationToken = default)
+		public BusTask PublishAsync(string eventType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			return CreateAndStartBusTask(eventType, null, cancellationToken).ToBusTask();
+			return CreateAndStartBusTask(eventType, null, requestContext, cancellationToken).ToBusTask();
 
 		}
 
-		public BusTask PublishAsync(string eventType, object eventData, CancellationToken cancellationToken = default)
+		public BusTask PublishAsync(string eventType, object eventData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			return CreateAndStartBusTask(eventType, eventData, cancellationToken).ToBusTask();
+			return CreateAndStartBusTask(eventType, eventData, requestContext, cancellationToken).ToBusTask();
 		}
 
-		public BusTask<object> RequestAsync(string requestType, CancellationToken cancellationToken = default)
+		public BusTask<object> RequestAsync(string requestType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			return BusTask<object>.FromBusTask(CreateAndStartBusTask(requestType, null, cancellationToken), x => x!);
+			return BusTask<object>.FromBusTask(CreateAndStartBusTask(requestType, null, requestContext, cancellationToken), x => x!);
 
 		}
 
-		public BusTask<object> RequestAsync(string requestType, object requestData, CancellationToken cancellationToken = default)
+		public BusTask<object> RequestAsync(string requestType, object requestData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			return BusTask<object>.FromBusTask(CreateAndStartBusTask(requestType, requestData, cancellationToken), x => x!);
+			return BusTask<object>.FromBusTask(CreateAndStartBusTask(requestType, requestData, requestContext, cancellationToken), x => x!);
 		}
 
-		public BusTask SendAsync(string commandType, CancellationToken cancellationToken = default)
+		public BusTask SendAsync(string commandType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			return CreateAndStartBusTask(commandType, null, cancellationToken).ToBusTask();
+			return CreateAndStartBusTask(commandType, null, requestContext, cancellationToken).ToBusTask();
 		}
 
-		public BusTask SendAsync(string commandType, object commandData, CancellationToken cancellationToken = default)
+		public BusTask SendAsync(string commandType, object commandData, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			return CreateAndStartBusTask(commandType, commandData, cancellationToken).ToBusTask();
+			return CreateAndStartBusTask(commandType, commandData, requestContext, cancellationToken).ToBusTask();
 		}
 
-		private BusTask<object?> CreateAndStartBusTask(string requestType, object? requestData = null, CancellationToken cancellationToken = default)
+		private BusTask<object?> CreateAndStartBusTask(string requestType, object? requestData = null, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
 			SignalRSession session = sessionManager.StartSession();
-			Task<OneOf<object?, ErrorMessage>> reqeustTask = Task.Run(async () =>
+			Task<OneOf<object?, ErrorMessage>> reqeustTask = Task.Run((Func<Task<OneOf<object?, ErrorMessage>>?>)(async () =>
 			{
 				if (byteSerializer.TrySerialize(requestData, requestType, out var requestDataBytes, out var error) is false)
 				{
@@ -83,7 +83,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 				}
 				try
 				{
-					await hubConnection.Call.Request(new RequestSignalRDTO(requestType, true, requestDataBytes));
+					await hubConnection.Call.Request(new RequestSignalRDTO(requestType, true, requestDataBytes, RequestContext: requestContext));
 				}
 				catch (Exception ex)
 				{
@@ -109,7 +109,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 				},
 				error => error);
 
-			});
+			}));
 
 			return BusTask<object?>.FromTask(session.TraceId, reqeustTask);
 

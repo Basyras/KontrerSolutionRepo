@@ -16,11 +16,11 @@ namespace Basyc.MessageBus.Client.NetMQ.Sessions
 		/// Return new session's id
 		/// </summary>
 		/// <returns></returns>
-		public NetMqSession<TSessionResult> CreateSession(string messageType)
+		public NetMqSession<TSessionResult> CreateSession(string messageType, string traceId, string requesterSpanId)
 		{
 			var newSessionId = Interlocked.Increment(ref lastUsedSessionId);
 			TaskCompletionSource<TSessionResult> responseSource = new TaskCompletionSource<TSessionResult>();
-			var newSession = new NetMqSession<TSessionResult>(newSessionId, newSessionId.ToString(), messageType, responseSource);
+			var newSession = new NetMqSession<TSessionResult>(newSessionId, traceId, requesterSpanId, messageType, responseSource);
 			sessions.Add(newSessionId, newSession);
 			logger.LogDebug($"Session '{newSession.SessionId}' created for '{messageType}'");
 			return newSession;

@@ -32,13 +32,13 @@ namespace Basyc.MessageBus.Manager.Application
 		}
 
 		public string TraceId { get; init; }
-		public RequestDiagnostics Diagnostics { get; }
+		public RequestDiagnosticContext Diagnostics { get; }
 		public RequestResultState State { get; private set; }
 		public object? Response { get; private set; }
 		public string? ErrorMessage { get; private set; }
 
 
-		public RequestContext(Request request, DateTimeOffset requestCreationTime, string traceId, IDurationMapBuilder durationMapBuilder, RequestDiagnostics requestDiagnostics)
+		public RequestContext(Request request, DateTimeOffset requestCreationTime, string traceId, IDurationMapBuilder durationMapBuilder, RequestDiagnosticContext requestDiagnostics)
 		{
 			Request = request;
 			this.durationMapBuilder = durationMapBuilder;

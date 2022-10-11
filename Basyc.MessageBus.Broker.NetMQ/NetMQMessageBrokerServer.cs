@@ -70,7 +70,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 						messageToProducer.AppendEmptyFrame();
 						messageToProducer.AppendEmptyFrame();
 						messageToProducer.AppendEmptyFrame();
-						messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, request.TraceId, MessageCase.Response));
+						messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, request.TraceId, request.ParentSpanId, MessageCase.Response));
 						logger.LogError($"Sending failure: '{failure}' to {senderAddressString}");
 						brokerSocket.SendMultipartMessage(messageToProducer);
 						logger.LogError($"Failure sent to {senderAddressFrame}");
@@ -127,7 +127,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 					messageToProducer.AppendEmptyFrame();
 					messageToProducer.AppendEmptyFrame();
 					messageToProducer.AppendEmptyFrame();
-					messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failResult, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), failure.SessionId, failure.TraceId, MessageCase.Response));
+					messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failResult, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), failure.SessionId, failure.TraceId, failure.ParentSpanId, MessageCase.Response));
 					logger.LogDebug($"Sending failure: '{failure}' to {sendFailToAddressString}");
 					brokerSocket.SendMultipartMessage(messageToProducer);
 					logger.LogDebug($"Failure sent to {sendFailToAddressString}");

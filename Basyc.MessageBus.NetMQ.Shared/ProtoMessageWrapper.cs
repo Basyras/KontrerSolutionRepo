@@ -14,13 +14,14 @@ public class ProtoMessageWrapper
 
 	}
 
-	public ProtoMessageWrapper(int sessionId, MessageCase messageCase, string messageType, byte[] messageData, string traceId)
+	public ProtoMessageWrapper(int sessionId, MessageCase messageCase, string messageType, byte[] messageData, string traceId, string parentSpanId)
 	{
 		SessionId = sessionId;
 		MessageCase = messageCase;
 		MessageType = messageType;
 		MessageBytes = messageData;
 		TraceId = traceId;
+		ParentSpanId = parentSpanId;
 	}
 
 	[ProtoMember(1)]
@@ -37,4 +38,7 @@ public class ProtoMessageWrapper
 
 	[ProtoMember(5)]
 	public string TraceId { get; set; }
+
+	[ProtoMember(6)]
+	public string ParentSpanId { get; set; }
 }

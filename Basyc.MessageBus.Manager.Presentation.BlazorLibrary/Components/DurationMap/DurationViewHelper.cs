@@ -4,15 +4,7 @@
 	{
 		public static double GetDurationAsRem(TimeSpan duration, double scale)
 		{
-			var minHeight = Math.Round(duration.TotalMilliseconds / scale);
-			//if (minHeight < 5)
-			//{
-			//	minHeight = 5;
-			//}
-			//if (minHeight > 100)
-			//{
-			//	minHeight = 100;
-			//}
+			var minHeight = duration.TotalMilliseconds / scale;
 			return minHeight;
 		}
 

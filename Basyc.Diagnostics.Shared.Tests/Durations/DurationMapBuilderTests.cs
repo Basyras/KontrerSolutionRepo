@@ -9,7 +9,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void When_BuildingEmpty_Should_BeEmpty()
 		{
-			var mapBuilder = new DurationMapBuilder(TestServiceIndentity);
+			var mapBuilder = new DurationMapBuilder(TestServiceIndentity, "1");
 			var durationMap = mapBuilder.Build();
 
 			durationMap.Segments.Length.Should().Be(0);
@@ -19,7 +19,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void When_BuildWithoutStartCounting_Should_StartAutomatically()
 		{
-			var mapBuilder = new DurationMapBuilder(TestServiceIndentity);
+			var mapBuilder = new DurationMapBuilder(TestServiceIndentity, "1");
 			var durationMap = mapBuilder.Build();
 			mapBuilder.HasStarted.Should().BeTrue();
 			mapBuilder.StartTime.Should().NotBe(default(DateTimeOffset));
@@ -28,7 +28,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void When_AddAndStartSegmentWithoutStartCounting_Should_StartAutomatically()
 		{
-			var mapBuilder = new DurationMapBuilder(TestServiceIndentity);
+			var mapBuilder = new DurationMapBuilder(TestServiceIndentity, "1");
 			_ = mapBuilder.StartNewSegment("segmentName");
 			mapBuilder.HasStarted.Should().BeTrue();
 			mapBuilder.StartTime.Should().NotBe(default(DateTimeOffset));
@@ -37,7 +37,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void When_AddAndStartSegment_Should_HaveOneSegment()
 		{
-			var mapBuilder = new DurationMapBuilder(TestServiceIndentity);
+			var mapBuilder = new DurationMapBuilder(TestServiceIndentity, "1");
 			const string segment1Name = "segment1";
 			_ = mapBuilder.StartNewSegment(segment1Name);
 			var durationMap = mapBuilder.Build();
@@ -55,7 +55,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[InlineData(3)]
 		public void When_StartingMultipleSegment_Should_ContainAll(int numberOfSegments)
 		{
-			var durationMapBuilder = new DurationMapBuilder(TestServiceIndentity);
+			var durationMapBuilder = new DurationMapBuilder(TestServiceIndentity, "1");
 
 			for (int segmentIndex = 0; segmentIndex < numberOfSegments; segmentIndex++)
 			{
@@ -81,7 +81,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		public void AddAndStartSegment_Should_ReturnNewSegment()
 		{
 			List<IDurationSegmentBuilder> allSegments = new List<IDurationSegmentBuilder>();
-			var mapBuilder = new DurationMapBuilder(TestServiceIndentity);
+			var mapBuilder = new DurationMapBuilder(TestServiceIndentity, "1");
 
 			for (int segmentIndex = 0; segmentIndex < 4; segmentIndex++)
 			{
@@ -99,7 +99,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		{
 			durationsMs.Length.Should().Be(numberOfSegments);
 
-			var mapBuilder = new DurationMapBuilder(TestServiceIndentity);
+			var mapBuilder = new DurationMapBuilder(TestServiceIndentity, "1");
 
 			for (int segmentIndex = 0; segmentIndex < numberOfSegments; segmentIndex++)
 			{
@@ -122,7 +122,7 @@ namespace Basyc.MessageBus.Manager.Application.Tests.Durations
 		[Fact]
 		public void StartingNested_With_StartTime_Before_Map_Start_Should_Throw()
 		{
-			var mapBuilder = new DurationMapBuilder(TestServiceIndentity);
+			var mapBuilder = new DurationMapBuilder(TestServiceIndentity, "1");
 			mapBuilder.Start();
 			mapBuilder.Invoking(x => x.StartNewSegment("nested1", DateTimeOffset.UtcNow.AddMinutes(-1)))
 				.Should()

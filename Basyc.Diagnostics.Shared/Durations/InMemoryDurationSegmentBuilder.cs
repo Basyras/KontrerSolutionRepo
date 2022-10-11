@@ -6,21 +6,21 @@
 		private readonly Func<InMemoryDurationSegmentBuilder>? parentSegmentGetter;
 
 
-		public InMemoryDurationSegmentBuilder(string name, ServiceIdentity service) : base(name, service)
+		public InMemoryDurationSegmentBuilder(ServiceIdentity service, string traceId, string id, string name) : base(service, traceId, id, name)
 		{
 			Name = name;
 			Service = service;
 		}
 
-		public InMemoryDurationSegmentBuilder(string name, ServiceIdentity service, Func<InMemoryDurationSegmentBuilder> parentSegmentGetter)
-			: this(name, service)
+		public InMemoryDurationSegmentBuilder(ServiceIdentity service, string traceId, string id, string name, Func<InMemoryDurationSegmentBuilder> parentSegmentGetter)
+			: this(service, name, traceId, id)
 		{
 			this.parentSegmentGetter = parentSegmentGetter;
 			HasParent = true;
 		}
 
-		public InMemoryDurationSegmentBuilder(string name, ServiceIdentity service, DateTimeOffset segmentStart, InMemoryDurationSegmentBuilder parentSegment)
-			: this(name, service, () => parentSegment)
+		public InMemoryDurationSegmentBuilder(ServiceIdentity service, string traceId, string id, string name, DateTimeOffset segmentStart, InMemoryDurationSegmentBuilder parentSegment)
+			: this(service, traceId, id, name, () => parentSegment)
 		{
 			StartTime = segmentStart;
 			HasStarted = true;
@@ -114,7 +114,7 @@
 		public override IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start)
 		{
 			EnsureStarted(start);
-			var nestedSegment = new InMemoryDurationSegmentBuilder(segmentName, service, start, this);
+			var nestedSegment = new InMemoryDurationSegmentBuilder(service, TraceId, Guid.NewGuid().ToString(), segmentName, start, this);
 			nestedSegmentBuilders.Add(nestedSegment);
 			return nestedSegment;
 		}

@@ -9,6 +9,8 @@
 		public bool HasStarted { get; protected set; }
 		public bool HasEnded { get; protected set; }
 		public string Name { get; init; }
+		public string Id { get; init; }
+		public string TraceId { get; init; }
 		/// <summary>
 		/// Service (application) executing this segment
 		/// </summary>
@@ -16,10 +18,12 @@
 
 
 
-		public DurationSegmentBuilderBase(string name, ServiceIdentity service)
+		public DurationSegmentBuilderBase(ServiceIdentity service, string traceId, string id, string name)
 		{
 			Name = name;
 			Service = service;
+			TraceId = traceId;
+			Id = id;
 		}
 
 

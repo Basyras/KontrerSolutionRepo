@@ -26,61 +26,56 @@ namespace Basyc.MessageBus.Client
 			objectBusClient.Dispose();
 		}
 
-		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			return objectBusClient.PublishAsync(TypedToSimpleConverter.ConvertTypeToSimple<TEvent>(), cancellationToken);
 		}
 
-		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(TEvent eventData, CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.PublishAsync<TEvent>(TEvent eventData, RequestContext requestContext, CancellationToken cancellationToken)
 		{
-			return objectBusClient.PublishAsync(TypedToSimpleConverter.ConvertTypeToSimple<TEvent>(), eventData, cancellationToken);
+			return objectBusClient.PublishAsync(TypedToSimpleConverter.ConvertTypeToSimple<TEvent>(), eventData, requestContext, cancellationToken);
 		}
 
-		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(CancellationToken cancellationToken)
+		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(RequestContext requestContext, CancellationToken cancellationToken)
 		{
-			//var genericTask = objectBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple<TRequest>(), cancellationToken);
-			//return (TResponse)((dynamic)genericTask).Result;
-			//return genericTask.ContinueWith(x=> (TResponse)x.Result);
-			//return (TResponse)await genericTask.ConfigureAwait(false);
-
 			var nestedBusTask = objectBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple<TRequest>(), cancellationToken);
 			return BusTask<TResponse>.FromBusTask(nestedBusTask, x => (TResponse)x);
 		}
 
-		BusTask<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, CancellationToken cancellationToken)
+		BusTask<object> ITypedMessageBusClient.RequestAsync(Type requestType, Type responseType, RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			return objectBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple(requestType), cancellationToken);
 		}
 
-		BusTask<object> ITypedMessageBusClient.RequestAsync(Type requestType, object requestData, Type responseType, CancellationToken cancellationToken)
+		BusTask<object> ITypedMessageBusClient.RequestAsync(Type requestType, object requestData, Type responseType, RequestContext requestContext, CancellationToken cancellationToken)
 		{
-			return objectBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple(requestType), requestData, cancellationToken);
+			return objectBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple(requestType), requestData, requestContext, cancellationToken);
 		}
 
-		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest requestData, CancellationToken cancellationToken)
+		BusTask<TResponse> ITypedMessageBusClient.RequestAsync<TRequest, TResponse>(TRequest requestData, RequestContext requestContext, CancellationToken cancellationToken)
 		{
-			var innerBusTask = objectBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple<TRequest>(), requestData, cancellationToken);
+			var innerBusTask = objectBusClient.RequestAsync(TypedToSimpleConverter.ConvertTypeToSimple<TRequest>(), requestData, requestContext, cancellationToken);
 			return innerBusTask.ContinueWith(x => (OneOf<TResponse, ErrorMessage>)x);
 
 		}
 
 
-		BusTask ITypedMessageBusClient.SendAsync<TCommand>(CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.SendAsync<TCommand>(RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			return objectBusClient.SendAsync(TypedToSimpleConverter.ConvertTypeToSimple<TCommand>(), cancellationToken);
 		}
 
-		BusTask ITypedMessageBusClient.SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.SendAsync<TCommand>(TCommand command, RequestContext requestContext, CancellationToken cancellationToken)
 		{
-			return objectBusClient.SendAsync(TypedToSimpleConverter.ConvertTypeToSimple<TCommand>(), command, cancellationToken);
+			return objectBusClient.SendAsync(TypedToSimpleConverter.ConvertTypeToSimple<TCommand>(), command, requestContext, cancellationToken);
 		}
 
-		BusTask ITypedMessageBusClient.SendAsync(Type commandType, object command, CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.SendAsync(Type commandType, object command, RequestContext requestContext, CancellationToken cancellationToken)
 		{
-			return objectBusClient.SendAsync(TypedToSimpleConverter.ConvertTypeToSimple(commandType), command, cancellationToken);
+			return objectBusClient.SendAsync(TypedToSimpleConverter.ConvertTypeToSimple(commandType), command, requestContext, cancellationToken);
 		}
 
-		BusTask ITypedMessageBusClient.SendAsync(Type commandType, CancellationToken cancellationToken)
+		BusTask ITypedMessageBusClient.SendAsync(Type commandType, RequestContext requestContext, CancellationToken cancellationToken)
 		{
 			return objectBusClient.SendAsync(TypedToSimpleConverter.ConvertTypeToSimple(commandType), cancellationToken);
 		}

@@ -25,19 +25,24 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 			var listener = new ActivityListener();
 			listener.ShouldListenTo = activity =>
 			{
-				//return activity == DiagnosticSources.HandlerStarted;
 				return true;
 			};
 			listener.Sample = (ref ActivityCreationOptions<ActivityContext> options) =>
 			{
 				return ActivitySamplingResult.AllDataAndRecorded;
 			};
-			listener.ActivityStarted += activity =>
+			listener.ActivityStarted += (Activity activity) =>
 			{
+				//DiagnosticConstants.HandlerStarted.
 				if (activity.GetBaggageItem(DiagnosticConstants.ShouldBeReceived) != true.ToString())
 				{
 					if (activity.GetTagItem(DiagnosticConstants.ShouldBeReceived) as bool? != true)
 						return;
+				}
+
+				if (activity.Context.IsRemote)
+				{
+
 				}
 				string traceId = activity.TraceId.ToString().TrimStart('0');
 				SendActivityStart(new ActivityStart(options.Value.Service, traceId, activity.ParentId, activity.Id, activity.OperationName, activity.StartTimeUtc));

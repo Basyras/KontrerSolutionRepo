@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
-	public class RequestDiagnostics
+	public class RequestDiagnosticContext
 	{
 		private readonly object lockObject = new object();
 
@@ -25,7 +25,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		public event EventHandler<ActivityEnd>? ActivityEndReceived;
 
 
-		public RequestDiagnostics(string traceId)
+		public RequestDiagnosticContext(string traceId)
 		{
 			TraceId = traceId;
 		}
