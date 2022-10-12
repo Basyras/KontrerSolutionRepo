@@ -1,4 +1,5 @@
-﻿using Basyc.MessageBus.Client.NetMQ.Sessions;
+﻿using Basyc.Diagnostics.Producing.Shared;
+using Basyc.MessageBus.Client.NetMQ.Sessions;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.NetMQ.Shared.Cases;
 using Basyc.MessageBus.Shared;
@@ -22,6 +23,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	private readonly ISessionManager<NetMQSessionResult> sessionManager;
 	private readonly INetMQMessageWrapper netMQMessageWrapper;
 	private readonly IObjectToByteSerailizer objectToByteSerailizer;
+	private readonly IDiagnosticsProducer diagnosticsProducer;
 	private readonly NetMQPoller poller = new();
 	private readonly DealerSocket dealerSocket;
 
@@ -31,7 +33,8 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 		ILogger<NetMQByteMessageBusClient> logger,
 		ISessionManager<NetMQSessionResult> sessionManager,
 		INetMQMessageWrapper netMQByteSerializer,
-		IObjectToByteSerailizer objectToByteSerailizer)
+		IObjectToByteSerailizer objectToByteSerailizer,
+		IDiagnosticsProducer diagnosticsProducer)
 	{
 		this.options = options;
 		this.handlerManager = handlerManager;
@@ -39,7 +42,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 		this.sessionManager = sessionManager;
 		this.netMQMessageWrapper = netMQByteSerializer;
 		this.objectToByteSerailizer = objectToByteSerailizer;
-
+		this.diagnosticsProducer = diagnosticsProducer;
 		dealerSocket = CreateSocket(options);
 		poller.Add(dealerSocket);
 	}
@@ -208,14 +211,18 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	{
 		string traceId = requestContext.TraceId is null ? Guid.NewGuid().ToString() : requestContext.TraceId;
 		string requesterSpanId = requestContext.RequesterSpanId is null ? traceId : requestContext.RequesterSpanId;
+		using var requestActivity = diagnosticsProducer.StartActivity(traceId, requesterSpanId, "NetMQ bus manager request");
 
 		var newSession = sessionManager.CreateSession(requestType, requestContext.TraceId, requestContext.RequesterSpanId);
-
 		Task<OneOf<ByteResponse, ErrorMessage>> task = Task.Run<OneOf<ByteResponse, ErrorMessage>>(async () =>
 		{
 			requestBytes ??= new byte[0];
 			cancellationToken.ThrowIfCancellationRequested();
-			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(requestBytes, requestType, newSession.SessionId, newSession.TraceId, newSession.RequesterSpanId, MessageCase.Request);
+
+			using var seriActivity = diagnosticsProducer.StartActivity(requestActivity, "NetMQ serialization");
+			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(requestBytes, requestType, newSession.SessionId, traceId, requesterSpanId, MessageCase.Request);
+			seriActivity.End();
+
 			var messageToBroker = new NetMQMessage();
 			messageToBroker.AppendEmptyFrame();
 			messageToBroker.Append(netMQByteMessage);
@@ -225,7 +232,11 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			logger.LogInformation($"Requesting '{requestType}'");
 			try
 			{
-				dealerSocket.SendMultipartMessage(messageToBroker);
+				using (var sendingActivity = diagnosticsProducer.StartActivity(requestActivity, "NetMQ sending"))
+				{
+					dealerSocket.SendMultipartMessage(messageToBroker);
+				}
+
 			}
 			catch (Exception ex)
 			{

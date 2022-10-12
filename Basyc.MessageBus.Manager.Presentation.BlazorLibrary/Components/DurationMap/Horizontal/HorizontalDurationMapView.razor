@@ -37,6 +37,13 @@
             </service>
         }
     }
+    <MudStack Row="true">
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="OnZoomInClick" />
+        <MudText>
+            @Scale
+        </MudText>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Remove" OnClick="OnZoomOutClick" />
+    </MudStack>
 
 </horizontalDurationMapView>
 
@@ -44,7 +51,7 @@
 
 @code {
     [Parameter] public RequestContext RequestContext { get; set; }
-    [Parameter] public double Scale { get; set; } = 20;
+    [Parameter] public double Scale { get; set; } = 1;
 
     protected override void OnParametersSet()
     {
@@ -63,5 +70,17 @@
     private void OnActivityEneReceived(object sender, ActivityEnd activityEnd)
     {
         StateHasChanged();
+    }
+
+    private void OnZoomInClick(MouseEventArgs args)
+    {
+        Scale += 1;
+    }
+
+    private void OnZoomOutClick(MouseEventArgs args)
+    {
+        Scale -= 1;
+        if (Scale <= 0)
+            Scale = 1;
     }
 }

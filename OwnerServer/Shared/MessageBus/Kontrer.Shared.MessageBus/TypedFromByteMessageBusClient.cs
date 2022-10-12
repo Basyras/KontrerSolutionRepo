@@ -1,4 +1,5 @@
-﻿using Basyc.MessageBus.Shared;
+﻿using Basyc.Diagnostics.Producing.Shared;
+using Basyc.MessageBus.Shared;
 using Basyc.Serialization.Abstraction;
 using Basyc.Serializaton.Abstraction;
 using System;
@@ -11,11 +12,13 @@ namespace Basyc.MessageBus.Client
 	{
 		private readonly IByteMessageBusClient byteMessageBusClient;
 		private readonly IObjectToByteSerailizer objectToByteSerailizer;
+		private readonly IDiagnosticsProducer diagnosticsProducer;
 
-		public TypedFromByteMessageBusClient(IByteMessageBusClient byteMessageBusClient, IObjectToByteSerailizer objectToByteSerailizer)
+		public TypedFromByteMessageBusClient(IByteMessageBusClient byteMessageBusClient, IObjectToByteSerailizer objectToByteSerailizer, IDiagnosticsProducer diagnosticsProducer)
 		{
 			this.byteMessageBusClient = byteMessageBusClient;
 			this.objectToByteSerailizer = objectToByteSerailizer;
+			this.diagnosticsProducer = diagnosticsProducer;
 		}
 
 		public void Dispose()
@@ -43,10 +46,12 @@ namespace Basyc.MessageBus.Client
 
 		public BusTask<object> RequestAsync(Type requestType, object requestData, Type responseType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
+			using var requestActivityDisposer = diagnosticsProducer.StartActivity(requestContext.TraceId, requestContext.RequesterSpanId, "Typed RequestAsync");
+
 			var requestTypeString = TypedToSimpleConverter.ConvertTypeToSimple(requestType);
 			var responseTypeString = TypedToSimpleConverter.ConvertTypeToSimple(responseType);
-
 			var requestBytes = objectToByteSerailizer.Serialize(requestData, requestTypeString);
+
 			var byteBusTask = byteMessageBusClient.RequestAsync(requestTypeString, requestBytes, requestContext, cancellationToken);
 			var objectBusTask = BusTask<object>.FromBusTask(byteBusTask, byteResponse => objectToByteSerailizer.Deserialize(byteResponse.ResponseBytes, byteResponse.ResposneType));
 			return objectBusTask;

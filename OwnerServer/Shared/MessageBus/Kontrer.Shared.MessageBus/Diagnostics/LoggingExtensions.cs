@@ -23,7 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
 			});
 		}
 
-		public static void UseBasycDiagnosticsLogExporter(this BusClientSetupDiagnosticsStage stage)
+		public static void SelectBasycDiagnosticsExporter(this BusClientSetupDiagnosticsStage stage)
 		{
 			stage.services.AddSingleton<IBusClientLogExporter, BasycDiagnosticsBusClientLogExporter>();
 		}

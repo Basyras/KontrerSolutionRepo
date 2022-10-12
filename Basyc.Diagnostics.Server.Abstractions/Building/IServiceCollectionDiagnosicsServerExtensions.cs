@@ -1,11 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Basyc.Diagnostics.Server.Abstractions;
+using Basyc.Diagnostics.Server.Abstractions.Building;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Basyc.Diagnostics.Server.Abstractions.Building
+namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionDiagnosicsServerExtensions
 	{
 		public static SelectDiagnosticsServerStage AddBasycDiagnosticsServer(this IServiceCollection services)
 		{
+			services.AddSingleton<DiagnosticServer>();
+			services.TryAddSingleton<InMemoryServerDiagnosticReceiver>();
+
 			return new SelectDiagnosticsServerStage(services);
 		}
 	}

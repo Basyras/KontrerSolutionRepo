@@ -5,5 +5,6 @@ namespace Basyc.MessageBus.Client.Diagnostics
 	public class UseDiagnosticsOptions
 	{
 		public ServiceIdentity Service { get; set; }
+		public bool UseDiagnostics { get; set; }
 	}
 }

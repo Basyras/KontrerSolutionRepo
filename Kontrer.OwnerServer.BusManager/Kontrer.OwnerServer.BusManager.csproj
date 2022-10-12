@@ -16,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Basyc.Diagnostics.Producing.SignalR\Basyc.Diagnostics.Producing.SignalR.csproj" />
 		<ProjectReference Include="..\Basyc.Diagnostics.Receiving.SignalR\Basyc.Diagnostics.Receiving.SignalR.csproj" />
 		<ProjectReference Include="..\Basyc.MessageBus.InMemory\Basyc.MessageBus.Client.NetMQ.csproj" />
 		<ProjectReference Include="..\Basyc.MessageBus.Manager.Application\Basyc.MessageBus.Manager.Application.csproj" />

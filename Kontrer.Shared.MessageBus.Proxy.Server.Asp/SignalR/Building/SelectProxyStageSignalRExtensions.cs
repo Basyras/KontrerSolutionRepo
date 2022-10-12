@@ -4,7 +4,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class SelectProxyStageSignalRExtensions
 	{
-		public static void UseSignalR(this SelectProxyStage parent)
+		public static void UseSignalRProxy(this SelectProxyStage parent)
 		{
 			parent.services.AddSignalR();
 		}

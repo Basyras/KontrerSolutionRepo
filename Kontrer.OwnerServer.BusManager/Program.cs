@@ -1,3 +1,4 @@
+using Basyc.Diagnostics.Producing.SignalR.Shared;
 using Basyc.DomainDrivenDesign.Domain;
 using Basyc.MessageBus.Manager;
 using Basyc.MessageBus.Manager.Application;
@@ -11,9 +12,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Reflection;
 
-#if DEBUG
-await Task.Delay(5000);
-#endif
+//#if DEBUG
+//await Task.Delay(5000);
+//#endif
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -27,14 +28,23 @@ var assembliesToScan = new Assembly[]
 	typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
 };
 
+builder.Services.AddBasycDiagnosticsProducer()
+	.SelectSignalR()
+		.SetOptions(options =>
+		{
+			options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
+		});
+;
+
 builder.Services.AddBasycMessageBus()
-	//.UseHttpProxy()
-	//.SetProxyServerUri(new Uri("https://localhost:44310/"));
-	.UseSignalRProxy("https://localhost:44310");
+	.NoHandlers()
+	.UseSignalRProxyProvider("https://localhost:44310")
+	.UseDiagnostics("BusManager")
+		.SelectBasycDiagnosticsExporter();
 
 builder.Services.AddBasycDiagnosticReceiver()
-	.UseSignalR()
-	.SetServerUri("https://localhost:44310");
+	.SelectSignalR()
+		.SetServerUri("https://localhost:44310");
 
 var busManagerBuilder = builder.Services.AddBasycBusBlazorUI();
 CreateTestingMessages(busManagerBuilder);
@@ -51,6 +61,7 @@ busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 var app = builder.Build();
 await app.Services.StartBasycDiagnosticsReceivers();
+await app.Services.StartBasycDiagnosticsProducer();
 await app.Services.StartBasycMessageBusClient();
 await app.RunAsync();
 

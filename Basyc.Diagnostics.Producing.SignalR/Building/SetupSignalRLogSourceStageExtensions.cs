@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class SetupSignalRLogProducerStageExtensions
 {
-	public static SetupProducerStage UseSignalR(this SelectProducerStage parent)
+	public static SetupProducerStage SelectSignalR(this SelectProducerStage parent)
 	{
 		parent.services.AddSingleton<IDiagnosticsProducer, SignalRDiagnosticsProducer>();
 		return new SetupProducerStage(parent.services);

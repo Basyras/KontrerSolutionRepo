@@ -1,6 +1,7 @@
 ﻿using Basyc.DependencyInjection;
 using Basyc.Diagnostics.Producing.Shared;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Basyc.MessageBus.Broker.NetMQ.Building
 {
@@ -10,9 +11,9 @@ namespace Basyc.MessageBus.Broker.NetMQ.Building
 		{
 		}
 
-		public void SkipDiagnostics()
+		public void NoDiagnostics()
 		{
-			services.AddSingleton<IDiagnosticsProducer, NullDiagnosticsProducer>();
+			services.TryAddSingleton<IDiagnosticsProducer, NullDiagnosticsProducer>();
 		}
 	}
 }

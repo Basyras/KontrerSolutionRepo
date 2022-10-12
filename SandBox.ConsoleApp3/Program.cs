@@ -8,8 +8,8 @@ using Microsoft.Extensions.Logging;
 
 IServiceCollection clientServices = new ServiceCollection();
 clientServices
-	.AddBasycDiagnosticsProducing()
-	.UseSignalR()
+	.AddBasycDiagnosticsProducer()
+	.SelectSignalR()
 	.SetOptions(options =>
 	{
 		options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
@@ -23,7 +23,6 @@ clientServices.AddLogging(x =>
 });
 clientServices.AddNetMQMessageBroker()
 	.UseBasycDiagnosticsProducer();
-//.SkipDiagnostics();
 
 var services = clientServices.BuildServiceProvider();
 await services.StartBasycDiagnosticsProducer();

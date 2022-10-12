@@ -1,18 +1,23 @@
-using Basyc.Diagnostics.Server.Abstractions.Building;
+using Basyc.Diagnostics.Producing.Shared;
+using Basyc.Diagnostics.Server.Abstractions;
+using Basyc.Diagnostics.Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBasycMessageBus()
-	.NoProxy()
-	.NoHandlers()
-	//.AddMassTransitClient();
-	.UseNetMQProvider("HttpProxy");
 
-//builder.Services.AddBasycMessageBusProxy()
-//.UseHttp();
+builder.Services
+	.AddBasycDiagnosticsProducer()
+	.SelectInMemoryProducer();
+
+builder.Services.AddBasycMessageBus()
+	.NoHandlers()
+	.SelectNetMQProvider("HttpProxy")
+//.NoDiagnostics();
+.UseDiagnostics("HttpProxy")
+.SelectBasycDiagnosticsExporter();
 
 builder.Services.AddBasycMessageBusProxy()
-	.UseSignalR();
+	.UseSignalRProxy();
 
 builder.Services.AddCors(policy =>
 {
@@ -25,7 +30,7 @@ builder.Services.AddCors(policy =>
 });
 
 builder.Services.AddBasycDiagnosticsServer()
-	.UseSignalR();
+	.SelectSignalRPusher();
 
 
 var app = builder.Build();
@@ -44,9 +49,32 @@ app.MapGet("/", async (httpContext) =>
 app.UseHttpsRedirection();
 app.UseCors("*");
 
-//app.MapBasycHttpMessageBusProxy();
+WireUpInMemoryProducers(app);
 app.MapBasycSignalRMessageBusProxy();
-
 app.MapBasycSignalRDiagnosticsServer();
-app.Services.StartBasycMessageBusClient();
+
+await app.Services.StartBasycMessageBusClient();
+await app.Services.StartBasycDiagnosticsProducer();
+await app.Services.StartBasycDiagnosticServer();
+
+
 app.Run();
+
+static void WireUpInMemoryProducers(WebApplication app)
+{
+	var serverReceiver = app.Services.GetRequiredService<InMemoryServerDiagnosticReceiver>();
+	var inMemoryProducer = app.Services.GetRequiredService<InMemoryDiagnosticsProducer>();
+	inMemoryProducer.LogProduced += (s, a) =>
+	{
+		serverReceiver.ReceiveChangesFromProducer(new DiagnosticChanges(new LogEntry[] { a }, Array.Empty<ActivityStart>(), Array.Empty<ActivityEnd>()));
+	};
+	inMemoryProducer.StartProduced += (s, a) =>
+	{
+		serverReceiver.ReceiveChangesFromProducer(new DiagnosticChanges(Array.Empty<LogEntry>(), new ActivityStart[] { a }, Array.Empty<ActivityEnd>()));
+	};
+
+	inMemoryProducer.EndProduced += (s, a) =>
+	{
+		serverReceiver.ReceiveChangesFromProducer(new DiagnosticChanges(Array.Empty<LogEntry>(), Array.Empty<ActivityStart>(), new ActivityEnd[] { a }));
+	};
+}

@@ -7,15 +7,16 @@ namespace Basyc.Diagnostics.SignalR.Server
 {
 	public class LoggingProducersHub : Hub<IProducersMethodsServerCanCall>, IServerMethodsProducersCanCall
 	{
-		private readonly IDiagnosticsServer diagnosticsServer;
-		public LoggingProducersHub(IDiagnosticsServer diagnosticsServer)
+		private readonly InMemoryServerDiagnosticReceiver diagnosticsServer;
+		public LoggingProducersHub(InMemoryServerDiagnosticReceiver diagnosticsServer)
 		{
 			this.diagnosticsServer = diagnosticsServer;
 		}
 
 		public Task ReceiveChangesFromProducer(ChangesSignalRDTO changesDTO)
 		{
-			return diagnosticsServer.ReceiveChanges(ChangesSignalRDTO.FromDto(changesDTO));
+			diagnosticsServer.ReceiveChangesFromProducer(ChangesSignalRDTO.FromDto(changesDTO));
+			return Task.CompletedTask;
 		}
 	}
 }

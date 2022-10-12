@@ -1,4 +1,5 @@
 ﻿using Basyc.DependencyInjection;
+using Basyc.MessageBus.Client.Building;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -10,10 +11,10 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 		{
 		}
 
-		public SetupHttpProxyStage SetProxyServerUri(Uri hostUri)
+		public BusClientUseDiagnosticsStage SetProxyServerUri(Uri hostUri)
 		{
 			services.Configure<HttpProxyObjectMessageBusClientOptions>(x => x.ProxyHostUri = hostUri);
-			return this;
+			return new(services);
 		}
 	}
 }

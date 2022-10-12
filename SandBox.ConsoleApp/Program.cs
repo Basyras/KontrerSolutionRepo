@@ -15,8 +15,8 @@ clientServices.AddLogging(x =>
 });
 
 clientServices
-	.AddBasycDiagnosticsProducing()
-	.UseSignalR()
+	.AddBasycDiagnosticsProducer()
+	.SelectSignalR()
 	.SetOptions(options =>
 	{
 		options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
@@ -25,19 +25,18 @@ clientServices
 
 clientServices
 	.AddBasycMessageBus()
-	.NoProxy()
 	.RegisterBasycTypedHandlers<Program>()
-	.UseNetMQProvider("Console1")
+	.SelectNetMQProvider("Console1")
 	.UseDiagnostics("Console1")
-	.UseBasycDiagnosticsLogExporter();
+	.SelectBasycDiagnosticsExporter();
 //.SelectHttpDiagnostics("https://localhost:7115/log");
 
 var services = clientServices.BuildServiceProvider();
 await services.StartBasycMessageBusClient();
-using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();
 await services.StartBasycDiagnosticsProducer();
 
 
+using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();
 while (Console.ReadLine() != "stop")
 {
 	var response = client.RequestAsync<CreateCustomerCommand, CreateCustomerCommandResponse>(new("Jan", "Console12", "aasdů"))

@@ -5,10 +5,10 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionMessageBusExtensions
 	{
-		public static BusClientSetupProxyStage AddBasycMessageBus(this IServiceCollection services)
+		public static BusClientSetupHandlersStage AddBasycMessageBus(this IServiceCollection services)
 		{
 			services.AddSingleton<ISharedRequestIdCounter, InMemorySharedRequestIdCounter>();
-			return new BusClientSetupProxyStage(services);
+			return new BusClientSetupHandlersStage(services);
 		}
 	}
 }

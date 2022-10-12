@@ -4,15 +4,15 @@ namespace Basyc.Diagnostics.SignalR.Shared.DTOs
 {
 	public record ChangesSignalRDTO(LogEntrySignalRDTO[] Logs, ActivityStartSignalRDTO[] ActivityStarts, ActivityEndSignalRDTO[] ActivityEnds)
 	{
-		public static DiagnosticChange FromDto(ChangesSignalRDTO dto)
+		public static DiagnosticChanges FromDto(ChangesSignalRDTO dto)
 		{
 			var logs = dto.Logs.Select(x => LogEntrySignalRDTO.ToEntry(x)).ToArray();
 			var starts = dto.ActivityStarts.Select(x => ActivityStartSignalRDTO.ToEntry(x)).ToArray();
 			var ends = dto.ActivityEnds.Select(x => ActivityEndSignalRDTO.ToEntry(x)).ToArray();
-			return new DiagnosticChange(logs, starts, ends);
+			return new DiagnosticChanges(logs, starts, ends);
 		}
 
-		public static ChangesSignalRDTO ToDto(DiagnosticChange model)
+		public static ChangesSignalRDTO ToDto(DiagnosticChanges model)
 		{
 			var logDtos = model.Logs.Select(x => LogEntrySignalRDTO.FromEntry(x)).ToArray();
 			var activityStartDTOs = model.ActivityStarts.Select(x => ActivityStartSignalRDTO.FromEntry(x)).ToArray();

@@ -4,7 +4,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionDiagnosticsProducingExtensions
 	{
-		public static SelectProducerStage AddBasycDiagnosticsProducing(this IServiceCollection services)
+		public static SelectProducerStage AddBasycDiagnosticsProducer(this IServiceCollection services)
 		{
 			return new SelectProducerStage(services);
 		}

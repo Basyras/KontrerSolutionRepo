@@ -18,9 +18,9 @@ public static class BuildingNetMQExtensions
 
 	public static BusClientUseDiagnosticsStage SelectNetMQProvider(this BusClientSetupProviderStage builder,
 	   int? brokerServerPort) =>
-		UseNetMQProvider(builder, null, defaultBrokerServerPort, defaultBrokerServerAddress);
+		SelectNetMQProvider(builder, null, defaultBrokerServerPort, defaultBrokerServerAddress);
 
-	public static BusClientUseDiagnosticsStage UseNetMQProvider(this BusClientSetupProviderStage builder,
+	public static BusClientUseDiagnosticsStage SelectNetMQProvider(this BusClientSetupProviderStage builder,
 		string? clientId = null, int brokerServerPort = defaultBrokerServerPort, string brokerServerAddress = defaultBrokerServerAddress)
 	{
 		var services = builder.services;

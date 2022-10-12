@@ -11,7 +11,7 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.Duratio
 		{
 			NumberFormatInfo numberFormatter = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
 			numberFormatter.NumberDecimalSeparator = ".";
-			var minHeight = duration.TotalMilliseconds / scale;
+			var minHeight = (duration.TotalMilliseconds / 20) * scale;
 			return $"{minHeight.ToString(numberFormatter)}rem";
 		}
 

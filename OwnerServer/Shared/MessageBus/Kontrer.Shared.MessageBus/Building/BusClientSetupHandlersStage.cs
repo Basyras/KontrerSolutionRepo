@@ -66,23 +66,12 @@ namespace Basyc.MessageBus.Client.Building
 				ParameterInfo ctorParam = ctorParams[paramIndex];
 				if (ctorParam.ParameterType == typeof(ILogger))
 				{
-					//var logSinks = services.GetServices<ILogSink>().ToArray();
-					//ctorArguments[paramIndex] = new BusHandlerLogger((ILogger)services.GetRequiredService(ctorParam.ParameterType), logSinks);
 					var handlerLogger = services.GetRequiredService(typeof(BusHandlerLogger));
 					ctorArguments[paramIndex] = handlerLogger;
 					continue;
 				}
-				//if (ctorParam.ParameterType == typeof(ILogger<>).MakeGenericType(handlerType))
 				if (ctorParam.ParameterType.IsAssignableToGenericType(typeof(ILogger<>)))
 				{
-					//var originalLoggerGenericArgument = ctorParam.ParameterType.GetTypeArgumentsFromParent(typeof(ILogger<>))[0];
-					//var decoLoggerType = typeof(BusHandlerLogger<>).MakeGenericType(originalLoggerGenericArgument);
-					//var decoLoggerCtor = decoLoggerType.GetConstructor(new Type[] { typeof(ILogger), typeof(IEnumerable<ILogSink>) });
-					//var logSinks = services.GetServices<ILogSink>().ToArray();
-					//object originalLogger = services.GetRequiredService(ctorParam.ParameterType);
-					//var decoLogger = decoLoggerCtor.Invoke(new object[] { originalLogger, logSinks });
-					//ctorArguments[paramIndex] = decoLogger;
-
 					var originalLoggerGenericArgument = ctorParam.ParameterType.GetTypeArgumentsFromParent(typeof(ILogger<>))[0];
 					var decoLoggerType = typeof(BusHandlerLogger<>).MakeGenericType(originalLoggerGenericArgument);
 					var decoLogger = services.GetRequiredService(decoLoggerType);

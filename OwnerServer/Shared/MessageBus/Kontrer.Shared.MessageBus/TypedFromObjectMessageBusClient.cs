@@ -1,4 +1,5 @@
-﻿using Basyc.MessageBus.Shared;
+﻿using Basyc.Diagnostics.Producing.Shared;
+using Basyc.MessageBus.Shared;
 using Basyc.Serializaton.Abstraction;
 using OneOf;
 using System;
@@ -10,10 +11,12 @@ namespace Basyc.MessageBus.Client
 	public sealed class TypedFromObjectMessageBusClient : ITypedMessageBusClient
 	{
 		private readonly IObjectMessageBusClient objectBusClient;
+		private readonly IDiagnosticsProducer diagnosticsProducer;
 
-		public TypedFromObjectMessageBusClient(IObjectMessageBusClient messageBusClient)
+		public TypedFromObjectMessageBusClient(IObjectMessageBusClient messageBusClient, IDiagnosticsProducer diagnosticsProducer)
 		{
 			this.objectBusClient = messageBusClient;
+			this.diagnosticsProducer = diagnosticsProducer;
 		}
 
 		public Task StartAsync(CancellationToken cancellationToken = default)

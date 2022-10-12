@@ -71,13 +71,14 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			}
 			ActivityContext newActivity = new ActivityContext(activityStart.Service, activityStart.TraceId, parentActivity, activityStart.Id, activityStart.Name, activityStart.StartTime);
 			activityIdToActivityMap.Add(newActivity.Id, newActivity);
-			if (parentActivity is null)
+			if (parentActivity is not null && newActivity.Service == parentActivity.Service)
 			{
-				serviceVM.AddActivity(newActivity);
+				parentActivity.AddNestedActivity(newActivity);
 			}
 			else
 			{
-				parentActivity.AddNestedActivity(newActivity);
+				serviceVM.AddActivity(newActivity);
+
 			}
 			OnActivityStartReceived(activityStart);
 			return newActivity;
