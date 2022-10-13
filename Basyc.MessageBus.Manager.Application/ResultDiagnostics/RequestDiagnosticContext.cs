@@ -15,6 +15,8 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		public IReadOnlyList<LogEntry> LogEntries { get => logEntries; }
 
 		private readonly Dictionary<string, ActivityContext> activityIdToActivityMap = new();
+		private readonly Dictionary<string, List<ActivityContext>> missingParentIdToNestedActivityMap = new();
+
 		public List<ServiceIdentityContext> services = new List<ServiceIdentityContext>();
 		public IReadOnlyList<ServiceIdentityContext> Services { get => services; }
 
@@ -53,35 +55,55 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 		public ActivityContext StartActivity(ActivityStart activityStart)
 		{
-			ServiceIdentityContext serviceVM = EnsureServiceCreated(activityStart.Service);
+			ServiceIdentityContext serviceContext = EnsureServiceCreated(activityStart.Service);
+			bool hasParent = activityStart.ParentId is not null;
+			ActivityContext newActivityContext = new ActivityContext(activityStart.Service, activityStart.TraceId, hasParent, activityStart.ParentId, activityStart.Id, activityStart.Name, activityStart.StartTime);
+			activityIdToActivityMap.Add(newActivityContext.Id, newActivityContext);
 
-			ActivityContext? parentActivity = null;
-			if (activityStart.ParentId is not null)
+			if (hasParent)
 			{
-				try
+				if (activityStart.ParentId is null)
+					throw new InvalidOperationException($"{nameof(ActivityStart.ParentId)} cant be null when {nameof(ActivityStart.HasParent)} is true");
+
+				if (activityIdToActivityMap.TryGetValue(activityStart.ParentId, out var parentActivity))
 				{
-					parentActivity = activityIdToActivityMap[activityStart.ParentId];
-
+					newActivityContext.AssignParentData(parentActivity);
+					if (newActivityContext.Service == parentActivity.Service)
+					{
+						parentActivity.AddNestedActivity(newActivityContext);
+					}
+					else
+					{
+						serviceContext.AddActivity(newActivityContext);
+					}
 				}
-				catch (Exception ex)
+				else
 				{
-
+					missingParentIdToNestedActivityMap.TryAdd(activityStart.ParentId, new List<ActivityContext>());
+					missingParentIdToNestedActivityMap[activityStart.ParentId].Add(newActivityContext);
 				}
-
-			}
-			ActivityContext newActivity = new ActivityContext(activityStart.Service, activityStart.TraceId, parentActivity, activityStart.Id, activityStart.Name, activityStart.StartTime);
-			activityIdToActivityMap.Add(newActivity.Id, newActivity);
-			if (parentActivity is not null && newActivity.Service == parentActivity.Service)
-			{
-				parentActivity.AddNestedActivity(newActivity);
 			}
 			else
 			{
-				serviceVM.AddActivity(newActivity);
+				serviceContext.AddActivity(newActivityContext);
+			}
+
+			var isMissingParent = missingParentIdToNestedActivityMap.TryGetValue(activityStart.Id, out var nestedActivities);
+			if (isMissingParent)
+			{
+				for (int nestedActivityIndex = 0; nestedActivityIndex < nestedActivities!.Count; nestedActivityIndex++)
+				{
+					var nestedActivity = nestedActivities![nestedActivityIndex];
+					nestedActivity.AssignParentData(newActivityContext);
+					newActivityContext.AddNestedActivity(nestedActivity);
+				}
+
+				missingParentIdToNestedActivityMap.Remove(activityStart.Id);
 
 			}
+
 			OnActivityStartReceived(activityStart);
-			return newActivity;
+			return newActivityContext;
 
 		}
 

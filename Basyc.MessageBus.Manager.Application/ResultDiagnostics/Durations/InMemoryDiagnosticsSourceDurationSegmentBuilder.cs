@@ -1,4 +1,5 @@
 ﻿using Basyc.Diagnostics.Shared.Durations;
+using Basyc.Diagnostics.Shared.Helpers;
 using Basyc.Diagnostics.Shared.Logging;
 using System;
 
@@ -40,7 +41,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 
 		public override IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start)
 		{
-			var nestedId = Guid.NewGuid().ToString();
+			var nestedId = IdGeneratorHelper.GenerateNewSpanId();
 			diagnosticsSource.StartActivity(new ActivityStart(service, TraceId, Id, nestedId, segmentName, start));
 			return new InMemoryDiagnosticsSourceDurationSegmentBuilder(this, TraceId, nestedId, segmentName, service, diagnosticsSource);
 		}

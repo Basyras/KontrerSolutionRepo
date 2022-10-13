@@ -27,6 +27,8 @@
         </ChildContent>
         <TooltipContent>
             <toolTipContent>
+                service: @Activity.Service.ServiceName
+                <br />
                 name: @Activity.DisplayName
                 <br />
                 id: @Activity.Id
@@ -37,13 +39,12 @@
                 <br />
                 dur: @((Activity.EndTime - Activity.StartTime).TotalMilliseconds) ms
                 <br />
-                hasParent: @(Activity.ParentActivity != null)
+                hasParent: @Activity.HasParent
                 <br />
                 ParentId?: @Activity.ParentActivity?.Id
                 <br />
                 hasEnded: @Activity.HasEnded
-                <br />
-                service: @Activity.Service.ServiceName
+
             </toolTipContent>
         </TooltipContent>
     </MudTooltip>

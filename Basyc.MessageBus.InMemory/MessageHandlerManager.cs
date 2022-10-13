@@ -42,7 +42,7 @@ namespace Basyc.MessageBus.Client.NetMQ
 
 		}
 
-		public async Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken, string traceId)
+		public async Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken, string traceId, string parentSpanId)
 		{
 			if (handlerTypesCacheMap.TryGetValue(messageType, out var handlerMetadata) is false)
 			{
@@ -53,7 +53,8 @@ namespace Basyc.MessageBus.Client.NetMQ
 			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(traceId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));
 
 			var activityTraceId = ActivityTraceId.CreateFromString(traceId.PadLeft(32, '0'));
-			var activitySpanId = ActivitySpanId.CreateFromString("11".PadRight(16, '0'));
+			//var activitySpanId = ActivitySpanId.CreateFromString(parentSpanId.PadRight(16, '0'));
+			var activitySpanId = ActivitySpanId.CreateFromString(parentSpanId);
 			var activityContext = new ActivityContext(activityTraceId, activitySpanId, ActivityTraceFlags.Recorded, null, true);
 
 			using (var handlerStartedActivity = DiagnosticConstants.HandlerStarted.StartActivity("Basyc.MessageBus.Client.NetMQ.MessageHandlerManager ConsumeMessage", ActivityKind.Internal, activityContext, new KeyValuePair<string, object?>[]

@@ -6,7 +6,7 @@ namespace Basyc.Diagnostics.Producing.Shared
 	public struct ActivityDisposer : IDisposable
 	{
 		private readonly IDiagnosticsProducer diagnosticsProducer;
-		private readonly bool isDisposed = false;
+		private bool isEnded = false;
 		public ActivityStart ActivityStart { get; init; }
 
 		public ActivityDisposer(IDiagnosticsProducer diagnosticsProducer, ActivityStart activityStart)
@@ -18,15 +18,27 @@ namespace Basyc.Diagnostics.Producing.Shared
 
 		public void Dispose()
 		{
-			if (isDisposed is false)
-				diagnosticsProducer.EndActivity(ActivityStart, DateTimeOffset.UtcNow);
+			if (isEnded)
+				return;
+
+			diagnosticsProducer.EndActivity(ActivityStart, DateTimeOffset.UtcNow);
+			isEnded = true;
 		}
 
 		public void End(DateTimeOffset endTime = default, ActivityStatusCode activityStatusCode = ActivityStatusCode.Ok)
 		{
-			if (endTime == default)
-				endTime = DateTimeOffset.UtcNow;
+			if (isEnded)
+				throw new InvalidOperationException("Activity is already ended");
+
 			diagnosticsProducer.EndActivity(ActivityStart, endTime, activityStatusCode);
+			isEnded = true;
+		}
+
+		public ActivityDisposer StartNested(string name, DateTimeOffset startTime = default)
+		{
+			var nestedActivityDisposer = diagnosticsProducer.StartActivity(this, name, startTime);
+			return nestedActivityDisposer;
+
 		}
 	}
 }

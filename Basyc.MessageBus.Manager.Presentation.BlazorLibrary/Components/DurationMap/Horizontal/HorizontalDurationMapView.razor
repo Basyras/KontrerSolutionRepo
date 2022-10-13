@@ -5,45 +5,51 @@
 
 <horizontalDurationMapView>
     @{
-        foreach (var service in RequestContext.Diagnostics.Services)
+        if (RequestContext.Diagnostics.Services.Any())
         {
-            string serviceStyle = "";
-            var serviceFirstActivity = service.Activities.FirstOrDefault();
-            if (serviceFirstActivity is not null)
+            foreach (var service in RequestContext.Diagnostics.Services.Where(x => x.Activities.Any()).OrderBy(x => x.Activities.Min(y => y.StartTime)))
             {
+                string serviceStyle = "";
+                var serviceFirstActivity = service.Activities.First();
                 serviceStyle = $"margin-left: {DurationViewHelper.GetDurationAsRem(RequestContext.StartTime, serviceFirstActivity.StartTime, Scale)};";
-            }
-            <service style="@serviceStyle">
-                <serviceName>
-                    @service.ServiceIdentity.ServiceName
-                </serviceName>
-                <durationBoxes>
-                    @{
-                        ActivityContext previousActivity = null;
-                        foreach (var activity in service.Activities)
-                        {
-                            var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != activity.StartTime;
-                            if (isGapBetweenPreviousNested)
+                <service style="@serviceStyle">
+                    <serviceName>
+                        @service.ServiceIdentity.ServiceName
+                    </serviceName>
+                    <durationBoxes>
+                        @{
+                            ActivityContext previousActivity = null;
+                            foreach (var activity in service.Activities)
                             {
-                                <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" />
+                                var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != activity.StartTime;
+                                if (isGapBetweenPreviousNested)
+                                {
+                                    <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" />
+                                }
+
+                                <HorizontalDurationBoxView Activity="activity" Scale="Scale" />
+                                previousActivity = activity;
                             }
-
-                            <HorizontalDurationBoxView Activity="activity" Scale="Scale" />
-                            previousActivity = activity;
                         }
-                    }
 
-                </durationBoxes>
-            </service>
+                    </durationBoxes>
+                </service>
+            }
         }
     }
-    <MudStack Row="true">
+    <zoomToolBar>
+        @*        <MudStack Row="true">
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="OnZoomInClick" />
         <MudText>
-            @Scale
+        @((Scale * 100).ToString("0"))%
         </MudText>
+        <MudField >
+
+        </MudField>
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Remove" OnClick="OnZoomOutClick" />
-    </MudStack>
+        </MudStack>*@
+        <MudNumericField Format="N2" T="double" @bind-Value="Scale" FullWidth="false" Step="0.1" />
+    </zoomToolBar>
 
 </horizontalDurationMapView>
 
@@ -74,13 +80,13 @@
 
     private void OnZoomInClick(MouseEventArgs args)
     {
-        Scale += 1;
+        Scale += 0.1;
     }
 
     private void OnZoomOutClick(MouseEventArgs args)
     {
-        Scale -= 1;
-        if (Scale <= 0)
-            Scale = 1;
+        Scale -= 0.1;
+        if (Scale < 0)
+            Scale = 0;
     }
 }

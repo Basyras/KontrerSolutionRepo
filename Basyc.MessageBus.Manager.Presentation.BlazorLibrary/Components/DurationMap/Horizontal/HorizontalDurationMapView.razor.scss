@@ -1,8 +1,6 @@
 ﻿service {
     display: flex;
     margin-bottom: 1rem;
-    width: 100%;
-    overflow: hidden;
 }
 
 serviceName {
@@ -21,3 +19,17 @@ durationBoxes {
     min-height: 0px;
 }
 
+zoomToolBar {
+    display: block;
+    position: sticky;
+    left: 0px;
+    bottom: 0px;
+    width: 5rem;
+}
+
+horizontalDurationMapView{
+    display: block;
+    position: relative;
+    overflow: scroll;
+    width: 100%;
+}

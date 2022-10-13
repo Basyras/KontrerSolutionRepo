@@ -1,4 +1,6 @@
-﻿namespace Basyc.Diagnostics.Shared.Durations
+﻿using Basyc.Diagnostics.Shared.Helpers;
+
+namespace Basyc.Diagnostics.Shared.Durations
 {
 	public class DurationMapBuilder : IDurationMapBuilder
 	{
@@ -23,7 +25,7 @@
 		/// <returns></returns>
 		public DateTimeOffset Start()
 		{
-			rootSegmentBuilder = new InMemoryDurationSegmentBuilder(Service, TraceId, Guid.NewGuid().ToString(), "root", () => rootSegmentBuilder!);
+			rootSegmentBuilder = new InMemoryDurationSegmentBuilder(Service, TraceId, IdGeneratorHelper.GenerateNewSpanId(), "root", () => rootSegmentBuilder!);
 			StartTime = rootSegmentBuilder.Start();
 			HasStarted = true;
 			return StartTime;

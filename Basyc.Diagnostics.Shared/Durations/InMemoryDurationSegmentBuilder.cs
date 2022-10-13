@@ -1,4 +1,6 @@
-﻿namespace Basyc.Diagnostics.Shared.Durations
+﻿using Basyc.Diagnostics.Shared.Helpers;
+
+namespace Basyc.Diagnostics.Shared.Durations
 {
 	public class InMemoryDurationSegmentBuilder : DurationSegmentBuilderBase, IDisposable, IDurationSegmentBuilder
 	{
@@ -114,7 +116,7 @@
 		public override IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start)
 		{
 			EnsureStarted(start);
-			var nestedSegment = new InMemoryDurationSegmentBuilder(service, TraceId, Guid.NewGuid().ToString(), segmentName, start, this);
+			var nestedSegment = new InMemoryDurationSegmentBuilder(service, TraceId, IdGeneratorHelper.GenerateNewSpanId(), segmentName, start, this);
 			nestedSegmentBuilders.Add(nestedSegment);
 			return nestedSegment;
 		}

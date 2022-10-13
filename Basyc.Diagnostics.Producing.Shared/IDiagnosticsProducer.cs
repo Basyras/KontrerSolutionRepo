@@ -1,4 +1,5 @@
 ﻿using Basyc.Diagnostics.Shared.Durations;
+using Basyc.Diagnostics.Shared.Helpers;
 using Basyc.Diagnostics.Shared.Logging;
 using System.Diagnostics;
 
@@ -19,7 +20,7 @@ namespace Basyc.Diagnostics.Producing.Shared
 		{
 			if (startTime == default)
 				startTime = DateTimeOffset.UtcNow;
-			var activityStart = new ActivityStart(serviceIdentity, traceId, parentId, Guid.NewGuid().ToString(), name, startTime);
+			var activityStart = new ActivityStart(serviceIdentity, traceId, parentId, IdGeneratorHelper.GenerateNewSpanId(), name, startTime);
 			var disposer = new ActivityDisposer(this, activityStart);
 			this.StartActivity(activityStart);
 			return disposer;

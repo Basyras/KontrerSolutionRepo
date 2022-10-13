@@ -37,7 +37,7 @@ namespace Basyc.Diagnostics.Producing.SignalR
 			{
 				while (true)
 				{
-					var changes = await ReadWithTimeoutAsync<ChangesSignalRDTO>(signalRChannel, TimeSpan.FromMilliseconds(500), default);
+					var changes = await ReadWithTimeoutAsync<ChangesSignalRDTO>(signalRChannel, TimeSpan.FromMilliseconds(1000), default);
 					var logs = changes.SelectMany(x => x.Logs).ToArray();
 					var activityStarts = changes.SelectMany(x => x.ActivityStarts).ToArray();
 					var activityEnds = changes.SelectMany(x => x.ActivityEnds).ToArray();
@@ -84,12 +84,12 @@ namespace Basyc.Diagnostics.Producing.SignalR
 					await foreach (var item in reader.ReadAllAsync(linkedCts.Token))
 					{
 						messages.Add(item);
-						linkedCts.Token.ThrowIfCancellationRequested();
+						//linkedCts.Token.ThrowIfCancellationRequested();
 					}
 				}
 				catch (OperationCanceledException)
 				{
-					cancellationToken.ThrowIfCancellationRequested();
+					//cancellationToken.ThrowIfCancellationRequested();
 				}
 			}
 			timeoutTokenSrc.Dispose();

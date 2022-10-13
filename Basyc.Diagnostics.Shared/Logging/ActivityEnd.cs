@@ -14,6 +14,9 @@ namespace Basyc.Diagnostics.Shared.Logging
 			DateTimeOffset endTime,
 			ActivityStatusCode status)
 		{
+			if (parentId is not null && parentId == id)
+				throw new ArgumentException($"{nameof(parentId)} cant be the same as {nameof(id)}");
+
 			this.Service = service;
 			this.TraceId = traceId;
 			this.ParentId = parentId;

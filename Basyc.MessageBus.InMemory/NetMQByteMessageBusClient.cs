@@ -1,4 +1,5 @@
 ﻿using Basyc.Diagnostics.Producing.Shared;
+using Basyc.Diagnostics.Shared.Helpers;
 using Basyc.MessageBus.Client.NetMQ.Sessions;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.NetMQ.Shared.Cases;
@@ -83,10 +84,10 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 
 	private async Task HandleMessage(NetMQMessage messageFrames, CancellationToken cancellationToken)
 	{
+		var startTime = DateTimeOffset.UtcNow;
 		var senderAddressBytes = messageFrames[1].Buffer;
 		var senderAddressString = Encoding.ASCII.GetString(senderAddressBytes);
 		byte[] messageDataBytes = messageFrames[3].Buffer;
-
 		var wrapperReadResult = netMQMessageWrapper.ReadWrapperMessage(messageDataBytes);
 		await wrapperReadResult.Match(
 			checkIn =>
@@ -96,45 +97,63 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			},
 			async requestCase =>
 			{
-				logger.LogDebug($"Request received from {senderAddressString}:{requestCase.SessionId}, data: '{requestCase.RequestBytes}'");
-				var deserializedRequest = objectToByteSerailizer.Deserialize(requestCase.RequestBytes, requestCase.RequestType);
-				var consumeResult = await handlerManager.ConsumeMessage(requestCase.RequestType, deserializedRequest, cancellationToken, requestCase.TraceId);
-				object connsumerResultData;
-				if (consumeResult.Value is Exception ex)
+				using (var requestCaseActivity = diagnosticsProducer.StartActivity(requestCase.TraceId, requestCase.RemoteSpanId, "NetMQ RequestCase", startTime))
 				{
-					logger.LogCritical($"Message handler throwed exception. {ex.Message}");
-					connsumerResultData = ex;
-				}
-				else
-				{
-					connsumerResultData = consumeResult.AsT0;
-				}
+					logger.LogDebug($"Request received from {senderAddressString}:{requestCase.SessionId}, data: '{requestCase.RequestBytes}'");
 
-				string responseType = TypedToSimpleConverter.ConvertTypeToSimple(connsumerResultData.GetType());
-				byte[] wrapperMessageBytes = netMQMessageWrapper.CreateWrapperMessage(connsumerResultData, responseType, requestCase.SessionId, requestCase.TraceId, requestCase.ParentSpanId, MessageCase.Response);
-				var messageToServer = new NetMQMessage();
-				messageToServer.AppendEmptyFrame();
-				messageToServer.Append(wrapperMessageBytes);
-				messageToServer.AppendEmptyFrame();
-				messageToServer.Append(senderAddressBytes);
+					using var deseriActivity = requestCaseActivity.StartNested("Deserializating request");
+					var deserializedRequest = objectToByteSerailizer.Deserialize(requestCase.RequestBytes, requestCase.RequestType);
+					deseriActivity.End();
 
-				logger.LogInformation($"Sending response message");
-				dealerSocket.SendMultipartMessage(messageToServer);
+					using var consumeActivity = requestCaseActivity.StartNested("Consume message");
+					var consumeResult = await handlerManager.ConsumeMessage(requestCase.RequestType, deserializedRequest, cancellationToken, requestCase.TraceId, consumeActivity.ActivityStart.Id);
+					consumeActivity.End();
+
+					var connsumerResultData = consumeResult.Value;
+					if (consumeResult.Value is Exception ex)
+						logger.LogCritical($"Message handler throwed exception. {ex.Message}");
+
+
+					using var seriActivity = requestCaseActivity.StartNested("Serializating repsonse");
+					string responseType = TypedToSimpleConverter.ConvertTypeToSimple(connsumerResultData.GetType());
+					byte[] wrapperMessageBytes = netMQMessageWrapper.CreateWrapperMessage(connsumerResultData, responseType, requestCase.SessionId, requestCase.TraceId, requestCase.ParentSpanId, MessageCase.Response);
+					seriActivity.End();
+
+
+					var messageToBroker = new NetMQMessage();
+					messageToBroker.AppendEmptyFrame();
+					messageToBroker.Append(wrapperMessageBytes);
+					messageToBroker.AppendEmptyFrame();
+					messageToBroker.Append(senderAddressBytes);
+
+					logger.LogInformation($"Sending response message");
+					using (requestCaseActivity.StartNested("Sending response to broker"))
+					{
+						dealerSocket.SendMultipartMessage(messageToBroker);
+					}
+				}
 				logger.LogInformation($"Response message sent");
 			},
 			responseCase =>
 			{
-				logger.LogInformation($"Response received from {senderAddressString}:{responseCase.SessionId}, data: {responseCase.ResponseBytes}");
-				if (sessionManager.TryCompleteSession(responseCase.SessionId, new NetMQSessionResult(responseCase.ResponseBytes, responseCase.ResponseType)) is false)
-					logger.LogError($"Session '{responseCase.SessionId}' completation failed. Session does not exist");
+				using (var requestCaseActivity = diagnosticsProducer.StartActivity(responseCase.TraceId, responseCase.RemoteSpanId, "NetMQ ResponseCase", startTime))
+				{
+					logger.LogInformation($"Response received from {senderAddressString}:{responseCase.SessionId}, data: {responseCase.ResponseBytes}");
+					if (sessionManager.TryCompleteSession(responseCase.SessionId, new NetMQSessionResult(responseCase.ResponseBytes, responseCase.ResponseType)) is false)
+						logger.LogError($"Session '{responseCase.SessionId}' completation failed. Session does not exist");
 
-				return Task.CompletedTask;
+					return Task.CompletedTask;
+				}
 			},
 			async eventCase =>
 			{
-				logger.LogInformation($"Event received from {senderAddressString}:{eventCase.SessionId}, data: '{eventCase.EventBytes}'");
-				var eventRequest = objectToByteSerailizer.Deserialize(eventCase.EventBytes, eventCase.EventType);
-				var responseData = await handlerManager.ConsumeMessage(eventCase.EventType, eventRequest, cancellationToken, eventCase.TraceId);
+				using (var requestCaseActivity = diagnosticsProducer.StartActivity(eventCase.TraceId, eventCase.RemoteSpanId, "NetMQ EventCase", startTime))
+				{
+					logger.LogInformation($"Event received from {senderAddressString}:{eventCase.SessionId}, data: '{eventCase.EventBytes}'");
+					var eventRequest = objectToByteSerailizer.Deserialize(eventCase.EventBytes, eventCase.EventType);
+					var responseData = await handlerManager.ConsumeMessage(eventCase.EventType, eventRequest, cancellationToken, eventCase.TraceId, requestCaseActivity.ActivityStart.Id);
+				}
+
 			},
 			failureCase =>
 			{
@@ -158,7 +177,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 
 	private BusTask PublishAsync(byte[]? eventBytes, string eventType, RequestContext requestContext, CancellationToken cancellationToken)
 	{
-		string traceId = requestContext.TraceId is null ? Guid.NewGuid().ToString() : requestContext.TraceId;
+		string traceId = requestContext.TraceId is null ? IdGeneratorHelper.GenerateNewSpanId() : requestContext.TraceId;
 		string requesterSpanId = requestContext.RequesterSpanId is null ? traceId : requestContext.RequesterSpanId;
 
 		var newSession = sessionManager.CreateSession(eventType, traceId, requesterSpanId);
@@ -209,7 +228,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	}
 	private BusTask<ByteResponse> RequestAsync(byte[]? requestBytes, string requestType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 	{
-		string traceId = requestContext.TraceId is null ? Guid.NewGuid().ToString() : requestContext.TraceId;
+		string traceId = requestContext.TraceId is null ? IdGeneratorHelper.GenerateNewSpanId() : requestContext.TraceId;
 		string requesterSpanId = requestContext.RequesterSpanId is null ? traceId : requestContext.RequesterSpanId;
 		using var requestActivity = diagnosticsProducer.StartActivity(traceId, requesterSpanId, "NetMQ bus manager request");
 
@@ -219,7 +238,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 			requestBytes ??= new byte[0];
 			cancellationToken.ThrowIfCancellationRequested();
 
-			using var seriActivity = diagnosticsProducer.StartActivity(requestActivity, "NetMQ serialization");
+			var seriActivity = diagnosticsProducer.StartActivity(requestActivity, "NetMQ serialization");
 			var netMQByteMessage = netMQMessageWrapper.CreateWrapperMessage(requestBytes, requestType, newSession.SessionId, traceId, requesterSpanId, MessageCase.Request);
 			seriActivity.End();
 

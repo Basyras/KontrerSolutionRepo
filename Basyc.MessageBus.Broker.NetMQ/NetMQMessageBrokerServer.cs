@@ -1,5 +1,6 @@
 ﻿using Basyc.Diagnostics.Producing.Shared;
 using Basyc.Diagnostics.Shared.Durations;
+using Basyc.Diagnostics.Shared.Helpers;
 using Basyc.Diagnostics.Shared.Logging;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.NetMQ.Shared.Cases;
@@ -189,6 +190,6 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 
 	private ActivityStart CreateActivity(string traceId, string name)
 	{
-		return new ActivityStart(borkerIdentity, traceId, null, Guid.NewGuid().ToString(), name, DateTimeOffset.UtcNow);
+		return new ActivityStart(borkerIdentity, traceId, null, IdGeneratorHelper.GenerateNewSpanId(), name, DateTimeOffset.UtcNow);
 	}
 }

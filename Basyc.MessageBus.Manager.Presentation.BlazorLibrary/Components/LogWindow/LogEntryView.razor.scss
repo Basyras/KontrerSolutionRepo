@@ -27,7 +27,7 @@ serviceName {
     color: white;
 }
 
-level{
+level {
     display: inline;
     padding: 0px;
 }
@@ -42,4 +42,9 @@ level{
 
 .level--Error {
     background-color: #C15C5C;
+}
+
+
+.level--Debug {
+    color: #b4b4b4;
 }
