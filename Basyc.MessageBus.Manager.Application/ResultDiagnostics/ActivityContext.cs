@@ -23,11 +23,13 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		public IReadOnlyList<ActivityContext> NestedActivities { get => nestedActivities; }
 		public bool HasEnded { get; private set; }
 		public DateTimeOffset EndTime { get; private set; }
+		public TimeSpan Duration { get; private set; }
 		public ActivityStatusCode Status { get; private set; }
 		public ActivityContext? ParentActivity { get; private set; }
 		public void End(DateTimeOffset endTime, ActivityStatusCode status)
 		{
 			EndTime = endTime;
+			Duration = EndTime - StartTime;
 			Status = status;
 			HasEnded = true;
 			ActivityEnded?.Invoke(this, EventArgs.Empty);

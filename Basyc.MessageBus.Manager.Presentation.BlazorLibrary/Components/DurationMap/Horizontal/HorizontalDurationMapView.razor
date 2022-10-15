@@ -12,28 +12,33 @@
                 string serviceStyle = "";
                 var serviceFirstActivity = service.Activities.First();
                 serviceStyle = $"margin-left: {DurationViewHelper.GetDurationAsRem(RequestContext.StartTime, serviceFirstActivity.StartTime, Scale)};";
-                <service style="@serviceStyle">
-                    <serviceName>
-                        @service.ServiceIdentity.ServiceName
-                    </serviceName>
-                    <durationBoxes>
-                        @{
+                    <service style="@serviceStyle">
+                        <serviceName>
+                            @service.ServiceIdentity.ServiceName
+                        </serviceName>
+                        <durationBoxes>
+                            @{
                             ActivityContext previousActivity = null;
                             foreach (var activity in service.Activities)
                             {
-                                var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != activity.StartTime;
-                                if (isGapBetweenPreviousNested)
-                                {
-                                    <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" />
-                                }
-
-                                <HorizontalDurationBoxView Activity="activity" Scale="Scale" />
-                                previousActivity = activity;
+                                //var relativeStart = previousActivity == null ? RequestContext.StartTime  : activity.StartTime.AddTicks(-serviceFirstActivity.StartTime.UtcTicks);
+                                //string leftMargin = DurationViewHelper.GetDurationAsRem(relativeStart, activity.StartTime, Scale);
+                                string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetDurationAsRem(serviceFirstActivity.StartTime, activity.StartTime, Scale);
+                                        <div style="display: flex; margin-left:@leftMargin;">
+                                            @{
+                                        var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != activity.StartTime;
+                                        if (isGapBetweenPreviousNested)
+                                        {
+                                                        <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" />
+                                        }
+                                                    <HorizontalDurationBoxView Activity="activity" Scale="Scale" />
+                                        previousActivity = activity;
+                                            }
+                                        </div>
                             }
-                        }
-
-                    </durationBoxes>
-                </service>
+                            }
+                        </durationBoxes>
+                    </service>
             }
         }
     }

@@ -230,8 +230,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	{
 		string traceId = requestContext.TraceId is null ? IdGeneratorHelper.GenerateNewSpanId() : requestContext.TraceId;
 		string requesterSpanId = requestContext.RequesterSpanId is null ? traceId : requestContext.RequesterSpanId;
-		using var requestActivity = diagnosticsProducer.StartActivity(traceId, requesterSpanId, "NetMQ bus manager request");
-
+		var requestActivity = diagnosticsProducer.StartActivity(traceId, requesterSpanId, "NetMQ bus manager request");
 		var newSession = sessionManager.CreateSession(requestType, requestContext.TraceId, requestContext.RequesterSpanId);
 		Task<OneOf<ByteResponse, ErrorMessage>> task = Task.Run<OneOf<ByteResponse, ErrorMessage>>(async () =>
 		{
@@ -266,10 +265,12 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 
 			logger.LogInformation($"Requested '{requestType}'");
 			var sessionResult = await newSession.ResponseSource.Task;
+			requestActivity.End();
 			return new ByteResponse(sessionResult.bytes, sessionResult.responseType);
 		});
 
 		return BusTask<ByteResponse>.FromTask(newSession.TraceId, task);
+
 	}
 
 

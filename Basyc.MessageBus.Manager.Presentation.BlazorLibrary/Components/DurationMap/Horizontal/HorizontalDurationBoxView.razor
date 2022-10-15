@@ -54,7 +54,6 @@
             foreach (var nestedActivity in Activity.NestedActivities.ToArray())
             {
                 var isFirstNested = previousActivity is null && Activity.ParentActivity is not null;
-
                 if (isFirstNested)
                 {
                     var lateStartDuration = nestedActivity.StartTime - Activity.StartTime;

@@ -1,9 +1,11 @@
 ﻿service {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
     margin-bottom: 1rem;
 }
 
 serviceName {
+    grid-column: 1;
     display: flex;
     align-items: center;
     justify-content: right;
@@ -13,10 +15,19 @@ serviceName {
 }
 
 durationBoxes {
-    display: flex;
-    flex-direction: row;
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    /*display: flex;*/
+    /*flex-direction: row;*/
     width: 100%;
     min-height: 0px;
+}
+
+durationBoxes > *{
+    grid-column: 1;
+    grid-row: 1;
 }
 
 zoomToolBar {
@@ -30,6 +41,6 @@ zoomToolBar {
 horizontalDurationMapView{
     display: block;
     position: relative;
-    overflow: scroll;
+    overflow: auto;
     width: 100%;
 }

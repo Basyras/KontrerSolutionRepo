@@ -1,1 +1,68 @@
-horizontalDurationBoxView{display:grid;grid-template-rows:auto auto}durationBox{display:flex;align-items:center;background-color:#CDD8D8;box-sizing:border-box;height:2.3rem;overflow:hidden;min-width:4px;grid-row:1;width:100%}durationBoxBorder{display:flex;height:100%;width:100%;border:1.7px solid #628E8E;overflow:hidden;position:relative}nestedDurationBoxes{display:flex;grid-row:2;min-height:0px}spinner{display:flex;align-items:center;justify-items:right;width:100%;justify-content:right}acitvityName{display:flex;height:100%;width:100%;overflow:hidden;padding:0.3rem;line-height:0.8rem;position:absolute;top:0;left:0}toolTipContent{display:block;width:100%;text-align:left}durationBox:hover{background-color:#b7cccc}
+﻿horizontalDurationBoxView {
+  display: grid;
+  grid-template-rows: auto auto;
+}
+
+durationBox {
+  display: flex;
+  align-items: center;
+  /*background-color: #CDD8D8;*/
+  /*background-color: #cdd8d870;*/
+  /*background-color: #1072722e;*/
+  background-color: #538d8d29;
+  box-sizing: border-box;
+  height: 2.3rem;
+  overflow: hidden;
+  grid-row: 1;
+  float: left;
+  position: relative;
+}
+
+durationBoxBorder {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  border: 1.7px solid #628E8E;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+nestedDurationBoxes {
+  display: flex;
+  grid-row: 2;
+  min-height: 0px;
+  gap: 0px;
+  margin-top: -0.85px;
+}
+
+spinner {
+  display: flex;
+  align-items: center;
+  justify-items: right;
+  width: 100%;
+  justify-content: right;
+}
+
+acitvityName {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  padding: 0.3rem;
+  line-height: 0.8rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+toolTipContent {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+durationBox:hover {
+  background-color: #b7cccc;
+}
