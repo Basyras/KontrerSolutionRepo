@@ -4,14 +4,14 @@
 @implements IDisposable
 @{
     var width = Activity.HasEnded ? DurationViewHelper.GetDurationAsRem(Activity.EndTime - Activity.StartTime, Scale) : "5rem";
-    string boxStyle = $"min-width: {width};";
+    string durationBoxStyle = $"min-width: {width}; background-color: {Color};";
     string mudTooltipBoxStyle = $"width: 100%;";
 }
 
 <horizontalDurationBoxView>
     <MudTooltip RootStyle="@mudTooltipBoxStyle" Arrow="true">
         <ChildContent>
-            <durationBox style="@boxStyle">
+            <durationBox style="@durationBoxStyle">
                 <durationBoxBorder>
                     <acitvityName>
                         @Activity.DisplayName
@@ -19,7 +19,7 @@
                     @if (Activity.HasEnded is false)
                     {
                         <spinner>
-                            <MudProgressCircular Color="Color.Default" Indeterminate="true" Size="Size.Small" />
+                            <MudProgressCircular Color="MudBlazor.Color.Default" Indeterminate="true" Size="Size.Small" />
                         </spinner>
                     }
                 </durationBoxBorder>
@@ -66,10 +66,10 @@
                 var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != nestedActivity.StartTime;
                 if (isGapBetweenPreviousNested)
                 {
-                    <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" />
+                    <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
                 }
 
-                <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" />
+                <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" />
                 previousActivity = nestedActivity;
             }
 
@@ -79,7 +79,7 @@
                 var lastActivity = Activity.NestedActivities.OrderByDescending(x => x.EndTime).First();
                 if (Activity.EndTime != lastActivity.EndTime)
                 {
-                    <HorizontalUnknownDurationBoxView StartTime="lastActivity.EndTime" EndTime="Activity.EndTime" Scale="Scale" />
+                    <HorizontalUnknownDurationBoxView StartTime="lastActivity.EndTime" EndTime="Activity.EndTime" Scale="Scale" Color="@Color" />
                 }
             }
         }
@@ -90,8 +90,12 @@
 
 
 @code {
-    [Parameter] public ActivityContext Activity { get; set; }
-    [Parameter] public double Scale { get; set; }
+    [Parameter, EditorRequired] public ActivityContext Activity { get; set; }
+    [Parameter, EditorRequired] public double Scale { get; set; }
+    /// <summary>
+    ///Hexadecimal string
+    /// </summary>
+    [Parameter, EditorRequired] public string Color { get; set; }
 
     protected override Task OnParametersSetAsync()
     {

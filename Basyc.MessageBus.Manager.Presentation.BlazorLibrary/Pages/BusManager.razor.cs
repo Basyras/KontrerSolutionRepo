@@ -5,7 +5,6 @@ using Basyc.MessageBus.Manager.Application.Requesting;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System.ComponentModel;
-using System.Text;
 using System.Text.Json;
 
 namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Pages;
@@ -145,35 +144,7 @@ public partial class BusManager
 		return castedParam;
 	}
 
-	public static string GetColor(string textInput, int saturation, int saturationRandomness = 0)
-	{
-		int seed = textInput.Select(x => (int)x).Sum();
-		var random = new Random(seed);
 
-		var remainingColours = new List<int>(3) { 0, 1, 2 };
-		int[] colours = new int[3];
-		int firstIndex = random.Next(0, 2);
-		int randomSaturationToApply = random.Next(0, saturationRandomness);
-		colours[remainingColours[firstIndex]] = 255 - randomSaturationToApply;
-		remainingColours.RemoveAt(firstIndex);
-
-		int secondIndex = remainingColours[random.Next(0, 1)];
-		randomSaturationToApply = random.Next(0, saturationRandomness);
-		colours[remainingColours[secondIndex]] = saturation - randomSaturationToApply;
-		remainingColours.RemoveAt(secondIndex);
-
-		int flexibleSaturation = random.Next(saturation, 255);
-		randomSaturationToApply = random.Next(0, saturationRandomness);
-		colours[remainingColours[0]] = flexibleSaturation - randomSaturationToApply;
-
-		StringBuilder stringBuilder = new StringBuilder(6);
-		stringBuilder.Append('#');
-		stringBuilder.Append(colours[0].ToString("X2"));
-		stringBuilder.Append(colours[1].ToString("X2"));
-		stringBuilder.Append(colours[2].ToString("X2"));
-		string finalColor = stringBuilder.ToString();
-		return finalColor;
-	}
 
 	private void OnSelectedRequestMenuItemChanged(RequestItemViewModel newSelectedRequest)
 	{

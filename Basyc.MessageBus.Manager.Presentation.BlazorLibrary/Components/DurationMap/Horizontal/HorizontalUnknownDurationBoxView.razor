@@ -22,7 +22,11 @@
 </MudTooltip>
 
 @code {
-    [Parameter] public DateTimeOffset StartTime { get; init; }
-    [Parameter] public DateTimeOffset EndTime { get; init; }
-    [Parameter] public double Scale { get; set; }
+    [Parameter, EditorRequired] public DateTimeOffset StartTime { get; init; }
+    [Parameter, EditorRequired] public DateTimeOffset EndTime { get; init; }
+    [Parameter, EditorRequired] public double Scale { get; set; }
+    /// <summary>
+    ///Hexadecimal string
+    /// </summary>
+    [Parameter, EditorRequired] public string Color { get; set; }
 }
