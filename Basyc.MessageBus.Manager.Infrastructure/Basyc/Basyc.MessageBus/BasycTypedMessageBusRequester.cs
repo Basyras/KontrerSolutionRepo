@@ -51,13 +51,17 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 
 			if (requestContext.Request.RequestInfo.HasResponse)
 			{
-				var busStartSegment = startSegment.StartNested("Requesting to bus");
+				var busRequestActivity = startSegment.StartNested("Bus Request");
+
+				using var requestStartActivity = busRequestActivity.StartNested("Request Start");
 				var busTask = typedMessageBusClient.RequestAsync(requestType, requestObject, requestContext.Request.RequestInfo.ResponseType, busRequestContext);
+				requestStartActivity.End();
+
 				inMemorySessionMapper.AddMapping(requestContext.TraceId, busTask.TraceId);
 				busTask.Task.ContinueWith(x =>
 				{
 					var endTime = DateTimeOffset.UtcNow;
-					busStartSegment.End(endTime);
+					busRequestActivity.End(endTime);
 					startSegment.End(endTime);
 
 					if (x.IsFaulted)

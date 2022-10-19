@@ -13,6 +13,8 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 			if (opacity < 0 || opacity > 1)
 				throw new ArgumentException("bad value", nameof(opacity));
 
+			var opacity255 = (int)Math.Round(255 * opacity);
+
 			if (saturationRandomness < 0 || saturationRandomness > 1)
 				throw new ArgumentException("bad value", nameof(saturationRandomness));
 
@@ -45,7 +47,7 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 			stringBuilder.Append(colours[0].ToString("X2"));
 			stringBuilder.Append(colours[1].ToString("X2"));
 			stringBuilder.Append(colours[2].ToString("X2"));
-			stringBuilder.Append(opacity.ToString("X2"));
+			stringBuilder.Append(opacity255.ToString("X2"));
 			string finalColor = stringBuilder.ToString();
 			return finalColor;
 		}
