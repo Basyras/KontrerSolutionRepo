@@ -13,7 +13,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.Diagnostics
 	public class BasycDiagnosticsReceiversRequestDiagnosticsSource : IRequestDiagnosticsSource
 	{
 		private readonly IBasycDiagnosticsReceiverTraceIdMapper sessionMapper;
-		public BasycDiagnosticsReceiversRequestDiagnosticsSource(IEnumerable<IDiagnosticsLogReceiver> logReceivers, IBasycDiagnosticsReceiverTraceIdMapper sessionMapper)
+		public BasycDiagnosticsReceiversRequestDiagnosticsSource(IEnumerable<IDiagnosticReceiver> logReceivers, IBasycDiagnosticsReceiverTraceIdMapper sessionMapper)
 		{
 			foreach (var logReceiver in logReceivers)
 			{

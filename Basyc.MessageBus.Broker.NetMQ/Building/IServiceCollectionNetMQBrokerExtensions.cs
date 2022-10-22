@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionNetMQBrokerExtensions
 	{
-		public static SelectDiagnosticStage AddNetMQMessageBroker(this IServiceCollection services,
+		public static SelectDiagnosticStage AddBasycNetMQMessageBroker(this IServiceCollection services,
 			int brokerServerPort = 5367, string brokerServerAddress = "localhost")
 		{
 			services.AddSingleton<IMessageBrokerServer, NetMQMessageBrokerServer>();

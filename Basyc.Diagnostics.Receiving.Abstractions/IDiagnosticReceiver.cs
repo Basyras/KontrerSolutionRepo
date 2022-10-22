@@ -1,10 +1,10 @@
 ﻿namespace Basyc.Diagnostics.Receiving.Abstractions
 {
-	public interface IDiagnosticsLogReceiver
+	public interface IDiagnosticReceiver
 	{
 		event EventHandler<LogsReceivedArgs> LogsReceived;
-		event EventHandler<ActivityEndsReceivedArgs> ActivityEndsReceived;
 		event EventHandler<ActivityStartsReceivedArgs> ActivityStartsReceived;
+		event EventHandler<ActivityEndsReceivedArgs> ActivityEndsReceived;
 		Task StartReceiving();
 
 

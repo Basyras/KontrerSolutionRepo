@@ -11,13 +11,13 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 {
 	public class BasycDiagnosticsBusClientLogExporter : IBusClientLogExporter
 	{
-		private readonly IDiagnosticsProducer[] logProducers;
+		private readonly IDiagnosticsExporter[] diagnosticExporters;
 		private readonly ILogger<BasycDiagnosticsBusClientLogExporter> logger;
-		private readonly IOptions<UseDiagnosticsOptions> options;
+		private readonly IOptions<BusDiagnosticsOptions> options;
 
-		public BasycDiagnosticsBusClientLogExporter(IEnumerable<IDiagnosticsProducer> logProducers, ILogger<BasycDiagnosticsBusClientLogExporter> logger, IOptions<UseDiagnosticsOptions> options)
+		public BasycDiagnosticsBusClientLogExporter(IEnumerable<IDiagnosticsExporter> diagnosticExporters, ILogger<BasycDiagnosticsBusClientLogExporter> logger, IOptions<BusDiagnosticsOptions> options)
 		{
-			this.logProducers = logProducers.ToArray();
+			this.diagnosticExporters = diagnosticExporters.ToArray();
 			this.logger = logger;
 			this.options = options;
 			Activity.DefaultIdFormat = ActivityIdFormat.W3C;
@@ -33,7 +33,6 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 			};
 			listener.ActivityStarted += (Activity activity) =>
 			{
-				//DiagnosticConstants.HandlerStarted.
 				if (activity.GetBaggageItem(DiagnosticConstants.ShouldBeReceived) != true.ToString())
 				{
 					if (activity.GetTagItem(DiagnosticConstants.ShouldBeReceived) as bool? != true)
@@ -45,7 +44,6 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 
 				}
 				string traceId = activity.TraceId.ToString().TrimStart('0');
-
 				SendActivityStart(new ActivityStart(options.Value.Service, traceId, activity.ParentSpanId.ToString(), activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc));
 			};
 			listener.ActivityStopped += activity =>
@@ -65,7 +63,7 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 		public void SendLog<TState>(string handlerDisplayName, LogLevel logLevel, string traceId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
 			var formattedMessage = formatter.Invoke(state, exception);
-			foreach (var diagnosticProducer in logProducers)
+			foreach (var diagnosticProducer in diagnosticExporters)
 			{
 				try
 				{
@@ -80,7 +78,7 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 
 		public void StartActivity(ActivityStart activityStart)
 		{
-			foreach (var producer in logProducers)
+			foreach (var producer in diagnosticExporters)
 			{
 				try
 				{
@@ -95,7 +93,7 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 
 		private void SendActivityStart(ActivityStart activityStart)
 		{
-			foreach (var producer in logProducers)
+			foreach (var producer in diagnosticExporters)
 			{
 				try
 				{
@@ -110,7 +108,7 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 
 		private void SendActivityEnd(ActivityEnd activityEnd)
 		{
-			foreach (var producer in logProducers)
+			foreach (var producer in diagnosticExporters)
 			{
 				try
 				{

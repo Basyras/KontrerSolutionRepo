@@ -11,12 +11,12 @@ namespace Basyc.MessageBus.Client
 	public sealed class TypedFromObjectMessageBusClient : ITypedMessageBusClient
 	{
 		private readonly IObjectMessageBusClient objectBusClient;
-		private readonly IDiagnosticsProducer diagnosticsProducer;
+		private readonly IDiagnosticsExporter diagnosticExporter;
 
-		public TypedFromObjectMessageBusClient(IObjectMessageBusClient messageBusClient, IDiagnosticsProducer diagnosticsProducer)
+		public TypedFromObjectMessageBusClient(IObjectMessageBusClient messageBusClient, IDiagnosticsExporter diagnosticExporter)
 		{
 			this.objectBusClient = messageBusClient;
-			this.diagnosticsProducer = diagnosticsProducer;
+			this.diagnosticExporter = diagnosticExporter;
 		}
 
 		public Task StartAsync(CancellationToken cancellationToken = default)

@@ -21,7 +21,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 	private readonly NetMQPoller poller = new NetMQPoller();
 	private readonly ILogger<NetMQMessageBrokerServer> logger;
 	private readonly INetMQMessageWrapper messageToByteSerializer;
-	private readonly IDiagnosticsProducer diagnosticsProducer;
+	private readonly IDiagnosticsExporter diagnosticsProducer;
 	private readonly RouterSocket brokerSocket;
 	private readonly ServiceIdentity borkerIdentity = new ServiceIdentity("Broker");
 
@@ -29,7 +29,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 		IWorkerRegistry workerRegistry,
 		ILogger<NetMQMessageBrokerServer> logger,
 		INetMQMessageWrapper messageToByteSerializer,
-		IDiagnosticsProducer diagnosticsProducer
+		IDiagnosticsExporter diagnosticsProducer
 		)
 	{
 		this.options = options;

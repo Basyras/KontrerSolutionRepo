@@ -1,6 +1,5 @@
 ﻿using Basyc.DependencyInjection;
 using Basyc.Diagnostics.Producing.Shared;
-using Basyc.Diagnostics.Shared.Durations;
 using Basyc.MessageBus.Client.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,23 +16,20 @@ namespace Basyc.MessageBus.Client.Building
 		public void NoDiagnostics()
 #pragma warning restore CA1822 // Mark members as static
 		{
-			services.TryAddSingleton<IDiagnosticsProducer, NullDiagnosticsProducer>();
-			services.Configure((System.Action<UseDiagnosticsOptions>)(x =>
+			services.TryAddSingleton<IDiagnosticsExporter, NullDiagnosticsProducer>();
+			services.Configure<BusDiagnosticsOptions>(x =>
 			{
 				x.UseDiagnostics = false;
-			}));
+			});
 		}
 
-		public BusClientSetupDiagnosticsStage UseDiagnostics(string serviceName)
+		public BusClientSetupDiagnosticsStage UseDiagnostics()
 		{
-			ServiceIdentity serviceIdentity = new ServiceIdentity(serviceName);
-
-			services.Configure((System.Action<UseDiagnosticsOptions>)(x =>
+			services.Configure<BusDiagnosticsOptions>(x =>
 			{
 				x.UseDiagnostics = true;
-				x.Service = serviceIdentity;
-			}));
-			IDiagnosticsProducer.ApplicationWideServiceIdentity = serviceIdentity;
+				x.Service = IDiagnosticsExporter.ApplicationWideServiceIdentity;
+			});
 			return new BusClientSetupDiagnosticsStage(services);
 		}
 

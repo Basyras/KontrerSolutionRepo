@@ -2,7 +2,7 @@
 
 namespace Basyc.MessageBus.Client.Diagnostics
 {
-	public class UseDiagnosticsOptions
+	public class BusDiagnosticsOptions
 	{
 		public ServiceIdentity Service { get; set; }
 		public bool UseDiagnostics { get; set; }

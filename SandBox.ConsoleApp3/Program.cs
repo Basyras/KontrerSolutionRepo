@@ -1,19 +1,10 @@
-﻿
-using Basyc.Diagnostics.Producing.SignalR.Shared;
-using Basyc.MessageBus.Broker;
+﻿using Basyc.MessageBus.Broker;
 //using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 
 IServiceCollection clientServices = new ServiceCollection();
-clientServices
-	.AddBasycDiagnosticsProducer()
-	.SelectSignalR()
-	.SetOptions(options =>
-	{
-		options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
-	});
 
 clientServices.AddLogging(x =>
 {
@@ -21,11 +12,18 @@ clientServices.AddLogging(x =>
 	x.AddConsole();
 	x.SetMinimumLevel(LogLevel.Debug);
 });
-clientServices.AddNetMQMessageBroker()
+
+clientServices
+	.AddBasycDiagnosticExporting()
+	.SetupDefaultService("Console3 - Broker")
+	.AddSignalRExporter("https://localhost:44310");
+
+
+clientServices.AddBasycNetMQMessageBroker()
 	.UseBasycDiagnosticsProducer();
 
 var services = clientServices.BuildServiceProvider();
-await services.StartBasycDiagnosticsProducer();
+await services.StartBasycDiagnosticExporters();
 using var broker = services.GetRequiredService<IMessageBrokerServer>();
 broker.Start();
 

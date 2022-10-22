@@ -11,14 +11,14 @@ using System.Threading.Channels;
 namespace Basyc.Diagnostics.Producing.SignalR
 {
 
-	public class SignalRDiagnosticsProducer : IDiagnosticsProducer
+	public class SignalRDiagnosticsExporter : IDiagnosticsExporter
 	{
 		private readonly Channel<ChangesSignalRDTO> signalRChannel = Channel.CreateUnbounded<ChangesSignalRDTO>(new UnboundedChannelOptions() { SingleReader = true });
 
 
 		private readonly IStrongTypedHubConnectionPusher<IServerMethodsProducersCanCall> hubConnection;
 
-		public SignalRDiagnosticsProducer(IOptions<SignalRLogReceiverOptions> options)
+		public SignalRDiagnosticsExporter(IOptions<SignalRLogReceiverOptions> options)
 		{
 			hubConnection = new HubConnectionBuilder()
 				.WithUrl(options.Value.SignalRServerUri!)

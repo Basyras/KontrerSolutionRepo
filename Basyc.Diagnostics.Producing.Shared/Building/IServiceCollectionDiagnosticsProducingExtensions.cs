@@ -1,12 +1,14 @@
 ﻿using Basyc.Diagnostics.Producing.Shared.Building;
+using Basyc.Diagnostics.Producing.Shared.Listening;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class IServiceCollectionDiagnosticsProducingExtensions
 	{
-		public static SelectProducerStage AddBasycDiagnosticsProducer(this IServiceCollection services)
+		public static SetupDefaultServiceStage AddBasycDiagnosticExporting(this IServiceCollection services)
 		{
-			return new SelectProducerStage(services);
+			services.AddSingleton<DiagnosticListenerManager>();
+			return new SetupDefaultServiceStage(services);
 		}
 
 	}

@@ -1,5 +1,7 @@
-﻿using Basyc.MessageBus.Client.Diagnostics.Sinks;
+﻿using Basyc.Diagnostics.Producing.Shared;
+using Basyc.Diagnostics.Shared.Logging;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +13,13 @@ namespace Basyc.MessageBus.Client.Diagnostics
 	public class BusHandlerLogger : ILogger
 	{
 		private readonly ILogger normalLogger;
-		private readonly IBusClientLogExporter[] logSinks;
+		private readonly IOptions<BusDiagnosticsOptions> busDiagnosticOptions;
+		private readonly IDiagnosticsExporter[] logSinks;
 
-		public BusHandlerLogger(ILogger normalLogger, IEnumerable<IBusClientLogExporter> logSinks)
+		public BusHandlerLogger(ILogger normalLogger, IEnumerable<IDiagnosticsExporter> logSinks, IOptions<BusDiagnosticsOptions> busDiagnosticOptions)
 		{
 			this.normalLogger = normalLogger;
+			this.busDiagnosticOptions = busDiagnosticOptions;
 			this.logSinks = logSinks.ToArray();
 		}
 
@@ -44,14 +48,17 @@ namespace Basyc.MessageBus.Client.Diagnostics
 
 			foreach (var logSink in logSinks)
 			{
-				logSink.SendLog(session.HandlerName, logLevel, session.TraceId, state, exception, formatter);
+				var message = formatter.Invoke(state, exception);
+				var logEntry = new LogEntry(busDiagnosticOptions.Value.Service, session.TraceId, DateTimeOffset.UtcNow, logLevel, message);
+				logSink.ProduceLog(logEntry);
 			}
 		}
 	}
 
 	public class BusHandlerLogger<THandler> : BusHandlerLogger, ILogger<THandler>
 	{
-		public BusHandlerLogger(ILogger<THandler> normalLogger, IEnumerable<IBusClientLogExporter> logSinks) : base(normalLogger, logSinks)
+		public BusHandlerLogger(ILogger<THandler> normalLogger, IEnumerable<IDiagnosticsExporter> logSinks, IOptions<BusDiagnosticsOptions> busDiagnosticOptions)
+			: base(normalLogger, logSinks, busDiagnosticOptions)
 		{
 		}
 	}

@@ -4,16 +4,16 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Basyc.Diagnostics.Producing.Shared.Building
 {
-	public class SelectProducerStage : BuilderStageBase
+	public class SetupProducersStage : BuilderStageBase
 	{
-		public SelectProducerStage(IServiceCollection services) : base(services)
+		public SetupProducersStage(IServiceCollection services) : base(services)
 		{
 		}
 
 		public void SelectInMemoryProducer()
 		{
 			services.TryAddSingleton<InMemoryDiagnosticsProducer>();
-			services.AddSingleton<IDiagnosticsProducer, InMemoryDiagnosticsProducer>(x => x.GetRequiredService<InMemoryDiagnosticsProducer>());
+			services.AddSingleton<IDiagnosticsExporter, InMemoryDiagnosticsProducer>(x => x.GetRequiredService<InMemoryDiagnosticsProducer>());
 		}
 	}
 }

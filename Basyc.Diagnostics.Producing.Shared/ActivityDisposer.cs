@@ -5,11 +5,11 @@ namespace Basyc.Diagnostics.Producing.Shared
 {
 	public struct ActivityDisposer : IDisposable
 	{
-		private readonly IDiagnosticsProducer diagnosticsProducer;
+		private readonly IDiagnosticsExporter diagnosticsProducer;
 		private bool isEnded = false;
 		public ActivityStart ActivityStart { get; init; }
 
-		public ActivityDisposer(IDiagnosticsProducer diagnosticsProducer, ActivityStart activityStart)
+		public ActivityDisposer(IDiagnosticsExporter diagnosticsProducer, ActivityStart activityStart)
 		{
 			this.diagnosticsProducer = diagnosticsProducer;
 			this.ActivityStart = activityStart;

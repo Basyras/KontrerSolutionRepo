@@ -24,7 +24,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	private readonly ISessionManager<NetMQSessionResult> sessionManager;
 	private readonly INetMQMessageWrapper netMQMessageWrapper;
 	private readonly IObjectToByteSerailizer objectToByteSerailizer;
-	private readonly IDiagnosticsProducer diagnosticsProducer;
+	private readonly IDiagnosticsExporter diagnosticsProducer;
 	private readonly NetMQPoller poller = new();
 	private readonly DealerSocket dealerSocket;
 
@@ -35,7 +35,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 		ISessionManager<NetMQSessionResult> sessionManager,
 		INetMQMessageWrapper netMQByteSerializer,
 		IObjectToByteSerailizer objectToByteSerailizer,
-		IDiagnosticsProducer diagnosticsProducer)
+		IDiagnosticsExporter diagnosticsProducer)
 	{
 		this.options = options;
 		this.handlerManager = handlerManager;

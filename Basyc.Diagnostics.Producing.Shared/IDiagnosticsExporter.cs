@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Basyc.Diagnostics.Producing.Shared
 {
-	public interface IDiagnosticsProducer
+	public interface IDiagnosticsExporter
 	{
 		Task ProduceLog(LogEntry logEntry);
 		Task StartActivity(ActivityStart activityStart);

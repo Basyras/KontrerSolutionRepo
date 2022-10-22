@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace Basyc.Diagnostics.Receiving.SignalR
 {
-	public class SignalRDiagnosticsLogReceiver : IDiagnosticsLogReceiver, IReceiversMethodsServerCanCall
+	public class SignalRDiagnosticsLogReceiver : IDiagnosticReceiver, IReceiversMethodsServerCanCall
 	{
 		private readonly IStrongTypedHubConnectionPusherAndReceiver<IServerMethodsReceiversCanCall, IReceiversMethodsServerCanCall> hubConnection;
 		public event EventHandler<LogsReceivedArgs>? LogsReceived;

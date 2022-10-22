@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using Basyc.Diagnostics.Producing.SignalR.Shared;
-using Basyc.MessageBus.Client;
+﻿using Basyc.MessageBus.Client;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,26 +12,21 @@ clientServices.AddLogging(x =>
 	x.SetMinimumLevel(LogLevel.Debug);
 });
 
-clientServices
-	.AddBasycDiagnosticsProducer()
-	.SelectSignalR()
-	.SetOptions(options =>
-	{
-		options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
-	});
+clientServices.AddBasycDiagnosticExporting()
+	.SetupDefaultService("Console1")
+	.AddSignalRExporter("https://localhost:44310")
+	.AutomaticallyExport()
+		.AnyActvity();
 
-
-clientServices
-	.AddBasycMessageBus()
-	.RegisterBasycTypedHandlers<Program>()
-	.SelectNetMQProvider("Console1")
-	.UseDiagnostics("Console1")
-	.SelectBasycDiagnosticsExporter();
-//.SelectHttpDiagnostics("https://localhost:7115/log");
+clientServices.AddBasycMessageBus()
+		.RegisterBasycTypedHandlers<Program>()
+		.SelectNetMQProvider("Console1")
+		.UseDiagnostics();
+//.ExportToBasycDiagnostics();
 
 var services = clientServices.BuildServiceProvider();
 await services.StartBasycMessageBusClient();
-await services.StartBasycDiagnosticsProducer();
+await services.StartBasycDiagnosticExporters();
 
 
 using ITypedMessageBusClient client = services.GetRequiredService<ITypedMessageBusClient>();
@@ -45,10 +38,6 @@ while (Console.ReadLine() != "stop")
 		.GetResult();
 
 	response.Switch(x => Console.WriteLine(x), x => Console.WriteLine(x));
-
-	//client.PublishAsync<CustomerCreatedEvent>(new CustomerCreatedEvent(new CustomerEntity(1, "a", "aa", "aaa")))
-	//	.GetAwaiter().GetResult();
-
 }
 
 

@@ -2,7 +2,7 @@
 
 namespace Basyc.Diagnostics.Receiving.Abstractions
 {
-	public class InMemoryDiagnosticsLogReceiver : IDiagnosticsLogReceiver
+	public class InMemoryDiagnosticsLogReceiver : IDiagnosticReceiver
 	{
 		public event EventHandler<LogsReceivedArgs>? LogsReceived;
 		public event EventHandler<ActivityEndsReceivedArgs>? ActivityEndsReceived;

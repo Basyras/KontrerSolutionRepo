@@ -12,9 +12,9 @@ namespace Basyc.MessageBus.Client
 	{
 		private readonly IByteMessageBusClient byteMessageBusClient;
 		private readonly IObjectToByteSerailizer objectToByteSerailizer;
-		private readonly IDiagnosticsProducer diagnosticsProducer;
+		private readonly IDiagnosticsExporter diagnosticsProducer;
 
-		public TypedFromByteMessageBusClient(IByteMessageBusClient byteMessageBusClient, IObjectToByteSerailizer objectToByteSerailizer, IDiagnosticsProducer diagnosticsProducer)
+		public TypedFromByteMessageBusClient(IByteMessageBusClient byteMessageBusClient, IObjectToByteSerailizer objectToByteSerailizer, IDiagnosticsExporter diagnosticsProducer)
 		{
 			this.byteMessageBusClient = byteMessageBusClient;
 			this.objectToByteSerailizer = objectToByteSerailizer;

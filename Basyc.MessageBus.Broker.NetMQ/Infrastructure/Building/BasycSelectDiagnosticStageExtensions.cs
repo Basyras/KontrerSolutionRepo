@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 	{
 		public static void UseBasycDiagnosticsProducer(this SelectDiagnosticStage selectDiagnosticStage)
 		{
-			if (selectDiagnosticStage.services.Any(x => x.ServiceType == typeof(IDiagnosticsProducer)) is false)
+			if (selectDiagnosticStage.services.Any(x => x.ServiceType == typeof(IDiagnosticsExporter)) is false)
 			{
 				throw new InvalidOperationException("Need to register basyc diagnostics first");
 			}

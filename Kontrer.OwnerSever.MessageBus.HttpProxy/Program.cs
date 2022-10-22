@@ -6,15 +6,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
-	.AddBasycDiagnosticsProducer()
+	.AddBasycDiagnosticExporting()
+	.SetupDefaultService("HttProxy")
 	.SelectInMemoryProducer();
 
 builder.Services.AddBasycMessageBus()
 	.NoHandlers()
 	.SelectNetMQProvider("HttpProxy")
 //.NoDiagnostics();
-.UseDiagnostics("HttpProxy")
-.SelectBasycDiagnosticsExporter();
+.UseDiagnostics()
+.ExportToBasycDiagnostics();
 
 builder.Services.AddBasycMessageBusProxy()
 	.UseSignalRProxy();
@@ -54,7 +55,7 @@ app.MapBasycSignalRMessageBusProxy();
 app.MapBasycSignalRDiagnosticsServer();
 
 await app.Services.StartBasycMessageBusClient();
-await app.Services.StartBasycDiagnosticsProducer();
+await app.Services.StartBasycDiagnosticExporters();
 await app.Services.StartBasycDiagnosticServer();
 
 

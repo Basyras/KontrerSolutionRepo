@@ -28,19 +28,18 @@ var assembliesToScan = new Assembly[]
 	typeof(IdGeneratorServiceDomainAssemblyMarker).Assembly,
 };
 
-builder.Services.AddBasycDiagnosticsProducer()
-	.SelectSignalR()
-		.SetOptions(options =>
-		{
-			options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
-		});
-;
+builder.Services.AddBasycDiagnosticExporting()
+	.SetupDefaultService("BusManager")
+	.AddSignalRExporter((options =>
+	{
+		options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
+	}));
 
 builder.Services.AddBasycMessageBus()
 	.NoHandlers()
 	.UseSignalRProxyProvider("https://localhost:44310")
-	.UseDiagnostics("BusManager")
-		.SelectBasycDiagnosticsExporter();
+	.UseDiagnostics()
+		.ExportToBasycDiagnostics();
 
 builder.Services.AddBasycDiagnosticReceiver()
 	.SelectSignalR()
@@ -61,7 +60,7 @@ busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 var app = builder.Build();
 await app.Services.StartBasycDiagnosticsReceivers();
-await app.Services.StartBasycDiagnosticsProducer();
+await app.Services.StartBasycDiagnosticExporters();
 await app.Services.StartBasycMessageBusClient();
 await app.RunAsync();
 

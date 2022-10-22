@@ -2,7 +2,7 @@
 
 namespace Basyc.Diagnostics.Producing.Shared
 {
-	public class InMemoryDiagnosticsProducer : IDiagnosticsProducer
+	public class InMemoryDiagnosticsProducer : IDiagnosticsExporter
 	{
 		public InMemoryDiagnosticsProducer()
 		{
