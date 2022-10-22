@@ -2,7 +2,7 @@
 {
 	public interface IRequestDiagnosticsManager
 	{
-		RequestDiagnosticContext CreateDiagnostics(string tracId);
+		RequestDiagnosticContext CreateDiagnostics(string traceId);
 		RequestDiagnosticContext GetDiagnostics(string traceId);
 	}
 }

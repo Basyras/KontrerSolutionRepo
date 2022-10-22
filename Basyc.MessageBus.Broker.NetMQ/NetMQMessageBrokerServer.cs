@@ -1,5 +1,4 @@
 ﻿using Basyc.Diagnostics.Producing.Shared;
-using Basyc.Diagnostics.Shared.Durations;
 using Basyc.Diagnostics.Shared.Helpers;
 using Basyc.Diagnostics.Shared.Logging;
 using Basyc.MessageBus.NetMQ.Shared;
@@ -23,7 +22,6 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 	private readonly INetMQMessageWrapper messageToByteSerializer;
 	private readonly IDiagnosticsExporter diagnosticsProducer;
 	private readonly RouterSocket brokerSocket;
-	private readonly ServiceIdentity borkerIdentity = new ServiceIdentity("Broker");
 
 	public NetMQMessageBrokerServer(IOptions<NetMQMessageBrokerServerOptions> options,
 		IWorkerRegistry workerRegistry,
@@ -62,7 +60,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 				{
 					var requestStartActivity = CreateActivity(request.TraceId, "Delegating request");
 					diagnosticsProducer.StartActivity(requestStartActivity);
-					diagnosticsProducer.ProduceLog(new LogEntry(borkerIdentity, request.TraceId, DateTimeOffset.UtcNow, LogLevel.Debug, "Delegating request"));
+					diagnosticsProducer.ProduceLog(new LogEntry(IDiagnosticsExporter.ApplicationWideServiceIdentity, request.TraceId, DateTimeOffset.UtcNow, LogLevel.Debug, "Delegating request"));
 					logger.LogInformation($"Recieved request: '{request.RequestBytes}' from {senderAddressString}:{request.SessionId}");
 					if (workerRegistry.TryGetWorkerFor(request.RequestType, out string? workerAddressString))
 					{
@@ -190,6 +188,6 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 
 	private ActivityStart CreateActivity(string traceId, string name)
 	{
-		return new ActivityStart(borkerIdentity, traceId, null, IdGeneratorHelper.GenerateNewSpanId(), name, DateTimeOffset.UtcNow);
+		return new ActivityStart(IDiagnosticsExporter.ApplicationWideServiceIdentity, traceId, null, IdGeneratorHelper.GenerateNewSpanId(), name, DateTimeOffset.UtcNow);
 	}
 }

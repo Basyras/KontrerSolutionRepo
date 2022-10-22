@@ -1,4 +1,3 @@
-using Basyc.Diagnostics.Producing.SignalR.Shared;
 using Basyc.DomainDrivenDesign.Domain;
 using Basyc.MessageBus.Manager;
 using Basyc.MessageBus.Manager.Application;
@@ -30,16 +29,13 @@ var assembliesToScan = new Assembly[]
 
 builder.Services.AddBasycDiagnosticExporting()
 	.SetupDefaultService("BusManager")
-	.AddSignalRExporter((options =>
-	{
-		options.SignalRServerUri = "https://localhost:44310" + SignalRConstants.ProducersHubPattern;
-	}));
+	.AddSignalRExporter("https://localhost:44310")
+	.AutomaticallyExport().AnyActvity();
 
 builder.Services.AddBasycMessageBus()
 	.NoHandlers()
-	.UseSignalRProxyProvider("https://localhost:44310")
-	.UseDiagnostics()
-		.ExportToBasycDiagnostics();
+	.SelectSignalRProxyProvider("https://localhost:44310")
+	.UseDiagnostics();
 
 builder.Services.AddBasycDiagnosticReceiver()
 	.SelectSignalR()

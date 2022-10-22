@@ -13,9 +13,7 @@ builder.Services
 builder.Services.AddBasycMessageBus()
 	.NoHandlers()
 	.SelectNetMQProvider("HttpProxy")
-//.NoDiagnostics();
-.UseDiagnostics()
-.ExportToBasycDiagnostics();
+.UseDiagnostics();
 
 builder.Services.AddBasycMessageBusProxy()
 	.UseSignalRProxy();

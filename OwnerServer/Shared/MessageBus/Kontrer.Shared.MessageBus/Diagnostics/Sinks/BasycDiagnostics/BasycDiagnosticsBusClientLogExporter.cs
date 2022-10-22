@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 {
+	[Obsolete]
 	public class BasycDiagnosticsBusClientLogExporter : IBusClientLogExporter
 	{
 		private readonly IDiagnosticsExporter[] diagnosticExporters;

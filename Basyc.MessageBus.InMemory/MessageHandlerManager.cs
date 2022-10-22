@@ -53,7 +53,6 @@ namespace Basyc.MessageBus.Client.NetMQ
 			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(traceId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));
 
 			var activityTraceId = ActivityTraceId.CreateFromString(traceId.PadLeft(32, '0'));
-			//var activitySpanId = ActivitySpanId.CreateFromString(parentSpanId.PadRight(16, '0'));
 			var activitySpanId = ActivitySpanId.CreateFromString(parentSpanId);
 			var activityContext = new ActivityContext(activityTraceId, activitySpanId, ActivityTraceFlags.Recorded, null, true);
 
