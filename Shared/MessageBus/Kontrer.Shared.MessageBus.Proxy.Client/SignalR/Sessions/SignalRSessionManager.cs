@@ -64,11 +64,11 @@ namespace Basyc.MessageBus.HttpProxy.Client.SignalR.Sessions
 			return Task.CompletedTask;
 		}
 
-		public SignalRSession StartSession()
+		public SignalRSession StartSession(string traceId)
 		{
-			var sessionIndex = requestIdCounter.GetNextId();
-			var traceId = sessionIndex.ToString();
-			var session = new SignalRSession(sessionIndex, traceId);
+			//var sessionIndex = requestIdCounter.GetNextId();
+			//var traceId = sessionIndex.ToString();
+			var session = new SignalRSession(traceId, traceId);
 			sessionMap.Add(traceId, session);
 			return session;
 		}

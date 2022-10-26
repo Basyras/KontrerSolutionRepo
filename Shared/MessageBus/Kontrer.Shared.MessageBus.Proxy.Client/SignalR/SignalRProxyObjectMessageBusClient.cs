@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
 using OneOf;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -74,13 +75,22 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 
 		private BusTask<object?> CreateAndStartBusTask(string requestType, object? requestData = null, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			SignalRSession session = sessionManager.StartSession();
+			var createAndStartBusTaskActivity = new Activity("SignalRProxyObjectMessageBusClient.CreateAndStartBusTask");
+			createAndStartBusTaskActivity.SetParentId(requestContext.ParentSpanId);
+			createAndStartBusTaskActivity.Start();
+			SignalRSession session = sessionManager.StartSession(requestContext.TraceId);
 			Task<OneOf<object?, ErrorMessage>> reqeustTask = Task.Run((Func<Task<OneOf<object?, ErrorMessage>>?>)(async () =>
 			{
+				var createAndStartBusTaskTaskActivity = new Activity("SignalRProxyObjectMessageBusClient.CreateAndStartBusTask TaskRun").Start();
+				var seriActivity = new Activity("SignalRProxyObjectMessageBusClient.CreateAndStartBusTask TaskRun Seri").Start();
+
 				if (byteSerializer.TrySerialize(requestData, requestType, out var requestDataBytes, out var error) is false)
 				{
+					seriActivity.Stop();
 					return new ErrorMessage("Failed to serailize request");
 				}
+				seriActivity.Stop();
+
 				try
 				{
 					await hubConnection.Call.Request(new RequestSignalRDTO(requestType, true, requestDataBytes, RequestContext: requestContext));
@@ -97,13 +107,22 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 					{
 						if (byteSerializer.TryDeserialize(resultDTO.ResponseData!, resultDTO.ResponseType!, out var deserializedResult, out var error) is false)
 						{
+							createAndStartBusTaskTaskActivity.Stop();
+							createAndStartBusTaskActivity.Stop();
+
 							return new ErrorMessage("Failed to serailize response");
 						}
+						createAndStartBusTaskTaskActivity.Stop();
+						createAndStartBusTaskActivity.Stop();
+
 						return deserializedResult;
 
 					}
 					else
 					{
+						createAndStartBusTaskTaskActivity.Stop();
+						createAndStartBusTaskActivity.Stop();
+
 						return (OneOf<object?, ErrorMessage>)null;
 					}
 				},

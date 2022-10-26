@@ -44,8 +44,10 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 				{
 
 				}
-				string traceId = activity.TraceId.ToString().TrimStart('0');
-				SendActivityStart(new ActivityStart(options.Value.Service, traceId, activity.ParentSpanId.ToString(), activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc));
+				string traceId = activity.TraceId.ToString();
+				string parentId = activity.ParentSpanId == default ? null : activity.ParentSpanId.ToString();
+
+				SendActivityStart(new ActivityStart(options.Value.Service, traceId, parentId, activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc));
 			};
 			listener.ActivityStopped += activity =>
 			{
@@ -54,8 +56,10 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 					if (activity.GetTagItem(DiagnosticConstants.ShouldBeReceived) as bool? != true)
 						return;
 				}
-				string traceId = activity.TraceId.ToString().TrimStart('0');
-				SendActivityEnd(new ActivityEnd(options.Value.Service, traceId, activity.ParentSpanId.ToString(), activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc, activity.StartTimeUtc + activity.Duration, activity.Status));
+				string traceId = activity.TraceId.ToString();
+				string parentId = activity.ParentSpanId == default ? null : activity.ParentSpanId.ToString();
+
+				SendActivityEnd(new ActivityEnd(options.Value.Service, traceId, parentId, activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc, activity.StartTimeUtc + activity.Duration, activity.Status));
 			};
 			ActivitySource.AddActivityListener(listener);
 

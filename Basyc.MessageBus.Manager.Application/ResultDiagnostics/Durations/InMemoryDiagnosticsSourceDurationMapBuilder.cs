@@ -8,10 +8,12 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 	internal class InMemoryDiagnosticsSourceDurationMapBuilder : InMemoryDiagnosticsSourceDurationSegmentBuilder, IDurationMapBuilder
 	{
 		private readonly InMemoryRequestDiagnosticsSource diagnosticsSource;
+		private readonly string? parentId;
 
-		public InMemoryDiagnosticsSourceDurationMapBuilder(ServiceIdentity service, string traceId, string name, InMemoryRequestDiagnosticsSource diagnosticsSource) : base(service, traceId, Guid.NewGuid().ToString(), name, diagnosticsSource)
+		public InMemoryDiagnosticsSourceDurationMapBuilder(ServiceIdentity service, string traceId, string name, InMemoryRequestDiagnosticsSource diagnosticsSource, string? parentId = null) : base(service, traceId, Guid.NewGuid().ToString(), name, diagnosticsSource)
 		{
 			this.diagnosticsSource = diagnosticsSource;
+			this.parentId = parentId;
 		}
 
 
@@ -22,7 +24,6 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 
 		public IDurationSegmentBuilder StartNewSegment(string segmentName)
 		{
-			//return ((IDurationSegmentBuilder)this).Start(segmentName);
 			return this.StartNested(segmentName);
 		}
 
@@ -34,7 +35,6 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 		void IDurationMapBuilder.End()
 		{
 			//Root element is not really existing so it does not required to notify anyone
-			//this.End();
 			EndTime = DateTimeOffset.UtcNow;
 
 		}
@@ -42,7 +42,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 		public override IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start)
 		{
 			var nestedId = IdGeneratorHelper.GenerateNewSpanId();
-			diagnosticsSource.StartActivity(new ActivityStart(service, TraceId, null, nestedId, segmentName, start));
+			diagnosticsSource.StartActivity(new ActivityStart(service, TraceId, parentId, nestedId, segmentName, start));
 			return new InMemoryDiagnosticsSourceDurationSegmentBuilder(this, TraceId, nestedId, segmentName, service, diagnosticsSource);
 		}
 	}

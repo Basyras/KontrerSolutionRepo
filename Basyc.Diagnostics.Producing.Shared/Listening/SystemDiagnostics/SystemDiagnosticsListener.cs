@@ -28,16 +28,19 @@ namespace Basyc.Diagnostics.Producing.Shared.Listening.SystemDiagnostics
 				if (options.Value.Filter.Invoke(activity) is false)
 					return;
 
-				string traceId = activity.TraceId.ToString().TrimStart('0');
-				var actvityStart = new ActivityStart(service, traceId, activity.ParentSpanId.ToString(), activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc);
+				string traceId = activity.TraceId.ToString();
+				string? parentId = activity.ParentSpanId == default ? null : activity.ParentSpanId.ToString();
+				var actvityStart = new ActivityStart(service, traceId, parentId, activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc);
 				ActivityStartsReceived?.Invoke(this, actvityStart);
 			};
 			listener.ActivityStopped += activity =>
 			{
 				if (options.Value.Filter.Invoke(activity) is false)
 					return;
-				string traceId = activity.TraceId.ToString().TrimStart('0');
-				var activityEnd = new ActivityEnd(service, traceId, activity.ParentSpanId.ToString(), activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc, activity.StartTimeUtc + activity.Duration, activity.Status);
+				string traceId = activity.TraceId.ToString();
+				string? parentId = activity.ParentSpanId == default ? null : activity.ParentSpanId.ToString();
+
+				var activityEnd = new ActivityEnd(service, traceId, parentId, activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc, activity.StartTimeUtc + activity.Duration, activity.Status);
 				ActivityEndsReceived?.Invoke(this, activityEnd);
 
 			};

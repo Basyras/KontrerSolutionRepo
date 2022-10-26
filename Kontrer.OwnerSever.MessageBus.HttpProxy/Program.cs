@@ -5,10 +5,11 @@ using Basyc.Diagnostics.Shared.Logging;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services
-	.AddBasycDiagnosticExporting()
-	.SetupDefaultService("HttProxy")
-	.SelectInMemoryProducer();
+builder.Services.AddBasycDiagnosticExporting()
+	.SetDefaultService("HttProxy")
+	.SelectInMemoryProducer()
+	.AutomaticallyExport()
+		.AnyActvity();
 
 builder.Services.AddBasycMessageBus()
 	.NoHandlers()

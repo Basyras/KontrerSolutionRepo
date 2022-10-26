@@ -28,18 +28,20 @@ var assembliesToScan = new Assembly[]
 };
 
 builder.Services.AddBasycDiagnosticExporting()
-	.SetupDefaultService("BusManager")
+	.SetDefaultService("BusManager")
 	.AddSignalRExporter("https://localhost:44310")
 	.AutomaticallyExport().AnyActvity();
+
+builder.Services.AddBasycDiagnosticReceiving()
+	.SelectSignalRReceiver()
+		.SetServerUri("https://localhost:44310");
 
 builder.Services.AddBasycMessageBus()
 	.NoHandlers()
 	.SelectSignalRProxyProvider("https://localhost:44310")
 	.UseDiagnostics();
 
-builder.Services.AddBasycDiagnosticReceiver()
-	.SelectSignalR()
-		.SetServerUri("https://localhost:44310");
+
 
 var busManagerBuilder = builder.Services.AddBasycBusBlazorUI();
 CreateTestingMessages(busManagerBuilder);

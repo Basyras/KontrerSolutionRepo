@@ -46,7 +46,7 @@ namespace Basyc.MessageBus.Client
 
 		public BusTask<object> RequestAsync(Type requestType, object requestData, Type responseType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			using var requestActivityDisposer = diagnosticsProducer.StartActivity(requestContext.TraceId, requestContext.RequesterSpanId, "Typed RequestAsync");
+			using var requestActivityDisposer = diagnosticsProducer.StartActivity(requestContext.TraceId, requestContext.ParentSpanId, "Typed RequestAsync");
 
 			var requestTypeString = TypedToSimpleConverter.ConvertTypeToSimple(requestType);
 			var responseTypeString = TypedToSimpleConverter.ConvertTypeToSimple(responseType);

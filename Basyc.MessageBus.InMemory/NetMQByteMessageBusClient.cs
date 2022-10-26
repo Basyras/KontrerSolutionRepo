@@ -178,7 +178,7 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	private BusTask PublishAsync(byte[]? eventBytes, string eventType, RequestContext requestContext, CancellationToken cancellationToken)
 	{
 		string traceId = requestContext.TraceId is null ? IdGeneratorHelper.GenerateNewSpanId() : requestContext.TraceId;
-		string requesterSpanId = requestContext.RequesterSpanId is null ? traceId : requestContext.RequesterSpanId;
+		string requesterSpanId = requestContext.ParentSpanId is null ? traceId : requestContext.ParentSpanId;
 
 		var newSession = sessionManager.CreateSession(eventType, traceId, requesterSpanId);
 
@@ -229,9 +229,9 @@ public partial class NetMQByteMessageBusClient : IByteMessageBusClient
 	private BusTask<ByteResponse> RequestAsync(byte[]? requestBytes, string requestType, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 	{
 		string traceId = requestContext.TraceId is null ? IdGeneratorHelper.GenerateNewSpanId() : requestContext.TraceId;
-		string requesterSpanId = requestContext.RequesterSpanId is null ? traceId : requestContext.RequesterSpanId;
+		string requesterSpanId = requestContext.ParentSpanId is null ? traceId : requestContext.ParentSpanId;
 		var requestActivity = diagnosticsProducer.StartActivity(traceId, requesterSpanId, "NetMQ bus manager request");
-		var newSession = sessionManager.CreateSession(requestType, requestContext.TraceId, requestContext.RequesterSpanId);
+		var newSession = sessionManager.CreateSession(requestType, requestContext.TraceId, requestContext.ParentSpanId);
 		Task<OneOf<ByteResponse, ErrorMessage>> task = Task.Run<OneOf<ByteResponse, ErrorMessage>>(async () =>
 		{
 			requestBytes ??= new byte[0];

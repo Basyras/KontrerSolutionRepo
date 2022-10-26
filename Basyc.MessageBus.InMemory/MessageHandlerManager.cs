@@ -52,7 +52,8 @@ namespace Basyc.MessageBus.Client.NetMQ
 			object handler = serviceProvider.GetRequiredService(handlerMetadata.HandlerRuntimeType)!;
 			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(traceId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));
 
-			var activityTraceId = ActivityTraceId.CreateFromString(traceId.PadLeft(32, '0'));
+			//var activityTraceId = ActivityTraceId.CreateFromString(traceId.PadLeft(32, '0'));
+			var activityTraceId = ActivityTraceId.CreateFromString(traceId);
 			var activitySpanId = ActivitySpanId.CreateFromString(parentSpanId);
 			var activityContext = new ActivityContext(activityTraceId, activitySpanId, ActivityTraceFlags.Recorded, null, true);
 
