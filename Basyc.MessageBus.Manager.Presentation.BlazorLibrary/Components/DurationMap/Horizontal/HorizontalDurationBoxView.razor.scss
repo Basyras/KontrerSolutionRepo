@@ -7,12 +7,8 @@
 durationBox {
     display: flex;
     align-items: center;
-    /*background-color: #CDD8D8;*/
-    /*background-color: #cdd8d870;*/
-    /*background-color: #1072722e;*/
-    /*background-color: #538d8d29;*/
     box-sizing: border-box;
-    height: 2.3rem;
+    height: 2.4rem;
     overflow: hidden;
     grid-row: 1;
     float: left;
@@ -32,6 +28,7 @@ durationBoxBorder {
 
 nestedDurationBoxes {
     display: flex;
+    flex-direction: column;
     grid-row: 2;
     min-height: 0px;
     gap: 0px;
@@ -66,4 +63,25 @@ toolTipContent {
 
 durationBox:hover {
     background-color: #cfdede;
+}
+
+nestedBox {
+    display: flex;
+    flex-direction: row;
+}
+
+unknownAndKnowGroup {
+    display: flex;
+    flex-direction: row;
+}
+treeLeg{
+    display: flex;
+}
+
+treeHorizontalLine {
+    display: block;
+    height: 1.2rem;
+    width: 5px;
+    border-bottom: 2px solid #81a7a7;
+    border-left: 2px solid #81a7a7;
 }

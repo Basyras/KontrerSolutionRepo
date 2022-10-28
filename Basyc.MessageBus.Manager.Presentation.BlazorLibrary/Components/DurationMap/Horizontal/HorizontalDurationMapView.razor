@@ -24,26 +24,35 @@
                             ActivityContext previousActivity = null;
                             foreach (var activity in service.Activities)
                             {
-                                var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != activity.StartTime;
-                                if (isGapBetweenPreviousNested)
-                                {
-                                    //<HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" />
-
-                                    string leftMarginDifference = previousActivity == null ? "0px" : DurationViewHelper.GetDurationAsRem(serviceFirstActivity.StartTime, previousActivity.EndTime, Scale);
-                                    <div style="display: flex; margin-left:@leftMarginDifference;">
-                                        @{
-                                            <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" Color="@color" />
-                                        }
-                                    </div>
-
-                                }
-                                string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetDurationAsRem(serviceFirstActivity.StartTime, activity.StartTime, Scale);
-                                <div style="display: flex; margin-left:@leftMargin;">
-                                    @{
-                                        <HorizontalDurationBoxView Activity="activity" Scale="Scale" Color="@color" />
-                                        previousActivity = activity;
-                                    }
+                                <div>
+                                    (r)
                                 </div>
+                                <unknownAndKnowGroup>
+                                    @{
+                                        var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != activity.StartTime;
+                                        if (isGapBetweenPreviousNested)
+                                        {
+                                            //<HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" />
+
+                                            //string leftMarginDifference = previousActivity == null ? "0px" : DurationViewHelper.GetDurationAsRem(serviceFirstActivity.StartTime, previousActivity.EndTime, Scale);
+                                            string leftMarginDifference = "0px";
+                                            <div style="display: flex; margin-left:@leftMarginDifference;">
+                                                @{
+                                                    <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" Color="@color" />
+                                                }
+                                            </div>
+
+                                        }
+                                        //string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetDurationAsRem(serviceFirstActivity.StartTime, activity.StartTime, Scale);
+                                        string leftMargin = "0px";
+                                        <div style="display: flex; margin-left:@leftMargin;">
+                                            @{
+                                                <HorizontalDurationBoxView Activity="activity" Scale="Scale" Color="@color" />
+                                                previousActivity = activity;
+                                            }
+                                        </div>
+                                    }
+                                </unknownAndKnowGroup>
                             }
                         }
                     </durationBoxes>

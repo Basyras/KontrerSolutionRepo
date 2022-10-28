@@ -15,9 +15,8 @@ clientServices.AddLogging(x =>
 
 clientServices
 	.AddBasycMessageBus()
-	.NoProxy()
 	.RegisterBasycTypedHandlers<Program>()
-	.UseNetMQProvider("Console2");
+	.SelectNetMQProvider("Console2");
 
 var services = clientServices.BuildServiceProvider();
 
@@ -29,7 +28,7 @@ while (Console.ReadLine() != "stop")
 {
 	//client.SendAsync(new DeleteCustomerCommand(1)).GetAwaiter().GetResult();
 	//client.PublishAsync(new CustomerCreatedEvent(new )).GetAwaiter().GetResult();
-	Task.Run(() => client.SendAsync(new DeleteCustomerCommand(1)).GetAwaiter().GetResult());
+	Task.Run(() => client.SendAsync(new DeleteCustomerCommand(1)).Task.GetAwaiter().GetResult());
 
 }
 

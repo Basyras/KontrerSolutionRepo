@@ -13,7 +13,7 @@ namespace Basyc.MessageBus.Broker.NetMQ.Building
 
 		public void NoDiagnostics()
 		{
-			services.TryAddSingleton<IDiagnosticsExporter, NullDiagnosticsProducer>();
+			services.TryAddSingleton<IDiagnosticsExporter, NullDiagnosticsExporter>();
 		}
 	}
 }

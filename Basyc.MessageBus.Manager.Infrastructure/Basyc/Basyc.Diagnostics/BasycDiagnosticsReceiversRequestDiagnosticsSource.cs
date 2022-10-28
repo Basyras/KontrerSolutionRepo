@@ -29,35 +29,23 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.Diagnostics
 		public event EventHandler<ActivityEndsReceivedArgs> ActivityEndsReceived;
 		public event EventHandler<ActivityStartsReceivedArgs> ActivityStartsReceived;
 
-		private void OnLogsReceived(LogEntry[] logEntries)
-		{
-			LogsReceived?.Invoke(this, new LogsUpdatedArgs(logEntries));
-		}
-		private void OnActivityStartsReceived(ActivityStart[] activities)
-		{
-			ActivityStartsReceived?.Invoke(this, new ActivityStartsReceivedArgs(activities));
-		}
-
-		private void OnActivityEndsReceived(ActivityEnd[] activities)
-		{
-			ActivityEndsReceived?.Invoke(this, new ActivityEndsReceivedArgs(activities));
-		}
-
-
 		private void LogReceiver_LogsReceived(object sender, LogsReceivedArgs e)
 		{
 			var mappedSessions = e.LogEntries.Select(x => new LogEntry(x.Service, sessionMapper.GetTraceId(x.TraceId), x.Time, x.LogLevel, x.Message)).ToArray();
-			OnLogsReceived(mappedSessions);
+			LogsReceived?.Invoke(this, new LogsUpdatedArgs(mappedSessions));
+
 		}
 
 		private void LogReceiver_ActivityStartsReceived(object sender, global::Basyc.Diagnostics.Receiving.Abstractions.ActivityStartsReceivedArgs e)
 		{
-			OnActivityStartsReceived(e.ActivityStarts);
+			ActivityStartsReceived?.Invoke(this, new ActivityStartsReceivedArgs(e.ActivityStarts));
+
 		}
 
 		private void LogReceiver_ActivityEndsReceived(object sender, global::Basyc.Diagnostics.Receiving.Abstractions.ActivityEndsReceivedArgs e)
 		{
-			OnActivityEndsReceived(e.ActivityEnds);
+			ActivityEndsReceived?.Invoke(this, new ActivityEndsReceivedArgs(e.ActivityEnds));
+
 		}
 	}
 }

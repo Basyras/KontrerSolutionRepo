@@ -2,9 +2,9 @@
 
 namespace Basyc.Diagnostics.Producing.Shared
 {
-	public class InMemoryDiagnosticsProducer : IDiagnosticsExporter
+	public class InMemoryDiagnosticsExporter : IDiagnosticsExporter
 	{
-		public InMemoryDiagnosticsProducer()
+		public InMemoryDiagnosticsExporter()
 		{
 
 		}

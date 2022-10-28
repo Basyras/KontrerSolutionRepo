@@ -17,6 +17,8 @@ clientServices
 	.AddBasycDiagnosticExporting()
 	.SetDefaultService("Console3 - Broker")
 	.AddSignalRExporter("https://localhost:44310");
+//.SelectNullExporter();
+
 
 
 clientServices.AddBasycNetMQMessageBroker()

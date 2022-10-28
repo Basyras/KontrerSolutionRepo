@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 {
@@ -20,7 +21,9 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		{
 			foreach (var activityStart in e.ActivityStarts)
 			{
-				var loggingContext = GetDiagnostics(activityStart.TraceId);
+				if (TryGetDiagnostics(activityStart.TraceId, out var loggingContext) is false)
+					return;
+
 				loggingContext.StartActivity(activityStart);
 			}
 		}
@@ -29,7 +32,9 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		{
 			foreach (var activityEnd in e.ActivityEnds)
 			{
-				var loggingContext = GetDiagnostics(activityEnd.TraceId);
+				if (TryGetDiagnostics(activityEnd.TraceId, out var loggingContext) is false)
+					return;
+
 				loggingContext.EndActivity(activityEnd);
 			}
 		}
@@ -38,7 +43,8 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		{
 			foreach (var logEntry in e.NewLogEntries)
 			{
-				var loggingContext = GetDiagnostics(logEntry.TraceId);
+				if (TryGetDiagnostics(logEntry.TraceId, out var loggingContext) is false)
+					return;
 				loggingContext.Log(logEntry);
 			}
 		}
@@ -50,9 +56,9 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			return loggingContext;
 		}
 
-		public RequestDiagnosticContext GetDiagnostics(string traceId)
+		public bool TryGetDiagnostics(string traceId, [NotNullWhen(true)] out RequestDiagnosticContext? diagnosticContext)
 		{
-			return traceIdToContextMap[traceId];
+			return traceIdToContextMap.TryGetValue(traceId, out diagnosticContext);
 		}
 	}
 }

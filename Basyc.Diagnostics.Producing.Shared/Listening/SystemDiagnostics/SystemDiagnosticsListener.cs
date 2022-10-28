@@ -11,7 +11,7 @@ namespace Basyc.Diagnostics.Producing.Shared.Listening.SystemDiagnostics
 
 		public SystemDiagnosticsListener(IOptions<SystemDiagnosticsListenerOptions> options)
 		{
-			service = IDiagnosticsExporter.ApplicationWideServiceIdentity;
+			service = ServiceIdentity.ApplicationWideIdentity;
 			Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 			Activity.ForceDefaultIdFormat = true;
 			var listener = new ActivityListener();
@@ -39,7 +39,6 @@ namespace Basyc.Diagnostics.Producing.Shared.Listening.SystemDiagnostics
 					return;
 				string traceId = activity.TraceId.ToString();
 				string? parentId = activity.ParentSpanId == default ? null : activity.ParentSpanId.ToString();
-
 				var activityEnd = new ActivityEnd(service, traceId, parentId, activity.SpanId.ToString(), activity.OperationName, activity.StartTimeUtc, activity.StartTimeUtc + activity.Duration, activity.Status);
 				ActivityEndsReceived?.Invoke(this, activityEnd);
 

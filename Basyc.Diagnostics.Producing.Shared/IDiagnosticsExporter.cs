@@ -15,7 +15,6 @@ namespace Basyc.Diagnostics.Producing.Shared
 		/// <summary>
 		/// When app represents only one identity (in most sc)
 		/// </summary>
-		public static ServiceIdentity ApplicationWideServiceIdentity { get; set; } = new ServiceIdentity("NotSpecifiedIdentity");
 		public ActivityDisposer StartActivity(ServiceIdentity serviceIdentity, string traceId, string? parentId, string name, DateTimeOffset startTime = default)
 		{
 			if (startTime == default)
@@ -28,12 +27,13 @@ namespace Basyc.Diagnostics.Producing.Shared
 
 		public ActivityDisposer StartActivity(string traceId, string? parentId, string name, DateTimeOffset startTime = default)
 		{
-			return StartActivity(ApplicationWideServiceIdentity, traceId, parentId, name, startTime);
+
+			return StartActivity(ServiceIdentity.ApplicationWideIdentity, traceId, parentId, name, startTime);
 		}
 
 		public ActivityDisposer StartActivity(ActivityStart parentActivityStart, string name, DateTimeOffset startTime = default)
 		{
-			return StartActivity(ApplicationWideServiceIdentity, parentActivityStart.TraceId, parentActivityStart.Id, name, startTime);
+			return StartActivity(ServiceIdentity.ApplicationWideIdentity, parentActivityStart.TraceId, parentActivityStart.Id, name, startTime);
 		}
 
 		public ActivityDisposer StartActivity(ActivityDisposer parentActivityStart, string name, DateTimeOffset startTime = default)

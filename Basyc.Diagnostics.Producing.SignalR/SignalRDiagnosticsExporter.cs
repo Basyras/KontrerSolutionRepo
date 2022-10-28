@@ -33,15 +33,24 @@ namespace Basyc.Diagnostics.Producing.SignalR
 		public async Task<bool> StartAsync()
 		{
 			await hubConnection.StartAsync();
+			//Task.Run(async () =>
+			//{
+			//	while (true)
+			//	{
+			//		var changes = await ReadWithTimeoutAsync<ChangesSignalRDTO>(signalRChannel, TimeSpan.FromMilliseconds(1000), default);
+			//		var logs = changes.SelectMany(x => x.Logs).ToArray();
+			//		var activityStarts = changes.SelectMany(x => x.ActivityStarts).ToArray();
+			//		var activityEnds = changes.SelectMany(x => x.ActivityEnds).ToArray();
+			//		var aggregatedChanges = new ChangesSignalRDTO(logs, activityStarts, activityEnds);
+			//		await hubConnection.Call.ReceiveChangesFromProducer(aggregatedChanges);
+			//	}
+
+			//});
 			Task.Run(async () =>
 			{
 				while (true)
 				{
-					var changes = await ReadWithTimeoutAsync<ChangesSignalRDTO>(signalRChannel, TimeSpan.FromMilliseconds(1000), default);
-					var logs = changes.SelectMany(x => x.Logs).ToArray();
-					var activityStarts = changes.SelectMany(x => x.ActivityStarts).ToArray();
-					var activityEnds = changes.SelectMany(x => x.ActivityEnds).ToArray();
-					var aggregatedChanges = new ChangesSignalRDTO(logs, activityStarts, activityEnds);
+					var aggregatedChanges = await signalRChannel.Reader.ReadAsync();
 					await hubConnection.Call.ReceiveChangesFromProducer(aggregatedChanges);
 				}
 

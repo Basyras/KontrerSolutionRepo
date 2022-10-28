@@ -1,7 +1,9 @@
 ﻿service {
-    display: grid;
-    grid-template-columns: auto 1fr;
+    display: flex;
+    flex-direction: row;
+    /*grid-template-columns: auto 1fr;*/
     margin-bottom: 1rem;
+    background: #00000020;
 }
 
 serviceName {
@@ -15,10 +17,11 @@ serviceName {
 }
 
 durationBoxes {
-    grid-column: 2;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
+    display: flex;
+    flex-direction: column;
+    /*grid-column: 2;*/
+    /*grid-template-columns: 1fr;*/
+    /*grid-template-rows: 1fr;*/
     /*display: flex;*/
     /*flex-direction: row;*/
     width: 100%;
@@ -43,4 +46,9 @@ horizontalDurationMapView{
     position: relative;
     overflow: auto;
     width: 100%;
+}
+
+unknownAndKnowGroup{
+    display: flex;
+    flex-direction: row;
 }

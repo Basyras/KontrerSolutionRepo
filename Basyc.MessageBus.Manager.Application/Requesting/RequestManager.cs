@@ -1,4 +1,5 @@
-﻿using Basyc.Diagnostics.Shared.Durations;
+﻿using Basyc.Diagnostics.Shared;
+using Basyc.Diagnostics.Shared.Durations;
 using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
 using Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations;
@@ -12,20 +13,18 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 {
 	public class RequestManager : IRequestManager
 	{
-		public static readonly ActivitySource RequestManagerRequestActivity = new ActivitySource("RequestManager.StartRequest", "1.0.0");
-
-
 		private readonly IRequesterSelector requesterSelector;
 		private readonly IRequestDiagnosticsManager requestDiagnosticsManager;
 		private readonly InMemoryRequestDiagnosticsSource inMemoryRequestDiagnosticsSource;
 		private int requestCounter;
-		private readonly ServiceIdentity requestManagerServiceIdentity = new ServiceIdentity("RequestManager");
+		private readonly ServiceIdentity requestManagerServiceIdentity;
 
 		public RequestManager(IRequesterSelector requesterSelector, IRequestDiagnosticsManager loggingManager, InMemoryRequestDiagnosticsSource inMemoryRequestDiagnosticsSource)
 		{
 			this.requesterSelector = requesterSelector;
 			this.requestDiagnosticsManager = loggingManager;
 			this.inMemoryRequestDiagnosticsSource = inMemoryRequestDiagnosticsSource;
+			requestManagerServiceIdentity = ServiceIdentity.ApplicationWideIdentity;
 		}
 
 		public Dictionary<RequestInfo, List<RequestContext>> Results { get; } = new Dictionary<RequestInfo, List<RequestContext>>();
@@ -34,7 +33,7 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 		public RequestContext StartRequest(Request request)
 		{
 			var traceId = Interlocked.Increment(ref requestCounter).ToString().PadLeft(32, '0');
-			using (var handlerStartedActivity = RequestManagerRequestActivity.StartActivity(ActivityKind.Internal, name: "RequestManager.StartRequest", parentContext: new System.Diagnostics.ActivityContext(ActivityTraceId.CreateFromString(traceId), default, ActivityTraceFlags.Recorded)))
+			using (var handlerStartedActivity = DiagnosticHelper.DefaultActivitySource.StartActivity(ActivityKind.Internal, name: "RequestManager.StartRequest", parentContext: new System.Diagnostics.ActivityContext(ActivityTraceId.CreateFromString(traceId), default, ActivityTraceFlags.Recorded)))
 			{
 				if (handlerStartedActivity is null)
 					throw new Exception();

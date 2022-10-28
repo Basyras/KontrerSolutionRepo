@@ -17,12 +17,13 @@ clientServices.AddBasycDiagnosticExporting()
 	.AddSignalRExporter("https://localhost:44310")
 	.AutomaticallyExport()
 		.AnyActvity();
+//.SelectNullExporter();
+
 
 clientServices.AddBasycMessageBus()
 		.RegisterBasycTypedHandlers<Program>()
 		.SelectNetMQProvider("Console1")
 		.UseDiagnostics();
-//.ExportToBasycDiagnostics();
 
 var services = clientServices.BuildServiceProvider();
 await services.StartBasycMessageBusClient();

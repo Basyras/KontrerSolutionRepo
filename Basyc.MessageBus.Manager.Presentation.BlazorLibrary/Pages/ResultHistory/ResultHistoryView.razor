@@ -10,10 +10,17 @@
         int resultCounter = 0;
         @foreach (var requestContext in RequestContexts)
         {
-            var diagnosticsContext = resultLoggingManager.GetDiagnostics(requestContext.TraceId);
-            <item>
-                <ResultHistoryItemView RequestContext="requestContext" OrderIndex="++resultCounter" />
-            </item>
+            if (resultLoggingManager.TryGetDiagnostics(requestContext.TraceId, out var diagnosticsContext) is false)
+            {
+                <div>cant get daignostic context</div>
+            }
+            else
+            {
+                <item>
+                    <ResultHistoryItemView RequestContext="requestContext" OrderIndex="++resultCounter" />
+                </item>
+            }
+            
         }
     }
     else

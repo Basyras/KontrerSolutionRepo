@@ -1,4 +1,5 @@
-﻿using Basyc.Extensions.SignalR.Client;
+﻿using Basyc.Diagnostics.Shared;
+using Basyc.Extensions.SignalR.Client;
 using Basyc.MessageBus.Client;
 using Basyc.MessageBus.HttpProxy.Client.SignalR.Sessions;
 using Basyc.MessageBus.HttpProxy.Shared.SignalR;
@@ -75,9 +76,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 
 		private BusTask<object?> CreateAndStartBusTask(string requestType, object? requestData = null, RequestContext requestContext = default, CancellationToken cancellationToken = default)
 		{
-			var createAndStartBusTaskActivity = new Activity("SignalRProxyObjectMessageBusClient.CreateAndStartBusTask");
-			createAndStartBusTaskActivity.SetParentId(requestContext.ParentSpanId);
-			createAndStartBusTaskActivity.Start();
+			var createAndStartBusTaskActivity = DiagnosticHelper.Start("SignalRProxyObjectMessageBusClient.CreateAndStartBusTask", requestContext.TraceId, requestContext.ParentSpanId);
 			SignalRSession session = sessionManager.StartSession(requestContext.TraceId);
 			Task<OneOf<object?, ErrorMessage>> reqeustTask = Task.Run((Func<Task<OneOf<object?, ErrorMessage>>?>)(async () =>
 			{

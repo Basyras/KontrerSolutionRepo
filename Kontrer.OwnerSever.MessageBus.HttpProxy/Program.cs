@@ -7,9 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddBasycDiagnosticExporting()
 	.SetDefaultService("HttProxy")
-	.SelectInMemoryProducer()
+	.SelectInMemoryExporter()
 	.AutomaticallyExport()
 		.AnyActvity();
+//.SelectNullExporter();
 
 builder.Services.AddBasycMessageBus()
 	.NoHandlers()
@@ -63,7 +64,7 @@ app.Run();
 static void WireUpInMemoryProducers(WebApplication app)
 {
 	var serverReceiver = app.Services.GetRequiredService<InMemoryServerDiagnosticReceiver>();
-	var inMemoryProducer = app.Services.GetRequiredService<InMemoryDiagnosticsProducer>();
+	var inMemoryProducer = app.Services.GetRequiredService<InMemoryDiagnosticsExporter>();
 	inMemoryProducer.LogProduced += (s, a) =>
 	{
 		serverReceiver.ReceiveChangesFromProducer(new DiagnosticChanges(new LogEntry[] { a }, Array.Empty<ActivityStart>(), Array.Empty<ActivityEnd>()));

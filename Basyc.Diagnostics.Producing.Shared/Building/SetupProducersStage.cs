@@ -10,10 +10,16 @@ namespace Basyc.Diagnostics.Producing.Shared.Building
 		{
 		}
 
-		public SetupProducersStage SelectInMemoryProducer()
+		public SetupProducersStage SelectInMemoryExporter()
 		{
-			services.TryAddSingleton<InMemoryDiagnosticsProducer>();
-			services.AddSingleton<IDiagnosticsExporter, InMemoryDiagnosticsProducer>(x => x.GetRequiredService<InMemoryDiagnosticsProducer>());
+			services.TryAddSingleton<InMemoryDiagnosticsExporter>();
+			services.AddSingleton<IDiagnosticsExporter, InMemoryDiagnosticsExporter>(x => x.GetRequiredService<InMemoryDiagnosticsExporter>());
+			return new SetupProducersStage(services);
+		}
+
+		public SetupProducersStage SelectNullExporter()
+		{
+			services.AddSingleton<IDiagnosticsExporter, NullDiagnosticsExporter>();
 			return new SetupProducersStage(services);
 		}
 	}

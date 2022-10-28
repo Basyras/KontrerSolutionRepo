@@ -5,7 +5,7 @@ namespace Basyc.Diagnostics.Producing.Shared
 	/// <summary>
 	/// Dummy producer implementation that does nothing
 	/// </summary>
-	public class NullDiagnosticsProducer : IDiagnosticsExporter
+	public class NullDiagnosticsExporter : IDiagnosticsExporter
 	{
 		public Task EndActivity(ActivityEnd activity)
 		{
