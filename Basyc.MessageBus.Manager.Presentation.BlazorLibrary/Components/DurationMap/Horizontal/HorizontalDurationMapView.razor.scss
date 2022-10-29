@@ -1,31 +1,25 @@
 ﻿service {
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
-    /*grid-template-columns: auto 1fr;*/
-    margin-bottom: 1rem;
-    background: #00000020;
 }
 
 serviceName {
-    grid-column: 1;
     display: flex;
     align-items: center;
-    justify-content: right;
-    width: 8rem;
-    margin-right: 1rem;
-    margin-left: 1rem;
+    justify-content: center;
+    padding: 0.5rem;
+    writing-mode: vertical-rl;
 }
 
 durationBoxes {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
     display: flex;
     flex-direction: column;
-    /*grid-column: 2;*/
-    /*grid-template-columns: 1fr;*/
-    /*grid-template-rows: 1fr;*/
-    /*display: flex;*/
-    /*flex-direction: row;*/
-    width: 100%;
     min-height: 0px;
+    background-color: #00000010;
 }
 
 durationBoxes > *{

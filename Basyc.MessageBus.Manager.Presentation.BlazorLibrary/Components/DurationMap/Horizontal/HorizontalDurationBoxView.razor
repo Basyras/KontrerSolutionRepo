@@ -56,52 +56,79 @@
             </toolTipContent>
         </TooltipContent>
     </MudTooltip>
+
     <nestedDurationBoxes>
         @{
             ActivityContext previousActivity = null;
-            foreach (var nestedActivity in Activity.NestedActivities.ToArray())
+            List<RowViewModel> rows = new();
+            rows.Add(new RowViewModel());
+            foreach (var nestedActivity in Activity.NestedActivities)
             {
-                <nestedBox>
+                var nestedActivityLatestEndTime = GetRecursiveLatestEndTime(nestedActivity); ;
+                var lastRow = rows.Last();
+                if (lastRow.LastEndTime == default)
+                {
+                    lastRow.Activities.Add(nestedActivity);
+                    lastRow.LastEndTime = nestedActivityLatestEndTime;
+                    lastRow.StartTime = nestedActivity.StartTime;
+                    continue;
+                }
+
+                if (lastRow.LastEndTime < nestedActivity.StartTime)
+                {
+                    lastRow.Activities.Add(nestedActivity);
+                    lastRow.LastEndTime = nestedActivityLatestEndTime;
+                }
+                else
+                {
+                    var newRow = new RowViewModel();
+                    newRow.LastEndTime = nestedActivityLatestEndTime;
+                    newRow.Activities.Add(nestedActivity);
+                    newRow.StartTime = nestedActivity.StartTime;
+                    rows.Add(newRow);
+                }
+            }
+            foreach (var row in rows)
+            {
+
+                <row>
                     @if (Activity.NestedActivities.Count > 1)
                     {
                         <treeLeg>
-                            <treeHorizontalLine/>
+                            <treeHorizontalLine />
                         </treeLeg>
                     }
-                    @{
-                        var isFirstNested = previousActivity is null && Activity.ParentActivity is not null;
-                        if (isFirstNested)
-                        {
-                            var lateStartDuration = nestedActivity.StartTime - Activity.StartTime;
-                            if (lateStartDuration > TimeSpan.FromMilliseconds(0))
-                            {
-                                <HorizontalUnknownDurationBoxView StartTime="Activity.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" />
+                    @foreach (var nestedActivity in row.Activities)
+                    {
+                        <nestedRow>
+                            @{
+                                var isFirstNested = previousActivity is null && Activity.ParentActivity is not null;
+                                if (isFirstNested)
+                                {
+                                    var lateStartDuration = nestedActivity.StartTime - Activity.StartTime;
+                                    if (lateStartDuration > TimeSpan.FromMilliseconds(0))
+                                    {
+                                        <HorizontalUnknownDurationBoxView StartTime="row.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
+                                    }
+                                }
+
+
+                                var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != nestedActivity.StartTime;
+                                if (isGapBetweenPreviousNested)
+                                {
+                                    <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
+                                }
+                                <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" />
+
+                                previousActivity = nestedActivity;
+
                             }
-                        }
-
-
-                        var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != nestedActivity.StartTime;
-                        if (isGapBetweenPreviousNested)
-                        {
-                            <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
-                        }
-                        <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" />
-
-                        previousActivity = nestedActivity;
-
+                        </nestedRow>
                     }
-                </nestedBox>
+                </row>
+
             }
 
-
-            //if (Activity.HasEnded && Activity.NestedActivities.Any() && Activity.NestedActivities.All(x => x.HasEnded))
-            //{
-            //    var lastActivity = Activity.NestedActivities.OrderByDescending(x => x.EndTime).First();
-            //    if (Activity.EndTime != lastActivity.EndTime)
-            //    {
-            //        <HorizontalUnknownDurationBoxView StartTime="lastActivity.EndTime" EndTime="Activity.EndTime" Scale="Scale" Color="@Color" />
-            //    }
-            //}
         }
     </nestedDurationBoxes>
 
@@ -110,6 +137,17 @@
 
 
 @code {
+    private class RowViewModel
+    {
+        public RowViewModel()
+        {
+
+        }
+        public DateTimeOffset StartTime { get; set; } = default;
+        public DateTimeOffset LastEndTime { get; set; } = default;
+        public List<ActivityContext> Activities { get; } = new();
+    }
+
     [Parameter, EditorRequired] public ActivityContext Activity { get; set; }
     [Parameter, EditorRequired] public double Scale { get; set; }
     /// <summary>
@@ -138,5 +176,16 @@
     {
         Activity.ActivityEnded -= OnActivityEnded;
         Activity.NestedActivityEnded -= OnNestedActivityEnded;
+    }
+
+    private static DateTimeOffset GetRecursiveLatestEndTime(ActivityContext activity)
+    {
+        var latestEndTime = activity.EndTime;
+        foreach (var nestedActivity in activity.NestedActivities)
+        {
+            var nestedLatestEndTime = GetRecursiveLatestEndTime(nestedActivity);
+            latestEndTime = latestEndTime > nestedLatestEndTime ? latestEndTime : nestedLatestEndTime;
+        }
+        return latestEndTime;
     }
 }
