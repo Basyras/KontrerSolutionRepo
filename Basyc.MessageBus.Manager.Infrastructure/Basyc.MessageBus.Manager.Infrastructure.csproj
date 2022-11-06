@@ -9,4 +9,8 @@
 		<!--<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus.MasstTransit\Basyc.MessageBus.MasstTransit.csproj" />-->
 		<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Building\Cqrs\" />
+	</ItemGroup>
 </Project>

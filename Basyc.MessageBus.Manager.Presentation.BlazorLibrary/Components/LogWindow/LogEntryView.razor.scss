@@ -24,7 +24,22 @@ time {
 }
 
 serviceName {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0px;
+    min-height: 0px;
+    width: 5rem;
     color: white;
+    padding: 0rem 0.4rem;
+    border-radius: 2px;
+}
+
+serviceName > * {
+    min-width: 0;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 level {

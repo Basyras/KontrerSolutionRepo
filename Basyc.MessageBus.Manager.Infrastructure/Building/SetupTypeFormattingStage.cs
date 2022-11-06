@@ -13,7 +13,6 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building
 		{
 			this.services = services;
 			SetDefaultFormatting();
-			services.AddSingleton<IRequestInfoTypeStorage, InMemoryRequestInfoTypeStorage>();
 		}
 
 		private void SetDefaultFormatting()

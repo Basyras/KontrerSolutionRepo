@@ -8,6 +8,7 @@ public enum RequestTagType
 	Command,
 	Response,
 	Generic,
+	Event,
 }
 
 public static class RequestTagTypeHelper
@@ -19,6 +20,7 @@ public static class RequestTagTypeHelper
 			RequestType.Query => RequestTagType.Query,
 			RequestType.Command => RequestTagType.Command,
 			RequestType.Generic => RequestTagType.Generic,
+			RequestType.Event => RequestTagType.Event,
 			_ => throw new NotImplementedException(),
 		};
 	}

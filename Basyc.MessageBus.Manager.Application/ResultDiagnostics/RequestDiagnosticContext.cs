@@ -14,6 +14,8 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		private readonly List<LogEntry> logEntries = new List<LogEntry>();
 		public IReadOnlyList<LogEntry> LogEntries { get => logEntries; }
 
+
+
 		private readonly Dictionary<string, ActivityContext> activityIdToActivityMap = new();
 		private readonly Dictionary<string, List<ActivityContext>> missingParentIdToNestedActivityMap = new();
 

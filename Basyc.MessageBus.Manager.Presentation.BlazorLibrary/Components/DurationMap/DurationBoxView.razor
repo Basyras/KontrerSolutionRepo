@@ -2,7 +2,7 @@
 <durationBoxContainer>
 
     @{
-        var minHeight = DurationViewHelper.GetDurationAsRem(DurationSegment.Duration, Scale);
+        var minHeight = DurationViewHelper.GetCssDurationValue(DurationSegment.Duration, Scale);
         string durationBoxStyle = $"min-height: {minHeight};";
         var minHeightNumber = double.Parse(minHeight);
         var showDurationInBox = double.Parse(minHeight) > 2.5;

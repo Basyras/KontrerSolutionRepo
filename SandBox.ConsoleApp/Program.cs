@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 IServiceCollection clientServices = new ServiceCollection();
 clientServices.AddLogging(x =>
 {
-	x.AddDebug();
+	//x.AddDebug();
 	x.AddConsole();
 	x.SetMinimumLevel(LogLevel.Debug);
 });

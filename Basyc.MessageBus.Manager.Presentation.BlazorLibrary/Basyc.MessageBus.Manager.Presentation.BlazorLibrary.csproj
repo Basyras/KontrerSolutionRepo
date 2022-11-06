@@ -20,13 +20,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.9" />
 		<PackageReference Include="LibSassBuilder" Version="2.0.1" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />-->
 		<PackageReference Include="MudBlazor" Version="6.0.10" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Basyc.Blazor.Controls\Basyc.Blazor.Controls.csproj" />
 		<ProjectReference Include="..\Basyc.MessageBus.Manager.Application\Basyc.MessageBus.Manager.Application.csproj" />
 		<ProjectReference Include="..\Basyc.MessageBus.Manager.Infrastructure\Basyc.MessageBus.Manager.Infrastructure.csproj" />
 		<ProjectReference Include="..\OwnerServer\Shared\MessageBus\Kontrer.Shared.MessageBus\Basyc.MessageBus.Client.csproj" />

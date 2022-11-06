@@ -1,74 +1,55 @@
-﻿@using Basyc.Diagnostics.Shared.Durations
+﻿@using Basyc.Blazor.Controls.TooltippedText
+@using Basyc.Diagnostics.Shared.Durations
 @using Basyc.Diagnostics.Shared.Logging
 @using Basyc.MessageBus.Manager.Application
 @using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
 <horizontalDurationMapView>
-    @{
-        if (RequestContext.Diagnostics.Services.Any())
-        {
-            foreach (var service in RequestContext.Diagnostics.Services.Where(x => x.Activities.Any()).OrderBy(x => x.Activities.Min(y => y.StartTime)))
+    <services>
+        @{
+            if (RequestContext.Diagnostics.Services.Any())
             {
-                var color = ColorHelper.GetColorFromText(service.ServiceIdentity.ServiceName, 0.7, 0, 0.3);
+                foreach (var service in RequestContext.Diagnostics.Services.Where(x => x.Activities.Any()).OrderBy(x => x.Activities.Min(y => y.StartTime)))
+                {
+                    var color = ColorHelper.GetColorFromText(service.ServiceIdentity.ServiceName, 0.7, 0, 0.2);
 
-                string serviceStyle = "";
-                var serviceFirstActivity = service.Activities.First();
-                serviceStyle = $"margin-left: {DurationViewHelper.GetDurationAsRem(RequestContext.StartTime, serviceFirstActivity.StartTime, Scale)}; background-color: {color};";
-                <service style="@serviceStyle">
-                    <serviceName>
-                        @service.ServiceIdentity.ServiceName
-                    </serviceName>
-                    <durationBoxes>
-                        @{
-                            ActivityContext previousActivity = null;
-                            foreach (var activity in service.Activities)
-                            {
-                                <unknownAndKnowGroup>
-                                    @{
-                                        //var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != activity.StartTime;
-                                        //if (isGapBetweenPreviousNested)
-                                        //{
-                                        //    //<HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" />
-
-                                        //    //string leftMarginDifference = previousActivity == null ? "0px" : DurationViewHelper.GetDurationAsRem(serviceFirstActivity.StartTime, previousActivity.EndTime, Scale);
-                                        //    string leftMarginDifference = "0px";
-                                        //    <div style="display: flex; margin-left:@leftMarginDifference;">
-                                        //        @{
-                                        //            <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="activity.StartTime" Scale="Scale" Color="@color" />
-                                        //        }
-                                        //    </div>
-
-                                        //}
-                                        string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetDurationAsRem(serviceFirstActivity.StartTime, activity.StartTime, Scale);
-                                        //string leftMargin = "0px";
-                                        <div style="display: flex; margin-left:@leftMargin;">
-                                            @{
-                                                <HorizontalDurationBoxView Activity="activity" Scale="Scale" Color="@color" />
-                                                previousActivity = activity;
-                                            }
-                                        </div>
-                                    }
-                                </unknownAndKnowGroup>
+                    string serviceStyle = "";
+                    var serviceFirstActivity = service.Activities.First();
+                    serviceStyle = $"margin-left: {DurationViewHelper.GetCssDurationValue(RequestContext.StartTime, serviceFirstActivity.StartTime, Scale)}; background-color: {color};";
+                    <service style="@serviceStyle">
+                        <serviceNameContainer>
+                            <serviceName>
+                                @service.ServiceIdentity.ServiceName
+                            </serviceName>
+                        </serviceNameContainer>
+                        <durationBoxes>
+                            @{
+                                ActivityContext previousActivity = null;
+                                foreach (var activity in service.Activities)
+                                {
+                                    <unknownAndKnowGroup>
+                                        @{
+                                            string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetCssDurationValue(serviceFirstActivity.StartTime, activity.StartTime, Scale);
+                                            <div style="display: flex; margin-left:@leftMargin;">
+                                                @{
+                                                    <HorizontalDurationBoxView Activity="activity" Scale="Scale" Color="@color" NestingLevel="0" />
+                                                    previousActivity = activity;
+                                                }
+                                            </div>
+                                        }
+                                    </unknownAndKnowGroup>
+                                }
                             }
-                        }
-                    </durationBoxes>
-                </service>
-                <br>
+                        </durationBoxes>
+                    </service>
+                    <br>
+                }
             }
         }
-    }
-    <zoomToolBar>
-        @*        <MudStack Row="true">
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="OnZoomInClick" />
-        <MudText>
-        @((Scale * 100).ToString("0"))%
-        </MudText>
-        <MudField >
+    </services>
 
-        </MudField>
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Remove" OnClick="OnZoomOutClick" />
-        </MudStack>*@
+    <zoomToolBar>
         <MudNumericField Format="N2" T="double" @bind-Value="Scale" FullWidth="false" Step="0.1" />
     </zoomToolBar>
 

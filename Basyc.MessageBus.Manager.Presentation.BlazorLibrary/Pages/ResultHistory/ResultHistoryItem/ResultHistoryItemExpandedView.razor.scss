@@ -45,6 +45,9 @@ formLabel {
 formValue {
     height: 1rem;
     display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 basicTable {
@@ -87,8 +90,8 @@ dataSubSection {
     flex-grow: 1;
 }
 
-arrow{
-    color: #cccccc;
+arrow {
+    color: $Information-Background;
     display: flex;
     align-items: center;
 }
@@ -96,4 +99,8 @@ arrow{
 textValue {
     display: block;
     padding: 0.5rem;
+}
+
+tabs{
+    color: white !important;
 }

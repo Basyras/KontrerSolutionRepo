@@ -7,10 +7,13 @@ namespace Basyc.MessageBus.Manager
 {
 	public static class MessageManagerIServiceCollectionExtensions
 	{
-		public static BusManagerApplicationBuilder AddMessageManager(this IServiceCollection services)
+		public static BusManagerApplicationBuilder AddBasycBusManager(this IServiceCollection services)
 		{
 			services.AddSingleton<IRequestManager, RequestManager>();
 			services.AddSingleton<IRequestDiagnosticsManager, RequestDiagnosticsManager>();
+
+			services.AddSingleton<InMemoryRequestDiagnosticsSource>();
+			services.AddSingleton<IRequestDiagnosticsSource>(serviceProvider => serviceProvider.GetRequiredService<InMemoryRequestDiagnosticsSource>());
 			var builder = new BusManagerApplicationBuilder(services);
 			return builder;
 		}

@@ -1,4 +1,5 @@
-﻿using Basyc.MessageBus.Client.Diagnostics;
+﻿using Basyc.Diagnostics.Shared;
+using Basyc.MessageBus.Client.Diagnostics;
 using Basyc.MessageBus.Client.RequestResponse;
 using Basyc.MessageBus.NetMQ.Shared;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +53,6 @@ namespace Basyc.MessageBus.Client.NetMQ
 			object handler = serviceProvider.GetRequiredService(handlerMetadata.HandlerRuntimeType)!;
 			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(traceId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));
 
-			//var activityTraceId = ActivityTraceId.CreateFromString(traceId.PadLeft(32, '0'));
 			var activityTraceId = ActivityTraceId.CreateFromString(traceId);
 			var activitySpanId = ActivitySpanId.CreateFromString(parentSpanId);
 			var activityContext = new ActivityContext(activityTraceId, activitySpanId, ActivityTraceFlags.Recorded, null, true);
@@ -67,6 +67,7 @@ namespace Basyc.MessageBus.Client.NetMQ
 					handlerStartedActivity.AddBaggage(DiagnosticConstants.ShouldBeReceived, true.ToString());
 				}
 
+				var invokeActivity = DiagnosticHelper.Start("Basyc.MessageBus.Client.NetMQ.MessageHandlerManager Invoking method info");
 				Task handlerResultTask = (Task)handlerMetadata.HandlerInfo.HandleMethodInfo.Invoke(handler, new object[] { messageData!, cancellationToken })!;
 				object? handlerResult;
 				try
@@ -74,20 +75,29 @@ namespace Basyc.MessageBus.Client.NetMQ
 					if (handlerMetadata.HandlerInfo.HasResponse)
 					{
 						object taskResult = ((dynamic)handlerResultTask).Result!;
+						invokeActivity.Stop();
 						handlerResult = taskResult;
 					}
 					else
 					{
 						await handlerResultTask;
+						invokeActivity.Stop();
 						handlerResult = new VoidResult();
 					}
 				}
 				catch (Exception ex)
 				{
+					var endSessionActivity2 = DiagnosticHelper.Start("Basyc.MessageBus.Client.NetMQ.MessageHandlerManager End BusHandlerLoggerSessionManager session");
 					BusHandlerLoggerSessionManager.EndSession();
+					endSessionActivity2.Stop();
+					invokeActivity.Stop();
 					return ex;
 				}
+
+				var endSessionActivity = DiagnosticHelper.Start("Basyc.MessageBus.Client.NetMQ.MessageHandlerManager End BusHandlerLoggerSessionManager session");
 				BusHandlerLoggerSessionManager.EndSession();
+				endSessionActivity.Stop();
+
 				return handlerResult;
 
 			}

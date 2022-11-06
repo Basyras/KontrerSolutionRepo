@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Basyc.MessageBus.Manager.Application;
+using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration.FluentApi.Helpers
+namespace Basyc.MessageBus.Manager.Infrastructure.Building.FluentApi.Helpers
 {
 	public class RequestToTypeBinder<TMessage>
 	{
 		private static readonly Type messageRuntimeType;
-		private static Type[]? requestParameterTypes;
+		private static Type[] requestParameterTypes;
 		private static readonly PropertyInfo[] messageClassProperties;
 
 		static RequestToTypeBinder()

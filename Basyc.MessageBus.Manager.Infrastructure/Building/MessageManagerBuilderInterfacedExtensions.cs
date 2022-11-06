@@ -3,7 +3,6 @@ using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.Building;
 using System;
-using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -11,28 +10,30 @@ namespace Microsoft.Extensions.DependencyInjection
 	{
 		public static SetupDiagnosticsStage RegisterMessagesAsCQRS(this RegisterMessagesFromAssemblyStage parentStage, Type iQueryType, Type iCommandType, Type iCommandWithResponseType)
 		{
-			parentStage.services.Configure<InterfacedDomainProviderOptions>(options =>
+			parentStage.services.Configure<CqrsInterfacedDomainProviderOptions>(options =>
 			{
 				options.IQueryType = iQueryType;
 				options.ICommandType = iCommandType;
 				options.ICommandWithResponseType = iCommandWithResponseType;
 				options.AssembliesToScan = parentStage.assembliesToScan;
 			});
-			parentStage.services.AddSingleton<IDomainInfoProvider, InterfacedDomainProvider>();
+			parentStage.services.AddSingleton<IDomainInfoProvider, CqrsInterfacedDomainProvider>();
 			return new SetupDiagnosticsStage(parentStage.services);
 
 		}
 
-		public static SetupTypeFormattingStage RegisterMessages(this RegisterMessagesFromAssemblyStage fromAssemblyStage, Type iMessageType, Type iMessageWithResponseType, params Assembly[] assemblies)
+		public static SetupTypeFormattingStage RegisterMessages(this RegisterMessagesFromAssemblyStage fromAssemblyStage, Type iMessageType, Type iMessageWithResponseType)
 		{
-			fromAssemblyStage.services.Configure<InterfacedDomainProviderOptions>(options =>
+			fromAssemblyStage.services.Configure<CqrsInterfacedDomainProviderOptions>(options =>
 			{
 				options.IMessageType = iMessageType;
 				options.IMessageWithResponseType = iMessageWithResponseType;
-				options.AssembliesToScan = assemblies;
+				options.AssembliesToScan = fromAssemblyStage.assembliesToScan;
 			});
-			fromAssemblyStage.services.AddSingleton<IDomainInfoProvider, InterfacedDomainProvider>();
+			fromAssemblyStage.services.AddSingleton<IDomainInfoProvider, CqrsInterfacedDomainProvider>();
 			return new SetupTypeFormattingStage(fromAssemblyStage.services);
 		}
+
+
 	}
 }

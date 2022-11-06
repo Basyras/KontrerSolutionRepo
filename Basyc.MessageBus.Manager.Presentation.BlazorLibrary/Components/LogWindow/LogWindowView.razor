@@ -1,14 +1,63 @@
-﻿@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+﻿@using Basyc.Diagnostics.Shared.Durations
+@using Basyc.Diagnostics.Shared.Logging
+@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+@using Microsoft.Extensions.Logging
 
 <logWindowView>
-    @for (int logEntryIndex = 0; logEntryIndex < DiagnosticsContext.LogEntries.Count; logEntryIndex++)
-    {
-        var logEntry = DiagnosticsContext.LogEntries[logEntryIndex];
-        <LogEntryView LogEntry="logEntry" AlternateColor="logEntryIndex % 2 != 0" />
-    }
+    <toolBar>
+        <filterLogLevel>
+            <TableFilter TItems="LogLevel" Tooltip="tooltip" SelectedItems="SelectedLogLevels" SelectedItemsChanged="SelectedLogLevelsChanged" />
+        </filterLogLevel>
+        <filterService>
+            <TableFilter TItems="ServiceIdentity"
+                         Tooltip="tooltip"
+                         ItemsToSelect="@DiagnosticsContext.Services.Select(x => x.ServiceIdentity).ToArray()"
+                         SelectedItems="SelectedServiceIdentities"
+                         SelectedItemsChanged="SelectedServiceIdentitiesChanged"
+                         ItemsToSelectDisplayConverter="(x)=>x.ServiceName" />
+        </filterService>
+    </toolBar>
+    <logs>
+        @for (int logEntryIndex = 0; logEntryIndex < FilteredLogs.Count; logEntryIndex++)
+        {
+            var logEntry = FilteredLogs[logEntryIndex];
+            <LogEntryView LogEntry="logEntry" AlternateColor="logEntryIndex % 2 != 0" />
+        }
+    </logs>
 </logWindowView>
 
 
 @code {
     [Parameter] public RequestDiagnosticContext DiagnosticsContext { get; set; }
+    [Parameter] public List<LogLevel> SelectedLogLevels { get; set; }
+    [Parameter] public List<ServiceIdentity> SelectedServiceIdentities { get; set; }
+    private void SelectedLogLevelsChanged(List<LogLevel> levels)
+    {
+        SelectedLogLevels = levels;
+        UpdateFilteredLogs();
+    }
+    private void SelectedServiceIdentitiesChanged(List<ServiceIdentity> services)
+    {
+        SelectedServiceIdentities = services;
+        UpdateFilteredLogs();
+    }
+
+    protected override void OnParametersSet()
+    {
+        SelectedLogLevels ??= Enum.GetValues<LogLevel>().Cast<LogLevel>().ToList();
+        SelectedServiceIdentities ??= DiagnosticsContext.Services.Select(x => x.ServiceIdentity).ToList();
+        UpdateFilteredLogs();
+        base.OnParametersSet();
+    }
+
+    private List<LogEntry> FilteredLogs = new List<LogEntry>();
+
+    private void UpdateFilteredLogs()
+    {
+        FilteredLogs = DiagnosticsContext.LogEntries
+        .Where(x => SelectedLogLevels.Contains(x.LogLevel))
+        .Where(x => SelectedServiceIdentities.Contains(x.Service))
+        .ToList();
+
+    }
 }

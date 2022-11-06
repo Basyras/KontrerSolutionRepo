@@ -1,4 +1,5 @@
-﻿@using Basyc.Diagnostics.Shared.Logging
+﻿@using Basyc.Blazor.Controls.TooltippedText
+@using Basyc.Diagnostics.Shared.Logging
 @using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Application
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components
@@ -13,18 +14,10 @@
             <MudGrid Spacing="0">
                 <MudItem lg="6">
                     <MudStack Spacing="2">
-                        <formLabel>
-                            StartTime
-                        </formLabel>
-                        <formLabel>
-                            State
-                        </formLabel>
-                        <formLabel>
-                            Duration
-                        </formLabel>
-                        <formLabel>
-                            TraceId
-                        </formLabel>
+                        <formLabel>StartTime</formLabel>
+                        <formLabel>State</formLabel>
+                        <formLabel>Duration</formLabel>
+                        <formLabel>TraceId</formLabel>
                     </MudStack>
                 </MudItem>
                 <MudItem lg="6">
@@ -39,7 +32,7 @@
                             <LatencyView RequestContext="RequestContext" />
                         </formValue>
                         <formValue>
-                            @RequestContext.TraceId
+                            <BasycTooltippedText Text="@RequestContext.TraceId" />
                         </formValue>
                     </MudStack>
                 </MudItem>
@@ -85,20 +78,29 @@
                 }
             </responseBox>
         </dataSubSection>
-
     </basicSection>
-    <activityMapSecion>
-        <sectionLabel>
-            ActivityMap
-        </sectionLabel>
-        <HorizontalDurationMapView RequestContext="RequestContext" />
-    </activityMapSecion>
-    <logsSection>
-        <sectionLabel class="sectionLabel--logs">
-            Logs
-        </sectionLabel>
-        <LogWindowView DiagnosticsContext="RequestContext.Diagnostics" />
-    </logsSection>
+
+    <tabs>
+        <MudTabs Color="@Color.Dark">
+            <MudTabPanel>
+                <TabContent>
+                    <MudText Typo="Typo.body1">Logs</MudText>
+                </TabContent>
+                <ChildContent>
+                    <LogWindowView DiagnosticsContext="RequestContext.Diagnostics" />
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel>
+                <TabContent>
+                    <MudText Typo="Typo.body1">Traces</MudText>
+                </TabContent>
+                <ChildContent>
+                    <HorizontalDurationMapView RequestContext="RequestContext" />
+                </ChildContent>
+            </MudTabPanel>
+        </MudTabs>
+    </tabs>
+
 </resultHistoryItemExpandedView>
 
 

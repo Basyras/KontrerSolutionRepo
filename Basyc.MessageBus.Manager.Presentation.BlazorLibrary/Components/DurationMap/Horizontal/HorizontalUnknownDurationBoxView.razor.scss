@@ -1,18 +1,23 @@
 ﻿horizontalUnknownDurationBoxView {
-    display: flex;
-    align-items: center;
-    height: 100%;
+    display: block;
     overflow: hidden;
     height: 2.4rem;
 }
 
 unknownDurationLine {
-
     background-color: #81a7a7;
     height: 2px;
     width: 100%;
 }
 
 horizontalUnknownDurationBoxView:hover {
-    background-color: #cfdede;
+    background-color: #84c6c670;
+}
+
+
+unknownDurationLineContainer {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
 }

@@ -2,30 +2,29 @@
 using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Application.Requesting;
 using Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus;
-using Basyc.Shared.Helpers;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 
 namespace Basyc.MessageBus.Manager.Infrastructure
 {
-	public class InterfacedDomainProvider : IDomainInfoProvider
+	public class CqrsInterfacedDomainProvider : IDomainInfoProvider
 	{
 		private readonly ITypedDomainNameFormatter domainNameFormatter;
 		private readonly ITypedRequestNameFormatter requestNameFormatter;
 		private readonly ITypedParameterNameFormatter parameterNameFormatter;
 		private readonly ITypedResponseNameFormatter responseNameFormatter;
 		private readonly IRequestInfoTypeStorage requestInfoTypeStorage;
-		private readonly IOptions<InterfacedDomainProviderOptions> options;
+		private readonly IOptions<CqrsInterfacedDomainProviderOptions> options;
 		private readonly IRequesterSelector requesterSelector;
 
-		public InterfacedDomainProvider(
+		public CqrsInterfacedDomainProvider(
 			ITypedDomainNameFormatter domainNameFormatter,
 			ITypedRequestNameFormatter requestNameFormatter,
 			ITypedParameterNameFormatter parameterNameFormatter,
 			ITypedResponseNameFormatter responseNameFormatter,
 			IRequestInfoTypeStorage requestInfoTypeStorage,
-			IOptions<InterfacedDomainProviderOptions> options,
+			IOptions<CqrsInterfacedDomainProviderOptions> options,
 			IRequesterSelector requesterSelector
 			)
 		{
@@ -49,7 +48,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
 				{
 					if (TryParseRequestType(type, out RequestType requestType, out bool hasResponse, out Type responseType))
 					{
-						List<Application.Initialization.ParameterInfo> paramInfos = TypedProviderHelper.HarvestParameterInfos(type, parameterNameFormatter);
+						List<ParameterInfo> paramInfos = TypedProviderHelper.HarvestParameterInfos(type, parameterNameFormatter);
 
 						RequestInfo requestInfo = hasResponse
 							? new RequestInfo(requestType, paramInfos, responseType, requestNameFormatter.GetFormattedName(type), responseNameFormatter.GetFormattedName(responseType))
@@ -63,6 +62,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure
 
 				domains.Add(new DomainInfo(domainNameFormatter.GetFormattedName(assemblyWithMessages), requestInfos));
 			}
+
 			return domains;
 		}
 

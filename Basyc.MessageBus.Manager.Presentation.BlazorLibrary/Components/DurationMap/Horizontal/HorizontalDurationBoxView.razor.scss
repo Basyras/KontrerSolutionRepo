@@ -1,6 +1,6 @@
 ﻿horizontalDurationBoxView {
     display: grid;
-    grid-template-rows: auto auto;
+    grid-template-rows: min-content min-content;
 }
 
 
@@ -17,9 +17,11 @@ durationBox {
 
 durationBoxBorder {
     display: flex;
+    flex-direction: row;
     height: 100%;
     width: 100%;
-    border: 1.7px solid #628E8E;
+    border: 1.7px solid #292d4b62;
+    border-radius: 2px;
     overflow: hidden;
     position: absolute;
     top: 0;
@@ -44,15 +46,16 @@ spinner {
 }
 
 acitvityName {
+    position: absolute;
     display: flex;
     height: 100%;
     width: 100%;
     overflow: hidden;
     padding: 0.3rem;
     line-height: 0.8rem;
-    position: absolute;
     top: 0;
     left: 0;
+    color: #e7ecefbf;
 }
 
 toolTipContent {
@@ -61,8 +64,15 @@ toolTipContent {
     text-align: left;
 }
 
-durationBox:hover {
-    background-color: #cfdede;
+
+
+durationBox:hover:after {
+    /*background-color: #84c6c670;*/
+    background-color: #436b74a8;
+    content: '';
+    display: block;
+    height: 100%;
+    width: 100%;
 }
 
 nestedRow {
@@ -74,18 +84,22 @@ unknownAndKnowGroup {
     display: flex;
     flex-direction: row;
 }
-treeLeg{
+treeLeg {
     display: flex;
+    width: 5px;
+    position: absolute;
+    margin-left: -5px;
 }
 
 treeHorizontalLine {
     display: block;
     height: calc(1.2rem + 1px);
-    width: 3.5px;
     border-bottom: 2px solid #81a7a7;
     border-left: 2px solid #81a7a7;
+    width: 100%;
 }
 
 row{
     display: flex;
+    position: relative;
 }

@@ -1,8 +1,9 @@
 ﻿using Basyc.DependencyInjection;
+using Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration.FluentApi
+namespace Basyc.MessageBus.Manager.Infrastructure.Building.FluentApi
 {
 	public class FluentTMessageSetupMessageStage<TMessage> : BuilderStageBase
 	{

@@ -1,7 +1,6 @@
-using Basyc.DomainDrivenDesign.Domain;
 using Basyc.MessageBus.Manager;
 using Basyc.MessageBus.Manager.Application;
-using Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus;
+using Basyc.MessageBus.Shared;
 using Kontrer.OwnerServer.BusManager;
 using Kontrer.OwnerServer.CustomerService.Domain;
 using Kontrer.OwnerServer.IdGeneratorService.Domain;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Reflection;
+using RequestContext = Basyc.MessageBus.Manager.Application.RequestContext;
 
 //#if DEBUG
 //await Task.Delay(5000);
@@ -44,17 +44,37 @@ builder.Services.AddBasycMessageBus()
 
 
 
-var busManagerBuilder = builder.Services.AddBasycBusBlazorUI();
-CreateTestingMessages(busManagerBuilder);
+//var busManagerBuilder = builder.Services.AddBasycBusBlazorUI();
+var busManagerBuilder = builder.Services.AddBasycBusManager();
+builder.Services.AddBasycBusManagerBlazorUI();
+//CreateTestingMessages(busManagerBuilder);
+
+//busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
+//	.RegisterMessagesAsCQRS(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>))
+//	.UseBasycDiagnosticsReceivers()
+//		.UseMapper<BusManagerBasycDiagnosticsReceiverTraceIDMapper>()
+//	.UseBasycTypedMessageBusRequester()
+//		.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
 
 busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
-	.RegisterMessagesAsCQRS(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>))
-	.UseBasycDiagnosticsReceivers()
-		.UseMapper<BusManagerBasycDiagnosticsReceiverTraceIDMapper>()
-	.UseBasycTypedMessageBusRequester()
-		.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
+	.InDomain("1")
+	.FromInterface(typeof(IEventMessage))
+	.SetDisplayName(x => x.Name)
+	.AsEvents();
 
+busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
+	.InDomain("2")
+	.FromInterface(typeof(IMessage))
+	.SetDisplayName(x => x.Name)
+	.AsRequests()
+	.NoResponse();
 
+busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
+	.InDomain("2")
+	.FromInterface(typeof(IMessage<>))
+	.SetDisplayName(x => x.Name)
+	.AsRequests()
+	.NoResponse();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 var app = builder.Build();
@@ -63,9 +83,18 @@ await app.Services.StartBasycDiagnosticExporters();
 await app.Services.StartBasycMessageBusClient();
 await app.RunAsync();
 
+//busManagerBuilder.RegisterMessagesViaFluentApi
+//busManagerBuilder.RegisterMessagesFromAssembly
+//	.RegisterMessagesAsCQRS
+
+//	.RegisterMessages
+
+//	.FromInterface
+//busManagerBuilder.RegisterMessagesFromFluentApi
+
 static void CreateTestingMessages(Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration.BusManagerApplicationBuilder busManagerBuilder)
 {
-	busManagerBuilder.RegisterMessagesViaFluentApi()
+	busManagerBuilder.RegisterMessagesFromFluentApi()
 					.AddDomain("Domain_ManualParams")
 						//NoReturn
 						.AddMessage("Params:Manual_Return:No_HandeledBy:RequestResult")

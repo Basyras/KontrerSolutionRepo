@@ -1,10 +1,11 @@
 ﻿using Basyc.DependencyInjection;
+using Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using ParameterInfo = Basyc.MessageBus.Manager.Application.Initialization.ParameterInfo;
 
-namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration.FluentApi
+namespace Basyc.MessageBus.Manager.Infrastructure.Building.FluentApi
 {
 	public class FluentSetupMessageStage : BuilderStageBase
 	{

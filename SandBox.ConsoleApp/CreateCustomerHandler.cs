@@ -34,7 +34,7 @@ namespace SandBox.ConsoleApp
 				{
 					await busClient.PublishAsync(new CustomerCreatedEvent(newCustomer)).Task;
 				}
-				logger.LogInformation($"{nameof(CustomerCreatedEvent)} event published");
+				//logger.LogInformation($"{nameof(CustomerCreatedEvent)} event published");
 				return new CreateCustomerCommandResponse(newCustomer);
 			}
 

@@ -6,11 +6,13 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 {
 	public class RegisterMessagesFromAssemblyStage : BuilderStageBase
 	{
-		public RegisterMessagesFromAssemblyStage(IServiceCollection services, params Assembly[] assembliesToScan) : base(services)
+		public RegisterMessagesFromAssemblyStage(IServiceCollection services, string domainName, params Assembly[] assembliesToScan) : base(services)
 		{
 			this.assembliesToScan = assembliesToScan;
+			this.domainName = domainName;
 		}
 
 		public readonly Assembly[] assembliesToScan;
+		public readonly string domainName;
 	}
 }

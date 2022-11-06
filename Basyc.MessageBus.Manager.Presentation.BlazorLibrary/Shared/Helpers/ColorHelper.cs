@@ -10,10 +10,7 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 			if (saturation < 0 || saturation > 1)
 				throw new ArgumentException("bad value", nameof(saturation));
 
-			if (opacity < 0 || opacity > 1)
-				throw new ArgumentException("bad value", nameof(opacity));
-
-			var opacity255 = (int)Math.Round(255 * opacity);
+			var opacity255 = GetHexPercentage(opacity);
 
 			if (saturationRandomness < 0 || saturationRandomness > 1)
 				throw new ArgumentException("bad value", nameof(saturationRandomness));
@@ -47,9 +44,26 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 			stringBuilder.Append(colours[0].ToString("X2"));
 			stringBuilder.Append(colours[1].ToString("X2"));
 			stringBuilder.Append(colours[2].ToString("X2"));
-			stringBuilder.Append(opacity255.ToString("X2"));
+			stringBuilder.Append(opacity255);
 			string finalColor = stringBuilder.ToString();
 			return finalColor;
+		}
+		public static string GetHexPercentage(double percantage)
+		{
+			if (percantage < 0 || percantage > 1)
+				throw new ArgumentException("bad value", nameof(percantage));
+
+			var percentage255 = (int)Math.Round(255 * percantage);
+			return percentage255.ToString("X2");
+		}
+
+		public static string GetHexPercentage(int percantage)
+		{
+			if (percantage < 0 || percantage > 100)
+				throw new ArgumentException("bad value", nameof(percantage));
+
+			var percentage255 = (int)Math.Round(2.55 * percantage);
+			return percentage255.ToString("X2");
 		}
 	}
 }

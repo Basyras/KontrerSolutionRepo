@@ -1,37 +1,39 @@
 ﻿@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.DurationMap
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
 @implements IDisposable
 @{
     string width = "5rem";
     if (Activity.HasEnded)
     {
-        width = DurationViewHelper.GetDurationAsRem(Activity.EndTime - Activity.StartTime, Scale, out var remNumber);
+        width = DurationViewHelper.GetCssDurationValue(Activity.EndTime - Activity.StartTime, Scale, out var remNumber);
         if (remNumber < 0.2)
         {
-            width = "5px";
+            width = "0.5px";
         }
     }
     string durationBoxStyle = $"min-width: {width}; background-color: {Color};";
+    string durationBoxBorder = $"background-color: #000000{ColorHelper.GetHexPercentage(NestingLevel * 5)};";
     string mudTooltipBoxStyle = $"";
 }
 
 <horizontalDurationBoxView>
     <MudTooltip RootStyle="@mudTooltipBoxStyle" Arrow="true">
         <ChildContent>
-            <durationBox style="@durationBoxStyle">
-                <durationBoxBorder>
-                    <acitvityName>
-                        @Activity.DisplayName
-                    </acitvityName>
-                    @if (Activity.HasEnded is false)
-                    {
-                        <spinner>
-                            <MudProgressCircular Color="MudBlazor.Color.Default" Indeterminate="true" Size="Size.Small" />
-                        </spinner>
-                    }
-                </durationBoxBorder>
-            </durationBox>
+                <durationBox style="@durationBoxStyle">
+                <durationBoxBorder style="@durationBoxBorder">
+                        <acitvityName>
+                            @Activity.DisplayName
+                        </acitvityName>
+                        @if (Activity.HasEnded is false)
+                        {
+                            <spinner>
+                                <MudProgressCircular Color="MudBlazor.Color.Default" Indeterminate="true" Size="Size.Small" />
+                            </spinner>
+                        }
+                    </durationBoxBorder>
+                </durationBox>
         </ChildContent>
         <TooltipContent>
             <toolTipContent>
@@ -41,9 +43,9 @@
                 <br />
                 id: @Activity.Id
                 <br />
-                start: @Activity.StartTime.Millisecond
+                start: @Activity.StartTime.ToString("hh:mm:ss:fff")
                 <br />
-                end: @Activity.EndTime.Millisecond
+                end: @Activity.EndTime.ToString("hh:mm:ss:fff")
                 <br />
                 dur: @((Activity.EndTime - Activity.StartTime).TotalMilliseconds) ms
                 <br />
@@ -59,7 +61,6 @@
 
     <nestedDurationBoxes>
         @{
-            ActivityContext previousActivity = null;
             List<RowViewModel> rows = new();
             rows.Add(new RowViewModel());
             foreach (var nestedActivity in Activity.NestedActivities)
@@ -73,8 +74,12 @@
                     lastRow.StartTime = nestedActivity.StartTime;
                     continue;
                 }
-
-                if (lastRow.LastEndTime < nestedActivity.StartTime)
+                var previousActivityInRow = lastRow.Activities.First();
+                //var startsLater = lastRow.LastEndTime < nestedActivity.StartTime;
+                var diff = Math.Ceiling((nestedActivity.StartTime - lastRow.LastEndTime).TotalMilliseconds);
+                var canFitOnSameRow = diff >= 0;
+                var startsTheSameAndPreviousHas0Duration = ((lastRow.LastEndTime - nestedActivity.StartTime).TotalMilliseconds == 0 && previousActivityInRow.Duration.Ticks == 0);
+                if (canFitOnSameRow || startsTheSameAndPreviousHas0Duration)
                 {
                     lastRow.Activities.Add(nestedActivity);
                     lastRow.LastEndTime = nestedActivityLatestEndTime;
@@ -88,11 +93,13 @@
                     rows.Add(newRow);
                 }
             }
+
             foreach (var row in rows)
             {
+                ActivityContext previousRowActivity = null;
 
                 <row>
-                    @if (Activity.NestedActivities.Count > 1)
+                    @if (rows.Count > 1)
                     {
                         <treeLeg>
                             <treeHorizontalLine />
@@ -102,31 +109,30 @@
                     {
                         <nestedRow>
                             @{
-                                var isFirstNested = previousActivity is null && Activity.ParentActivity is not null;
+                                var isFirstNested = previousRowActivity is null;
                                 if (isFirstNested)
                                 {
                                     var lateStartDuration = nestedActivity.StartTime - Activity.StartTime;
                                     if (lateStartDuration > TimeSpan.FromMilliseconds(0))
                                     {
-                                        <HorizontalUnknownDurationBoxView StartTime="row.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
+                                        <HorizontalUnknownDurationBoxView StartTime="Activity.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
                                     }
                                 }
 
 
-                                var isGapBetweenPreviousNested = previousActivity is not null && previousActivity.EndTime != nestedActivity.StartTime;
+                                var isGapBetweenPreviousNested = previousRowActivity is not null && previousRowActivity.EndTime != nestedActivity.StartTime;
                                 if (isGapBetweenPreviousNested)
                                 {
-                                    <HorizontalUnknownDurationBoxView StartTime="previousActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
+                                    <HorizontalUnknownDurationBoxView StartTime="previousRowActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
                                 }
-                                <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" />
+                                <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" NestingLevel="NestingLevel+1" />
 
-                                previousActivity = nestedActivity;
+                                previousRowActivity = nestedActivity;
 
                             }
                         </nestedRow>
                     }
                 </row>
-
             }
 
         }
@@ -154,6 +160,7 @@
     ///Hexadecimal string
     /// </summary>
     [Parameter, EditorRequired] public string Color { get; set; }
+    [Parameter, EditorRequired] public int NestingLevel { get; set; }
 
     protected override Task OnParametersSetAsync()
     {
