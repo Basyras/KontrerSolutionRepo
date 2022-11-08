@@ -6,7 +6,7 @@ using Basyc.MessageBus.Manager.Infrastructure.Building.FluentApi;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-	public static class FluentExtensions
+	public static class BusManagerApplicationBuilderFluentExtensions
 	{
 		public static RegisterMessagesFromFluentApiStage RegisterMessagesFromFluentApi(this BusManagerApplicationBuilder parent)
 		{

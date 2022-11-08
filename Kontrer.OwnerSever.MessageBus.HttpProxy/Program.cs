@@ -20,9 +20,9 @@ builder.Services.AddBasycMessageBus()
 builder.Services.AddBasycMessageBusProxy()
 	.UseSignalRProxy();
 
-builder.Services.AddCors(policy =>
+builder.Services.AddCors(options =>
 {
-	policy.AddPolicy("*", builder => builder
+	options.AddPolicy("*", builder => builder
 		.AllowAnyOrigin()
 		.AllowAnyMethod()
 		.AllowAnyHeader()

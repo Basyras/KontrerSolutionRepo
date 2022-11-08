@@ -1,6 +1,5 @@
 ﻿using Basyc.DependencyInjection;
 using Basyc.MessageBus.Manager.Application;
-using Basyc.MessageBus.Manager.Infrastructure.MessageRegistration.Interface;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Basyc.MessageBus.Manager.Infrastructure.Building.Interface
@@ -14,19 +13,19 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building.Interface
 			this.interfaceRegistration = interfaceRegistration;
 		}
 
-		public void AsEvents()
+		public SelectRequesterStage AsEvents()
 		{
 			interfaceRegistration.RequestType = RequestType.Event;
-			//return new SetupResponseStage(services, interfaceRegistration);
+			return new SelectRequesterStage(services, interfaceRegistration);
 		}
 
-		public SetupHasResponseStage AsRequests()
+		public SetupHasResponseStage AsQueries()
 		{
 			interfaceRegistration.RequestType = RequestType.Query;
 			return new SetupHasResponseStage(services, interfaceRegistration);
 		}
 
-		public SetupHasResponseStage AsCommand()
+		public SetupHasResponseStage AsCommands()
 		{
 			interfaceRegistration.RequestType = RequestType.Command;
 			return new SetupHasResponseStage(services, interfaceRegistration);

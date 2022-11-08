@@ -2,6 +2,7 @@
 using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 
 namespace Basyc.MessageBus.Manager.Application.Requesting
 {
@@ -27,8 +28,9 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 
 		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
 		{
+			var spanId = Activity.Current?.SpanId.ToString();
 			var message = formatter.Invoke(state, exception);
-			loggingContext.Log(serviceIdentity, logLevel, message);
+			loggingContext.Log(serviceIdentity, logLevel, message, spanId);
 		}
 	}
 }

@@ -1,11 +1,11 @@
-﻿using Basyc.MessageBus.Client;
+﻿using Basyc.Diagnostics.Shared;
+using Basyc.MessageBus.Client;
 using Basyc.MessageBus.Manager.Application.Requesting;
 using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
 using Basyc.MessageBus.Manager.Infrastructure.Formatters;
 using Basyc.MessageBus.Shared;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
@@ -54,47 +54,49 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 			{
 				var busRequestActivity = startSegment.StartNested("BasycTypedMessageBusRequester.StartRequest Bus Request");
 
-				var activity = new Activity("BasycTypedMessageBusRequester.StartRequest Requesting busclient");
-				activity.SetParentId(ActivityTraceId.CreateFromString(busRequestActivity.TraceId), ActivitySpanId.CreateFromString(busRequestActivity.Id));
-				activity.Start();
-				//using var requestStartActivity = busRequestActivity.StartNested("Request Start");
+				var messageBusClientRequestActivity = DiagnosticHelper.Start("MessageBusClient Request", busRequestActivity.TraceId, startSegment.Id);
 				var busTask = typedMessageBusClient.RequestAsync(requestType, requestObject, requestContext.Request.RequestInfo.ResponseType, busRequestContext);
-				//requestStartActivity.End();
-				activity.Stop();
+				messageBusClientRequestActivity.Stop();
 
 				inMemorySessionMapper.AddMapping(requestContext.TraceId, busTask.TraceId);
-				busTask.Task.ContinueWith(x =>
+				busTask.Task.ContinueWith(async x =>
 				{
-					var endTime = DateTimeOffset.UtcNow;
-					busRequestActivity.End(endTime);
-					startSegment.End(endTime);
+					await busRequestActivity.Log("MessageBusClient Response received", LogLevel.Information);
+					busRequestActivity.End();
+
 
 					if (x.IsFaulted)
 					{
 						requestContext.Fail(x.Exception.ToString());
-						requestLogger.LogError($"Request handeling failed with exception: {x.Exception.ToString()}");
+						await startSegment.Log($"Request handeling failed with exception: {x.Exception}", LogLevel.Error);
+
 					}
 
 					if (x.IsCanceled)
 					{
 						requestContext.Fail("canceled");
-						requestLogger.LogError($"Request handeling was canceled");
+						await startSegment.Log($"Request handeling was canceled", LogLevel.Error);
 					}
+
+
 
 					if (x.IsCompletedSuccessfully)
 					{
 						if (x.Result.Value is ErrorMessage error)
 						{
 							requestContext.Fail(error.Message);
-							requestLogger.LogError($"Request handler returned error. {error.Message}");
+							await startSegment.Log($"Request handler returned error. {error.Message}", LogLevel.Error);
+
 						}
 						else
 						{
 							var resultObject = x.Result.AsT0;
 							requestContext.Complete(responseFormatter.Format(resultObject));
-							requestLogger.LogInformation($"Request completed");
+							await startSegment.Log($"Request completed", LogLevel.Information);
 						}
 					}
+
+					startSegment.End();
 				});
 
 			}

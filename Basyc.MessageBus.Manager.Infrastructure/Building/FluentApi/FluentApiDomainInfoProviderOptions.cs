@@ -1,4 +1,4 @@
-﻿using Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration;
+﻿using Basyc.MessageBus.Manager.Infrastructure.Building.FluentApi;
 using System.Collections.Generic;
 
 namespace Basyc.MessageBus.Manager.Application

@@ -61,7 +61,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 				{
 					var requestStartActivity = CreateActivity(request.TraceId, "Delegating request");
 					diagnosticsProducer.StartActivity(requestStartActivity);
-					diagnosticsProducer.ProduceLog(new LogEntry(ServiceIdentity.ApplicationWideIdentity, request.TraceId, DateTimeOffset.UtcNow, LogLevel.Debug, "Delegating request"));
+					diagnosticsProducer.ProduceLog(new LogEntry(ServiceIdentity.ApplicationWideIdentity, request.TraceId, DateTimeOffset.UtcNow, LogLevel.Debug, "Delegating request", requestStartActivity.Id));
 					logger.LogInformation($"Recieved request: '{request.RequestBytes}' from {senderAddressString}:{request.SessionId}");
 					if (workerRegistry.TryGetWorkerFor(request.RequestType, out string? workerAddressString))
 					{

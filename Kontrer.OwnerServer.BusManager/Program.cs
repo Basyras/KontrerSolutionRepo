@@ -1,5 +1,7 @@
+using Basyc.DomainDrivenDesign.Domain;
 using Basyc.MessageBus.Manager;
 using Basyc.MessageBus.Manager.Application;
+using Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus;
 using Basyc.MessageBus.Shared;
 using Kontrer.OwnerServer.BusManager;
 using Kontrer.OwnerServer.CustomerService.Domain;
@@ -47,34 +49,50 @@ builder.Services.AddBasycMessageBus()
 //var busManagerBuilder = builder.Services.AddBasycBusBlazorUI();
 var busManagerBuilder = builder.Services.AddBasycBusManager();
 builder.Services.AddBasycBusManagerBlazorUI();
+busManagerBuilder.RegisterBasycMessageBusRequester();
 //CreateTestingMessages(busManagerBuilder);
 
-//busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
-//	.RegisterMessagesAsCQRS(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>))
-//	.UseBasycDiagnosticsReceivers()
-//		.UseMapper<BusManagerBasycDiagnosticsReceiverTraceIDMapper>()
-//	.UseBasycTypedMessageBusRequester()
-//		.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
+busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
+	.AsDomain("CQRS Domain")
+	.RegisterMessagesAsCQRS(typeof(IQuery<>), typeof(ICommand), typeof(ICommand<>))
+	.UseBasycDiagnosticsReceivers()
+		.UseMapper<BusManagerBasycDiagnosticsReceiverTraceIDMapper>()
+	.UseBasycTypedMessageBusRequester()
+		.SetDomainNameFormatter<TypedDddDomainNameFormatter>();
 
 busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
-	.InDomain("1")
-	.FromInterface(typeof(IEventMessage))
-	.SetDisplayName(x => x.Name)
-	.AsEvents();
+	.AsDomain("FromInterfaceDomain")
+	.FromInterface<IEventMessage>()
+	.SetDefaultDisplayName()
+	.AsEvents()
+	.HandeledByDefault();
 
 busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
-	.InDomain("2")
-	.FromInterface(typeof(IMessage))
-	.SetDisplayName(x => x.Name)
-	.AsRequests()
-	.NoResponse();
+	.AsDomain("FromInterfaceDomain")
+	.FromInterface<ICommand>()
+	.SetDefaultDisplayName()
+	.AsCommands()
+	.NoResponse()
+	.HandeledByDefault();
 
 busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
-	.InDomain("2")
-	.FromInterface(typeof(IMessage<>))
-	.SetDisplayName(x => x.Name)
-	.AsRequests()
-	.NoResponse();
+	.AsDomain("FromInterfaceDomain")
+	.FromInterface(typeof(ICommand<>))
+	.SetDefaultDisplayName()
+	.AsQueries()
+	.HasResponse<int>()
+	.SetResponseDisplayName("responseType")
+	.HandeledByDefault();
+
+
+busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
+	.AsDomain("FromInterfaceDomain")
+	.FromInterface(typeof(IQuery<>))
+	.SetDefaultDisplayName()
+	.AsQueries()
+	.HasResponse<int>()
+	.SetResponseDisplayName("asddas")
+	.HandeledByDefault();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 var app = builder.Build();

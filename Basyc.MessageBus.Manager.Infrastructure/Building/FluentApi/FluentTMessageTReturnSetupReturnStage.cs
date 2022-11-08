@@ -1,6 +1,5 @@
 ﻿using Basyc.DependencyInjection;
 using Basyc.MessageBus.Manager.Application;
-using Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistration;
 using Basyc.MessageBus.Manager.Infrastructure.Building.FluentApi.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using System;

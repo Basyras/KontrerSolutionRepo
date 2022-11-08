@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Basyc.MessageBus.Manager.Infrastructure.MessageRegistration.Interface
+namespace Basyc.MessageBus.Manager.Infrastructure.Building.Interface
 {
 	public class InterfaceDomainProviderOptions
 	{
@@ -12,6 +12,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.MessageRegistration.Interface
 
 	public class InterfaceRegistration
 	{
+		public const string DefaultRequester = "DefaultRequester";
 		public List<Assembly> AssembliesToScan { get; set; }
 		public string DomainName { get; set; }
 		public Type MessageInterfaceType { get; set; }
@@ -20,6 +21,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.MessageRegistration.Interface
 		public Func<Type, string> DisplayNameFormatter { get; set; }
 		public string ResponseDisplayName { get; set; }
 		public RequestType RequestType { get; set; }
+		public string RequesterUniqueName { get; set; }
 
 	}
 }

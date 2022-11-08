@@ -45,5 +45,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 			diagnosticsSource.StartActivity(new ActivityStart(service, TraceId, parentId, nestedId, segmentName, start));
 			return new InMemoryDiagnosticsSourceDurationSegmentBuilder(this, TraceId, nestedId, segmentName, service, diagnosticsSource);
 		}
+
+
 	}
 }

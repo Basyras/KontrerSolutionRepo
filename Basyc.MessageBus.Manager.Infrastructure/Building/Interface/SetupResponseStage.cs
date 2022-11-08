@@ -1,5 +1,4 @@
 ﻿using Basyc.DependencyInjection;
-using Basyc.MessageBus.Manager.Infrastructure.MessageRegistration.Interface;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Basyc.MessageBus.Manager.Infrastructure.Building.Interface
@@ -13,9 +12,10 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building.Interface
 			this.registration = registration;
 		}
 
-		public void SetResponseDisplayName(string responseTypeDislpayName)
+		public SelectRequesterStage SetResponseDisplayName(string responseTypeDislpayName)
 		{
 			registration.ResponseDisplayName = responseTypeDislpayName;
+			return new SelectRequesterStage(services, registration);
 		}
 	}
 }

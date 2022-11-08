@@ -1,4 +1,5 @@
 ﻿using Basyc.Diagnostics.Shared.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Basyc.Diagnostics.Shared.Durations
 {
@@ -96,5 +97,9 @@ namespace Basyc.Diagnostics.Shared.Durations
 			return new DurationMap(rootSegment.NestedSegments, totalDuration, StartTime, EndTime);
 		}
 
+		public ValueTask Log(string message, LogLevel logLevel)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

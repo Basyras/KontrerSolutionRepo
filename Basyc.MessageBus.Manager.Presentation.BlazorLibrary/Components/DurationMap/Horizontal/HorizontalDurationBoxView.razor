@@ -1,4 +1,5 @@
-﻿@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
+﻿@using Basyc.Blazor.Controls.TooltippedText
+@using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.DurationMap
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 
@@ -21,19 +22,50 @@
 <horizontalDurationBoxView>
     <MudTooltip RootStyle="@mudTooltipBoxStyle" Arrow="true">
         <ChildContent>
-                <durationBox style="@durationBoxStyle">
+            <durationBox style="@durationBoxStyle">
                 <durationBoxBorder style="@durationBoxBorder">
-                        <acitvityName>
-                            @Activity.DisplayName
-                        </acitvityName>
-                        @if (Activity.HasEnded is false)
+                    <acitvityName>
+                        @Activity.DisplayName
+                    </acitvityName>
+                    @if (Activity.HasEnded is false)
+                    {
+                        <spinner>
+                            <MudProgressCircular Color="MudBlazor.Color.Default" Indeterminate="true" Size="Size.Small" />
+                        </spinner>
+                    }
+                    <logs>
+                        @foreach (var log in Activity.Logs)
                         {
-                            <spinner>
-                                <MudProgressCircular Color="MudBlazor.Color.Default" Indeterminate="true" Size="Size.Small" />
-                            </spinner>
+                            var logStartPosition = DurationViewHelper.GetCssDurationValue(log.Time - Activity.StartTime, Scale);
+
+                            var logStyle = $"margin-left: {logStartPosition}";
+                            <log style="@logStyle">
+                                <MudTooltip RootStyle="display: block; height: 100%;">
+                                    <ChildContent>
+                                        <logContent/>
+                                    </ChildContent>
+                                    <TooltipContent>
+                                        <toolTipContent>
+                                            time: @log.Time.ToString("hh:mm:ss:fff")
+                                            <br />
+                                            diff: @((log.Time - Activity.StartTime).TotalMilliseconds)
+                                            <br />
+                                            logLevel: @log.LogLevel.ToString()
+                                            <br />
+                                            message: @log.Message
+                                            <br />
+                                            spanId: @log.SpanId
+                                            <br />
+
+                                        </toolTipContent>
+                                    </TooltipContent>
+                                </MudTooltip>
+                            </log>
                         }
-                    </durationBoxBorder>
-                </durationBox>
+                    </logs>
+
+                </durationBoxBorder>
+            </durationBox>
         </ChildContent>
         <TooltipContent>
             <toolTipContent>
@@ -54,6 +86,8 @@
                 ParentId?: @Activity.ParentActivity?.Id
                 <br />
                 hasEnded: @Activity.HasEnded
+                <br />
+                logs: @Activity.Logs.Count
 
             </toolTipContent>
         </TooltipContent>
@@ -75,7 +109,6 @@
                     continue;
                 }
                 var previousActivityInRow = lastRow.Activities.First();
-                //var startsLater = lastRow.LastEndTime < nestedActivity.StartTime;
                 var diff = Math.Ceiling((nestedActivity.StartTime - lastRow.LastEndTime).TotalMilliseconds);
                 var canFitOnSameRow = diff >= 0;
                 var startsTheSameAndPreviousHas0Duration = ((lastRow.LastEndTime - nestedActivity.StartTime).TotalMilliseconds == 0 && previousActivityInRow.Duration.Ticks == 0);
@@ -98,24 +131,24 @@
             {
                 ActivityContext previousRowActivity = null;
 
-                <row>
-                    @if (rows.Count > 1)
+                                    <row>
+                                        @if (rows.Count > 1)
                     {
-                        <treeLeg>
-                            <treeHorizontalLine />
-                        </treeLeg>
+                                            <treeLeg>
+                                                <treeHorizontalLine />
+                                            </treeLeg>
                     }
-                    @foreach (var nestedActivity in row.Activities)
+                                        @foreach (var nestedActivity in row.Activities)
                     {
-                        <nestedRow>
-                            @{
+                                            <nestedRow>
+                                                @{
                                 var isFirstNested = previousRowActivity is null;
                                 if (isFirstNested)
                                 {
                                     var lateStartDuration = nestedActivity.StartTime - Activity.StartTime;
                                     if (lateStartDuration > TimeSpan.FromMilliseconds(0))
                                     {
-                                        <HorizontalUnknownDurationBoxView StartTime="Activity.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
+                                                                                <HorizontalUnknownDurationBoxView StartTime="Activity.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
                                     }
                                 }
 
@@ -123,16 +156,16 @@
                                 var isGapBetweenPreviousNested = previousRowActivity is not null && previousRowActivity.EndTime != nestedActivity.StartTime;
                                 if (isGapBetweenPreviousNested)
                                 {
-                                    <HorizontalUnknownDurationBoxView StartTime="previousRowActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
+                                                                            <HorizontalUnknownDurationBoxView StartTime="previousRowActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
                                 }
-                                <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" NestingLevel="NestingLevel+1" />
+                                                                        <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" NestingLevel="NestingLevel+1" />
 
                                 previousRowActivity = nestedActivity;
 
-                            }
-                        </nestedRow>
+                                                }
+                                            </nestedRow>
                     }
-                </row>
+                                    </row>
             }
 
         }

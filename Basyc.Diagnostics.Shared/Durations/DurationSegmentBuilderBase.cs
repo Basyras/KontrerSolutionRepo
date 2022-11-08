@@ -1,4 +1,6 @@
-﻿namespace Basyc.Diagnostics.Shared.Durations
+﻿using Microsoft.Extensions.Logging;
+
+namespace Basyc.Diagnostics.Shared.Durations
 {
 	public abstract class DurationSegmentBuilderBase : IDisposable, IDurationSegmentBuilder
 	{
@@ -114,5 +116,7 @@
 		{
 			return StartNested(Service, segmentName);
 		}
+
+		public abstract ValueTask Log(string message, LogLevel logLevel);
 	}
 }

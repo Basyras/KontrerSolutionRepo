@@ -32,6 +32,11 @@ serviceName {
     color: white;
     padding: 0rem 0.4rem;
     border-radius: 2px;
+    margin-right: 0.3rem;
+}
+
+activityName {
+    @extend serviceName;
 }
 
 serviceName > * {

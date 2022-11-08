@@ -1,7 +1,9 @@
 ﻿using Basyc.Diagnostics.Shared.Durations;
 using Basyc.Diagnostics.Shared.Helpers;
 using Basyc.Diagnostics.Shared.Logging;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
 
 namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 {
@@ -37,6 +39,11 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations
 
 			var endTime = End();
 			return parent!.StartNested(segmentName, endTime);
+		}
+		public override ValueTask Log(string message, LogLevel logLevel)
+		{
+			diagnosticsSource.PushLog(new LogEntry(this.Service, this.TraceId, DateTimeOffset.UtcNow, logLevel, message, this.Id));
+			return ValueTask.CompletedTask;
 		}
 
 		public override IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName, DateTimeOffset start)

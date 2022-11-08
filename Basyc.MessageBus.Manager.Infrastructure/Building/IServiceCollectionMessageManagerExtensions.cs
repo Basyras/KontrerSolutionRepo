@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Basyc.MessageBus.Manager
 {
-	public static class MessageManagerIServiceCollectionExtensions
+	public static class IServiceCollectionMessageManagerExtensions
 	{
 		public static BusManagerApplicationBuilder AddBasycBusManager(this IServiceCollection services)
 		{

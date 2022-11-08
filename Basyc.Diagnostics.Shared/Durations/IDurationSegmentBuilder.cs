@@ -1,4 +1,6 @@
-﻿namespace Basyc.Diagnostics.Shared.Durations
+﻿using Microsoft.Extensions.Logging;
+
+namespace Basyc.Diagnostics.Shared.Durations
 {
 	public interface IDurationSegmentBuilder : IDisposable
 	{
@@ -20,5 +22,7 @@
 		IDurationSegmentBuilder StartNested(ServiceIdentity service, string segmentName);
 		IDurationSegmentBuilder StartNested(string segmentName);
 		IDurationSegmentBuilder EndAndStartFollowing(string segmentName);
+		ValueTask Log(string message, LogLevel logLevel);
+
 	}
 }

@@ -3,7 +3,6 @@ using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Application.Requesting;
 using Basyc.MessageBus.Manager.Infrastructure;
 using Basyc.MessageBus.Manager.Infrastructure.Building.Interface;
-using Basyc.MessageBus.Manager.Infrastructure.MessageRegistration.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -23,8 +22,13 @@ namespace Basyc.MessageBus.Manager.Application.Building.Stages.MessageRegistrati
 
 		public SetupDomainStage RegisterMessagesFromAssembly(params Assembly[] assembliesToScan)
 		{
-
 			return new SetupDomainStage(services, assembliesToScan);
 		}
+
+		public void RegisterRequester<TRequester>() where TRequester : class, IRequester
+		{
+			services.AddSingleton<IRequester, TRequester>();
+		}
+
 	}
 }

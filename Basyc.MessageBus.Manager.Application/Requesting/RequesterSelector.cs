@@ -1,7 +1,6 @@
 ﻿using Basyc.MessageBus.Manager.Application.Initialization;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Basyc.MessageBus.Manager.Application.Requesting
 {
@@ -13,7 +12,20 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 
 		public RequesterSelector(IEnumerable<IRequester> requesters, IOptions<RequesterSelectorOptions> options)
 		{
-			requesterToChoose = requesters.ToDictionary(x => x.UniqueName, x => x);
+			//requesterToChoose = requesters.ToDictionary(x => x.UniqueName, x => x);
+			requesterToChoose = new();
+			foreach (var requester in requesters)
+			{
+				if (requesterToChoose.TryGetValue(requester.UniqueName, out var foundRequester))
+				{
+					if (foundRequester != requester)
+						throw new System.Exception($"2 requesters with same unique name ({requester.UniqueName}) found");
+				}
+				else
+				{
+					requesterToChoose.Add(requester.UniqueName, requester);
+				}
+			}
 			this.options = options;
 			infoToRequesterNameMap = options.Value.ResolveRequesterMap();
 		}

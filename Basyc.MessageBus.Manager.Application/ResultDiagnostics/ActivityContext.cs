@@ -1,4 +1,5 @@
 ﻿using Basyc.Diagnostics.Shared.Durations;
+using Basyc.Diagnostics.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,6 +22,8 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 		private readonly List<ActivityContext> nestedActivities = new();
 		public IReadOnlyList<ActivityContext> NestedActivities { get => nestedActivities; }
+		private readonly List<LogEntry> logs = new();
+		public IReadOnlyList<LogEntry> Logs { get => logs; }
 		public bool HasEnded { get; private set; }
 		public DateTimeOffset EndTime { get; private set; }
 		public TimeSpan Duration { get; private set; }
@@ -56,6 +59,19 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 			ParentActivity = parentContext;
 			ParentAssigned?.Invoke(this, EventArgs.Empty);
+		}
+
+		public void AddLog(LogEntry logEntry)
+		{
+			logs.Add(logEntry);
+		}
+
+		public void AddLogs(IEnumerable<LogEntry> logsEntries)
+		{
+			foreach (var log in logsEntries)
+			{
+				logs.Add(log);
+			}
 		}
 	}
 }

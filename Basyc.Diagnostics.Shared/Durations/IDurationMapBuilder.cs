@@ -1,4 +1,6 @@
-﻿namespace Basyc.Diagnostics.Shared.Durations
+﻿using Microsoft.Extensions.Logging;
+
+namespace Basyc.Diagnostics.Shared.Durations
 {
 	public interface IDurationMapBuilder
 	{
@@ -13,5 +15,6 @@
 		IDurationSegmentBuilder StartNewSegment(ServiceIdentity service, string segmentName, DateTimeOffset startTime);
 		IDurationSegmentBuilder StartNewSegment(string segmentName);
 		IDurationSegmentBuilder StartNewSegment(string segmentName, DateTimeOffset startTime);
+		ValueTask Log(string message, LogLevel logLevel);
 	}
 }

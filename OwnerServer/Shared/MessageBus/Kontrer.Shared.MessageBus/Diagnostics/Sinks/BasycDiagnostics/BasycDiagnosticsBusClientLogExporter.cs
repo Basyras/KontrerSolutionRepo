@@ -72,7 +72,7 @@ namespace Basyc.MessageBus.Client.Diagnostics.Sinks.BasycDiagnostics
 			{
 				try
 				{
-					diagnosticProducer.ProduceLog(new LogEntry(options.Value.Service, traceId, DateTimeOffset.UtcNow, logLevel, formattedMessage));
+					diagnosticProducer.ProduceLog(new LogEntry(options.Value.Service, traceId, DateTimeOffset.UtcNow, logLevel, formattedMessage, null));
 				}
 				catch (Exception ex)
 				{

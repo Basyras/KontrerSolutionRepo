@@ -31,7 +31,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.Diagnostics
 
 		private void LogReceiver_LogsReceived(object sender, LogsReceivedArgs e)
 		{
-			var mappedSessions = e.LogEntries.Select(x => new LogEntry(x.Service, sessionMapper.GetTraceId(x.TraceId), x.Time, x.LogLevel, x.Message)).ToArray();
+			var mappedSessions = e.LogEntries.Select(x => new LogEntry(x.Service, sessionMapper.GetTraceId(x.TraceId), x.Time, x.LogLevel, x.Message, x.SpanId)).ToArray();
 			LogsReceived?.Invoke(this, new LogsUpdatedArgs(mappedSessions));
 
 		}

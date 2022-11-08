@@ -14,7 +14,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building.Interface
 			this.assemblies = assemblies;
 		}
 
-		public RegisterMessagesFromAssemblyStage InDomain(string domainName)
+		public RegisterMessagesFromAssemblyStage AsDomain(string domainName)
 		{
 			return new(services, domainName, assemblies);
 		}

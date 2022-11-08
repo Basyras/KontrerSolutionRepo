@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Basyc.MessageBus.Client.Diagnostics
@@ -49,7 +50,8 @@ namespace Basyc.MessageBus.Client.Diagnostics
 			foreach (var logSink in logSinks)
 			{
 				var message = formatter.Invoke(state, exception);
-				var logEntry = new LogEntry(busDiagnosticOptions.Value.Service, session.TraceId, DateTimeOffset.UtcNow, logLevel, message);
+				var spanId = Activity.Current?.SpanId.ToString();
+				var logEntry = new LogEntry(busDiagnosticOptions.Value.Service, session.TraceId, DateTimeOffset.UtcNow, logLevel, message, spanId);
 				logSink.ProduceLog(logEntry);
 			}
 		}

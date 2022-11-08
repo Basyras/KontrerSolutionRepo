@@ -38,14 +38,14 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 			}
 
 			RequestDiagnosticContext requestDiagnostics = requestDiagnosticsManager.CreateDiagnostics(traceId);
-			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Choosing requester");
+			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Choosing requester", null);
 			var requester = requesterSelector.PickRequester(request.RequestInfo);
 			IDurationMapBuilder durationMapBuilder = new InMemoryDiagnosticsSourceDurationMapBuilder(requestManagerServiceIdentity, traceId, "root", inMemoryRequestDiagnosticsSource);
 			var requestContext = new RequestContext(request, DateTime.Now, traceId, durationMapBuilder, requestDiagnostics);
 			reqeustContexts.Add(requestContext);
-			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Starting request");
+			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Starting request", null);
 			requester.StartRequest(requestContext, new ResultLoggingContextLogger(requestManagerServiceIdentity, requestDiagnostics));
-			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Request start done");
+			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Request start done", null);
 
 
 			return requestContext;

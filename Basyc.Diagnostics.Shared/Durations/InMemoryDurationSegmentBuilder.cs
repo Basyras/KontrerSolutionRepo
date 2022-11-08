@@ -1,4 +1,5 @@
 ﻿using Basyc.Diagnostics.Shared.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Basyc.Diagnostics.Shared.Durations
 {
@@ -119,6 +120,11 @@ namespace Basyc.Diagnostics.Shared.Durations
 			var nestedSegment = new InMemoryDurationSegmentBuilder(service, TraceId, IdGeneratorHelper.GenerateNewSpanId(), segmentName, start, this);
 			nestedSegmentBuilders.Add(nestedSegment);
 			return nestedSegment;
+		}
+
+		public override ValueTask Log(string message, LogLevel logLevel)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -21,7 +21,8 @@
         @for (int logEntryIndex = 0; logEntryIndex < FilteredLogs.Count; logEntryIndex++)
         {
             var logEntry = FilteredLogs[logEntryIndex];
-            <LogEntryView LogEntry="logEntry" AlternateColor="logEntryIndex % 2 != 0" />
+            var logActivity = logEntry.SpanId is null ? null : DiagnosticsContext.GetActivity(logEntry.SpanId);
+            <LogEntryView LogEntry="logEntry" AlternateColor="logEntryIndex % 2 != 0" Activity="logActivity" />
         }
     </logs>
 </logWindowView>

@@ -1,5 +1,4 @@
 ﻿using Basyc.DependencyInjection;
-using Basyc.MessageBus.Manager.Infrastructure.MessageRegistration.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -12,6 +11,12 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building.Interface
 		public SetupDisplayNameStage(IServiceCollection services, InterfaceRegistration interfaceRegistration) : base(services)
 		{
 			this.interfaceRegistration = interfaceRegistration;
+		}
+
+		public SelectMessageTypeStage SetDefaultDisplayName()
+		{
+			interfaceRegistration.DisplayNameFormatter = x => x.Name;
+			return new SelectMessageTypeStage(services, interfaceRegistration);
 		}
 
 		public SelectMessageTypeStage SetDisplayName(Func<Type, string> formatter)

@@ -17,40 +17,40 @@
                     string serviceStyle = "";
                     var serviceFirstActivity = service.Activities.First();
                     serviceStyle = $"margin-left: {DurationViewHelper.GetCssDurationValue(RequestContext.StartTime, serviceFirstActivity.StartTime, Scale)}; background-color: {color};";
-                    <service style="@serviceStyle">
-                        <serviceNameContainer>
-                            <serviceName>
-                                @service.ServiceIdentity.ServiceName
-                            </serviceName>
-                        </serviceNameContainer>
-                        <durationBoxes>
-                            @{
+                        <service style="@serviceStyle">
+                            <serviceNameContainer>
+                                <serviceName>
+                                    @service.ServiceIdentity.ServiceName
+                                </serviceName>
+                            </serviceNameContainer>
+                            <durationBoxes>
+                                @{
                                 ActivityContext previousActivity = null;
                                 foreach (var activity in service.Activities)
                                 {
-                                    <unknownAndKnowGroup>
-                                        @{
-                                            string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetCssDurationValue(serviceFirstActivity.StartTime, activity.StartTime, Scale);
-                                            <div style="display: flex; margin-left:@leftMargin;">
+                                            <unknownAndKnowGroup>
                                                 @{
-                                                    <HorizontalDurationBoxView Activity="activity" Scale="Scale" Color="@color" NestingLevel="0" />
+                                            string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetCssDurationValue(serviceFirstActivity.StartTime, activity.StartTime, Scale);
+                                                        <div style="display: flex; margin-left:@leftMargin;">
+                                                            @{
+                                                                    <HorizontalDurationBoxView Activity="activity" Scale="Scale" Color="@color" NestingLevel="0" />
                                                     previousActivity = activity;
+                                                            }
+                                                        </div>
                                                 }
-                                            </div>
-                                        }
-                                    </unknownAndKnowGroup>
+                                            </unknownAndKnowGroup>
                                 }
-                            }
-                        </durationBoxes>
-                    </service>
-                    <br>
+                                }
+                            </durationBoxes>
+                        </service>
+                        <br>
                 }
             }
         }
     </services>
 
     <zoomToolBar>
-        <MudNumericField Format="N2" T="double" @bind-Value="Scale" FullWidth="false" Step="0.1" />
+        <MudNumericField Format="N2" T="double" @bind-Value="Scale" FullWidth="false" Step="0.1" Style="color: white;" />
     </zoomToolBar>
 
 </horizontalDurationMapView>

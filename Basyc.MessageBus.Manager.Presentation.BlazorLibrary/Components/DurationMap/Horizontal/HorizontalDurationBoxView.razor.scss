@@ -8,7 +8,7 @@ durationBox {
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    height: 2.4rem;
+    height: 1.4rem;
     overflow: hidden;
     grid-row: 1;
     float: left;
@@ -51,6 +51,9 @@ acitvityName {
     height: 100%;
     width: 100%;
     overflow: hidden;
+    overflow-wrap: break-word;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     padding: 0.3rem;
     line-height: 0.8rem;
     top: 0;
@@ -67,7 +70,6 @@ toolTipContent {
 
 
 durationBox:hover:after {
-    /*background-color: #84c6c670;*/
     background-color: #436b74a8;
     content: '';
     display: block;
@@ -84,6 +86,7 @@ unknownAndKnowGroup {
     display: flex;
     flex-direction: row;
 }
+
 treeLeg {
     display: flex;
     width: 5px;
@@ -93,13 +96,41 @@ treeLeg {
 
 treeHorizontalLine {
     display: block;
-    height: calc(1.2rem + 1px);
+    height: calc(0.7rem + 1px);
     border-bottom: 2px solid #81a7a7;
     border-left: 2px solid #81a7a7;
     width: 100%;
 }
 
-row{
+row {
     display: flex;
     position: relative;
+}
+
+logs {
+    position: absolute;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 1fr;
+    width: 100%;
+    height: 100%;
+}
+
+log {
+    display: block;
+    height: 100%;
+    grid-column: 1;
+    grid-row: 1;
+    border-color: transparent;
+    width: 4px;
+    padding: 4px
+}
+
+logContent {
+    display: block;
+    background-color: #ff00007b;
+    border-radius: 100%;
+    margin-left: -16px;
+    /*width: 16px;*/
+    height: 100%;
 }

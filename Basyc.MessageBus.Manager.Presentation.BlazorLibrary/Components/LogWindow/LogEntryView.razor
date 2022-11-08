@@ -19,11 +19,15 @@
         @LogLevelToString(LogEntry.LogLevel)
     </level>
     <serviceName style="@serviceNameStyle">
-@*        <span>
-            @LogEntry.Service.ServiceName
-        </span>*@
         <BasycTooltippedText Text="@LogEntry.Service.ServiceName" />
     </serviceName>
+    @if (Activity is not null)
+    {
+        <activityName style="@serviceNameStyle">
+            <BasycTooltippedText Text="@Activity.DisplayName" />
+        </activityName>
+    }
+
     <message>
         @LogEntry.Message
     </message>
@@ -32,6 +36,7 @@
 
 @code {
     [Parameter] public LogEntry LogEntry { get; set; }
+    [Parameter] public ActivityContext Activity { get; set; }
     [Parameter] public bool AlternateColor { get; set; }
 
     private static string LogLevelToString(LogLevel logLevel)

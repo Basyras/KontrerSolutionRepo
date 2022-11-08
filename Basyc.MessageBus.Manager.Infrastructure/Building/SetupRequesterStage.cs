@@ -2,6 +2,7 @@
 using Basyc.MessageBus.Manager.Application.Requesting;
 using Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Basyc.MessageBus.Manager.Infrastructure.Building
 {
@@ -13,7 +14,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building
 
 		public SetupTypeFormattingStage UseBasycTypedMessageBusRequester()
 		{
-			services.AddSingleton<IRequester, BasycTypedMessageBusRequester>();
+			services.TryAddSingleton<IRequester, BasycTypedMessageBusRequester>();
 			return new SetupTypeFormattingStage(services);
 		}
 

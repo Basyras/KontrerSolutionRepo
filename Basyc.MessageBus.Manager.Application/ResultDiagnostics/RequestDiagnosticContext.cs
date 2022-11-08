@@ -18,6 +18,7 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 		private readonly Dictionary<string, ActivityContext> activityIdToActivityMap = new();
 		private readonly Dictionary<string, List<ActivityContext>> missingParentIdToNestedActivityMap = new();
+		private readonly Dictionary<string, List<LogEntry>> missingActivityIdToLogsMap = new();
 
 		public List<ServiceIdentityContext> services = new List<ServiceIdentityContext>();
 		public IReadOnlyList<ServiceIdentityContext> Services { get => services; }
@@ -34,14 +35,14 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			TraceId = traceId;
 		}
 
-		public void Log(ServiceIdentity service, LogLevel logLevel, string message)
+		public void Log(ServiceIdentity service, LogLevel logLevel, string message, string? spanId)
 		{
-			Log(service, DateTimeOffset.UtcNow, logLevel, message);
+			Log(service, DateTimeOffset.UtcNow, logLevel, message, spanId);
 		}
 
-		public void Log(ServiceIdentity service, DateTimeOffset time, LogLevel logLevel, string message)
+		public void Log(ServiceIdentity service, DateTimeOffset time, LogLevel logLevel, string message, string? spanId)
 		{
-			LogEntry newLogEntry = new(service, TraceId, time, logLevel, message);
+			LogEntry newLogEntry = new(service, TraceId, time, logLevel, message, spanId);
 			Log(newLogEntry);
 		}
 
@@ -52,6 +53,19 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 
 			logEntries.Add(newLogEntry);
 			logEntries.Sort((x, y) => x.Time.CompareTo(y.Time));
+			if (newLogEntry.SpanId is not null)
+			{
+				if (activityIdToActivityMap.TryGetValue(newLogEntry.SpanId, out var activity))
+				{
+					activity.AddLog(newLogEntry);
+				}
+				else
+				{
+					missingActivityIdToLogsMap.TryAdd(newLogEntry.SpanId, new List<LogEntry>());
+					missingActivityIdToLogsMap[newLogEntry.SpanId].Add(newLogEntry);
+				}
+
+			}
 			OnLogAdded(newLogEntry);
 		}
 
@@ -61,6 +75,11 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			bool hasParent = activityStart.ParentId is not null;
 			ActivityContext newActivityContext = new ActivityContext(activityStart.Service, activityStart.TraceId, hasParent, activityStart.ParentId, activityStart.Id, activityStart.Name, activityStart.StartTime);
 			activityIdToActivityMap.Add(newActivityContext.Id, newActivityContext);
+			if (missingActivityIdToLogsMap.TryGetValue(newActivityContext.Id, out var logs))
+			{
+				newActivityContext.AddLogs(logs);
+				missingActivityIdToLogsMap.Remove(newActivityContext.Id);
+			}
 
 			if (hasParent)
 			{
@@ -144,6 +163,11 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 			}
 
 			return serviceVM;
+		}
+
+		public ActivityContext GetActivity(string activityId)
+		{
+			return activityIdToActivityMap[activityId];
 		}
 	}
 }
