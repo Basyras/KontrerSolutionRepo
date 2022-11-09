@@ -13,6 +13,7 @@ durationBox {
     grid-row: 1;
     float: left;
     position: relative;
+    border-radius: 2px;
 }
 
 durationBoxBorder {
@@ -20,7 +21,7 @@ durationBoxBorder {
     flex-direction: row;
     height: 100%;
     width: 100%;
-    border: 1.7px solid #292d4b62;
+    border: 1px solid #292d4b62;
     border-radius: 2px;
     overflow: hidden;
     position: absolute;
@@ -77,6 +78,11 @@ durationBox:hover:after {
     width: 100%;
 }
 
+nestedRows {
+    display: flex;
+    position: relative;
+}
+
 nestedRow {
     display: inline-flex;
     flex-direction: row;
@@ -100,11 +106,6 @@ treeHorizontalLine {
     border-bottom: 2px solid #81a7a7;
     border-left: 2px solid #81a7a7;
     width: 100%;
-}
-
-row {
-    display: flex;
-    position: relative;
 }
 
 logs {
@@ -133,4 +134,9 @@ logContent {
     margin-left: -16px;
     /*width: 16px;*/
     height: 100%;
+}
+
+rowSplitter {
+    height: 0.5rem;
+    width: 1rem;
 }

@@ -42,7 +42,7 @@
                             <log style="@logStyle">
                                 <MudTooltip RootStyle="display: block; height: 100%;">
                                     <ChildContent>
-                                        <logContent/>
+                                        <logContent />
                                     </ChildContent>
                                     <TooltipContent>
                                         <toolTipContent>
@@ -127,28 +127,32 @@
                 }
             }
 
+            RowViewModel previousRow = null;
             foreach (var row in rows)
             {
                 ActivityContext previousRowActivity = null;
-
-                                    <row>
-                                        @if (rows.Count > 1)
+                if (previousRow != null)
+                {
+                    <rowSplitter/>
+                }
+                <nestedRows>
+                    @if (rows.Count > 1)
                     {
-                                            <treeLeg>
-                                                <treeHorizontalLine />
-                                            </treeLeg>
+                        <treeLeg>
+                            <treeHorizontalLine />
+                        </treeLeg>
                     }
-                                        @foreach (var nestedActivity in row.Activities)
+                    @foreach (var nestedActivity in row.Activities)
                     {
-                                            <nestedRow>
-                                                @{
+                        <nestedRow>
+                            @{
                                 var isFirstNested = previousRowActivity is null;
                                 if (isFirstNested)
                                 {
                                     var lateStartDuration = nestedActivity.StartTime - Activity.StartTime;
                                     if (lateStartDuration > TimeSpan.FromMilliseconds(0))
                                     {
-                                                                                <HorizontalUnknownDurationBoxView StartTime="Activity.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
+                                        <HorizontalUnknownDurationBoxView StartTime="Activity.StartTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
                                     }
                                 }
 
@@ -156,16 +160,17 @@
                                 var isGapBetweenPreviousNested = previousRowActivity is not null && previousRowActivity.EndTime != nestedActivity.StartTime;
                                 if (isGapBetweenPreviousNested)
                                 {
-                                                                            <HorizontalUnknownDurationBoxView StartTime="previousRowActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
+                                    <HorizontalUnknownDurationBoxView StartTime="previousRowActivity.EndTime" EndTime="nestedActivity.StartTime" Scale="Scale" Color="@Color" />
                                 }
-                                                                        <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" NestingLevel="NestingLevel+1" />
+                                <HorizontalDurationBoxView Activity="nestedActivity" Scale="Scale" Color="@Color" NestingLevel="NestingLevel+1" />
 
                                 previousRowActivity = nestedActivity;
 
-                                                }
-                                            </nestedRow>
+                            }
+                        </nestedRow>
                     }
-                                    </row>
+                </nestedRows>
+                previousRow = row;
             }
 
         }

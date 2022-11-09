@@ -16,6 +16,9 @@ service {
     display: inline-flex;
     flex-direction: row;
     margin-bottom: 0.2rem;
+    /*border: 3px solid black;*/
+    border-radius: 2px;
+    margin: 4px;
 }
 
 serviceNameContainer {
