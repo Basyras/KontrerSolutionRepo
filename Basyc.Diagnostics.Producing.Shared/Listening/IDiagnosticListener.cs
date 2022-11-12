@@ -2,7 +2,7 @@
 
 namespace Basyc.Diagnostics.Producing.Shared.Listening
 {
-	public interface IListener
+	public interface IDiagnosticListener
 	{
 		Task Start();
 		event EventHandler<LogEntry> LogsReceived;

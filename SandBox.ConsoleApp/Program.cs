@@ -13,7 +13,7 @@ clientServices.AddLogging(x =>
 });
 
 clientServices.AddBasycDiagnosticExporting()
-	.SetDefaultService("Console1")
+	.SetDefaultIdentity("Console1")
 	.AddSignalRExporter("https://localhost:44310")
 	.AutomaticallyExport()
 		.AnyActvity();

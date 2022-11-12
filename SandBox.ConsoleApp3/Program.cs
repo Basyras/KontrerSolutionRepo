@@ -15,7 +15,7 @@ clientServices.AddLogging(x =>
 
 clientServices
 	.AddBasycDiagnosticExporting()
-	.SetDefaultService("Console3 - Broker")
+	.SetDefaultIdentity("Console3 - Broker")
 	.AddSignalRExporter("https://localhost:44310");
 //.SelectNullExporter();
 

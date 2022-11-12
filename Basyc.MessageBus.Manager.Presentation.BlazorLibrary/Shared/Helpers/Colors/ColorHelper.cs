@@ -1,14 +1,15 @@
-﻿using System.Text;
-
-namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
+﻿namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers.Colors
 {
 	public static class ColorHelper
 	{
-		public static string GetColorFromText(string textInput, double saturation, double saturationRandomness = 0, double opacity = 1)
+		public static Color GetColorFromText(string textInput, double saturation, double saturationRandomness = 0, double opacity = 1)
 		{
 
 			if (saturation < 0 || saturation > 1)
 				throw new ArgumentException("bad value", nameof(saturation));
+
+			if (opacity < 0 || opacity > 1)
+				throw new ArgumentException("bad value", nameof(opacity));
 
 			var opacity255 = GetHexPercentage(opacity);
 
@@ -39,14 +40,14 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
 			randomSaturationToApply = random.Next(0, saturationRandomness255);
 			colours[remainingColours[0]] = flexibleSaturation - randomSaturationToApply;
 
-			StringBuilder stringBuilder = new StringBuilder(6);
-			stringBuilder.Append('#');
-			stringBuilder.Append(colours[0].ToString("X2"));
-			stringBuilder.Append(colours[1].ToString("X2"));
-			stringBuilder.Append(colours[2].ToString("X2"));
-			stringBuilder.Append(opacity255);
-			string finalColor = stringBuilder.ToString();
-			return finalColor;
+			//StringBuilder stringBuilder = new StringBuilder(6);
+			//stringBuilder.Append('#');
+			//stringBuilder.Append(colours[0].ToString("X2"));
+			//stringBuilder.Append(colours[1].ToString("X2"));
+			//stringBuilder.Append(colours[2].ToString("X2"));
+			//stringBuilder.Append(opacity255);
+			//string finalColor = stringBuilder.ToString();
+			return new Color(colours[0], colours[1], colours[2], opacity);
 		}
 		public static string GetHexPercentage(double percantage)
 		{

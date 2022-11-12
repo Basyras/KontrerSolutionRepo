@@ -30,7 +30,7 @@ var assembliesToScan = new Assembly[]
 };
 
 builder.Services.AddBasycDiagnosticExporting()
-	.SetDefaultService("BusManager")
+	.SetDefaultIdentity("BusManager")
 	.AddSignalRExporter("https://localhost:44310")
 	.AutomaticallyExport()
 		.AnyActvity();

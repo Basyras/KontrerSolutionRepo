@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Basyc.Diagnostics.Producing.Shared.Listening.SystemDiagnostics
 {
-	public class SystemDiagnosticsListener : IListener
+	public class SystemDiagnosticsListener : IDiagnosticListener
 	{
 		private ServiceIdentity service;
 

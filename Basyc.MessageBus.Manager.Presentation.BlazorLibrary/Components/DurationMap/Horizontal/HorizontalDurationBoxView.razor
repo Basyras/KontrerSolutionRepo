@@ -1,7 +1,9 @@
 ﻿@using Basyc.Blazor.Controls.TooltippedText
 @using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.DurationMap
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.LogWindow
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers.Colors
 
 @implements IDisposable
 @{
@@ -11,18 +13,25 @@
         width = DurationViewHelper.GetCssDurationValue(Activity.EndTime - Activity.StartTime, Scale, out var remNumber);
         if (remNumber < 0.2)
         {
-            width = "0.5px";
+            width = "0.1px";
         }
     }
-    string durationBoxStyle = $"min-width: {width}; background-color: {Color};";
-    string durationBoxBorder = $"background-color: #000000{ColorHelper.GetHexPercentage(NestingLevel * 5)};";
-    string mudTooltipBoxStyle = $"";
+    //var opacity = Color.Opacity - (((double)NestingLevel / 5) * Color.Opacity);
+    //string durationBoxStyle = $"min-width: {width}; background-color: {Color.Edit(opacity: opacity)};";
+    var darkPercentage = (double)NestingLevel / 5;
+    if (darkPercentage > 1)
+        darkPercentage = 1;
+    //string durationBoxStyle = $"min-width: {width}; background-color: {Color.Darker(darkPercentage)};";
+    string durationBoxStyle = $"width: {width}; background-color: {Color.Darker(1)};";
+    string durationBoxBorder = "";
+    string mudTooltipBoxStyle = $"display: block; width: 100%; height: 100%; grid-row: 1; grid-column: 1;";
 }
 
 <horizontalDurationBoxView>
-    <MudTooltip RootStyle="@mudTooltipBoxStyle" Arrow="true">
-        <ChildContent>
-            <durationBox style="@durationBoxStyle">
+
+    <durationBox style="@durationBoxStyle">
+        <MudTooltip RootStyle="@mudTooltipBoxStyle" Arrow="true">
+            <ChildContent>
                 <durationBoxBorder style="@durationBoxBorder">
                     <acitvityName>
                         @Activity.DisplayName
@@ -33,65 +42,61 @@
                             <MudProgressCircular Color="MudBlazor.Color.Default" Indeterminate="true" Size="Size.Small" />
                         </spinner>
                     }
-                    <logs>
-                        @foreach (var log in Activity.Logs)
-                        {
-                            var logStartPosition = DurationViewHelper.GetCssDurationValue(log.Time - Activity.StartTime, Scale);
-
-                            var logStyle = $"margin-left: {logStartPosition}";
-                            <log style="@logStyle">
-                                <MudTooltip RootStyle="display: block; height: 100%;">
-                                    <ChildContent>
-                                        <logContent />
-                                    </ChildContent>
-                                    <TooltipContent>
-                                        <toolTipContent>
-                                            time: @log.Time.ToString("hh:mm:ss:fff")
-                                            <br />
-                                            diff: @((log.Time - Activity.StartTime).TotalMilliseconds)
-                                            <br />
-                                            logLevel: @log.LogLevel.ToString()
-                                            <br />
-                                            message: @log.Message
-                                            <br />
-                                            spanId: @log.SpanId
-                                            <br />
-
-                                        </toolTipContent>
-                                    </TooltipContent>
-                                </MudTooltip>
-                            </log>
-                        }
-                    </logs>
-
                 </durationBoxBorder>
-            </durationBox>
-        </ChildContent>
-        <TooltipContent>
-            <toolTipContent>
-                service: @Activity.Service.ServiceName
-                <br />
-                name: @Activity.DisplayName
-                <br />
-                id: @Activity.Id
-                <br />
-                start: @Activity.StartTime.ToString("hh:mm:ss:fff")
-                <br />
-                end: @Activity.EndTime.ToString("hh:mm:ss:fff")
-                <br />
-                dur: @((Activity.EndTime - Activity.StartTime).TotalMilliseconds) ms
-                <br />
-                hasParent: @Activity.HasParent
-                <br />
-                ParentId?: @Activity.ParentActivity?.Id
-                <br />
-                hasEnded: @Activity.HasEnded
-                <br />
-                logs: @Activity.Logs.Count
+            </ChildContent>
+            <TooltipContent>
+                <toolTipContent>
+                    service: @Activity.Service.ServiceName
+                    <br />
+                    name: @Activity.DisplayName
+                    <br />
+                    id: @Activity.Id
+                    <br />
+                    start: @Activity.StartTime.ToString("hh:mm:ss:fff")
+                    <br />
+                    end: @Activity.EndTime.ToString("hh:mm:ss:fff")
+                    <br />
+                    dur: @((Activity.EndTime - Activity.StartTime).TotalMilliseconds) ms
+                    <br />
+                    Parent: @(Activity.HasParent ? Activity.ParentActivity?.DisplayName : "(none)")
+                    <br />
+                    hasEnded: @Activity.HasEnded
+                    <br />
+                    logs: @Activity.Logs.Count
 
-            </toolTipContent>
-        </TooltipContent>
-    </MudTooltip>
+                </toolTipContent>
+            </TooltipContent>
+        </MudTooltip>
+        @foreach (var log in Activity.Logs)
+        {
+            var logStartPosition = DurationViewHelper.GetCssDurationValue(log.Time - Activity.StartTime, Scale);
+            var logClass = $"log--{log.LogLevel}";
+            var logStyle = $"margin-left: calc({logStartPosition} - 4px);";
+            <log class="@logClass" style="@logStyle">
+                <MudTooltip RootStyle="display: block; height: 100%; width: 100%; overflow: visible;">
+                    <ChildContent>
+                        <logContent />
+                    </ChildContent>
+                    <TooltipContent>
+                        <toolTipContent>
+                            @*time: @log.Time.ToString("hh:mm:ss:fff")
+                            <br />
+                            diff: @((log.Time - Activity.StartTime).TotalMilliseconds)
+                            <br />
+                            logLevel: @log.LogLevel.ToString()
+                            <br />
+                            message: @log.Message
+                            <br />
+                            spanId: @log.SpanId
+                            <br />*@
+                            <LogEntryView Activity="@Activity" LogEntry="@log"/>
+                        </toolTipContent>
+                    </TooltipContent>
+                </MudTooltip>
+            </log>
+        }
+    </durationBox>
+
 
     <nestedDurationBoxes>
         @{
@@ -133,7 +138,7 @@
                 ActivityContext previousRowActivity = null;
                 if (previousRow != null)
                 {
-                    <rowSplitter/>
+                    <rowSplitter />
                 }
                 <nestedRows>
                     @if (rows.Count > 1)
@@ -197,7 +202,7 @@
     /// <summary>
     ///Hexadecimal string
     /// </summary>
-    [Parameter, EditorRequired] public string Color { get; set; }
+    [Parameter, EditorRequired] public Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers.Colors.Color Color { get; set; }
     [Parameter, EditorRequired] public int NestingLevel { get; set; }
 
     protected override Task OnParametersSetAsync()

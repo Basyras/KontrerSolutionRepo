@@ -3,9 +3,9 @@
 	public class DiagnosticListenerManager
 	{
 		private readonly IDiagnosticsExporter[] exporters;
-		private readonly IListener[] listeners;
+		private readonly IDiagnosticListener[] listeners;
 
-		public DiagnosticListenerManager(IEnumerable<IDiagnosticsExporter> exporters, IEnumerable<IListener> listeners)
+		public DiagnosticListenerManager(IEnumerable<IDiagnosticsExporter> exporters, IEnumerable<IDiagnosticListener> listeners)
 		{
 			this.exporters = exporters.ToArray();
 			this.listeners = listeners.ToArray();

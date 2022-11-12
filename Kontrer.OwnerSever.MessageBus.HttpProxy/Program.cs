@@ -4,12 +4,19 @@ using Basyc.Diagnostics.Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddLogging(x =>
+{
+	//x.AddDebug();
+	x.AddConsole();
+	x.SetMinimumLevel(LogLevel.Debug);
+});
 
 builder.Services.AddBasycDiagnosticExporting()
-	.SetDefaultService("HttProxy")
+	.SetDefaultIdentity("HttProxy")
 	.SelectInMemoryExporter()
 	.AutomaticallyExport()
-		.AnyActvity();
+		.AnyActvity()
+		.AnyLog();
 //.SelectNullExporter();
 
 builder.Services.AddBasycMessageBus()

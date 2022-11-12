@@ -10,7 +10,7 @@ namespace Basyc.Diagnostics.Producing.Shared.Building
 		{
 		}
 
-		public SetupProducersStage SetDefaultService(string serviceName)
+		public SetupProducersStage SetDefaultIdentity(string serviceName)
 		{
 			ServiceIdentity serviceIdentity = new ServiceIdentity(serviceName);
 			ServiceIdentity.ApplicationWideIdentity = serviceIdentity;

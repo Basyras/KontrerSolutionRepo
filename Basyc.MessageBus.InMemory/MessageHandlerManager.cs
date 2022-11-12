@@ -30,7 +30,6 @@ namespace Basyc.MessageBus.Client.NetMQ
 				{
 					handlerInterfaceType = typeof(IMessageHandler<,>);
 					handlerType = handlerInterfaceType.MakeGenericType(handlerInfo.MessageType, handlerInfo.ResponseType!);
-
 				}
 				else
 				{
@@ -46,9 +45,7 @@ namespace Basyc.MessageBus.Client.NetMQ
 		public async Task<OneOf<object, Exception>> ConsumeMessage(string messageType, object? messageData, CancellationToken cancellationToken, string traceId, string parentSpanId)
 		{
 			if (handlerTypesCacheMap.TryGetValue(messageType, out var handlerMetadata) is false)
-			{
 				throw new InvalidOperationException("Handler for this message not found");
-			}
 
 			object handler = serviceProvider.GetRequiredService(handlerMetadata.HandlerRuntimeType)!;
 			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(traceId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));

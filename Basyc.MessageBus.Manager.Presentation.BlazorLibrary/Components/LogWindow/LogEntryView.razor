@@ -2,13 +2,14 @@
 @using Basyc.Diagnostics.Shared.Logging
 @using Basyc.MessageBus.Manager.Application.ResultDiagnostics
 @using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers
+@using Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Shared.Helpers.Colors
 @using Microsoft.Extensions.Logging
 
 @{
     string logEntryViewClass = AlternateColor ? "logEntryView--alternate" : "";
     string levelClass = $"level--{LogEntry.LogLevel.ToString()}";
-    var color = ColorHelper.GetColorFromText(LogEntry.Service.ServiceName, 0.7, 0, 0.16);
-    string serviceNameStyle = $"background-color: {color};";
+    var servicebackgroundColor = ServiceColorHelper.GetBackground(LogEntry.Service.ServiceName);
+    string serviceNameStyle = $"background-color: {servicebackgroundColor};";
 }
 
 <logEntryView class="@logEntryViewClass">
