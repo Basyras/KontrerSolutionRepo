@@ -13,7 +13,6 @@ public class NetMQMessageWrapper : INetMQMessageWrapper
 	public NetMQMessageWrapper(IObjectToByteSerailizer byteSerailizer)
 	{
 		this.objectToByteSerializer = byteSerailizer;
-
 	}
 
 	public byte[] CreateWrapperMessage(object? messageData, string messageType, int sessionId, string traceId, string requesterSpanId, MessageCase messageCase)

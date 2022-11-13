@@ -1,4 +1,6 @@
-﻿namespace Basyc.Serialization.ProtobufNet
+﻿using System.Reflection;
+
+namespace Basyc.Serialization.ProtobufNet
 {
-	public record PreparedTypeMetadata(bool HasZeroProperties);
+	public record PreparedTypeMetadata(bool HasZeroProperties, PropertyInfo[] PublicProperties);
 }

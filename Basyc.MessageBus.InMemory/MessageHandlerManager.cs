@@ -5,7 +5,6 @@ using Basyc.MessageBus.NetMQ.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OneOf;
-using System.Diagnostics;
 
 namespace Basyc.MessageBus.Client.NetMQ
 {
@@ -50,21 +49,22 @@ namespace Basyc.MessageBus.Client.NetMQ
 			object handler = serviceProvider.GetRequiredService(handlerMetadata.HandlerRuntimeType)!;
 			BusHandlerLoggerSessionManager.StartSession(new LoggingSession(traceId, handlerMetadata.HandlerInfo.HandleMethodInfo.Name));
 
-			var activityTraceId = ActivityTraceId.CreateFromString(traceId);
-			var activitySpanId = ActivitySpanId.CreateFromString(parentSpanId);
-			var activityContext = new ActivityContext(activityTraceId, activitySpanId, ActivityTraceFlags.Recorded, null, true);
+			//var activityTraceId = ActivityTraceId.CreateFromString(traceId);
+			//var activitySpanId = ActivitySpanId.CreateFromString(parentSpanId);
+			//var activityContext = new ActivityContext(activityTraceId, activitySpanId, ActivityTraceFlags.Recorded, null, true);
 
-			using (var handlerStartedActivity = DiagnosticConstants.HandlerStarted.StartActivity("Basyc.MessageBus.Client.NetMQ.MessageHandlerManager ConsumeMessage", ActivityKind.Internal, activityContext, new KeyValuePair<string, object?>[]
+			//using (var handlerStartedActivity = DiagnosticConstants.HandlerStarted.StartActivity("ConsumeMessage", ActivityKind.Internal, activityContext, new KeyValuePair<string, object?>[]
+			//{
+			//	new KeyValuePair<string, object?>(DiagnosticConstants.ShouldBeReceived ,true)
+			//}))
+			using (var handlerStartedActivity = DiagnosticHelper.Start("ConsumeMessage"))
 			{
-				new KeyValuePair<string, object?>(DiagnosticConstants.ShouldBeReceived ,true)
-			}))
-			{
-				if (handlerStartedActivity is not null)
-				{
-					handlerStartedActivity.AddBaggage(DiagnosticConstants.ShouldBeReceived, true.ToString());
-				}
+				//if (handlerStartedActivity is not null)
+				//{
+				//	handlerStartedActivity.AddBaggage(DiagnosticConstants.ShouldBeReceived, true.ToString());
+				//}
 
-				var invokeActivity = DiagnosticHelper.Start("Basyc.MessageBus.Client.NetMQ.MessageHandlerManager Invoking method info");
+				var invokeActivity = DiagnosticHelper.Start("Invoking method info");
 				Task handlerResultTask = (Task)handlerMetadata.HandlerInfo.HandleMethodInfo.Invoke(handler, new object[] { messageData!, cancellationToken })!;
 				object? handlerResult;
 				try

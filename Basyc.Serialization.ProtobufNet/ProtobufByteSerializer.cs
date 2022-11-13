@@ -14,22 +14,30 @@ namespace Basyc.Serialization.ProtobufNet
 			if (knownTypes.TryGetValue(typeToPrepare, out var metadata))
 				return metadata;
 
-			//Workaround to support records
+			var publicProperties = typeToPrepare.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			var hasZeroProperties = publicProperties.Length == 0;
+			var newMetadata = new PreparedTypeMetadata(hasZeroProperties, publicProperties);
+			knownTypes.Add(typeToPrepare, newMetadata);
+
 			bool couldBeSerializedByDefault = RuntimeTypeModel.Default.CanSerialize(typeToPrepare);
 			if (couldBeSerializedByDefault is false)
 			{
-				if (TryFixWithSkippingEmptyCtor(typeToPrepare) is false)
+				FixPotentialMissingPropertiesInCtor(typeToPrepare);
+
+				if (RuntimeTypeModel.Default.CanSerialize(typeToPrepare) is false)
 				{
-					RuntimeTypeModel.Default.Add(typeToPrepare);
-					if (RuntimeTypeModel.Default.CanSerialize(typeToPrepare) is false)
+					if (TryFixWithSkippingEmptyCtor(typeToPrepare) is false)
 					{
-						throw new Exception($"Could not prepare type '{typeToPrepare.Name}'");
+
+						RuntimeTypeModel.Default.Add(typeToPrepare);
+						if (RuntimeTypeModel.Default.CanSerialize(typeToPrepare) is false)
+						{
+							throw new Exception($"Could not prepare type '{typeToPrepare.Name}'");
+						}
 					}
 				}
 			}
-			var hasZeroProperties = typeToPrepare.GetProperties().Length == 0;
-			var newMetadata = new PreparedTypeMetadata(hasZeroProperties);
-			knownTypes.Add(typeToPrepare, newMetadata);
+
 			return newMetadata;
 		}
 
@@ -47,9 +55,14 @@ namespace Basyc.Serialization.ProtobufNet
 			else
 			{
 				//Problem could be even nested
+
 				var properties = typeToPrepare.GetProperties();
 				foreach (var property in properties)
 				{
+					var canSeriProperty = RuntimeTypeModel.Default.CanSerialize(property.PropertyType);
+					if (canSeriProperty)
+						continue;
+
 					//PrepareSerializer(property.PropertyType);
 					TryFixWithSkippingEmptyCtor(property.PropertyType);
 				}
@@ -84,6 +97,41 @@ namespace Basyc.Serialization.ProtobufNet
 				return false;
 
 			return true;
+		}
+
+		private static bool IsTypeMissingPropertiesInCtor(Type type)
+		{
+			var publicProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			if (publicProperties.Length is 0)
+				return false;
+
+			var notEmptyCtors = type.GetConstructors().Where(x => x.GetParameters().Length > 0);
+			if (notEmptyCtors.Any(x => x.GetParameters().Length == publicProperties.Length) is false)
+				return true;
+
+			return false;
+		}
+
+		private static bool FixPotentialMissingPropertiesInCtor(Type type)
+		{
+			var hadProblem = false;
+			if (IsTypeMissingPropertiesInCtor(type))
+			{
+				PrepareButSkipCtor(type);
+				hadProblem = true;
+			}
+			else
+			{
+				//Problem can be nested
+				var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+				foreach (var property in properties)
+				{
+					if (FixPotentialMissingPropertiesInCtor(property.PropertyType) is true)
+						hadProblem = true;
+				}
+
+			}
+			return hadProblem;
 		}
 
 		public byte[] Serialize(object? input, Type dataType)

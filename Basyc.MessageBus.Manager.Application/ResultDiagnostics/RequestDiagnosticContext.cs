@@ -3,6 +3,7 @@ using Basyc.Diagnostics.Shared.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
@@ -169,5 +170,11 @@ namespace Basyc.MessageBus.Manager.Application.ResultDiagnostics
 		{
 			return activityIdToActivityMap[activityId];
 		}
+
+		public bool TryGetActivity(string activityId, [NotNullWhen(true)] out ActivityContext? activityContext)
+		{
+			return activityIdToActivityMap.TryGetValue(activityId, out activityContext);
+		}
+
 	}
 }

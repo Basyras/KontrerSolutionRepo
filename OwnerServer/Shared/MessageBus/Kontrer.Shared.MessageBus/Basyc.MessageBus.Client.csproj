@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\..\..\Kontrer.Shared\Basyc.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Diagnostics\Sinks\BasycDiagnostics\" />
+  </ItemGroup>
+
 </Project>

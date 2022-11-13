@@ -17,7 +17,6 @@ builder.Services.AddBasycDiagnosticExporting()
 	.AutomaticallyExport()
 		.AnyActvity()
 		.AnyLog();
-//.SelectNullExporter();
 
 builder.Services.AddBasycMessageBus()
 	.NoHandlers()

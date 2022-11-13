@@ -23,16 +23,14 @@
         darkPercentage = 1;
     //string durationBoxStyle = $"min-width: {width}; background-color: {Color.Darker(darkPercentage)};";
     string durationBoxStyle = $"width: {width}; background-color: {Color.Darker(1)};";
-    string durationBoxBorder = "";
     string mudTooltipBoxStyle = $"display: block; width: 100%; height: 100%; grid-row: 1; grid-column: 1;";
 }
 
 <horizontalDurationBoxView>
-
     <durationBox style="@durationBoxStyle">
         <MudTooltip RootStyle="@mudTooltipBoxStyle" Arrow="true">
             <ChildContent>
-                <durationBoxBorder style="@durationBoxBorder">
+                <durationBoxBorder>
                     <acitvityName>
                         @Activity.DisplayName
                     </acitvityName>
@@ -70,25 +68,16 @@
         @foreach (var log in Activity.Logs)
         {
             var logStartPosition = DurationViewHelper.GetCssDurationValue(log.Time - Activity.StartTime, Scale);
-            var logClass = $"log--{log.LogLevel}";
-            var logStyle = $"margin-left: calc({logStartPosition} - 4px);";
-            <log class="@logClass" style="@logStyle">
+            var logContentClass = $"log--{log.LogLevel}";
+            //var logStyle = $"margin-left: calc({logStartPosition} - 4px);";
+            var logStyle = $"margin-left: {logStartPosition};";
+            <log  style="@logStyle">
                 <MudTooltip RootStyle="display: block; height: 100%; width: 100%; overflow: visible;">
                     <ChildContent>
-                        <logContent />
+                        <logContent class="@logContentClass" />
                     </ChildContent>
                     <TooltipContent>
                         <toolTipContent>
-                            @*time: @log.Time.ToString("hh:mm:ss:fff")
-                            <br />
-                            diff: @((log.Time - Activity.StartTime).TotalMilliseconds)
-                            <br />
-                            logLevel: @log.LogLevel.ToString()
-                            <br />
-                            message: @log.Message
-                            <br />
-                            spanId: @log.SpanId
-                            <br />*@
                             <LogEntryView Activity="@Activity" LogEntry="@log"/>
                         </toolTipContent>
                     </TooltipContent>
@@ -102,7 +91,7 @@
         @{
             List<RowViewModel> rows = new();
             rows.Add(new RowViewModel());
-            foreach (var nestedActivity in Activity.NestedActivities)
+            foreach (var nestedActivity in Activity.NestedActivities.OrderBy(x=>x.StartTime))
             {
                 var nestedActivityLatestEndTime = GetRecursiveLatestEndTime(nestedActivity); ;
                 var lastRow = rows.Last();

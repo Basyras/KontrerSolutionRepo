@@ -85,7 +85,7 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 
 		}
 
-		private async Task<OneOf<object?, ErrorMessage>> BustaskMethod(string requestType, object? requestData, RequestContext requestContext, Activity createAndStartBusTaskActivity, SignalRSession session, Activity waintingForTaskRunActivity)
+		private async Task<OneOf<object?, ErrorMessage>> BustaskMethod(string requestType, object? requestData, RequestContext requestContext, DiagnosticHelperActivityDisposer createAndStartBusTaskActivity, SignalRSession session, DiagnosticHelperActivityDisposer waintingForTaskRunActivity)
 		{
 
 			waintingForTaskRunActivity.Stop();

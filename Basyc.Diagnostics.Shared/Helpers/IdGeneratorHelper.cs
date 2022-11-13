@@ -8,5 +8,10 @@ namespace Basyc.Diagnostics.Shared.Helpers
 		{
 			return ActivitySpanId.CreateRandom().ToString();
 		}
+
+		public static string GenerateNewTraceId()
+		{
+			return ActivityTraceId.CreateRandom().ToString();
+		}
 	}
 }

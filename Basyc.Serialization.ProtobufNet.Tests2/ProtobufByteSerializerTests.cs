@@ -2,6 +2,7 @@
 using Basyc.Serializaton.Abstraction;
 using Bogus;
 using FluentAssertions;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Xunit;
@@ -75,6 +76,22 @@ namespace Basyc.Serialization.ProtobufNet.Tests
 			var input = new Class_Empty();
 			var seriInput = serializer.Serialize<Record_Empty?>(input);
 			var deseriInput = serializer.Deserialize<Record_Empty?>(seriInput);
+			var origialJson = JsonSerializer.Serialize(input);
+			var deseriJson = JsonSerializer.Serialize(deseriInput);
+			deseriJson.Should().Be(origialJson);
+		}
+
+		[Fact]
+		public void Should_Serialize_Inits_And_Sets_Properties()
+		{
+			var input = new Class_Inits_And_Sets_Properties("John");
+			input.NickName = "Johny";
+			input.NickNames = new List<string>() { "Johny1", "Johny2" };
+			input.Ages.Add(1);
+			input.Ages.Add(2);
+			var seriInput = serializer.Serialize<Class_Inits_And_Sets_Properties?>(input);
+			seriInput.Should().NotBeEmpty();
+			var deseriInput = serializer.Deserialize<Class_Inits_And_Sets_Properties?>(seriInput);
 			var origialJson = JsonSerializer.Serialize(input);
 			var deseriJson = JsonSerializer.Serialize(deseriInput);
 			deseriJson.Should().Be(origialJson);

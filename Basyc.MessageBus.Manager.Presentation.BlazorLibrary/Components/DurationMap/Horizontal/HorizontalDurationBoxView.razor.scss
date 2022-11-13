@@ -123,9 +123,9 @@ log {
     height: 100%;
     grid-column: 1;
     grid-row: 1;
-    width: 8px;
+    width: 6px;
     z-index: 100;
-    opacity: 0.35;
+    opacity: 0.75;
 }
 
 .log--Debug {
@@ -148,6 +148,7 @@ logContent {
     display: block;
     width: 100%;
     height: 100%;
+    margin-left: -3px;
 }
 
 logContent:hover {

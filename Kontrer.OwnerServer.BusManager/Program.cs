@@ -33,7 +33,8 @@ builder.Services.AddBasycDiagnosticExporting()
 	.SetDefaultIdentity("BusManager")
 	.AddSignalRExporter("https://localhost:44310")
 	.AutomaticallyExport()
-		.AnyActvity();
+.AnyActvity()
+.AnyLog();
 
 builder.Services.AddBasycDiagnosticReceiving()
 	.SelectSignalRReceiver()

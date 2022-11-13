@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Basyc.Serialization.ProtobufNet.Tests.TestMessages
 {
@@ -12,10 +8,13 @@ namespace Basyc.Serialization.ProtobufNet.Tests.TestMessages
 		{
 
 		}
-		public TestCar(string name)
+		public TestCar(string name, DateTime assemblyDate)
 		{
 			Name = name;
+			AssemblyDate = assemblyDate;
 		}
 		public string Name { get; init; }
+		public DateTime AssemblyDate { get; init; }
+
 	}
 }
