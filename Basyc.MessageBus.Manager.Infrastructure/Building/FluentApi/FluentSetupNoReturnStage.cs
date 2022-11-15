@@ -26,7 +26,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building.FluentApi
 		{
 			Action<RequestContext> handlerWrapper = (requestResult) =>
 			{
-				requestResult.Start();
+				//requestResult.Start();
 				handler.Invoke(requestResult.Request);
 				requestResult.Complete();
 			};

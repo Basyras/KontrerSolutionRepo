@@ -48,19 +48,19 @@ namespace Basyc.MessageBus.Manager.Application
 			TraceId = traceId;
 		}
 
-		/// <summary>
-		/// You should call <see cref="Start"/> in moment that all internal processes are done and from now only work related to handeling a request are in process.
-		/// </summary>
-		public void Start()
-		{
-			if (durationMapBuilder.HasStarted)
-				throw new InvalidOperationException($"{nameof(Start)} was already called");
-		}
+		///// <summary>
+		///// You should call <see cref="Start"/> in moment that all internal processes are done and from now only work related to handeling a request are in process.
+		///// </summary>
+		//public void Start()
+		//{
+		//	if (durationMapBuilder.HasStarted)
+		//		throw new InvalidOperationException($"{nameof(Start)} was already called");
+		//}
 
-		public IDurationSegmentBuilder StartNewSegment(string segmentName)
-		{
-			return durationMapBuilder.StartNewSegment(segmentName);
-		}
+		//public IDurationSegmentBuilder StartNewSegment(string segmentName)
+		//{
+		//	return durationMapBuilder.StartNewSegment(segmentName);
+		//}
 
 		public void Complete(object? response)
 		{

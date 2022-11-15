@@ -1,4 +1,5 @@
-﻿using Basyc.Diagnostics.Shared.Durations;
+﻿using Basyc.Diagnostics.Shared;
+using Basyc.Diagnostics.Shared.Durations;
 using Basyc.MessageBus.Manager.Application.Initialization;
 using Basyc.MessageBus.Manager.Application.ResultDiagnostics;
 using Basyc.MessageBus.Manager.Application.ResultDiagnostics.Durations;
@@ -43,9 +44,13 @@ namespace Basyc.MessageBus.Manager.Application.Requesting
 			IDurationMapBuilder durationMapBuilder = new InMemoryDiagnosticsSourceDurationMapBuilder(requestManagerServiceIdentity, traceId, "root", inMemoryRequestDiagnosticsSource);
 			var requestContext = new RequestContext(request, DateTime.Now, traceId, durationMapBuilder, requestDiagnostics);
 			reqeustContexts.Add(requestContext);
-			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Starting request", null);
+			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Giving request to requester", null);
+			var dummyStartSegment = durationMapBuilder.StartNewSegment("RequesterManager Dummy1");
+			var startSegment = DiagnosticHelper.Start("RequesterManager Dummy2", dummyStartSegment.TraceId, dummyStartSegment.Id);
 			requester.StartRequest(requestContext, new ResultLoggingContextLogger(requestManagerServiceIdentity, requestDiagnostics));
-			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Request start done", null);
+			startSegment.Stop();
+			dummyStartSegment.End();
+			requestDiagnostics.Log(requestManagerServiceIdentity, DateTimeOffset.UtcNow, LogLevel.Information, "Requester finished", null);
 
 
 			return requestContext;

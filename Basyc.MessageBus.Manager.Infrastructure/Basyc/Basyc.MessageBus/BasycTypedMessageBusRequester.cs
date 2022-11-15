@@ -43,8 +43,9 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 
 		public void StartRequest(Application.RequestContext requestContext, ILogger requestLogger)
 		{
-			var dummyStartSegment = requestContext.StartNewSegment("BasycTypedMessageBusRequester.StartRequest DUMMy");
-			var startSegment = DiagnosticHelper.Start("BasycTypedMessageBusRequester.StartRequest", dummyStartSegment.TraceId, dummyStartSegment.Id);
+			//var dummyStartSegment = requestContext.StartNewSegment("BasycTypedMessageBusRequester.StartRequest DUMMy");
+			//var startSegment = DiagnosticHelper.Start("BasycTypedMessageBusRequester.StartRequest", dummyStartSegment.TraceId, dummyStartSegment.Id);
+			var startSegment = DiagnosticHelper.Start("BasycTypedMessageBusRequester.StartRequest");
 
 			var busRequestContext = new Shared.RequestContext(startSegment.Activity?.SpanId.ToString(), startSegment.Activity?.TraceId.ToString());
 			var prepareSegment = DiagnosticHelper.Start("Creating request instance");
@@ -113,7 +114,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 					}
 
 					startSegment.Stop();
-					dummyStartSegment.End();
+					//dummyStartSegment.End();
 				});
 
 			}
@@ -155,7 +156,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Basyc.Basyc.MessageBus
 					}
 
 					startSegment.Stop();
-					dummyStartSegment.End();
+					//dummyStartSegment.End();
 
 				});
 			}

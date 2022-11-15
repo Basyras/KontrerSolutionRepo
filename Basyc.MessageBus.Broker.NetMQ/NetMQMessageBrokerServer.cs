@@ -1,8 +1,5 @@
 ﻿using Basyc.Diagnostics.Producing.Shared;
 using Basyc.Diagnostics.Shared;
-using Basyc.Diagnostics.Shared.Durations;
-using Basyc.Diagnostics.Shared.Helpers;
-using Basyc.Diagnostics.Shared.Logging;
 using Basyc.MessageBus.NetMQ.Shared;
 using Basyc.MessageBus.NetMQ.Shared.Cases;
 using Basyc.MessageBus.Shared;
@@ -55,89 +52,87 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 						.First()
 						.Split('.')
 						.Last()));
-					logger.LogInformation($"CheckIn received from {senderAddressString}. WorkerId: {checkIn.WorkerId}, HandeledTypes: {handledTypesNamesString}");
+					logger.LogInformation($"Received checkin from {senderAddressString}. WorkerId: {checkIn.WorkerId}, HandeledTypes: {handledTypesNamesString}");
 					workerRegistry.RegisterWorker(checkIn.WorkerId, checkIn.SupportedMessageTypes);
 				},
 				request =>
 				{
 					using var requestStartActivity = DiagnosticHelper.Start("RequestCase handeling", request.TraceId, request.ParentSpanId);
-					//var requestStartActivity = CreateActivity(request.TraceId, "RequestCase handeling");
-					//diagnosticsProducer.StartActivity(requestStartActivity);
-
-					//diagnosticsProducer.ProduceLog(new LogEntry(ServiceIdentity.ApplicationWideIdentity, request.TraceId, DateTimeOffset.UtcNow, LogLevel.Debug, "Delegating request", requestStartActivity.Id));
-
-					logger.LogInformation($"Recieved request {request.RequestType} ({request.RequestBytes.Length} bytes) from {senderAddressString}:{request.SessionId}");
+					logger.LogInformation($"Recieved request {request.RequestType} from producer {senderAddressString}:{request.SessionId}");
 					if (workerRegistry.TryGetWorkerFor(request.RequestType, out string? workerAddressString))
 					{
 						byte[] requestBytes = recievedMessageFrame[2].Buffer;
-						var messageToProducer = new NetMQMessage();
-						messageToProducer.Append(workerAddressString!);
-						messageToProducer.AppendEmptyFrame();
-						messageToProducer.Append(senderAddressFrame);
-						messageToProducer.AppendEmptyFrame();
-						messageToProducer.Append(requestBytes);
-						logger.LogDebug($"Sending request {request.RequestType} to {workerAddressString}:{request.SessionId}");
+						//var messageToProducer = new NetMQMessage();
+						//messageToProducer.Append(workerAddressString);
+						//messageToProducer.AppendEmptyFrame();
+						//messageToProducer.Append(senderAddressFrame);
+						//messageToProducer.AppendEmptyFrame();
+						//messageToProducer.Append(requestBytes);
+						var messageToProducer = CreateRequestNetMQMessage(workerAddressString, senderAddressFrame, requestBytes);
+						logger.LogInformation($"Sending request {request.RequestType} to {workerAddressString}:{request.SessionId}");
 						brokerSocket.SendMultipartMessage(messageToProducer);
-						//diagnosticsProducer.EndActivity(requestStartActivity);
+						logger.LogInformation($"Request sent to {workerAddressString}");
 						requestStartActivity.Stop();
-
-						logger.LogDebug($"Request sent to {workerAddressString}");
 					}
 					else
 					{
 						var failure = new ErrorMessage("Worker for this request not found!");
-						var messageToProducer = new NetMQMessage();
-						messageToProducer.Append(senderAddressFrame);
-						messageToProducer.AppendEmptyFrame();
-						messageToProducer.AppendEmptyFrame();
-						messageToProducer.AppendEmptyFrame();
-						messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, request.TraceId, request.ParentSpanId, MessageCase.Response));
+						//var messageToProducer = new NetMQMessage();
+						//messageToProducer.Append(senderAddressFrame);
+						//messageToProducer.AppendEmptyFrame();
+						//messageToProducer.AppendEmptyFrame();
+						//messageToProducer.AppendEmptyFrame();
+						//messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failure, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), request.SessionId, request.TraceId, request.ParentSpanId, MessageCase.Response));
+
+						var messageToProducer = CreateResponseNetMQMessage(senderAddressFrame, failure, request.SessionId, request.TraceId, request.ParentSpanId, MessageCase.Response);
+
 						logger.LogError($"Sending failure: '{failure}' to {senderAddressString}");
 						brokerSocket.SendMultipartMessage(messageToProducer);
-						//diagnosticsProducer.EndActivity(requestStartActivity);
-						requestStartActivity.Stop();
-
 						logger.LogError($"Failure sent to {senderAddressFrame}");
+						requestStartActivity.Stop();
 					}
 				},
 				response =>
 				{
 					using var responseActivityStart = DiagnosticHelper.Start("ResponseCase handeling", response.TraceId, response.ParentSpanId);
-					logger.LogDebug($"Response recieved: '{response.ResponseBytes}' from {senderAddressString}:{response.SessionId}");
-					var messageToConsumer = new NetMQMessage();
+					logger.LogInformation($"Recieved response {response.ResponseType} from consumer {senderAddressString}:{response.SessionId}");
 					var producerAddress = recievedMessageFrame[4];
 					var producerAddressString = producerAddress.ConvertToString();
-					messageToConsumer.Append(producerAddress);
-					messageToConsumer.AppendEmptyFrame();
-					messageToConsumer.Append(senderAddressFrame);
-					messageToConsumer.AppendEmptyFrame();
-					messageToConsumer.Append(recievedMessageFrame[2].Buffer);
-					logger.LogDebug($"Sending response: '{response.ResponseBytes}' to {producerAddressString}:{response.SessionId}");
+					//var messageToConsumer = new NetMQMessage();
+					//messageToConsumer.Append(producerAddress);
+					//messageToConsumer.AppendEmptyFrame();
+					//messageToConsumer.Append(senderAddressFrame);
+					//messageToConsumer.AppendEmptyFrame();
+					//messageToConsumer.Append(recievedMessageFrame[2].Buffer);
+					var messageToConsumer = CreateRequestNetMQMessage(producerAddressString, senderAddressFrame, recievedMessageFrame[2].Buffer);
+
+					logger.LogInformation($"Sending response {response.ResponseType} to producer {producerAddressString}:{response.SessionId}");
 					brokerSocket.SendMultipartMessage(messageToConsumer);
+					logger.LogInformation($"Sent response {response.ResponseType} to producer {producerAddressString}:{response.SessionId}");
 					responseActivityStart.Stop();
-					logger.LogDebug($"Response sent to {producerAddressString}");
 
 				},
 				@event =>
 				{
 					using var eventStartActivity = DiagnosticHelper.Start($"EventCase handeling", @event.TraceId, @event.ParentSpanId);
 
-					logger.LogInformation($"EventCase recieved {@event} from {senderAddressString}");
+					logger.LogInformation($"Received event {@event.EventType} from producer {senderAddressString}:{@event.SessionId}");
 
 					if (workerRegistry.TryGetWorkersFor(@event.EventType, out string[] workers))
 					{
 						foreach (var worker in workers)
 						{
 							byte[] eventData = recievedMessageFrame[2].Buffer;
-							var messageToProducer = new NetMQMessage();
-							messageToProducer.Append(worker!);
-							messageToProducer.AppendEmptyFrame();
-							messageToProducer.Append(senderAddressFrame);
-							messageToProducer.AppendEmptyFrame();
-							messageToProducer.Append(eventData);
-							logger.LogInformation($"Sending event: '{@event.EventBytes}' to {worker}:{@event.SessionId}");
+							//var messageToProducer = new NetMQMessage();
+							//messageToProducer.Append(worker);
+							//messageToProducer.AppendEmptyFrame();
+							//messageToProducer.Append(senderAddressFrame);
+							//messageToProducer.AppendEmptyFrame();
+							//messageToProducer.Append(eventData);
+							var messageToProducer = CreateRequestNetMQMessage(worker, senderAddressFrame, eventData);
+							logger.LogInformation($"Sending event to consumer {worker}:{@event.SessionId}");
 							brokerSocket.SendMultipartMessage(messageToProducer);
-							logger.LogInformation($"Event sent to {worker}");
+							logger.LogInformation($"Sent event {@event.EventType} to consumer {worker}:{@event.SessionId}");
 						}
 					}
 					else
@@ -159,9 +154,9 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 					//messageToProducer.AppendEmptyFrame();
 					//messageToProducer.Append(messageToByteSerializer.CreateWrapperMessage(failResult, TypedToSimpleConverter.ConvertTypeToSimple(typeof(ErrorMessage)), failure.SessionId, failure.TraceId, failure.ParentSpanId, MessageCase.Response));
 					var messageToProducer = CreateResponseNetMQMessage(sendFailToAddress, failResult, failure.SessionId, failure.TraceId, failure.ParentSpanId, MessageCase.Response);
-					logger.LogDebug($"Sending failure: '{failure}' to {sendFailToAddressString}");
+					logger.LogInformation($"Sending failure: '{failure}' to {sendFailToAddressString}");
 					brokerSocket.SendMultipartMessage(messageToProducer);
-					logger.LogDebug($"Failure sent to {sendFailToAddressString}");
+					logger.LogInformation($"Failure sent to {sendFailToAddressString}");
 				});
 
 		};
@@ -182,7 +177,7 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 		}
 		catch (Exception ex)
 		{
-			logger.LogDebug($"NetMQ proxy stopped. Reason: {ex.Message}");
+			logger.LogError($"NetMQ proxy stopped. Reason: {ex.Message}");
 			throw;
 		}
 	}
@@ -195,11 +190,6 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 	{
 		brokerSocket.Dispose();
 		logger.LogInformation("NetMQ proxy disposed");
-	}
-
-	private ActivityStart CreateActivity(string traceId, string name)
-	{
-		return new ActivityStart(ServiceIdentity.ApplicationWideIdentity, traceId, null, IdGeneratorHelper.GenerateNewSpanId(), name, DateTimeOffset.UtcNow);
 	}
 
 	private NetMQMessage CreateResponseNetMQMessage<TData>(NetMQFrame addressToSend, TData data, int sessionId, string traceId, string parentSpanId, MessageCase messageCase)
@@ -221,6 +211,17 @@ public class NetMQMessageBrokerServer : IMessageBrokerServer
 		mqMessage.Append(requestProducerAddress);
 		mqMessage.AppendEmptyFrame();
 		mqMessage.Append(messageToByteSerializer.CreateWrapperMessage(data, TypedToSimpleConverter.ConvertTypeToSimple(typeof(TData)), sessionId, traceId, parentSpanId, messageCase));
+		return mqMessage;
+	}
+
+	private NetMQMessage CreateRequestNetMQMessage(string addressToSend, NetMQFrame requestProducerAddress, byte[] byteData)
+	{
+		var mqMessage = new NetMQMessage();
+		mqMessage.Append(addressToSend);
+		mqMessage.AppendEmptyFrame();
+		mqMessage.Append(requestProducerAddress);
+		mqMessage.AppendEmptyFrame();
+		mqMessage.Append(byteData);
 		return mqMessage;
 	}
 }

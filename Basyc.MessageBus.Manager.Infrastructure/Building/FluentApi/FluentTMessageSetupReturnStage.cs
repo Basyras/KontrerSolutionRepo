@@ -29,7 +29,7 @@ namespace Basyc.MessageBus.Manager.Infrastructure.Building.FluentApi
 		{
 			Action<RequestContext> handlerWrapper = (requestResult) =>
 			{
-				requestResult.Start();
+				//requestResult.Start();
 				var returnObject = handler.Invoke(requestResult.Request);
 				requestResult.Complete(returnObject);
 			};
