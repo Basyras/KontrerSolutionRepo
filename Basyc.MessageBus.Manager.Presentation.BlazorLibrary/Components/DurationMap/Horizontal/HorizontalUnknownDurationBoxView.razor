@@ -1,6 +1,6 @@
 ﻿@{
     var duration = EndTime - StartTime;
-    string unknownStyle = $"width: {DurationViewHelper.GetCssDurationValue(duration, Scale)};";
+    string unknownStyle = $"width: {DurationViewHelper.GetCssDurationValue(duration, PixelsPerMs)};";
 }
 <horizontalUnknownDurationBoxView style="@unknownStyle">
     <MudTooltip Arrow="true" RootStyle="height: 100%; width: 100%; display: block;">
@@ -27,7 +27,7 @@
 @code {
     [Parameter, EditorRequired] public DateTimeOffset StartTime { get; init; }
     [Parameter, EditorRequired] public DateTimeOffset EndTime { get; init; }
-    [Parameter, EditorRequired] public double Scale { get; set; }
+    [Parameter, EditorRequired] public double PixelsPerMs { get; set; }
     /// <summary>
     ///Hexadecimal string
     /// </summary>

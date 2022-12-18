@@ -1,5 +1,5 @@
 ﻿using Basyc.Repositories.EF;
-using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
+using Kontrer.OwnerServer.CustomerService.Application.Customer;
 using Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public class EFRepositoryBuilder
+	public class EFRepositoryBuilder
     {
         public readonly IServiceCollection services;
 

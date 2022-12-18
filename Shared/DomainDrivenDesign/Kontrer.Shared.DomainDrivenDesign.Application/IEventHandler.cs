@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Basyc.DomainDrivenDesign.Application
 {
     public interface IEventHandler<TEvent> : IMessageHandler<TEvent>
-        where TEvent : class, IEventMessage
+        where TEvent : class, IEvent
     {
     }
 }

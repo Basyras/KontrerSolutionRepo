@@ -27,7 +27,7 @@ namespace Basyc.MessageBus.Client
 				disposable.Dispose();
 		}
 
-		public BusTask PublishAsync<TEvent>(TEvent eventData, RequestContext requestContext = default, CancellationToken cancellationToken = default) where TEvent : notnull, IEventMessage
+		public BusTask PublishAsync<TEvent>(TEvent eventData, RequestContext requestContext = default, CancellationToken cancellationToken = default) where TEvent : notnull, IEvent
 		{
 			return byteMessageBusClient.PublishAsync(TypedToSimpleConverter.ConvertTypeToSimple(typeof(TEvent)), requestContext, cancellationToken);
 		}

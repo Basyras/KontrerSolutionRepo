@@ -80,16 +80,14 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 			SignalRSession session = sessionManager.StartSession(requestContext.TraceId);
 			var waintingForTaskRunActivity = DiagnosticHelper.Start("Waiting for Task.Run");
 			Task<OneOf<object?, ErrorMessage>> reqeustTask = Task.Run(async () => await BustaskMethod(requestType, requestData, requestContext, createAndStartBusTaskActivity, session, waintingForTaskRunActivity));
-			//Task<OneOf<object?, ErrorMessage>> reqeustTask = Task.FromResult(BustaskMethod(requestType, requestData, requestContext, createAndStartBusTaskActivity, session, waintingForTaskRunActivity).GetAwaiter().GetResult());
 			return BusTask<object?>.FromTask(session.TraceId, reqeustTask);
 
 		}
 
 		private async Task<OneOf<object?, ErrorMessage>> BustaskMethod(string requestType, object? requestData, RequestContext requestContext, DiagnosticHelperActivityDisposer createAndStartBusTaskActivity, SignalRSession session, DiagnosticHelperActivityDisposer waintingForTaskRunActivity)
 		{
-
 			waintingForTaskRunActivity.Stop();
-			var createAndStartBusTaskTaskActivity = new Activity("TaskRun").Start();
+			var busTaskActivity = DiagnosticHelper.Start("BustaskMethod");
 			var seriActivity = new Activity("Serializating request").Start();
 
 			if (byteSerializer.TrySerialize(requestData, requestType, out var requestDataBytes, out var error) is false)
@@ -99,42 +97,57 @@ namespace Basyc.MessageBus.HttpProxy.Client.Http
 			}
 			seriActivity.Stop();
 
+			var signalRActivity = DiagnosticHelper.Start("SignalR Sending request");
+
 			try
 			{
 				await hubConnection.Call.Request(new RequestSignalRDTO(requestType, true, requestDataBytes, RequestContext: requestContext));
 			}
 			catch (Exception ex)
 			{
+				signalRActivity.Stop();
 				return new ErrorMessage("Failed while requesting. " + ex.Message);
 			}
+			signalRActivity.Stop();
 
-			var result = await session.WaitForCompletion();
-			return result.Match<OneOf<object?, ErrorMessage>>(resultDTO =>
+			var waitingForResult = DiagnosticHelper.Start("Waiting for result");
+			var sessionRsult = await session.WaitForCompletion();
+			waitingForResult.Stop();
+
+			return sessionRsult.Match<OneOf<object?, ErrorMessage>>(resultDTO =>
 			{
 				if (resultDTO.HasResponse)
 				{
+					var deseriActivity = DiagnosticHelper.Start("SignalR Request");
+
+
 					if (byteSerializer.TryDeserialize(resultDTO.ResponseData!, resultDTO.ResponseType!, out var deserializedResult, out var error) is false)
 					{
-						createAndStartBusTaskTaskActivity.Stop();
+						busTaskActivity.Stop();
 						createAndStartBusTaskActivity.Stop();
-
+						deseriActivity.Stop();
 						return new ErrorMessage("Failed to serailize response");
 					}
-					createAndStartBusTaskTaskActivity.Stop();
-					createAndStartBusTaskActivity.Stop();
 
+					deseriActivity.Stop();
+					busTaskActivity.Stop();
+					createAndStartBusTaskActivity.Stop();
 					return deserializedResult;
 
 				}
 				else
 				{
-					createAndStartBusTaskTaskActivity.Stop();
+					busTaskActivity.Stop();
 					createAndStartBusTaskActivity.Stop();
-
 					return (OneOf<object?, ErrorMessage>)null;
 				}
 			},
-			error => error);
+			error =>
+			{
+				busTaskActivity.Stop();
+				createAndStartBusTaskActivity.Stop();
+				return error;
+			});
 
 
 		}

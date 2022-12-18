@@ -61,7 +61,7 @@ busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
 
 busManagerBuilder.RegisterMessagesFromAssembly(assembliesToScan)
 	.AsDomain("FromInterfaceDomain")
-	.FromInterface<IEventMessage>()
+	.FromInterface<IEvent>()
 	.SetDefaultDisplayName()
 	.AsEvents()
 	.HandeledByDefault();

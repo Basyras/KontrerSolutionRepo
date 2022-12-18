@@ -20,7 +20,7 @@ namespace SandBox.ConsoleApp
 		{
 			using (var activity = new Activity("SandBox.ConsoleApp.CreateCustomerHandler.Handle").Start())
 			{
-				logger.LogInformation($"Handeling message {message.GetType().FullName}");
+				logger.LogInformation($"Handeling message {message.GetType().Name}");
 				CustomerEntity? newCustomer = new CustomerEntity()
 				{
 					Email = message.Email,
@@ -28,7 +28,7 @@ namespace SandBox.ConsoleApp
 					SecondName = message.LastName,
 					Id = new Random().Next()
 				};
-				logger.LogInformation($"Handeled message {message.GetType().FullName}");
+				logger.LogInformation($"Handeled message {message.GetType().Name}");
 				logger.LogInformation($"Publising {nameof(CustomerCreatedEvent)} event");
 				using (new Activity("Publishing Creating event").Start())
 				{

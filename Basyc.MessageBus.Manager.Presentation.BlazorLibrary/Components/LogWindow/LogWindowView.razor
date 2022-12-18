@@ -28,7 +28,7 @@
             else
                 DiagnosticsContext.TryGetActivity(logEntry.SpanId, out logActivity);
 
-            <LogEntryView LogEntry="logEntry" AlternateColor="logEntryIndex % 2 != 0" Activity="logActivity" />
+            <LogEntryView AlternateColor="logEntryIndex % 2 != 0" Activity="logActivity" ServiceName="@logEntry.Service.ServiceName" LogTime="@logEntry.Time" LogLevel="@logEntry.LogLevel" LogMessage="@logEntry.Message" />
         }
     </logs>
 </logWindowView>

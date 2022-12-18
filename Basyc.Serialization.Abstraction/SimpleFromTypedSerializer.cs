@@ -11,7 +11,7 @@ namespace Basyc.Serialization.Abstraction
 			this.typedByteSerializer = typedByteSerializer;
 		}
 
-		public object Deserialize(byte[] serializedInput, string dataType)
+		public object? Deserialize(byte[] serializedInput, string dataType)
 		{
 			return typedByteSerializer.Deserialize(serializedInput, TypedToSimpleConverter.ConvertSimpleToType(dataType));
 		}
@@ -33,17 +33,5 @@ namespace Basyc.Serialization.Abstraction
 			return typedByteSerializer.TrySerialize(input, TypedToSimpleConverter.ConvertSimpleToType(dataType), out output, out error);
 
 		}
-
-		//public OneOf<object, SerializationFailure> Deserialize(byte[] data, string dataType)
-		//{
-		//	return typedByteSerializer.Deserialize(data, TypedToSimpleConverter.ConvertSimpleToType(dataType));
-		//}
-
-		//public OneOf<byte[], SerializationFailure> Serialize(object data, string dataType)
-		//{
-		//	var clrType = TypedToSimpleConverter.ConvertSimpleToType(dataType);
-		//	var seriResult = typedByteSerializer.Serialize(data, clrType);
-		//	return seriResult;
-		//}
 	}
 }

@@ -9,6 +9,6 @@ namespace Basyc.MessageBus.Shared;
 /// <summary>
 /// Should be simple DTO
 /// </summary>
-public interface IEventMessage : IMessage
+public interface IEvent : IMessage
 {
 }

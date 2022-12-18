@@ -7,20 +7,20 @@
 
 @{
     string logEntryViewClass = AlternateColor ? "logEntryView--alternate" : "";
-    string levelClass = $"level--{LogEntry.LogLevel.ToString()}";
-    var servicebackgroundColor = ServiceColorHelper.GetBackground(LogEntry.Service.ServiceName);
+    string levelClass = $"level--{LogLevel.ToString()}";
+    var servicebackgroundColor = ServiceColorHelper.GetBackground(ServiceName);
     string serviceNameStyle = $"background-color: {servicebackgroundColor};";
 }
 
 <logEntryView class="@logEntryViewClass">
     <time>
-        @LogEntry.Time.ToString("HH:mm:ss:fff")
+        @LogTime.ToString("HH:mm:ss:fff")
     </time>
     <level class="@levelClass">
-        @LogLevelToString(LogEntry.LogLevel)
+        @LogLevelToString(LogLevel)
     </level>
     <serviceName style="@serviceNameStyle">
-        <BasycTooltippedText Text="@LogEntry.Service.ServiceName" />
+        <BasycTooltippedText Text="@ServiceName" />
     </serviceName>
     @if (Activity is not null)
     {
@@ -30,14 +30,17 @@
     }
 
     <message>
-        @LogEntry.Message
+        @LogMessage
     </message>
 </logEntryView>
 
 
 @code {
-    [Parameter] public LogEntry LogEntry { get; set; }
     [Parameter] public ActivityContext Activity { get; set; }
+    [Parameter] public string ServiceName { get; set; }
+    [Parameter] public string LogMessage { get; set; }
+    [Parameter] public DateTimeOffset LogTime { get; set; }
+    [Parameter] public LogLevel LogLevel { get; set; }
     [Parameter] public bool AlternateColor { get; set; }
 
     private static string LogLevelToString(LogLevel logLevel)

@@ -1,6 +1,6 @@
 ﻿using Basyc.DependencyInjection;
 using Basyc.DomainDrivenDesign.DependencyInjection;
-using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
+using Kontrer.OwnerServer.CustomerService.Application.Customer;
 using Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public class CustomerInfrastructureBuilder : DependencyBuilderBase
+	public class CustomerInfrastructureBuilder : DependencyBuilderBase
     {
         //public readonly IServiceCollection services;
         public CustomerInfrastructureBuilder(IServiceCollection services) : base(services)

@@ -2,8 +2,6 @@
 {
 	public interface ITypedByteSerializer : ISerializer<object?, byte[], Type>
 	{
-		public new byte[] Serialize(object? deserializedObject, Type dataType);
-		public new object? Deserialize(byte[] serializedObject, Type dataType);
 
 		public bool TrySerialize<T>(T deserializedObject, out byte[]? serializedObject, out SerializationFailure? error)
 		{

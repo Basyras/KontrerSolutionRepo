@@ -11,7 +11,7 @@ durationBox {
     display: grid;
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
-    align-items: center;
+    align-items: end;
     box-sizing: border-box;
     height: 1.4rem;
     overflow: hidden;
@@ -97,7 +97,7 @@ treeLeg {
     display: flex;
     width: 5px;
     position: absolute;
-    margin-left: -5px;
+    /*margin-left: -5px;*/
 }
 
 treeHorizontalLine {
@@ -119,37 +119,47 @@ logs {
 }
 
 log {
-    display: block;
-    height: 100%;
+    display: block;    
+    height: 33%;
     grid-column: 1;
     grid-row: 1;
-    width: 6px;
     z-index: 100;
     opacity: 0.75;
 }
 
-.log--Debug {
-    background-color: $Log-Debug-Foreground;
-}
-
-.log--Information {
-    background-color: $Log-Information-Foreground;
-}
-
-.log--Warning {
-    background-color: $Log-Warning-Background;
-}
-
-.log--Error {
-    background-color: $Log-Error-Background;
+::deep .logContentToolTip {
+    display: flex !important;
+    align-items: end;
+    height: 100%;
+    width: 100%;
+    overflow: visible;
 }
 
 logContent {
+    opacity: 0.5;
     display: block;
     width: 100%;
+    height: 33%;
     height: 100%;
-    margin-left: -3px;
 }
+
+.logContent--Debug {
+    background-color: $Log-Debug-Foreground;
+}
+
+.logContent--Information {
+    background-color: $Log-Information-Foreground;
+}
+
+.logContent--Warning {
+    background-color: $Log-Warning-Background;
+}
+
+.logContent--Error {
+    background-color: $Log-Error-Background;
+}
+
+
 
 logContent:hover {
     background-color: red;

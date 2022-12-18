@@ -4,9 +4,6 @@ namespace Basyc.Serialization.Abstraction
 {
 	public interface ISerializer<TDeserialized, TSerialized, TSerializationMetadata>
 	{
-		//OneOf<TOutput, SerializationFailure> TrySerialize(TInput input, TObjectTypeMetadata dataType);
-		//OneOf<TInput, SerializationFailure> TryDeserialize(TOutput serializedInput, TObjectTypeMetadata dataType);
-
 		public bool TrySerialize(TDeserialized deserializedObject, TSerializationMetadata dataType, [NotNullWhen(true)] out TSerialized? serializedObject, [NotNullWhen(false)] out SerializationFailure? error)
 		{
 			try

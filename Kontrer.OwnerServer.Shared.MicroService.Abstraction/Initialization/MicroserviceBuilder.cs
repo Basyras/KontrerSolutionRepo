@@ -1,5 +1,4 @@
 ﻿using Basyc.DependencyInjection;
-using Basyc.MessageBus.Client.Building;
 using Basyc.MicroService.Abstraction.Initialization;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -17,11 +16,6 @@ namespace Microsoft.Extensions.DependencyInjection
 		{
 			MicroserviceProvider = provider;
 			return this;
-		}
-
-		public BusClientSetupProxyStage AddMessageBus()
-		{
-			return services.AddBasycMessageBus();
 		}
 	}
 }

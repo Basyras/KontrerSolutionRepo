@@ -10,42 +10,28 @@ namespace Basyc.MessageBus.Manager.Presentation.BlazorLibrary.Components.Duratio
 			numberFormatter = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
 			numberFormatter.NumberDecimalSeparator = ".";
 		}
-		/// <summary>
-		/// Formats the number and append rem unit. Example output "15.8rem"
-		/// </summary>
-		public static string GetCssDurationValue(TimeSpan duration, double scale, out double lenghtNumber)
-		{
-			//var minHeight = (duration.TotalMilliseconds / 20) * scale;
-			//remNumber = minHeight;
-			//return $"{minHeight.ToString(numberFormatter)}rem";
 
+		public static string GetCssDurationValue(TimeSpan duration, double scale, out double lenghtNumber, string unit = "px")
+		{
 			var displayLenght = Math.Round(duration.TotalMilliseconds) * scale;
 			lenghtNumber = displayLenght;
-			return $"{displayLenght.ToString(numberFormatter)}px";
+			return $"{displayLenght.ToString(numberFormatter)}{unit}";
 		}
 
-		/// <summary>
-		/// Formats the number and append rem unit. Example output "15.8rem"
-		/// </summary>
-		public static string GetCssDurationValue(TimeSpan duration, double scale)
+
+		public static string GetCssDurationValue(TimeSpan duration, double scale, string unit = "px")
 		{
-			return GetCssDurationValue(duration, scale, out _);
+			return GetCssDurationValue(duration, scale, out _, unit);
 		}
 
-		/// <summary>
-		/// Formats the number and append rem unit. Example output "15.8rem"
-		/// </summary>
-		public static string GetCssDurationValue(DateTimeOffset earlyTime, DateTimeOffset laterTime, double scale, out double remNumber)
+		public static string GetCssDurationValue(DateTimeOffset earlyTime, DateTimeOffset laterTime, double scale, out double remNumber, string unit = "px")
 		{
-			return GetCssDurationValue(laterTime - earlyTime, scale, out remNumber);
+			return GetCssDurationValue(laterTime - earlyTime, scale, out remNumber, unit);
 		}
 
-		/// <summary>
-		/// Formats the number and append rem unit. Example output "15.8rem"
-		/// </summary>
-		public static string GetCssDurationValue(DateTimeOffset earlyTime, DateTimeOffset laterTime, double scale)
+		public static string GetCssDurationValue(DateTimeOffset earlyTime, DateTimeOffset laterTime, double scale, string unit = "px")
 		{
-			return GetCssDurationValue(earlyTime, laterTime, scale, out _);
+			return GetCssDurationValue(earlyTime, laterTime, scale, out _, unit);
 		}
 
 	}

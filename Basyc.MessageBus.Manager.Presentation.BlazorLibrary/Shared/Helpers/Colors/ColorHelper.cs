@@ -19,8 +19,6 @@
 			int saturationRandomness255 = (int)Math.Round(255 * saturationRandomness);
 			int saturation255 = (int)Math.Round(255 * saturation);
 
-
-
 			int seed = textInput.Select(x => (int)x).Sum();
 			var random = new Random(seed);
 
@@ -40,13 +38,6 @@
 			randomSaturationToApply = random.Next(0, saturationRandomness255);
 			colours[remainingColours[0]] = flexibleSaturation - randomSaturationToApply;
 
-			//StringBuilder stringBuilder = new StringBuilder(6);
-			//stringBuilder.Append('#');
-			//stringBuilder.Append(colours[0].ToString("X2"));
-			//stringBuilder.Append(colours[1].ToString("X2"));
-			//stringBuilder.Append(colours[2].ToString("X2"));
-			//stringBuilder.Append(opacity255);
-			//string finalColor = stringBuilder.ToString();
 			return new Color(colours[0], colours[1], colours[2], opacity);
 		}
 		public static string GetHexPercentage(double percantage)

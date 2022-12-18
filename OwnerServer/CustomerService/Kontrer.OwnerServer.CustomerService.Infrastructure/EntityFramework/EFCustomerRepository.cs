@@ -1,5 +1,5 @@
 ﻿using Basyc.Repositories.EF;
-using Kontrer.OwnerServer.CustomerService.Application.Interfaces;
+using Kontrer.OwnerServer.CustomerService.Application.Customer;
 using Kontrer.OwnerServer.CustomerService.Domain.Customer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Kontrer.OwnerServer.CustomerService.Infrastructure.EntityFramework
 {
-    public class EFCustomerRepository : EFInstantCrudRepositoryBase<CustomerEntity, int>, ICustomerRepository
+	public class EFCustomerRepository : EFInstantCrudRepositoryBase<CustomerEntity, int>, ICustomerRepository
     {
         public EFCustomerRepository(CustomerServiceDbContext dbContext, ILogger<EFCustomerRepository> logger) : base(dbContext, x => x.Id,logger)
         {

@@ -20,7 +20,7 @@
                     var backgroundColor = serviceThemeColor.Edit(opacity: 0.05);
 
                     var serviceFirstActivity = service.Activities.First();
-                    string serviceStyle = $"margin-left: {DurationViewHelper.GetCssDurationValue(RequestContext.StartTime, serviceFirstActivity.StartTime, Scale)}; background-color: {backgroundColor}; box-shadow: 0px 0px 0px 1px {borderColor};";
+                    string serviceStyle = $"margin-left: {DurationViewHelper.GetCssDurationValue(RequestContext.StartTime, serviceFirstActivity.StartTime, PixelsPerMs)}; background-color: {backgroundColor}; box-shadow: 0px 0px 0px 1px {borderColor};";
                     string serviceNameStyle = $"color: {nameColor}";
                     <service style="@serviceStyle">
                         <serviceNameContainer>
@@ -35,10 +35,10 @@
                                 {
                                     <unknownAndKnowGroup>
                                         @{
-                                            string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetCssDurationValue(serviceFirstActivity.StartTime, activity.StartTime, Scale);
+                                            string leftMargin = previousActivity == null ? "0px" : DurationViewHelper.GetCssDurationValue(serviceFirstActivity.StartTime, activity.StartTime, PixelsPerMs);
                                             <div style="display: flex; margin-left:@leftMargin;">
                                                 @{
-                                                    <HorizontalDurationBoxView Activity="activity" Scale="Scale" Color="@serviceThemeColor" NestingLevel="0" />
+                                                    <HorizontalDurationBoxView Activity="activity" PixelsPerMs="PixelsPerMs" Color="@serviceThemeColor" NestingLevel="0" />
                                                     previousActivity = activity;
                                                 }
                                             </div>
@@ -55,7 +55,7 @@
     </services>
 
     <zoomToolBar>
-        <MudNumericField Format="N2" T="double" @bind-Value="Scale" FullWidth="false" Step="0.1" Style="color: white;" />
+        <MudNumericField Format="N2" T="double" @bind-Value="PixelsPerMs" FullWidth="false" Step="0.1" Style="color: white;" />
     </zoomToolBar>
 
 </horizontalDurationMapView>
@@ -64,7 +64,7 @@
 
 @code {
     [Parameter] public RequestContext RequestContext { get; set; }
-    [Parameter] public double Scale { get; set; } = 1;
+    [Parameter] public double PixelsPerMs { get; set; } = 1;
 
     protected override void OnParametersSet()
     {
@@ -87,13 +87,13 @@
 
     private void OnZoomInClick(MouseEventArgs args)
     {
-        Scale += 0.1;
+        PixelsPerMs += 0.1;
     }
 
     private void OnZoomOutClick(MouseEventArgs args)
     {
-        Scale -= 0.1;
-        if (Scale < 0)
-            Scale = 0;
+        PixelsPerMs -= 0.1;
+        if (PixelsPerMs < 0)
+            PixelsPerMs = 0;
     }
 }
